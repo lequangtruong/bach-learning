@@ -452,3 +452,22 @@ test("loadCurriculumSource: preserves existing global window and does not overwr
     globalThis.window = originalWindow;
   }
 });
+
+test("curriculum quality rigor: 432 lessons have 0 audit findings, math challenges have substantial problem length, self-contained data, and progressive hints", async () => {
+  const curriculum = await loadCurriculumSource();
+  const report = auditCurriculum(curriculum);
+  assert.deepEqual(report.findings, [], "Full 432 lessons must have strictly 0 quality audit findings");
+
+  const allDays = extractCurriculumDays(curriculum);
+  assert.equal(allDays.length, 432);
+
+  for (const day of allDays) {
+    assert.ok(day.objective && day.objective.length >= 15, `Objective in Week ${day.week} (${day.day}, ${day.subject}) must be clear`);
+    assert.ok(day.basic && day.basic.length >= 15, `Basic task in Week ${day.week} (${day.day}, ${day.subject}) must be substantial`);
+    assert.ok(day.applied && day.applied.length >= 15, `Applied task in Week ${day.week} (${day.day}, ${day.subject}) must be substantial`);
+    assert.ok(day.reasoning && day.reasoning.length >= 15, `Reasoning task in Week ${day.week} (${day.day}, ${day.subject}) must be substantial`);
+    assert.ok(day.challenge && day.challenge.length >= 20, `Challenge in Week ${day.week} (${day.day}, ${day.subject}) must be non-trivial (> 20 chars)`);
+    assert.doesNotMatch(day.challenge, /^(?:tự\s+làm|làm\s+thêm|bài\s+tập\s+tự\s+chọn)$/i, `Challenge in Week ${day.week} must not be a lazy placeholder`);
+  }
+});
+

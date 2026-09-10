@@ -90,7 +90,7 @@
   .weekly-summary-panel { align-items: stretch; flex-direction: column; }
   .week-main { grid-template-columns: 56px 1fr auto; gap: 12px; padding: 16px; }
   .week-details { grid-template-columns: 1fr; padding: 13px 16px 16px; }
-  .bottom-nav { width: calc(100% - 20px); justify-content: space-around; bottom: 10px; }
+  .bottom-nav { width: calc(100% - 20px); justify-content: space-around; bottom: max(10px, env(safe-area-inset-bottom)); }
   .bottom-nav a { flex: 1; padding: 8px 4px; }
   .parent-preview-hero {
     flex-direction: column;
