@@ -17,9 +17,22 @@ export const coreBindings = {
   validatePhotoFile: core.validatePhotoFile
 };
 
-// カリキュラムおよびアプリケーションのソース読み込み
-export const curriculumSource = await readFile(new URL("../../data/curriculum.js", import.meta.url), "utf8");
+export const curriculumFactorySource = await readFile(new URL("../../data/curriculum-factory.js", import.meta.url), "utf8");
+export const curriculumDataSource = await readFile(new URL("../../data/curriculum.js", import.meta.url), "utf8");
+export const curriculumSource = curriculumFactorySource + "\n" + curriculumDataSource;
 export const appSource = await readFile(new URL("../../app.js", import.meta.url), "utf8");
+
+export async function getCombinedStylesSource() {
+  const entry = await readFile(new URL("../../styles.css", import.meta.url), "utf8");
+  if (entry.includes("@import")) {
+    const base = await readFile(new URL("../../styles/base.css", import.meta.url), "utf8");
+    const components = await readFile(new URL("../../styles/components.css", import.meta.url), "utf8");
+    const lessons = await readFile(new URL("../../styles/lessons.css", import.meta.url), "utf8");
+    const responsive = await readFile(new URL("../../styles/responsive.css", import.meta.url), "utf8");
+    return entry + "\n" + base + "\n" + components + "\n" + lessons + "\n" + responsive;
+  }
+  return entry;
+}
 
 // app.jsのexport構文を除去してVM実行可能にするヘルパー
 export function cleanAppSource(source = appSource) {

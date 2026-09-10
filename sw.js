@@ -2,11 +2,15 @@
 // Chỉ cache tài nguyên tĩnh same-origin thuộc danh mục cho phép.
 // TUYỆT ĐỐI KHÔNG cache API (/api/*), Authorization header, Google APIs, token hoặc DB riêng tư.
 
-const CACHE_NAME = "bach-learning-v29";
+const CACHE_NAME = "bach-learning-v30";
 const STATIC_ASSETS = [
   "./",
   "index.html",
   "styles.css",
+  "styles/base.css",
+  "styles/components.css",
+  "styles/lessons.css",
+  "styles/responsive.css",
   "public-config.js",
   "app.js",
   "js/core.js",
@@ -14,6 +18,10 @@ const STATIC_ASSETS = [
   "js/drive-sync.js",
   "js/study-timer.js",
   "js/touch-numpad.js",
+  "js/render-views.js",
+  "js/voice-input.js",
+  "js/ai-client.js",
+  "data/curriculum-factory.js",
   "data/curriculum.js",
   "data/data-core.js",
   "manifest.webmanifest",

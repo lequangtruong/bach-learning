@@ -86,6 +86,7 @@ test("server.mjs: strict static asset allowlist blocks dotfiles and internal rep
   assert.equal(isStaticAllowed("index.html"), true);
   assert.equal(isStaticAllowed("styles.css"), true);
   assert.equal(isStaticAllowed("app.js"), true);
+  assert.equal(isStaticAllowed("data/curriculum-factory.js"), true);
   assert.equal(isStaticAllowed("data/curriculum.js"), true);
   assert.equal(isStaticAllowed("data/data-core.js"), true);
   assert.equal(isStaticAllowed("manifest.webmanifest"), true);

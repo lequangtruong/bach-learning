@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import vm from "node:vm";
-import { curriculumSource } from "./helpers/curriculum-fixture.js";
+import { curriculumSource, getCombinedStylesSource } from "./helpers/curriculum-fixture.js";
 
 // カリキュラムランタイム、暗算バンク、教材品質検証テストスイート
 
@@ -46,7 +46,7 @@ test("curriculum includes a six-week accuracy-first mental calculation foundatio
   const appSource = await readFile(new URL("../app.js", import.meta.url), "utf8");
   assert.match(appSource, /renderMentalMathFoundation/);
   assert.match(appSource, /aria-pressed/);
-  assert.match(await readFile(new URL("../styles.css", import.meta.url), "utf8"), /\.mental-math-check \{ width: 44px; height: 44px; \}/);
+  assert.match(await getCombinedStylesSource(), /\.mental-math-check \{ width: 44px; height: 44px; \}/);
 });
 
 test("mental math bank has at least 5 groups per week, >= 3 distinct questions per group and reasoning question", async () => {
@@ -105,7 +105,7 @@ test("mental math bank has at least 5 groups per week, >= 3 distinct questions p
   assert.match(appSource, /mental-math-question-list/);
 
   // CSS verification
-  const stylesSource = await readFile(new URL("../styles.css", import.meta.url), "utf8");
+  const stylesSource = await getCombinedStylesSource();
   assert.match(stylesSource, /\.mental-math-bank/);
   assert.match(stylesSource, /\.mental-math-group-details/);
   assert.match(stylesSource, /\.mental-math-question-list/);
@@ -139,7 +139,7 @@ test("mental math continuation provides a distinct 8–10 minute bank for every 
   assert.ok(totalQuestions >= 600);
 
   const appSource = await readFile(new URL("../app.js", import.meta.url), "utf8");
-  const stylesSource = await readFile(new URL("../styles.css", import.meta.url), "utf8");
+  const stylesSource = await getCombinedStylesSource();
   assert.match(appSource, /renderMentalMathContinuation/);
   assert.match(appSource, /mentalMathContinuationWeekSelect/);
   assert.match(appSource, /mentalMathContinuation/);

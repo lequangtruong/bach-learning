@@ -1,6 +1,28 @@
 /* ==========================================================================
-   Base: Global Document Primitives & Layout
+   Base: Global Document Primitives, Tokens & Layout
    ========================================================================== */
+
+:root {
+  --ink: #252a2e;
+  --muted: #737875;
+  --paper: #f7f3ec;
+  --card: #fffdf9;
+  --line: #e9e2d7;
+  --coral: #ec725f;
+  --coral-soft: #fce8e1;
+  --gold: #d99f3e;
+  --mint: #6da889;
+  --sky: #6e9eb5;
+  --violet: #8b82ad;
+  --navy: #4b637b;
+  --shadow: 0 18px 42px rgba(64, 48, 35, .08);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: "Be Vietnam Pro", system-ui, sans-serif; line-height: 1.55; font-synthesis: none; text-rendering: optimizeLegibility; }
+button, input { font: inherit; }
+button { cursor: pointer; }
+a { color: inherit; text-decoration: none; }
 
 /* App Shell & Layout Primitives */
 .app-shell { min-height: 100vh; max-width: 1440px; margin: 0 auto; }

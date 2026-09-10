@@ -5,10 +5,13 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const factoryPath = path.resolve(__dirname, "../data/curriculum-factory.js");
+const factorySource = await readFile(factoryPath, "utf8");
 const curriculumPath = path.resolve(__dirname, "../data/curriculum.js");
 const curriculumSource = await readFile(curriculumPath, "utf8");
 
 const sandbox = { window: {} };
+vm.runInNewContext(factorySource, sandbox);
 vm.runInNewContext(curriculumSource, sandbox);
 const c = sandbox.window.BACH_CURRICULUM;
 

@@ -95,66 +95,6 @@
 .writing-submission-panel h3 { margin: 7px 0 5px; }
 .writing-submission-panel .small-button { margin-top: 9px; }
 
-/* Responsive Task & Voice UI Breakpoints */
-@media (max-width: 600px) {
-  .section-head .eyebrow { max-width: 100%; font-size: .66rem; line-height: 1.5; letter-spacing: .06em; overflow-wrap: anywhere; }
-  .daily-plan-day-head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: start; gap: 4px 9px; padding: 10px 9px; }
-  .daily-plan-day-label { min-width: 0; font-size: .9rem; line-height: 1.45; }
-  .daily-plan-day-head b { min-width: 0; font-size: 1rem; line-height: 1.45; }
-  .daily-plan-duration { margin-left: 0; align-self: start; font-size: .7rem; line-height: 1.45; }
-  .lesson-difficulty > div { align-items: flex-start; flex-direction: column; gap: 2px; }
-  .today-lesson-entry { align-items: stretch; flex-direction: column; gap: 10px; }
-  .today-lesson-entry-button { justify-content: center; width: 100%; }
-  .lesson-response-explanation {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-  }
-  .lesson-response-explanation textarea {
-    width: 100%;
-    box-sizing: border-box;
-  }
-  .lesson-response-explanation .voice-button {
-    width: 100%;
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    white-space: normal;
-    text-align: center;
-    box-sizing: border-box;
-    padding: 10px 14px;
-    margin-top: 0;
-  }
-  .lesson-quality { align-items: stretch; flex-direction: column; }
-  .lesson-quality select { width: 100%; }
-}
-
-@media (max-width: 834px) {
-  .lesson-response-explanation {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-  }
-  .lesson-response-explanation textarea {
-    width: 100%;
-    box-sizing: border-box;
-  }
-  .lesson-response-explanation .voice-button {
-    width: 100%;
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    white-space: normal;
-    text-align: center;
-    box-sizing: border-box;
-    padding: 10px 14px;
-    margin-top: 0;
-  }
-}
 
 /* Saturday Panel & Details */
 .saturday-panel { background: #fffaf3; border-top: 3px solid var(--coral); }
@@ -366,19 +306,6 @@
   color: #9c3320;
   font-size: .78rem;
   line-height: 1.5;
-}
-@media (max-width: 600px) {
-  .lesson-timer-body {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-  .lesson-timer-controls {
-    width: 100%;
-  }
-  .timer-btn {
-    flex: 1;
-  }
 }
 
 /* ==========================================================================

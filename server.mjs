@@ -17,6 +17,7 @@ const PUBLIC_ALLOWLIST = new Set([
   "styles.css",
   "public-config.js",
   "app.js",
+  "data/curriculum-factory.js",
   "data/curriculum.js",
   "data/data-core.js",
   "manifest.webmanifest",

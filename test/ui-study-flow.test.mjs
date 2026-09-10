@@ -15,13 +15,15 @@ import {
 import {
   coreBindings,
   curriculumSource,
-  registerCurriculumFixtureLifecycle
+  registerCurriculumFixtureLifecycle,
+  getCombinedStylesSource
 } from "./helpers/curriculum-fixture.js";
 import { createRenderViews } from "../js/render-views.js";
 
 const renderViewsSource = await readFile(new URL("../js/render-views.js", import.meta.url), "utf8");
 const voiceInputSource = await readFile(new URL("../js/voice-input.js", import.meta.url), "utf8");
 const aiClientSource = await readFile(new URL("../js/ai-client.js", import.meta.url), "utf8");
+const stylesSource = await getCombinedStylesSource();
 
 function getCombinedSource(appSource) {
   return appSource + "\n" + renderViewsSource + "\n" + voiceInputSource + "\n" + aiClientSource;
@@ -77,7 +79,6 @@ test("lesson response UI supports numeric answers and voice explanations", async
 test("tutor loading state visibly communicates that AI is thinking", async () => {
   const appSource = await readFile(new URL("../app.js", import.meta.url), "utf8");
   const combinedSource = getCombinedSource(appSource);
-  const stylesSource = await readFile(new URL("../styles.css", import.meta.url), "utf8");
   assert.match(combinedSource, /aiThinkingIndicator/);
   assert.match(combinedSource, /AI đang suy nghĩ/);
   assert.match(combinedSource, /thinkingMessages/);
@@ -85,7 +86,6 @@ test("tutor loading state visibly communicates that AI is thinking", async () =>
 });
 
 test("mobile layout stacks section headers so Vietnamese labels do not collapse", async () => {
-  const stylesSource = await readFile(new URL("../styles.css", import.meta.url), "utf8");
   assert.match(stylesSource, /\.section-head \{ display: block; \}/);
   assert.match(stylesSource, /\.section-head h2 \{ font-size: 1\.7rem/);
 });
@@ -93,7 +93,6 @@ test("mobile layout stacks section headers so Vietnamese labels do not collapse"
 test("daily lesson UX can focus the child on one current day", async () => {
   const appSource = await readFile(new URL("../app.js", import.meta.url), "utf8");
   const combinedSource = getCombinedSource(appSource);
-  const stylesSource = await readFile(new URL("../styles.css", import.meta.url), "utf8");
   assert.match(combinedSource, /<details class="daily-plan-day"/);
   assert.match(combinedSource, /<summary class="daily-plan-day-head"/);
   assert.match(combinedSource, /focusedDayIndex = null/);
@@ -105,7 +104,6 @@ test("daily lesson UX can focus the child on one current day", async () => {
 });
 
 test("today's lesson entry appears before the long subject material", async () => {
-  const stylesSource = await readFile(new URL("../styles.css", import.meta.url), "utf8");
   const entryIndex = renderViewsSource.indexOf('class="today-lesson-entry"');
   const mentalMathIndex = renderViewsSource.indexOf('${isMath ? renderMentalMathFoundation() : ""}');
   assert.ok(entryIndex >= 0 && entryIndex < mentalMathIndex);
@@ -115,7 +113,6 @@ test("today's lesson entry appears before the long subject material", async () =
 test("each daily lesson explains its difficulty for Bách and adapts after feedback", async () => {
   const appSource = await readFile(new URL("../app.js", import.meta.url), "utf8");
   const combinedSource = getCombinedSource(appSource);
-  const stylesSource = await readFile(new URL("../styles.css", import.meta.url), "utf8");
   assert.match(combinedSource, /function lessonDifficulty/);
   assert.match(combinedSource, /Độ khó cho Bách/);
   assert.match(combinedSource, /Củng cố có chọn lọc/);
@@ -819,7 +816,6 @@ test("Progressive hint disclosure for Bách normal study mode vs parent preview 
 });
 
 test("Math lesson response area stacks vertically with full-width textarea and 44px+ touch target on narrow screens and iPad portrait", async () => {
-  const stylesSource = await readFile(new URL("../styles.css", import.meta.url), "utf8");
   assert.match(stylesSource, /@media\s*\([^)]*max-width:\s*834px[^)]*\)/);
   assert.match(stylesSource, /\.lesson-response-explanation\s*\{[^}]*display:\s*flex;[^}]*flex-direction:\s*column;/);
   assert.match(stylesSource, /\.lesson-response-explanation\s+textarea\s*\{[^}]*width:\s*100%;[^}]*box-sizing:\s*border-box;/);

@@ -368,6 +368,7 @@ export async function loadCurriculumSource() {
   if (typeof globalThis.window === "undefined") {
     globalThis.window = globalThis;
   }
+  await import("../data/curriculum-factory.js");
   await import("../data/curriculum.js");
   return globalThis.window.BACH_CURRICULUM;
 }
