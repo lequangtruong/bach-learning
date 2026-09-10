@@ -1,0 +1,13 @@
+{
+  "name": "bach-learning-lab",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Lộ trình Toán và Tiếng Việt lớp 4 cho Bách",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "check": "node --check app.js && node --check server.mjs && node --check api/tutor.js && node --check data/data-core.js && node --check sw.js",
+    "test": "npm run check && node --test test/*.test.mjs",
+    "audit:curriculum-quality": "node scripts/audit-curriculum-quality.mjs"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "$schema": "../ai-support-kit/schemas/spec.schema.json",
+  "artifact_type": "spec",
+  "spec_id": "BACH_LEARNING_LAB_SPEC",
+  "version": "0.1.0",
+  "status": "APPROVED",
+  "title": "Lộ trình học Toán và Tiếng Việt lớp 4 cho Bách",
+  "intent": {
+    "requirement": "Tạo một web app nhẹ, dùng được trên Safari/iPad, giúp Bách ôn nền lớp 3, học chắc lớp 4 và tăng dần đến tư duy Olympic; đồng thời viết văn rõ ràng, mạch lạc, đúng tuổi.",
+    "business_value": "Gia đình có một lộ trình nhất quán, đo được tiến độ mà không biến việc học thành áp lực.",
+    "customer_ref": "BACH-EDU-001"
+  },
+  "scope": {
+    "in_scope": ["Chương trình 36 tuần", "Phiếu bài học đầy đủ 6 ngày/tuần cho cả Toán và Tiếng Việt", "Nhịp học 25 phút ngày thường và 50 phút Thứ 7", "Ô nhập đáp số Toán và đọc cách giải bằng giọng nói", "Viết Văn trên giấy rồi đọc trọn bài vào khung để Gemini chữa", "Cầu nối lớp 3–4", "Progress và lesson responses cục bộ IndexedDB schema v2", "Google Drive DB file Bach Learning DB.json", "Báo cáo tổng kết tuần cho phụ huynh qua Gemini", "Vercel serverless /api/tutor Gemini OAuth", "Nhập giọng nói Web Speech API", "Đọc câu trả lời bằng SpeechSynthesis tiếng Việt", "Responsive web Safari iPad"],
+    "out_of_scope": ["Tài khoản người dùng riêng", "API key Gemini trong browser", "Tự động chấm điểm thay giáo viên/phụ huynh", "Chức năng báo lỗi để AGY sửa code trong app"],
+    "invariants": ["Không lưu OAuth token vào repository", "Không gửi API key trong browser", "AI chỉ gợi mở, không làm hộ", "Nội dung phù hợp lứa tuổi lớp 4", "Không cache dữ liệu nhạy cảm trong Service Worker"]
+  },
+  "current_state": ["Triển khai bản sản phẩm nhẹ nhưng thật, tương thích Vercel Serverless và Safari iPad."],
+  "target_state": ["App chạy mượt mà trên Vercel và Safari iPad.", "Dữ liệu lưu local IndexedDB và đồng bộ visible file trên Google Drive.", "Gemini AI hỗ trợ gợi mở sư phạm qua server-side OAuth flow."],
+  "source_snapshot": {"commit": "WORKING_TREE", "repositories": ["Bach-learning"], "observed_at": "2026-09-08T05:30:00Z"},
+  "affected_areas": [
+    {"name": "Curriculum", "files": ["data/curriculum.js", "content/requirements.md"], "change": "Giữ nguyên 36 tuần và cầu nối lớp 3–4."},
+    {"name": "Web UI", "files": ["index.html", "styles.css", "app.js"], "change": "Giao diện iPad-first, bài học liền mạch, ô nhập đáp số Toán, đọc cách giải và đọc bài Văn bằng voice STT."},
+    {"name": "AI bridge", "files": ["api/tutor.js", "server.mjs", "README.md"], "change": "Vercel serverless OAuth refresh flow, fallback local agy CLI."}
+  ],
+  "contracts": {
+    "api": ["POST /api/tutor nhận subject, weekId, userMessage, history và trả answer hoặc lỗi cấu hình rõ ràng."],
+    "data": ["IndexedDB store userLearningStore schema v2 lưu progress, notes, lessonResponses, weeklySummaries, chatHistory và updatedAt; sync sang file 'Bach Learning DB.json' trên Google Drive."],
+    "state_transitions": ["CHƯA HỌC -> ĐANG HỌC -> HOÀN THÀNH"],
+    "errors": ["Chưa có OAuth env: trả lỗi 503 cấu hình rõ ràng, không làm hỏng app."]
+  },
+  "assumptions": [{"id": "A1", "statement": "Vercel cung cấp các biến môi trường GEMINI_CLIENT_ID, GEMINI_CLIENT_SECRET, GEMINI_REFRESH_TOKEN cho serverless function.", "status": "UNVERIFIED", "evidence_refs": []}],
+  "test_requirements": ["npm test", "node --check app.js", "node --check server.mjs", "node --check api/tutor.js", "node --check data/data-core.js", "GET / trả HTML 200"],
+  "evidence_requirements": ["Kết quả syntax check", "HTTP smoke test", "Ảnh/chụp kiểm tra Safari nếu cần"],
+  "approvals": [{"authority": "owner", "decision": "APPROVED", "at": "2026-09-08T04:30:00Z", "note": "Bản nhẹ; chỉ dùng ai-support-kit cho manifest/spec và validate."}],
+  "created_at": "2026-09-08T04:30:00Z",
+  "updated_at": "2026-09-08T17:00:00Z",
+  "history": [{"from": null, "to": "DRAFT", "at": "2026-09-08T04:30:00Z", "actor": "codex"}, {"from": "DRAFT", "to": "APPROVED", "at": "2026-09-08T04:30:00Z", "actor": "owner", "reason": "Scope nhẹ, review bằng kiểm tra cục bộ."}]
+}

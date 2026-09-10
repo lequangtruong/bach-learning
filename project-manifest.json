@@ -1,0 +1,51 @@
+{
+  "$schema": "../ai-support-kit/schemas/project-manifest.schema.json",
+  "artifact_type": "project-manifest",
+  "project_id": "BACH_LEARNING_LAB",
+  "name": "Bách Learning Lab",
+  "status": "ACTIVE",
+  "repositories": [{
+    "repository_id": "BACH_LEARNING",
+    "path": "/Volumes/DATA/Github/ToolbyMyself/Bach-learning",
+    "responsibility": "Web học tập Toán và Tiếng Việt lớp 4 với phiếu bài học đầy đủ, nhập đáp số và đọc bài bằng giọng nói",
+    "write_policy": "WRITE_ALLOWED",
+    "default_branch": "master"
+  }],
+  "technologies": ["HTML", "CSS", "JavaScript", "Node.js", "Gemini Server-side OAuth", "Google Drive API", "IndexedDB", "Web Speech API", "SpeechSynthesis"],
+  "source_of_truth": {
+    "requirements_map": "content/requirements.md",
+    "system_map": "content/system-map.md",
+    "state_machine": "content/state-machine.md"
+  },
+  "local_skills": [{
+    "skill_id": "LIGHTWEIGHT_EDUCATIONAL_WEB",
+    "path": "content",
+    "capabilities": ["CURRICULUM_DESIGN", "RESPONSIVE_WEB", "LOCAL_PROGRESS", "OAUTH_CLI_BRIDGE"],
+    "provenance": {
+      "type": "LOCAL_TEMPLATE",
+      "source": "/Volumes/DATA/Github/ToolbyMyself/ai-support-kit",
+      "version": "0.1.0",
+      "require_clean": false
+    }
+  }],
+  "policies": {
+    "sensitive_data_allowed": false,
+    "evidence_storage": "PROJECT_LOCAL_PRIVATE",
+    "external_network": "ASK"
+  },
+  "validation_commands": ["npm test"],
+  "test_areas": [{
+    "area_id": "MANUAL_WEB_SMOKE",
+    "path": "test",
+    "responsibility": "Kiểm tra responsive trên desktop và Safari iPad",
+    "type": "MANUAL_GUIDE",
+    "write_policy": "READ_ONLY"
+  }],
+  "runtime_profile": {
+    "profile_id": "LEAN_PERSONAL_SERIAL",
+    "overlay_path": "config/profiles/lean.json",
+    "execution_semantics": "PERSONAL_SERIAL"
+  },
+  "created_at": "2026-09-08T04:30:00Z",
+  "updated_at": "2026-09-08T17:00:00Z"
+}

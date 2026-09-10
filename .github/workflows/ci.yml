@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [ "master", "main" ]
+  pull_request:
+    branches: [ "master", "main" ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Node.js ${{ matrix.node-version }} Test Suite
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x, 22.x]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Syntax Check
+        run: npm run check
+
+      - name: Run 86 Unit Tests
+        run: npm test
+
+      - name: Audit 432 Curriculum Lessons
+        run: npm run audit:curriculum-quality

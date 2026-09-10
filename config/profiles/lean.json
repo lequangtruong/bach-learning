@@ -1,0 +1,86 @@
+{
+  "$schema": "../../../ai-support-kit/schemas/runtime-profile.schema.json",
+  "artifact_type": "runtime-profile",
+  "profile_id": "LEAN_PERSONAL_SERIAL",
+  "name": "Bách Learning Lean Personal Serial",
+  "description": "Profile nhẹ cho kiểm chứng tuần tự của dự án Bách Learning; không phải runtime của web app.",
+  "version": "0.1.0",
+  "execution_semantics": "PERSONAL_SERIAL",
+  "modules": {
+    "core": [
+      "artifact-store",
+      "command-runner",
+      "evidence",
+      "lock-manager",
+      "orchestrator",
+      "path-boundary",
+      "review-core",
+      "review-integrity",
+      "schema-validator",
+      "spec-resolver",
+      "state-machine",
+      "supervisor",
+      "task-execution"
+    ],
+    "on_demand": [
+      "change-request",
+      "knowledge-collector",
+      "review-agent",
+      "review-retry-journal",
+      "skill-composer",
+      "sot-hash",
+      "strategy-router"
+    ],
+    "disabled": [
+      "benchmark-engine",
+      "capability-router",
+      "evaluation-runner",
+      "knowledge-promotion"
+    ]
+  },
+  "capabilities": {
+    "core": ["FAST_EXECUTION", "STRICT_REVIEW"],
+    "on_demand": ["SYNTHESIS"],
+    "disabled": ["RESEARCH", "SPECIALIST"]
+  },
+  "policies": {
+    "allow_on_demand_activation": true,
+    "max_concurrency": 1,
+    "require_read_only_target": false,
+    "skill_permission_ceiling": {
+      "read": [
+        "app.js",
+        "api/**",
+        "data/**",
+        "styles.css",
+        "index.html",
+        "manifest.webmanifest",
+        "public-config.js",
+        "server.mjs",
+        "sw.js",
+        "test/**",
+        "content/**",
+        "*.md",
+        "*.json"
+      ],
+      "write": [
+        "app.js",
+        "api/**",
+        "data/**",
+        "styles.css",
+        "index.html",
+        "manifest.webmanifest",
+        "server.mjs",
+        "sw.js",
+        "test/**",
+        "content/**",
+        "*.md",
+        "*.json"
+      ],
+      "network": false,
+      "shell": true
+    }
+  },
+  "created_at": "2026-09-08T00:00:00Z",
+  "updated_at": "2026-09-08T00:00:00Z"
+}
