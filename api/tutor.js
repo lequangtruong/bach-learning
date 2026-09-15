@@ -180,9 +180,15 @@ export default async function handler(req, res) {
   const clientSecret = process.env.GEMINI_CLIENT_SECRET;
   const refreshToken = process.env.GEMINI_REFRESH_TOKEN;
   const projectId = process.env.GEMINI_PROJECT_ID;
-  const geminiModel = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+  const geminiModel = process.env.GEMINI_MODEL || "gemini-3.8-flash";
   const isVercelProd = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
-  const hasFullGeminiConfig = Boolean(clientId && clientSecret && refreshToken && projectId);
+  const isPlaceholder = (val) => !val || val.includes("replace-in-vercel") || val.includes("your-google");
+  const hasFullGeminiConfig = Boolean(
+    !isPlaceholder(clientId) &&
+    !isPlaceholder(clientSecret) &&
+    !isPlaceholder(refreshToken) &&
+    !isPlaceholder(projectId)
+  );
   const tutorClientId = process.env.GOOGLE_TUTOR_CLIENT_ID || clientId;
   const allowedEmail = process.env.BACH_ALLOWED_EMAIL;
   const isAgyFallbackBranch = !hasFullGeminiConfig && process.env.BACH_ENABLE_AGY_FALLBACK === "1" && !isVercelProd;

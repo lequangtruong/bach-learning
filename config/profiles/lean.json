@@ -52,6 +52,10 @@
         "app.js",
         "api/**",
         "data/**",
+        "js/**",
+        "styles/**",
+        "skills/**",
+        "evidence/**",
         "styles.css",
         "index.html",
         "manifest.webmanifest",
@@ -67,6 +71,10 @@
         "app.js",
         "api/**",
         "data/**",
+        "js/**",
+        "styles/**",
+        "skills/**",
+        "evidence/**",
         "styles.css",
         "index.html",
         "manifest.webmanifest",
@@ -82,5 +90,5 @@
     }
   },
   "created_at": "2026-09-08T00:00:00Z",
-  "updated_at": "2026-09-08T00:00:00Z"
+  "updated_at": "2026-09-11T00:00:00Z"
 }

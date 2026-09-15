@@ -213,8 +213,15 @@ export async function askAi({ mode = "student_tutor", userMessage = null, writin
   } finally {
     clearInterval(state.tutor.thinkingTimer);
     state.tutor.thinkingTimer = null;
-    state.tutor.isLoading = false;
-    if (askBtn) askBtn.disabled = false;
+    if (askBtn) {
+      askBtn.disabled = false;
+      askBtn.textContent = "Hỏi trợ giảng AI";
+    }
+    const thinkingIndicator = typeof document !== "undefined" ? document.querySelector("#aiThinkingIndicator") : null;
+    if (thinkingIndicator) {
+      thinkingIndicator.hidden = true;
+      thinkingIndicator.setAttribute("aria-hidden", "true");
+    }
     // Rerender lại phần history nếu đang ở trang guide
     if (typeof location !== "undefined" && location.hash === "#guide") {
       renderGuideHandler();

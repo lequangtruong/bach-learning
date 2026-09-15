@@ -1,0 +1,29 @@
+{
+  "$schema": "/Volumes/DATA/Github/ToolbyMyself/ai-support-kit/schemas/skill.schema.json",
+  "artifact_type": "skill",
+  "skill_id": "BACH_LEARNING_QUALITY_GATE",
+  "version": "0.1.0",
+  "status": "APPROVED",
+  "origin": {
+    "source": "Bách Learning sources of truth and AI Support Kit runtime verification overlays",
+    "license": "LOCAL_PROJECT_POLICY",
+    "version": "2026-09-11"
+  },
+  "layer": "PROJECT_LOCAL",
+  "scope": ["EDUCATIONAL_UX", "CURRICULUM", "CHILD_PRIVACY", "TUTOR_API", "ADAPTATION"],
+  "triggers": ["EDUCATIONAL_UX", "CURRICULUM", "CHILD_PRIVACY", "TUTOR_API", "ADAPTATION"],
+  "preconditions": ["Read content/requirements.md, content/system-map.md and content/state-machine.md", "Preserve existing staged application changes unless they are in the approved scope", "Use synthetic, non-identifying learner data only"],
+  "inputs": ["Approved task or review scope", "Relevant lesson, tutor or progress flow", "npm test command"],
+  "outputs": ["Child-facing acceptance evidence", "Privacy and adaptation findings", "Explicit triage for non-pass"],
+  "permissions": {
+    "read": ["app.js", "api/**", "data/**", "js/**", "styles/**", "content/**", "test/**", "skills/**"],
+    "write": ["test/**", "content/**", "skills/**"],
+    "network": false,
+    "shell": true
+  },
+  "side_effects": "REVERSIBLE_WRITE",
+  "evidence_required": ["npm test result", "Lesson or tutor business-state assertion", "Synthetic-data confirmation", "PRODUCT_BUG, TEST_ISSUE, EVIDENCE_ISSUE or BLOCKED_ENV for non-pass"],
+  "conflicts_with": [],
+  "evaluation_cases": ["TC_BACH_QUALITY_001", "TC_BACH_QUALITY_002"],
+  "content_ref": "skills/bach-learning-quality/SKILL.md"
+}

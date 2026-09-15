@@ -37,16 +37,32 @@ export function buildTutorSystemPrompt(subject = "", weekId = "", weekFocus = ""
   const subjectName = subject === "math" ? "Toán" : (subject === "vietnamese" ? "Tiếng Việt" : "Toán và Tiếng Việt");
 
   return [
-    `Bạn là gia sư AI tận tâm, thân thiện đồng hành cùng Bách, học sinh lớp 4 học môn ${subjectName}.`,
-    "NGUYÊN TẮC SƯ PHẠM CỐT LÕI:",
-    "1. Bạn là trợ giảng tiểu học lớp 4, KHÔNG PHẢI công cụ lập trình hay trợ lý viết code. Tuyệt đối từ chối các yêu cầu viết mã nguồn hoặc giải bài toán lập trình.",
+    `Bạn là bạn đồng hành AI học tập cùng Bách, học sinh lớp 4 môn ${subjectName}.`,
+    "NGUYÊN TẮC SƯ PHẠM VÀ GIAO TIẾP:",
+    "1. Bạn là BẠN ĐỒNG HÀNH (người bạn học cùng) của Bách, KHÔNG PHẢI THẦY CÔ GIÁO và KHÔNG PHẢI công cụ lập trình hay trợ lý viết code. Tuyệt đối từ chối các yêu cầu viết mã nguồn hoặc giải bài toán lập trình.",
     "2. TUYỆT ĐỐI KHÔNG làm bài hộ, không đưa ra đáp án trực tiếp cho học sinh.",
-    "3. Hãy gợi ý từng nấc (scaffolding), đặt câu hỏi dẫn dắt để con tự suy nghĩ và từng bước tìm ra lời giải.",
-    "4. Ngôn ngữ giao tiếp: Tiếng Việt trong sáng, gần gũi, khích lệ, phù hợp tâm lý lứa tuổi học sinh lớp 4.",
-    "5. QUY CHUẨN XƯNG HÔ: Tự xưng là 'mình' hoặc 'tôi', luôn gọi học sinh là 'Bách'. TUYỆT ĐỐI KHÔNG xưng là 'thầy' hoặc 'cô'.",
+    "3. Hãy gợi ý từng nấc (scaffolding), đặt câu hỏi dẫn dắt để Bách tự suy nghĩ và từng bước tìm ra lời giải.",
+    "4. NGỮ ĐIỆU VÀ PHONG CÁCH (RẤT QUAN TRỌNG): Giọng văn thật ấm áp, mềm mại, vui tươi, ân cần và dịu dàng như một người bạn thân thiết ngồi học cạnh Bách. Tuyệt đối KHÔNG dùng giọng điệu chát chúa, cộc lốc, khô khan, máy móc hay giáo điều phán xét.",
+    "5. QUY CHUẨN XƯNG HÔ (BẮT BUỘC): Bạn tự xưng là 'mình' hoặc 'tôi', luôn gọi bạn học là 'Bách' hoặc 'bạn' (ví dụ: 'mình và Bách', 'chúng mình cùng xem', 'bạn thử nghĩ xem').",
+    "6. CẤM TUYỆT ĐỐI: TUYỆT ĐỐI KHÔNG xưng là 'thầy' hoặc 'cô', và TUYỆT ĐỐI KHÔNG ĐƯỢC GỌI Bách là 'con'. Cấm dùng từ 'con' khi trò chuyện với Bách.",
     weekId ? `- Tuần học hiện tại: ${weekId}` : "",
     weekFocus ? `- Trọng tâm tuần học: ${weekFocus}` : ""
   ].filter(Boolean).join("\n");
+}
+
+/**
+ * Loại bỏ các dòng thông báo kỹ thuật môi trường (như Active Workspace / Working Folder)
+ * @param {string} str
+ * @returns {string}
+ */
+export function cleanTechnicalHeaders(str) {
+  if (typeof str !== "string") return "";
+  let cleaned = str.trim();
+  // Xóa các cụm header [Active Workspace: ...] và [Working Folder: ...] ở đầu phản hồi
+  cleaned = cleaned.replace(/^(\[(?:Active Workspace|Working Folder):[^\]]*\]\s*)+/gi, "");
+  // Xóa khối reasoning nội bộ nếu có: ### 🧠 Suy nghĩ ... --- hoặc 1. **Hiểu yêu cầu**... ---
+  cleaned = cleaned.replace(/^(?:###\s*🧠\s*Suy nghĩ[\s\S]*?---|1\.\s*\*\*Hiểu yêu cầu\*\*[\s\S]*?---)\s*/i, "");
+  return cleaned.trim();
 }
 
 /**
@@ -59,7 +75,8 @@ export function parseTutorResponse(rawAnswer) {
     return { answer: String(rawAnswer || ""), learningAction: null };
   }
 
-  const text = rawAnswer.trim();
+  const cleanedRaw = cleanTechnicalHeaders(rawAnswer);
+  const text = cleanedRaw.trim();
 
   // Thử parse JSON trực tiếp nếu toàn bộ chuỗi là JSON
   if (text.startsWith("{") && text.endsWith("}")) {
@@ -68,7 +85,7 @@ export function parseTutorResponse(rawAnswer) {
       if (parsed && typeof parsed === "object") {
         const answer = typeof parsed.answer === "string" ? parsed.answer : (parsed.response || text);
         const learningAction = parsed.learningAction || parsed.action || null;
-        return { answer, learningAction };
+        return { answer: cleanTechnicalHeaders(answer), learningAction };
       }
     } catch {
       // Bỏ qua nếu không parse được
@@ -83,14 +100,14 @@ export function parseTutorResponse(rawAnswer) {
       const parsedBlock = JSON.parse(match[1]);
       const learningAction = parsedBlock.learningAction || parsedBlock;
       const cleanAnswer = text.replace(match[0], "").trim();
-      return { answer: cleanAnswer, learningAction };
+      return { answer: cleanTechnicalHeaders(cleanAnswer), learningAction };
     } catch {
       // Bỏ qua nếu parse JSON block thất bại
     }
   }
 
   return {
-    answer: text,
+    answer: cleanTechnicalHeaders(text),
     learningAction: null
   };
 }

@@ -1,12 +1,18 @@
 import { createServer } from "node:http";
-import { readFile } from "node:fs/promises";
+import { readFile, writeFile, rename } from "node:fs/promises";
 import { extname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
+
+// Tự động nạp cấu hình từ .env nếu có (Node.js 20+)
+try { process.loadEnvFile(); } catch {}
+
 import tutorHandler from "./api/tutor.js";
+import ttsHandler from "./api/tts.js";
+import { validateDatabasePayload } from "./data/data-core.js";
 
 const root = fileURLToPath(new URL(".", import.meta.url));
 const port = Number(process.env.BACH_PORT || 4173);
-const host = process.env.BACH_HOST || "127.0.0.1";
+const host = process.env.BACH_HOST || "0.0.0.0";
 
 // STRICT STATIC ASSET ALLOWLIST:
 // Chỉ phục vụ đúng các file công khai phục vụ frontend, TUYỆT ĐỐI không expose repo internals
@@ -49,6 +55,67 @@ async function handleApi(req, res) {
   if (req.method === "POST" && (urlPath === "/api/tutor" || urlPath === "/api/gemini")) {
     await tutorHandler(req, res);
     return true;
+  }
+  if (urlPath === "/api/tts") {
+    await ttsHandler(req, res);
+    return true;
+  }
+  if (urlPath === "/api/db") {
+    const dbPath = join(root, "data", "db-lan.json");
+    res.setHeader("Content-Type", "application/json; charset=utf-8");
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+    if (req.method === "OPTIONS") {
+      res.statusCode = 204;
+      res.end();
+      return true;
+    }
+    if (req.method === "GET") {
+      try {
+        const content = await readFile(dbPath, "utf8");
+        res.statusCode = 200;
+        res.end(content);
+      } catch (err) {
+        if (err.code === "ENOENT") {
+          res.statusCode = 200;
+          res.end(JSON.stringify(null));
+        } else {
+          res.statusCode = 500;
+          res.end(JSON.stringify({ error: err.message }));
+        }
+      }
+      return true;
+    }
+    if (req.method === "POST") {
+      let body = "";
+      for await (const chunk of req) {
+        body += chunk;
+        if (body.length > 5 * 1024 * 1024) {
+          res.statusCode = 413;
+          res.end(JSON.stringify({ error: "Payload quá lớn" }));
+          return true;
+        }
+      }
+      try {
+        const parsed = JSON.parse(body);
+        if (!validateDatabasePayload(parsed)) {
+          res.statusCode = 400;
+          res.end(JSON.stringify({ error: "Dữ liệu cơ sở dữ liệu không hợp lệ" }));
+          return true;
+        }
+        const tmpPath = `${dbPath}.tmp`;
+        await writeFile(tmpPath, JSON.stringify(parsed, null, 2), "utf8");
+        await rename(tmpPath, dbPath);
+        res.statusCode = 200;
+        res.end(JSON.stringify({ status: "ok", updatedAt: parsed.updatedAt }));
+      } catch (err) {
+        res.statusCode = 500;
+        res.end(JSON.stringify({ error: err.message }));
+      }
+      return true;
+    }
   }
   return false;
 }
@@ -93,6 +160,19 @@ const server = createServer(async (req, res) => {
     res.writeHead(403, { "Content-Type": "text/plain; charset=utf-8" });
     res.end("Forbidden");
     return;
+  }
+
+  // Tự động inject Client ID từ .env vào public-config.js nếu có cấu hình thật
+  if (normalizedRelative === "public-config.js") {
+    const envClientId = process.env.GOOGLE_TUTOR_CLIENT_ID || process.env.GEMINI_CLIENT_ID;
+    if (envClientId && !envClientId.includes("your-google-oauth") && !envClientId.startsWith("PLACEHOLDER")) {
+      res.writeHead(200, {
+        "Content-Type": "text/javascript; charset=utf-8",
+        "Cache-Control": "no-cache"
+      });
+      res.end(`// Cấu hình động từ biến môi trường máy chủ\nwindow.BACH_GOOGLE_CLIENT_ID = ${JSON.stringify(envClientId.trim())};\n`);
+      return;
+    }
   }
 
   try {

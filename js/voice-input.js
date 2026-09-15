@@ -97,20 +97,61 @@ export const voiceInput = {
   }
 };
 
-// --- Tutor TTS: lightweight, explicit, local browser speech ---
+// --- Tutor TTS: lightweight Neural TTS with local Web Speech fallback ---
+function cleanSpeechText(raw) {
+  if (typeof raw !== "string") return "";
+  return raw
+    .replace(/^(\[(?:Active Workspace|Working Folder):[^\]]*\]\s*)+/gim, "")
+    .replace(/```[\s\S]*?```/g, "")
+    .replace(/`([^`]+)`/g, "$1")
+    .replace(/^#{1,6}\s+/gm, "")
+    .replace(/(\*\*|__)(.*?)\1/g, "$2")
+    .replace(/(\*|_)(.*?)\1/g, "$2")
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .replace(/^[•\-\*]\s+/gm, "")
+    .replace(/\n+/g, ". ")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
+
 export const tutorSpeech = {
+  currentAudio: null,
+  voicePreference: "vi-VN-HoaiMyNeural", // Mặc định giọng Nữ Hoài My truyền cảm, tự nhiên
+  _isSpeaking: false,
+
+  get speaking() {
+    return this._isSpeaking || Boolean(this.synthesis?.speaking);
+  },
+
+  set speaking(val) {
+    this._isSpeaking = Boolean(val);
+  },
+
   get synthesis() {
     return typeof window !== "undefined" ? window.speechSynthesis : null;
   },
 
   isSupported() {
     return typeof window !== "undefined" &&
-      "speechSynthesis" in window &&
-      typeof window.SpeechSynthesisUtterance === "function";
+      (("Audio" in window) || ("speechSynthesis" in window && typeof window.SpeechSynthesisUtterance === "function"));
+  },
+
+  setVoice(voiceName) {
+    if (voiceName) this.voicePreference = voiceName;
   },
 
   stop() {
-    if (this.synthesis) this.synthesis.cancel();
+    if (this.currentAudio) {
+      try {
+        this.currentAudio.pause();
+        this.currentAudio.currentTime = 0;
+      } catch {}
+      this.currentAudio = null;
+    }
+    if (this.synthesis) {
+      try { this.synthesis.cancel(); } catch {}
+    }
+    this._isSpeaking = false;
   },
 
   chooseVietnameseVoice() {
@@ -121,19 +162,74 @@ export const tutorSpeech = {
     return vietnamese.find(voice => femaleHints.test(`${voice.name} ${voice.voiceURI}`)) || vietnamese[0];
   },
 
-  speak(text) {
-    if (!this.isSupported() || typeof text !== "string" || !text.trim()) return false;
-    const synthesis = this.synthesis;
+  fallbackWebSpeech(text, onEnd) {
+    if (!this.synthesis || typeof window.SpeechSynthesisUtterance !== "function") {
+      this._isSpeaking = false;
+      return false;
+    }
     this.stop();
-    const utterance = new window.SpeechSynthesisUtterance(text.trim().slice(0, 6000));
+    const utterance = new window.SpeechSynthesisUtterance(text.slice(0, 4000));
     utterance.lang = "vi-VN";
-    utterance.rate = 0.92;
-    utterance.pitch = 1.08;
-    utterance.volume = 0.9;
+    utterance.rate = 0.88;
+    utterance.pitch = 0.93;
+    utterance.volume = 0.95;
     const voice = this.chooseVietnameseVoice();
     if (voice) utterance.voice = voice;
-    synthesis.speak(utterance);
+    utterance.onend = () => {
+      this._isSpeaking = false;
+      if (typeof onEnd === "function") onEnd();
+    };
+    utterance.onerror = () => {
+      this._isSpeaking = false;
+    };
+    this._isSpeaking = true;
+    this.synthesis.speak(utterance);
     return true;
+  },
+
+  speak(text, onEnd) {
+    if (typeof text !== "string" || !text.trim()) return false;
+    const clean = cleanSpeechText(text);
+    if (!clean) return false;
+
+    this.stop();
+    this._isSpeaking = true;
+
+    // 1. Thử Neural TTS qua POST. ID token chỉ đi trong header, không bao giờ ở URL.
+    if (typeof window !== "undefined" && typeof window.Audio === "function") {
+      const headers = { "Content-Type": "application/json" };
+      if (state.drive?.idToken) headers["X-Google-ID-Token"] = state.drive.idToken;
+      fetch("/api/tts", {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ voice: this.voicePreference, text: clean })
+      }).then(async response => {
+        if (!response.ok) throw new Error(`TTS HTTP ${response.status}`);
+        const objectUrl = window.URL.createObjectURL(await response.blob());
+        const audio = new window.Audio(objectUrl);
+        this.currentAudio = audio;
+        audio.onended = () => {
+          window.URL.revokeObjectURL(objectUrl);
+          this._isSpeaking = false;
+          this.currentAudio = null;
+          if (typeof onEnd === "function") onEnd();
+        };
+        audio.onerror = () => {
+          window.URL.revokeObjectURL(objectUrl);
+          this.currentAudio = null;
+          this.fallbackWebSpeech(clean, onEnd);
+        };
+        await audio.play();
+      }).catch(() => {
+        this.currentAudio = null;
+        this.fallbackWebSpeech(clean, onEnd);
+      });
+
+      return true;
+    }
+
+    // 2. Fallback sang Web Speech API
+    return this.fallbackWebSpeech(clean, onEnd);
   }
 };
 

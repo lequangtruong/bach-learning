@@ -1,0 +1,832 @@
+/* ==========================================================================
+   Games: Mini-Games Styling (Speed Math 90s, Bar Model Studio, Spot The Bug)
+   Optimized for iPad 60 FPS, Retina displays, touch targets >= 44px
+   ========================================================================== */
+
+/* Games Hub Grid */
+.games-hub-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.game-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 28px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.game-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 48px rgba(64, 48, 35, 0.12);
+}
+
+.game-card-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  width: fit-content;
+  margin-bottom: 14px;
+}
+
+.badge-speed { background: #fee2e2; color: #b91c1c; }
+.badge-bar { background: #e0f2fe; color: #0369a1; }
+.badge-bug { background: #fef3c7; color: #b45309; }
+
+.game-card h3 {
+  font-size: 1.45rem;
+  margin: 0 0 10px;
+  line-height: 1.25;
+}
+
+.game-card p {
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0 0 20px;
+  flex-grow: 1;
+}
+
+.game-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+}
+
+.game-stat {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.game-stat strong {
+  color: var(--ink);
+  font-size: 1.1rem;
+}
+
+/* Speed Math Sprint 90s Arena */
+.speed-math-arena {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  padding: 32px 24px;
+  max-width: 680px;
+  margin: 0 auto;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.arena-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.timer-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--ink);
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-family: "DM Mono", monospace;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.score-display {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.score-number {
+  font-family: "DM Mono", monospace;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--coral);
+}
+
+.streak-badge {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #b45309;
+  background: #fef3c7;
+  padding: 2px 10px;
+  border-radius: 999px;
+}
+
+.timer-progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 28px;
+}
+
+.timer-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #f59e0b, #ef4444);
+  transition: width 1s linear;
+}
+
+.math-problem-box {
+  background: #f8fafc;
+  border: 2px dashed #cbd5e1;
+  border-radius: 20px;
+  padding: 28px 16px;
+  margin-bottom: 24px;
+}
+
+.math-problem-text {
+  font-size: clamp(2.4rem, 6vw, 3.8rem);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.math-strategy-hint {
+  font-size: 0.92rem;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.answer-input-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.answer-input-row input {
+  width: 220px;
+  height: 58px;
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-align: center;
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.answer-input-row input:focus {
+  border-color: var(--coral);
+  box-shadow: 0 0 0 4px var(--coral-soft);
+}
+
+.game-results-card {
+  text-align: center;
+  padding: 32px 16px;
+}
+
+.game-results-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+
+.results-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 24px 0;
+}
+
+.results-stat-box {
+  background: #f8fafc;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+}
+
+.results-stat-box small {
+  display: block;
+  color: var(--muted);
+  font-size: 0.88rem;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.results-stat-box span {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+/* Mini Bar Model Studio */
+.bar-studio-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.bar-challenge-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 24px;
+}
+
+.bar-svg-stage {
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.04);
+}
+
+.bar-model-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.bar-controls-panel {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  align-items: center;
+}
+
+.bar-control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bar-control-group label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.stepper-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stepper-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: #f8fafc;
+  font-size: 1.3rem;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  transition: background 0.15s ease;
+}
+
+.stepper-btn:active {
+  background: #e2e8f0;
+}
+
+.stepper-val {
+  min-width: 36px;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.stepper-input {
+  width: 54px;
+  height: 44px;
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 800;
+  font-family: inherit;
+  color: var(--ink);
+  background: var(--card);
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 0;
+  -moz-appearance: textfield;
+}
+
+.stepper-input::-webkit-outer-spin-button,
+.stepper-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.stepper-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* Bar Studio Inputs & Smaller Placeholders */
+.bar-studio-input {
+  font-family: inherit;
+  font-size: 0.92rem;
+  color: var(--ink);
+  background: #fff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.bar-studio-input::placeholder,
+#diffInput::placeholder,
+#totalInput::placeholder {
+  font-size: 0.88rem !important;
+  font-weight: 400 !important;
+  color: #94a3b8 !important;
+  letter-spacing: normal;
+}
+
+
+/* 3 Trò chơi tích hợp trong buổi học (Study Games Trilogy) */
+.study-games-trilogy-panel {
+  background: linear-gradient(135deg, rgba(240, 249, 255, 0.95), rgba(254, 243, 199, 0.45));
+  border: 1.5px solid #bae6fd;
+  border-radius: 24px;
+  padding: 24px;
+  margin: 32px 0 32px;
+  box-shadow: 0 4px 16px rgba(3, 105, 161, 0.06);
+}
+
+.study-games-head h3 {
+  margin: 4px 0 6px;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #0369a1;
+}
+
+.study-games-head p {
+  margin: 0 0 16px;
+  font-size: 0.92rem;
+  color: #475569;
+}
+
+.study-games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 16px;
+}
+
+.study-game-mini-card {
+  background: #ffffff;
+  border: 1.5px solid var(--line);
+  border-radius: 18px;
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.study-game-mini-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.study-game-mini-card .sg-badge {
+  display: inline-block;
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+  align-self: flex-start;
+}
+
+.study-game-mini-card.speed-math .sg-badge {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.study-game-mini-card.bar-model .sg-badge {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.study-game-mini-card.spot-bug .sg-badge {
+  background: #fce7f3;
+  color: #be185d;
+}
+
+.study-game-mini-card h4 {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.study-game-mini-card p {
+  margin: 0 0 14px;
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.45;
+  flex-grow: 1;
+}
+
+/* Spot The Bug */
+.bug-stage {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.bug-problem-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 28px;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+}
+
+.bug-steps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 20px 0;
+}
+
+.bug-step-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  border: 2px solid var(--line);
+  border-radius: 16px;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 60px;
+}
+
+.bug-step-item:hover {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+
+.bug-step-item.selected-wrong {
+  border-color: #ef4444;
+  background: #fef2f2;
+}
+
+.bug-step-item.selected-correct {
+  border-color: #10b981;
+  background: #f0fdf4;
+}
+
+.step-badge {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: #e2e8f0;
+  color: var(--ink);
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.step-text {
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.bug-feedback-box {
+  padding: 20px;
+  border-radius: 18px;
+  margin-top: 20px;
+  line-height: 1.6;
+}
+
+.bug-feedback-box.success {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #065f46;
+}
+
+.bug-feedback-box.try-again {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #92400e;
+}
+
+/* ==========================================================================
+   Stage Mini-Games (Embedded at the end of each lesson stage)
+   ========================================================================== */
+.stage-mini-game {
+  margin-top: 18px;
+  background: #ffffff;
+  border: 1.5px solid var(--line);
+  border-radius: 18px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.stage-mini-game:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+}
+
+.stage-mini-game.speed-math {
+  border-left: 6px solid #eab308;
+  background: linear-gradient(135deg, #fffbeb 0%, #ffffff 75%);
+}
+
+.stage-mini-game.bar-model {
+  border-left: 6px solid #0284c7;
+  background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 75%);
+}
+
+.stage-mini-game.spot-bug {
+  border-left: 6px solid #db2777;
+  background: linear-gradient(135deg, #fdf2f8 0%, #ffffff 75%);
+}
+
+.stage-mini-game-info {
+  flex-grow: 1;
+}
+
+.stage-mini-game-info h5 {
+  margin: 4px 0 3px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.stage-mini-game-info p {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.smg-badge {
+  display: inline-block;
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.stage-mini-game.speed-math .smg-badge {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.stage-mini-game.bar-model .smg-badge {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.stage-mini-game.spot-bug .smg-badge {
+  background: #fce7f3;
+  color: #be185d;
+}
+
+.stage-game-btn {
+  padding: 9px 18px !important;
+  font-size: 0.88rem !important;
+  font-weight: 700 !important;
+  white-space: nowrap;
+  flex-shrink: 0;
+  border-radius: 12px !important;
+  text-decoration: none;
+}
+
+@media (max-width: 640px) {
+  .stage-mini-game {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .stage-game-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* Stage Game Daily Tasks List */
+.stage-game-tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stage-game-task-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 8px 12px;
+  gap: 12px;
+}
+
+.stage-game-task-row--bar {
+  border: 1px solid #bae6fd;
+}
+
+.stage-game-task-row--bug {
+  border: 1px solid #fbcfe8;
+}
+
+.stage-game-task-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.stage-game-task-lead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+.stage-game-task-role {
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 2px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.stage-game-task-role--bar {
+  color: #0369a1;
+  background: #e0f2fe;
+}
+
+.stage-game-task-role--bug {
+  color: #be185d;
+  background: #fce7f3;
+}
+
+.stage-game-task-title {
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: #0f172a;
+  line-height: 1.35;
+}
+
+.stage-game-task-level {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.stage-game-task-diff {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.stage-game-task-action {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+.stage-game-task-cta {
+  padding: 4px 12px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  width: 96px;
+  min-width: 96px;
+  text-align: center;
+  justify-content: center;
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  text-decoration: none;
+  white-space: nowrap;
+  border-radius: 8px;
+  transition: background-color 0.15s ease;
+}
+
+.stage-game-task-cta--bar {
+  background: #0284c7;
+  color: #ffffff;
+}
+
+.stage-game-task-cta--bar:hover {
+  background: #0369a1;
+  color: #ffffff;
+}
+
+.stage-game-task-cta--bug {
+  background: #db2777;
+  color: #ffffff;
+}
+
+.stage-game-task-cta--bug:hover {
+  background: #be185d;
+  color: #ffffff;
+}
+
+/* Tablet portrait & mobile layout consistency (especially ~635px parent preview) */
+@media (max-width: 768px) {
+  .stage-game-task-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .stage-game-task-main {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .stage-game-task-lead {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+
+  .stage-game-task-level {
+    margin-left: 0;
+  }
+
+  .stage-game-task-action {
+    align-self: center;
+    flex-shrink: 0;
+  }
+
+  .stage-game-task-cta {
+    width: 96px;
+    min-width: 96px;
+    text-align: center;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 440px) {
+  .stage-game-task-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .stage-game-task-action {
+    width: 100%;
+  }
+
+  .stage-game-task-cta {
+    width: 100%;
+    min-width: 100%;
+  }
+}
+

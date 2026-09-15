@@ -52,14 +52,11 @@ function bindViewsToSandbox(sandbox) {
 registerCurriculumFixtureLifecycle(test);
 
 
-test("tutor answer has explicit Vietnamese speech output controls without auto-play", async () => {
+test("tutor answer provides clean text-based solution guidance without audio distractions", async () => {
   const appSource = await readFile(new URL("../app.js", import.meta.url), "utf8");
   const combinedSource = getCombinedSource(appSource);
-  assert.match(combinedSource, /export const tutorSpeech/);
-  assert.match(combinedSource, /speechSynthesis/);
-  assert.match(combinedSource, /vi-VN/);
-  assert.match(combinedSource, /speakTutorBtn/);
-  assert.match(combinedSource, /stopTutorBtn/);
+  assert.match(combinedSource, /aiAnswer/);
+  assert.match(combinedSource, /Nhận hướng dẫn giải/);
   assert.doesNotMatch(combinedSource, /speechSynthesis\.speak\([^)]*render/);
 });
 
@@ -313,30 +310,19 @@ test("renderInstructionSteps removes redundant leading item labels on multi-line
   assert.equal(core.renderInstructionSteps(singleMath), '<p>Ta có 6 &lt; x &lt; 8.</p>');
 });
 
-test("Math submission UI provides clear question target, optional voice/text guidance, child-friendly explanation, and preserves review handler and prompt invariants", async () => {
+test("Math response UI provides streamlined adaptive adjustment and preserves review invariants", async () => {
   const appSource = await readFile(new URL("../app.js", import.meta.url), "utf8");
   const combinedSource = getCombinedSource(appSource);
 
-  // A. Renamed button and child-friendly explanation
-  assert.match(combinedSource, /Nhờ AI chấm (&amp;|&) góp ý/);
-  assert.match(combinedSource, /Thầy cô Gia sư AI/);
-  assert.match(combinedSource, /chiến lược/);
-  assert.match(combinedSource, /cách trình bày/);
+  // A. Streamlined adaptive adjustment
+  assert.match(combinedSource, /Buổi sau nên điều chỉnh\?/);
+  assert.match(combinedSource, /data-lesson-quality/);
+  assert.match(combinedSource, /Bách làm nhanh, bài còn nhẹ/);
+  assert.match(combinedSource, /Vừa sức/);
+  assert.match(combinedSource, /Còn vướng, cần củng cố/);
 
-  // B. Answer field clearly identifies WHICH question it is for
-  assert.match(combinedSource, /Nộp bài Câu 1 - Nhờ AI chấm &amp; góp ý/);
-  assert.match(combinedSource, /Đáp số Câu 1 \(phần Thực hành cốt lõi - Bách tự làm\)/);
-  assert.match(combinedSource, /Nhập đáp số Câu 1 \(phần Bách tự làm\)/);
-
-  // C. Optional explanation field clearly states Bách can write or press mic to speak and is optional
-  assert.match(combinedSource, /Cách giải \/ suy nghĩ của Bách \(không bắt buộc\)/);
-  assert.match(combinedSource, /Bách có thể tự gõ vào ô hoặc bấm nút micro 🎤 để nói cách làm \(tùy chọn\)\. AI sẽ xem xét cả đáp án và cách làm để chấm &amp; góp ý cho con\./);
-  assert.match(combinedSource, /Gõ cách giải hoặc bấm nút mic để đọc suy nghĩ \(không bắt buộc\)/);
-
-  // D. Preserved review handler and prompt invariants
+  // B. Preserved review handler and prompt invariants
   assert.match(appSource, /const reviewLessonAi = e\.target\.closest\("\[data-review-lesson-ai\]"\);/);
-  assert.match(appSource, /wrap\?\.querySelector\("\[data-lesson-answer\]"\)\?\.value\.trim\(\)/);
-  assert.match(appSource, /wrap\?\.querySelector\("\[data-lesson-explanation\]"\)\?\.value\.trim\(\)/);
   assert.match(appSource, /wrap\?\.querySelector\("\[data-lesson-quality\]"\)\?\.value/);
   assert.match(appSource, /const reviewPrompt = `Hãy đánh giá bài Toán vừa nộp của Bách theo 4 điểm: đúng đáp số, chiến lược, cách trình bày và mức độ so với học sinh giỏi lớp 4/);
   assert.match(appSource, /state\.tutor\.reviewPromptExpected = reviewPrompt;/);
@@ -464,10 +450,7 @@ test("Parent plan area provides compact lesson launcher and canonical lesson pre
   assert.match(normalMathHtml, /VÀO HỌC NGAY/);
   assert.match(normalMathHtml, /lesson-timer-panel/);
   assert.match(normalMathHtml, /data-timer-action="start"/);
-  assert.match(normalMathHtml, /data-lesson-answer=/);
-  assert.match(normalMathHtml, /data-review-lesson-ai=/);
   assert.match(normalMathHtml, /data-lesson-quality=/);
-  assert.match(normalMathHtml, /data-voice-for=/);
   assert.match(normalMathHtml, /data-done-mental=/);
 
   sandbox.renderSubject("vietnamese", null);
@@ -528,7 +511,9 @@ test("representative coverage audit: interactive controls in study view have wir
         /data-review-lesson-ai/.test(attrs) ||
         /data-voice-for/.test(attrs) ||
         /audio-read-btn/.test(attrs) ||
-        /data-reveal-hint/.test(attrs);
+        /data-reveal-hint/.test(attrs) ||
+        /data-done-mental/.test(attrs) ||
+        /data-confirm-adaptive/.test(attrs);
       assert.ok(hasAction, `Study view button in ${subj} must have a click route: ${btnMatch[0]}`);
     }
     assert.ok(buttonCount > 0, `At least one button must be audited in ${subj} study view`);
@@ -565,6 +550,7 @@ test("representative coverage audit: interactive controls in study view have wir
   assert.match(appSource, /e\.target\.closest\("\[data-voice-for\]"\)/);
   assert.match(appSource, /e\.target\.closest\("\.audio-read-btn"\)/);
   assert.match(appSource, /e\.target\.closest\("\[data-reveal-hint\]"\)/);
+  assert.match(appSource, /e\.target\.closest\("\[data-confirm-adaptive\]"\)/);
   const combinedSource = getCombinedSource(appSource);
   assert.match(combinedSource, /document(Obj)?\.querySelectorAll\("\[data-lesson-answer\]"\)/);
   assert.match(combinedSource, /document(Obj)?\.querySelectorAll\("\[data-lesson-explanation\]"\)/);
@@ -576,32 +562,14 @@ test("Math lesson response UI child-clarity and Parent plan 6-day detailed read-
   const cleanAppSource = appSource.replace(/export\s+/g, "");
   const combinedSource = getCombinedSource(appSource);
 
-  // 1. Math lesson response UI contract
-  // - Heading plainly says the answer is for "Câu 1"
-  assert.match(combinedSource, /<div class="daily-plan-label">Nộp bài Câu 1 - Nhờ AI chấm &amp; góp ý<\/div>/);
-  assert.match(combinedSource, /<label class="lesson-field-label">Đáp số Câu 1 \(phần Thực hành cốt lõi - Bách tự làm\):<\/label>/);
-  assert.match(combinedSource, /placeholder="Nhập đáp số Câu 1 \(phần Bách tự làm\)"/);
-
-  // - Explain that Bách may optionally write or press microphone to speak method, and AI considers both answer and method
-  assert.match(combinedSource, /Bách có thể tự gõ vào ô hoặc bấm nút micro 🎤 để nói cách làm \(tùy chọn\)\. AI sẽ xem xét cả đáp án và cách làm để chấm &amp; góp ý cho con\./);
-  assert.match(combinedSource, /Thầy cô Gia sư AI sẽ xem xét cả đáp số và cách làm/);
-
-  // - Action label changed to unambiguous "Nhờ AI chấm & góp ý"
-  assert.match(combinedSource, />Nhờ AI chấm &amp; góp ý<\/button>/);
-
-  // - Keep existing data attributes and exact review flow
+  // 1. Math lesson response UI contract - streamlined for focus on paper math and adaptive difficulty
+  assert.match(combinedSource, /Buổi sau nên điều chỉnh\?/);
   assert.match(combinedSource, /data-lesson-response="\$\{responseKey\}"/);
-  assert.match(combinedSource, /data-lesson-answer="\$\{responseKey\}"/);
-  assert.match(combinedSource, /data-save-lesson="\$\{responseKey\}"/);
-  assert.match(combinedSource, /data-review-lesson-ai="\$\{responseKey\}"/);
   assert.match(combinedSource, /data-lesson-quality="\$\{responseKey\}"/);
-  assert.match(combinedSource, /data-lesson-explanation="\$\{responseKey\}"/);
-  assert.match(combinedSource, /data-voice-for="\[data-lesson-explanation='\$\{responseKey\}'\]"/);
+  assert.match(combinedSource, /Tự đánh giá độ vừa sức/);
 
-  // Review handler wiring and prompt invariant
+  // Review handler wiring and prompt invariant in app.js
   assert.match(appSource, /const reviewLessonAi = e\.target\.closest\("\[data-review-lesson-ai\]"\);/);
-  assert.match(appSource, /const answer = wrap\?\.querySelector\("\[data-lesson-answer\]"\)\?\.value\.trim\(\) \|\| "";/);
-  assert.match(appSource, /const explanation = wrap\?\.querySelector\("\[data-lesson-explanation\]"\)\?\.value\.trim\(\) \|\| "";/);
   assert.match(appSource, /state\.tutor\.selectedSubject = "math";/);
   assert.match(appSource, /location\.hash = "#guide";/);
   assert.match(appSource, /state\.tutor\.prefillPrompt = reviewPrompt;/);
@@ -852,4 +820,180 @@ test("regression: sandboxed render in VM uses real escapeHtml and renderInstruct
   assert.doesNotMatch(rendered.escaped, /undefined/);
   assert.doesNotMatch(rendered.steps, /undefined/);
 });
+
+test("home: renders prominent Today's Lesson button for Bách jumping directly to the next lesson", async () => {
+  const { createRenderViews } = await import("../js/render-views.js");
+  const { allWeeks, percent, doneCount, progressBar, pageFrame, phaseChips, escapeHtml } = await import("../js/core.js");
+  const { readFile } = await import("node:fs/promises");
+  const vm = await import("node:vm");
+
+  const factorySrc = await readFile(new URL("../data/curriculum-factory.js", import.meta.url), "utf8");
+  const dataSrc = await readFile(new URL("../data/curriculum.js", import.meta.url), "utf8");
+  const ctx = { window: {} };
+  vm.createContext(ctx);
+  vm.runInContext(factorySrc + "\n" + dataSrc, ctx);
+  const curriculum = ctx.window.BACH_CURRICULUM;
+
+  let mockHtml = "";
+  const mockApp = {
+    set innerHTML(val) { mockHtml = val; },
+    get innerHTML() { return mockHtml; }
+  };
+
+  const state = {
+    db: {
+      progress: {},
+      lessonResponses: {}
+    }
+  };
+
+  const views = createRenderViews({
+    state,
+    curriculum,
+    app: mockApp,
+    allWeeks: () => allWeeks(curriculum),
+    percent: () => 0,
+    doneCount: () => 0,
+    progressBar: () => "",
+    pageFrame: (title, eyebrow, note, content) => content,
+    phaseChips: () => "",
+    escapeHtml,
+    splitInlineItems: () => [],
+    renderInstructionSteps: () => ""
+  });
+
+  // 1. Check resolveNextLesson calculates valid lesson
+  const nextLesson = views.resolveNextLesson();
+  assert.ok(nextLesson.url.startsWith("#math?") || nextLesson.url.startsWith("#vietnamese?"), "Must have valid lesson url");
+  assert.ok(nextLesson.url.includes("week="), "URL must contain week param");
+  assert.ok(nextLesson.url.includes("day="), "URL must contain day param");
+  assert.ok(nextLesson.title, "Lesson title must not be empty");
+  assert.equal(typeof nextLesson.weekNumber, "number");
+
+  // 2. Render Home and verify prominent buttons
+  views.renderHome();
+  assert.ok(mockHtml.includes("Bài học hôm nay cho Bách"), "Home hero must contain 'Bài học hôm nay cho Bách'");
+  assert.ok(mockHtml.includes("id=\"heroTodayLessonBtn\""), "Must have #heroTodayLessonBtn");
+  assert.ok(mockHtml.includes("class=\"today-lesson-entry today-home-launcher\""), "Must render .today-home-launcher card");
+  assert.ok(mockHtml.includes("id=\"homeTodayLessonCta\""), "Must have #homeTodayLessonCta");
+  assert.ok(mockHtml.includes(nextLesson.url), "Button must link directly to the next lesson URL");
+  assert.ok(mockHtml.includes("Vào học ngay"), "Must have 'Vào học ngay' CTA text");
+  assert.ok(mockHtml.includes("Đổi sang"), "Must offer quick switch to the other subject");
+});
+
+test("stage mini games in Chặng 2 and Chặng 3 render stable semantic task rows and consistent CTAs", async () => {
+  const { createRenderViews } = await import("../js/render-views.js");
+  const { allWeeks, escapeHtml, renderInstructionSteps } = await import("../js/core.js");
+  const { readFile } = await import("node:fs/promises");
+  const vm = await import("node:vm");
+
+  const factorySrc = await readFile(new URL("../data/curriculum-factory.js", import.meta.url), "utf8");
+  const dataSrc = await readFile(new URL("../data/curriculum.js", import.meta.url), "utf8");
+  const ctx = { window: {} };
+  vm.createContext(ctx);
+  vm.runInContext(factorySrc + "\n" + dataSrc, ctx);
+  const curriculum = ctx.window.BACH_CURRICULUM;
+
+  let mockHtml = "";
+  const mockApp = {
+    set innerHTML(val) { mockHtml = val; },
+    get innerHTML() { return mockHtml; }
+  };
+
+  const state = {
+    db: {
+      progress: {},
+      lessonTimers: {},
+      lessonResponses: {},
+      adaptive: {},
+      notes: {}
+    },
+    openWeek: "w1"
+  };
+
+  const views = createRenderViews({
+    state,
+    curriculum,
+    app: mockApp,
+    allWeeks: () => allWeeks(curriculum),
+    percent: () => 0,
+    doneCount: () => 0,
+    progressBar: () => "",
+    pageFrame: (title, eyebrow, note, content) => content,
+    phaseChips: () => "",
+    escapeHtml,
+    splitInlineItems: () => [],
+    renderInstructionSteps,
+    adaptiveNextStep: () => "",
+    lessonDifficulty: () => ({ level: 3, label: "Vừa sức", note: "Bám sát tiến độ" }),
+    renderDriveBar: () => ""
+  });
+
+  const params = new URLSearchParams("week=w1&day=Th%E1%BB%A9%202&preview=parent");
+  views.renderSubject("math", params);
+
+  // 1. Verify semantic structure for Chặng 2 (Bar Model)
+  assert.match(mockHtml, /class="stage-game-task-row stage-game-task-row--bar"/);
+  assert.match(mockHtml, /class="stage-game-task-main"/);
+  assert.match(mockHtml, /class="stage-game-task-lead"/);
+  assert.match(mockHtml, /class="stage-game-task-role stage-game-task-role--bar"/);
+  assert.match(mockHtml, /class="stage-game-task-title"/);
+  assert.match(mockHtml, /class="stage-game-task-level"/);
+  assert.match(mockHtml, /class="stage-game-task-diff"/);
+  assert.match(mockHtml, /class="stage-game-task-action"/);
+  assert.match(mockHtml, /class="primary-button stage-game-task-cta stage-game-task-cta--bar"/);
+  assert.match(mockHtml, /href="#games\/bar-model\?challenge=\d+&week=1&day=0&step=\d+&total=\d+"/);
+  assert.match(mockHtml, /Làm bài →/);
+
+  // 2. Verify semantic structure for Chặng 3 (Spot The Bug)
+  assert.match(mockHtml, /class="stage-game-task-row stage-game-task-row--bug"/);
+  assert.match(mockHtml, /class="stage-game-task-role stage-game-task-role--bug"/);
+  assert.match(mockHtml, /class="primary-button stage-game-task-cta stage-game-task-cta--bug"/);
+  assert.match(mockHtml, /href="#games\/spot-the-bug\?case=\d+&week=1&day=0&step=\d+&total=\d+"/);
+  assert.match(mockHtml, /Phá án →/);
+
+  // 3. Verify CSS rules in styles/games.css
+  const gamesCss = await readFile(new URL("../styles/games.css", import.meta.url), "utf8");
+  assert.match(gamesCss, /\.stage-game-task-row/);
+  assert.match(gamesCss, /\.stage-game-task-main/);
+  assert.match(gamesCss, /\.stage-game-task-cta\s*\{[\s\S]*?width:\s*96px/);
+  assert.match(gamesCss, /@media\s*\(max-width:\s*768px\)/);
+  assert.match(gamesCss, /\.stage-game-task-main\s*\{[\s\S]*?flex-direction:\s*column/);
+});
+
+// Guide画面の学習プロファイルサマリーUIのセマンティック構造とレスポンシブスタイルの検証
+test("Guide page learning profile summary renders semantic items with distinct labels, values, and responsive single-column layout", async () => {
+  const appSource = await readFile(new URL("../app.js", import.meta.url), "utf8");
+  const combinedStyles = await getCombinedStylesSource();
+
+  // 1. Semantic item structure in app.js
+  assert.match(appSource, /class="learning-profile-card"/);
+  assert.match(appSource, /class="learning-profile-item"/);
+  assert.match(appSource, /class="learning-profile-label eyebrow">PHƯƠNG PHÁP HIỆN TẠI<\/span>/);
+  assert.match(appSource, /class="learning-profile-value">\$\{escapeHtml\(learningProfile\.method \|\| "Gợi ý từng bước"\)\}<\/strong>/);
+  assert.match(appSource, /class="learning-profile-label eyebrow">NHỊP HỌC<\/span>/);
+  assert.match(appSource, /class="learning-profile-value">\$\{escapeHtml\(learningProfile\.pace \|\| "ổn định"\)\}<\/strong>/);
+  assert.match(appSource, /class="learning-profile-label eyebrow">TRỌNG TÂM CẦN ÔN<\/span>/);
+  assert.match(appSource, /class="learning-profile-value">\$\{escapeHtml\(learningProfile\.focus\)\}<\/strong>/);
+
+  // 2. Desktop and tablet styles in stylesSource
+  assert.match(combinedStyles, /\.learning-profile-card\s*\{[^}]*display:\s*grid;/);
+  assert.match(combinedStyles, /\.learning-profile-item\s*\{[^}]*display:\s*flex;[^}]*flex-direction:\s*column;/);
+  assert.match(combinedStyles, /\.learning-profile-label\s*\{[^}]*display:\s*block;/);
+  assert.match(combinedStyles, /\.learning-profile-value\s*\{[^}]*display:\s*block;/);
+
+  // 3. Narrow screen and iPad responsive layout (single column)
+  assert.match(combinedStyles, /@media\s*\([^)]*max-width:\s*834px[^)]*\)[\s\S]*?\.learning-profile-card\s*\{[^}]*grid-template-columns:\s*1fr;/);
+  assert.match(combinedStyles, /@media\s*\([^)]*max-width:\s*780px[^)]*\)[\s\S]*?\.learning-profile-card\s*\{[^}]*grid-template-columns:\s*1fr;/);
+
+  // 4. コンパクト情報ストリップ、CSSトークン、標準折り返しプロパティの検証
+  assert.doesNotMatch(combinedStyles, /\.learning-profile-card\s*\{[^}]*background:\s*var\(--card\);/);
+  assert.doesNotMatch(combinedStyles, /\.learning-profile-card\s*\{[^}]*border:\s*1px\s+solid\s+var\(--line\);/);
+  assert.match(combinedStyles, /\.learning-profile-item\s*\{[^}]*border-left:\s*2px\s+solid\s+var\(--line\);/);
+  assert.doesNotMatch(combinedStyles, /\.learning-profile-item\s*\{[^}]*border-left:[^;]*#d9e8dd/);
+  assert.match(combinedStyles, /\.learning-profile-value\s*\{[^}]*overflow-wrap:\s*break-word;/);
+  assert.doesNotMatch(combinedStyles, /\.learning-profile-value\s*\{[^}]*word-break:\s*break-word;/);
+  assert.doesNotMatch(combinedStyles, /@media[^{]+\{[^}]*learning-profile-item\s*\{[^}]*border-left:/);
+});
+
 

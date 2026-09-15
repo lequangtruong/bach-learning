@@ -27,6 +27,16 @@
       "version": "0.1.0",
       "require_clean": false
     }
+  }, {
+    "skill_id": "BACH_LEARNING_QUALITY_GATE",
+    "path": "skills/bach-learning-quality",
+    "capabilities": ["EDUCATIONAL_UX", "CURRICULUM", "CHILD_PRIVACY", "TUTOR_API", "ADAPTATION"],
+    "provenance": {
+      "type": "LOCAL_TEMPLATE",
+      "source": "/Volumes/DATA/Github/ToolbyMyself/ai-support-kit",
+      "version": "0.1.0",
+      "require_clean": false
+    }
   }],
   "policies": {
     "sensitive_data_allowed": false,
@@ -47,5 +57,5 @@
     "execution_semantics": "PERSONAL_SERIAL"
   },
   "created_at": "2026-09-08T04:30:00Z",
-  "updated_at": "2026-09-08T17:00:00Z"
+  "updated_at": "2026-09-11T00:00:00Z"
 }

@@ -208,7 +208,7 @@ test("tutor-providers: callGeminiRest formats payload with history and writingIm
   const answer = await callGeminiRest({
     accessToken: "test-token",
     projectId: "gemini-proj",
-    model: "gemini-2.5-flash",
+    model: "gemini-3.8-flash",
     systemPrompt: "Gia sư lớp 4",
     userMessage: "Bài này làm sao ạ?",
     history: [

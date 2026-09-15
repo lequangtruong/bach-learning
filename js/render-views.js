@@ -14,6 +14,8 @@ import {
   computeCurrentTimerState as defaultComputeCurrentTimerState,
   lessonOrdinalFromKey as defaultLessonOrdinalFromKey
 } from "../data/data-core.js";
+import { BUG_CASES } from "./spot-the-bug.js";
+import { getDailyGameChallenges, getDifficultyMeta } from "./render-games.js";
 
 // SVG視覚モデルのレンダリング関数
 export function renderSvgVisual(visual) {
@@ -134,7 +136,9 @@ export function renderSvgVisual(visual) {
 // ヒント解析関数
 export function parseHintSteps(rawHint = "") {
   if (!rawHint) return [];
-  return String(rawHint)
+  const normalized = String(rawHint)
+    .replace(/(?<=[.!?]|^)\s*(Gợi\s*ý\s*\d*[:.-]\s*)/gi, "\n$1");
+  return normalized
     .split(/\r?\n+/)
     .map(line => line.trim())
     .filter(Boolean);
@@ -284,6 +288,9 @@ export function createRenderViews(dependencies = {}) {
     }
     const isConnected = Boolean(state?.drive?.token);
     const isExpired = Boolean(state?.drive?.hasSessionExpired);
+    if (!isConnected && !isExpired) {
+      return "";
+    }
     return `
     <div class="drive-sync-bar">
       <div class="drive-status">
@@ -308,9 +315,112 @@ export function createRenderViews(dependencies = {}) {
   `;
   }
 
+  function resolveNextLesson() {
+    const weeks = allWeeks();
+    if (!weeks || !weeks.length) {
+      return {
+        weekNumber: 1,
+        weekId: "w1",
+        dayName: "Thứ 2",
+        dayIndex: 0,
+        subject: "math",
+        subjectName: "Toán",
+        altSubject: "vietnamese",
+        altSubjectName: "Tiếng Việt",
+        title: "Bài học mới",
+        objective: "",
+        duration: "25 phút",
+        url: "#math",
+        altUrl: "#vietnamese",
+        badge: "Toán · Thứ 2"
+      };
+    }
+
+    const currentWeek = weeks.find(w => !state?.db?.progress?.[w.id]?.week) || weeks[0];
+    const weekday = new Date(Date.now()).getDay();
+    // 0 is Sunday -> start of week (Thứ 2, index 0); 1 is Mon (index 0), ..., 6 is Sat (index 5)
+    const todayIndex = weekday === 0 ? 0 : Math.min(weekday - 1, 5);
+
+    let targetSubject = "math";
+    let targetDayIndex = todayIndex;
+    let targetWeek = currentWeek;
+
+    const mathKeyToday = `${currentWeek.id}-math-${todayIndex + 1}`;
+    const vietKeyToday = `${currentWeek.id}-vietnamese-${todayIndex + 1}`;
+    const isMathDoneToday = Boolean(state?.db?.lessonResponses?.[mathKeyToday]?.answer || state?.db?.progress?.[currentWeek.id]?.math);
+    const isVietDoneToday = Boolean(state?.db?.lessonResponses?.[vietKeyToday]?.answer || state?.db?.progress?.[currentWeek.id]?.vietnamese);
+
+    if (!isMathDoneToday) {
+      targetSubject = "math";
+      targetDayIndex = todayIndex;
+    } else if (!isVietDoneToday) {
+      targetSubject = "vietnamese";
+      targetDayIndex = todayIndex;
+    } else {
+      // Cả hai môn hôm nay đã hoàn thành -> tìm bài học chưa làm tiếp theo trong tuần
+      let found = false;
+      for (let d = 0; d < 6; d++) {
+        const mKey = `${currentWeek.id}-math-${d + 1}`;
+        const vKey = `${currentWeek.id}-vietnamese-${d + 1}`;
+        const mDone = Boolean(state?.db?.lessonResponses?.[mKey]?.answer || state?.db?.progress?.[currentWeek.id]?.math);
+        const vDone = Boolean(state?.db?.lessonResponses?.[vKey]?.answer || state?.db?.progress?.[currentWeek.id]?.vietnamese);
+        if (!mDone) {
+          targetSubject = "math";
+          targetDayIndex = d;
+          found = true;
+          break;
+        }
+        if (!vDone) {
+          targetSubject = "vietnamese";
+          targetDayIndex = d;
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        const curIdx = weeks.findIndex(w => w.id === currentWeek.id);
+        if (curIdx !== -1 && curIdx < weeks.length - 1) {
+          targetWeek = weeks[curIdx + 1];
+          targetDayIndex = 0;
+          targetSubject = "math";
+        }
+      }
+    }
+
+    const item = targetSubject === "math" ? targetWeek.math : targetWeek.vietnamese;
+    const dayPlan = item?.dailyPlan?.[targetDayIndex] || item?.dailyPlan?.[0] || { day: "Thứ 2", title: item?.[0] || "Bài học mới", objective: "" };
+    const subjectName = targetSubject === "math" ? "Toán" : "Tiếng Việt";
+    const altSubject = targetSubject === "math" ? "vietnamese" : "math";
+    const altSubjectName = targetSubject === "math" ? "Tiếng Việt" : "Toán";
+    const altItem = altSubject === "math" ? targetWeek.math : targetWeek.vietnamese;
+    const altDayPlan = altItem?.dailyPlan?.[targetDayIndex] || altItem?.dailyPlan?.[0] || { day: dayPlan.day };
+
+    const duration = dayPlan.day === "Thứ 7" ? "50 phút" : "25 phút";
+    const url = `#${targetSubject}?week=${targetWeek.id}&day=${encodeURIComponent(dayPlan.day)}`;
+    const altUrl = `#${altSubject}?week=${targetWeek.id}&day=${encodeURIComponent(altDayPlan.day)}`;
+
+    return {
+      weekNumber: targetWeek.number,
+      weekId: targetWeek.id,
+      dayName: dayPlan.day,
+      dayIndex: targetDayIndex,
+      subject: targetSubject,
+      subjectName,
+      altSubject,
+      altSubjectName,
+      title: dayPlan.title,
+      objective: dayPlan.objective || "",
+      duration,
+      url,
+      altUrl,
+      badge: `${subjectName} · ${dayPlan.day}`
+    };
+  }
+
   function renderHome() {
     const weeks = allWeeks();
     const current = weeks.find(w => !state?.db?.progress?.[w.id]?.week) || weeks[0];
+    const nextLesson = resolveNextLesson();
     const app = getAppRoot();
     if (!app) return "";
     app.innerHTML = `
@@ -320,12 +430,42 @@ export function createRenderViews(dependencies = {}) {
         <div class="eyebrow">CHƯƠNG TRÌNH CÁ NHÂN HÓA · 2026–2027</div>
         <h1>Học để <em>nghĩ rõ</em>,<br>viết để <em>nói mình.</em></h1>
         <p>Một lộ trình 36 tuần cho Bách: chắc nền lớp 4, tiến dần tới bài toán Olympic và những bài văn rõ ràng, có giọng riêng — vẫn hồn nhiên đúng tuổi.</p>
+        <div class="hero-actions" style="margin-top:24px; display:flex; flex-wrap:wrap; gap:12px; align-items:center">
+          <a href="${nextLesson.url}" class="today-lesson-entry-button" id="heroTodayLessonBtn" style="padding:13px 22px; font-size:1rem; font-weight:800; text-decoration:none; border-radius:14px; box-shadow:0 4px 14px rgba(224,93,70,0.35); display:inline-flex; align-items:center; gap:8px">
+            <span>🚀</span> Bài học hôm nay cho Bách: <strong>${escapeHtml(nextLesson.badge)}</strong> →
+          </a>
+        </div>
       </div>
       <div class="hero-note">
         <div class="eyebrow">TUẦN ĐANG HỌC · ${String(current.number).padStart(2, "0")}</div>
         <h3>${current.phase.title}</h3>
         <p>${current.phase.focus}</p>
-        <button class="text-button" style="color:#ffb09f" data-go="plan">Mở lộ trình →</button>
+        <div style="margin-top:18px; display:flex; flex-direction:column; gap:10px; position:relative; z-index:1">
+          <a href="${nextLesson.url}" class="primary-button" id="heroNoteNextLessonBtn" style="text-align:center; text-decoration:none; padding:11px 16px; font-weight:800; border-radius:12px; background:var(--coral); color:#fff; display:inline-flex; align-items:center; justify-content:center; gap:6px">
+            🚀 Vào học bài tiếp theo ngay →
+          </a>
+          <button class="text-button" style="color:#ffb09f; text-align:left; padding:0" data-go="plan">Phụ huynh mở lộ trình →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Thẻ Bài học hôm nay cho Bách - Nổi bật ngay đầu trang Home -->
+    <section class="today-lesson-entry today-home-launcher" aria-label="Bài học hôm nay cho Bách" style="margin-bottom:28px">
+      <div style="display:flex; align-items:center; gap:14px">
+        <span style="font-size:2rem; line-height:1">🎒</span>
+        <div>
+          <div class="eyebrow" style="color:var(--coral)">BÀI HỌC HÔM NAY CHO BÁCH · ${nextLesson.subjectName.toUpperCase()}</div>
+          <strong style="font-size:1.05rem; color:var(--ink)">Tuần ${nextLesson.weekNumber} (${nextLesson.dayName}): ${escapeHtml(nextLesson.title)}</strong>
+          <span style="color:var(--muted); font-size:0.82rem">Thời lượng ${nextLesson.duration} · Nhịp học 3 chặng có AI gia sư đồng hành</span>
+        </div>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">
+        <a class="today-lesson-entry-button" id="homeTodayLessonCta" href="${nextLesson.url}" style="padding:12px 20px; font-size:0.92rem; font-weight:800">
+          Vào học ngay <span aria-hidden="true">→</span>
+        </a>
+        <a href="${nextLesson.altUrl}" class="text-button" style="font-size:0.82rem; font-weight:600; color:var(--muted)">
+          Đổi sang ${nextLesson.altSubjectName} →
+        </a>
       </div>
     </section>
     <div class="stats-grid">
@@ -385,6 +525,7 @@ export function createRenderViews(dependencies = {}) {
       <div class="plan-toolbar">
         <button class="filter-button ${state?.filter === "all" ? "active" : ""}" data-filter="all">Tất cả tuần</button>
         <button class="filter-button ${state?.filter === "open" ? "active" : ""}" data-filter="open">Chưa hoàn thành</button>
+        <button class="filter-button" data-toggle-all-weeks>${state?.openWeek === "all" ? "Thu gọn tất cả" : "👁️ Xem chi tiết tất cả tuần"}</button>
         <button class="text-button" data-reset>Đặt lại tiến độ</button>
       </div>
       <div class="week-list">${weeks.map(weekCard).join("") || `<div class="empty">Không còn tuần nào trong bộ lọc này.</div>`}</div>`
@@ -394,7 +535,7 @@ export function createRenderViews(dependencies = {}) {
     // XSS SAFE NOTE POPULATION: Gán giá trị note bằng thuộc tính DOM textarea.value
     if (documentObj) {
       weeks.forEach(w => {
-        if (state?.openWeek === w.id) {
+        if (state?.openWeek === w.id || state?.openWeek === "all") {
           const ta = documentObj.querySelector(`#note_${w.id}`);
           if (ta) {
             ta.value = state?.db?.notes?.[w.id] || "";
@@ -407,7 +548,7 @@ export function createRenderViews(dependencies = {}) {
 
   function weekCard(w) {
     const status = state?.db?.progress?.[w.id] || {};
-    const open = state?.openWeek === w.id;
+    const open = state?.openWeek === w.id || state?.openWeek === "all";
     return `
     <article class="week-card">
       <div class="week-main">
@@ -471,6 +612,7 @@ export function createRenderViews(dependencies = {}) {
         const encodedDay = encodeURIComponent(day.day);
         return `<a class="parent-launcher-btn" href="#${subject}?week=${weekId}&day=${encodedDay}&preview=parent" data-parent-link="${subject}-${weekId}-${dayIndex}" data-subject="${subject}" data-day="${escapeHtml(day.day)}"><span class="parent-launcher-day">${escapeHtml(day.day)}</span>: <span class="parent-launcher-title">${escapeHtml(day.title)}</span></a>`;
       }).join("")}
+      <a class="parent-launcher-btn parent-launcher-all-btn" href="#${subject}?week=${weekId}&day=all&preview=parent" data-parent-link="${subject}-${weekId}-all" style="font-weight:700; background:#f0fdf4; color:#166534; border-color:#bbf7d0"><span class="parent-launcher-day">Cả tuần</span>: <span class="parent-launcher-title">📄 Xem tất cả 6 buổi tuần ${weekNumber}</span></a>
     </div>
   </div>`;
   }
@@ -490,6 +632,9 @@ export function createRenderViews(dependencies = {}) {
   function resolveStudyDayIndex(item, dayParam = null) {
     if (dayParam !== null && dayParam !== undefined && item?.dailyPlan?.length) {
       const raw = String(dayParam).trim();
+      if (raw.toLowerCase() === "all") {
+        return null;
+      }
       let decoded = raw;
       try {
         decoded = decodeURIComponent(raw);
@@ -528,12 +673,113 @@ export function createRenderViews(dependencies = {}) {
     return `<section class="today-mental-math" aria-labelledby="todayMentalMathTitle">
     <div class="today-mental-math-head">
       <div><span class="eyebrow">KHỞI ĐỘNG · 8–10 PHÚT</span><h3 id="todayMentalMathTitle">${escapeHtml(group.title)}</h3></div>
-      ${isParentPreview ? "" : `<button class="check-button mental-math-check ${done ? "done" : ""}" data-done-mental="${id}" aria-pressed="${done}" aria-label="${done ? "Bỏ đánh dấu" : "Đánh dấu"} phần tính nhẩm tuần ${weekNumber} hoàn thành">${done ? "✓" : ""}</button>`}
+      ${isParentPreview ? "" : `<button class="check-button mental-math-check ${done ? "done" : ""}" type="button" data-done-mental="${id}" aria-pressed="${done}" aria-label="${done ? "Bỏ đánh dấu" : "Đánh dấu"} phần tính nhẩm tuần ${weekNumber} hoàn thành">${done ? "✓" : ""}</button>`}
     </div>
     <p class="today-mental-math-note">Không dùng máy tính. Tính đúng trước, nói được cách nghĩ rồi mới bấm giờ.</p>
     <div class="mental-math-group-hint">💡 <b>Gợi ý:</b> ${escapeHtml(group.hint)}</div>
     <ol class="mental-math-question-list">${group.questions.map(question => `<li class="mental-math-question-item">${escapeHtml(question)}</li>`).join("")}</ol>
   </section>`;
+  }
+
+  function renderStudyGamesTrilogy(weekNumber, dayIndex, isParentPreview = false) {
+    const records = state?.db?.gameRecords || {};
+    const speedRecord = records.speedMath?.highScore ? `${records.speedMath.highScore} đ` : "Chưa đấu";
+    const barStars = records.barModel?.stars ? `${records.barModel.stars} ⭐` : "Chưa có sao";
+    const bugSolved = `${records.spotTheBug?.solvedCount || 0} vụ`;
+
+    return `
+      <section class="study-games-trilogy-panel" aria-labelledby="studyGamesTitle">
+        <div class="study-games-head">
+          <div class="eyebrow">🏆 CHẶNG VỀ ĐÍCH · THƯ GIÃN & CỦNG CỐ TOÁN HỌC</div>
+          <h3 id="studyGamesTitle">Chặng Về Đích: Bộ 3 Trò Chơi Toán Học</h3>
+          <p>Sau khi hoàn thành các chặng bài học hôm nay, Bách hãy thư giãn, rèn luyện phản xạ tính nhanh và trổ tài thám tử bắt lỗi sai:</p>
+        </div>
+
+        <div class="study-games-grid">
+          <!-- Trò 1: 90s Math -->
+          <article class="study-game-mini-card speed-math">
+            <div>
+              <span class="sg-badge">Về đích 1 · Thần tốc</span>
+              <h4>⚡ Đấu tính nhẩm 90s</h4>
+              <p>Phản xạ tính nhanh có chiến lược để đánh thức bộ não. Kỷ lục: <strong>${escapeHtml(speedRecord)}</strong>.</p>
+            </div>
+            <a href="#games/speed-math" class="primary-button" style="padding:10px 14px; font-size:0.92rem; text-align:center; font-weight:700">Vào đấu 90s ngay →</a>
+          </article>
+
+          <!-- Trò 2: Bar Model Studio -->
+          <article class="study-game-mini-card bar-model">
+            <div>
+              <span class="sg-badge">Về đích 2 · Mô hình</span>
+              <h4>📐 Mini Bar Model Studio</h4>
+              <p>Dựng sơ đồ đoạn thẳng Singapore, gõ trực tiếp số phần để giải bài toán Tổng–Hiệu & Tỉ số. Điểm: <strong>${escapeHtml(barStars)}</strong>.</p>
+            </div>
+            <a href="#games/bar-model" class="primary-button" style="padding:10px 14px; font-size:0.92rem; text-align:center; font-weight:700; background:#0284c7">Dựng sơ đồ đoạn thẳng →</a>
+          </article>
+
+          <!-- Trò 3: Spot Bug -->
+          <article class="study-game-mini-card spot-bug">
+            <div>
+              <span class="sg-badge">Về đích 3 · Phá án</span>
+              <h4>🕵️ Thám Tử Bắt Lỗi Sai</h4>
+              <p>Truy tìm bước làm sai của bạn học sinh để rèn thói quen rà soát bài thi. Đã phá: <strong>${escapeHtml(bugSolved)}</strong>.</p>
+            </div>
+            <a href="#games/spot-the-bug" class="primary-button" style="padding:10px 14px; font-size:0.92rem; text-align:center; font-weight:700; background:#db2777">Truy tìm lỗi sai ngay →</a>
+          </article>
+        </div>
+      </section>
+    `;
+  }
+
+  function renderLessonQuickNavigator(subject, week, dayIndex, isParentPreview) {
+    const isShowAllDays = dayIndex === null;
+    const item = subject === "math" ? week.math : week.vietnamese;
+    const previewQuery = isParentPreview ? "&preview=parent" : "";
+    const weeks = allWeeks();
+    const otherSubject = subject === "math" ? "vietnamese" : "math";
+    const otherSubjectName = subject === "math" ? "Tiếng Việt" : "Toán";
+    const curDay = !isShowAllDays && dayIndex !== null && item.dailyPlan[dayIndex] ? item.dailyPlan[dayIndex].day : null;
+    const dayQuery = isShowAllDays ? "&day=all" : (curDay ? `&day=${encodeURIComponent(curDay)}` : "");
+
+    return `<nav class="lesson-quick-nav ${isParentPreview ? "parent-nav" : ""}" aria-label="Bộ chọn bài học nhanh">
+      <div class="quick-nav-top">
+        <div class="quick-nav-heading">
+          <span class="quick-nav-badge">${isParentPreview ? "👁️ PHỤ HUYNH XEM TRỰC TIẾP TẤT CẢ BÀI HỌC" : "📚 DUYỆT BÀI HỌC NHANH"}</span>
+          <span class="quick-nav-summary">Tuần ${week.number}: <strong>${escapeHtml(week.phase.title)}</strong></span>
+        </div>
+        <div class="quick-nav-switchers">
+          <a href="#${otherSubject}?week=${week.id}${dayQuery}${previewQuery}" class="quick-nav-switch-btn" title="Đổi sang môn ${otherSubjectName}">
+            Chuyển sang ${otherSubjectName} →
+          </a>
+        </div>
+      </div>
+
+      <!-- Dòng chọn thứ trong tuần -->
+      <div class="quick-nav-days">
+        <span class="quick-nav-label">Buổi học:</span>
+        <div class="quick-nav-days-list">
+          ${item.dailyPlan.map((d, dIdx) => {
+            const isSelected = !isShowAllDays && dayIndex === dIdx;
+            return `<a href="#${subject}?week=${week.id}&day=${encodeURIComponent(d.day)}${previewQuery}" class="quick-nav-pill ${isSelected ? "active" : ""}">
+              <b>${escapeHtml(d.day)}</b>: <small>${escapeHtml(d.title)}</small>
+            </a>`;
+          }).join("")}
+          <a href="#${subject}?week=${week.id}&day=all${previewQuery}" class="quick-nav-pill quick-nav-all-pill ${isShowAllDays ? "active" : ""}">
+            <b>📄 Xem toàn bộ 6 buổi tuần ${week.number}</b>
+          </a>
+        </div>
+      </div>
+
+      <!-- Dòng chọn nhanh tuần từ 1 đến 36 -->
+      <div class="quick-nav-weeks">
+        <span class="quick-nav-label">Tuần 1–36:</span>
+        <div class="quick-nav-weeks-scroll">
+          ${weeks.map(w => {
+            const isCur = w.id === week.id;
+            return `<a href="#${subject}?week=${w.id}${dayQuery}${previewQuery}" class="quick-nav-week-chip ${isCur ? "active" : ""}" title="${escapeHtml(w.phase.title)}">T.${w.number}</a>`;
+          }).join("")}
+        </div>
+      </div>
+    </nav>`;
   }
 
   function renderSubject(subject, params = null) {
@@ -545,31 +791,32 @@ export function createRenderViews(dependencies = {}) {
 
     const week = getStudyWeek(subject, weekParam);
     const item = isMath ? week.math : week.vietnamese;
-    const dayIndex = resolveStudyDayIndex(item, dayParam);
-    const day = item.dailyPlan?.[dayIndex];
-    const dayLabel = day?.day || "Buổi hôm nay";
+    const isShowAllDays = String(dayParam || "").trim().toLowerCase() === "all";
+    const dayIndex = isShowAllDays ? null : resolveStudyDayIndex(item, dayParam);
+    const day = dayIndex !== null ? item.dailyPlan?.[dayIndex] : null;
+    const dayLabel = isShowAllDays ? "Toàn bộ 6 buổi tuần này" : (day?.day || "Buổi hôm nay");
     const app = getAppRoot();
     const documentObj = getDocumentObj();
 
     if (!app) return "";
     app.innerHTML = `
     ${renderDriveBar()}
+    ${isParentPreview ? renderLessonQuickNavigator(subject, week, dayIndex, isParentPreview) : ""}
     <section class="study-now-hero ${isParentPreview ? "parent-preview-hero" : ""}" aria-label="${isParentPreview ? "Xem trước bài học của Bách" : "Buổi học của Bách"}">
       <div>
         <div class="eyebrow">${name.toUpperCase()} · ${isParentPreview ? "PHỤ HUYNH ĐANG XEM TRƯỚC" : "VÀO HỌC NGAY"}</div>
-        <h2>${escapeHtml(day?.title || item[0])}</h2>
-        <p>Tuần ${week.number} · ${escapeHtml(dayLabel)} · ${dayLabel === "Thứ 7" ? "50" : "25"} phút</p>
+        <h2>${escapeHtml(day?.title || (isShowAllDays ? `${name} Tuần ${week.number} · Toàn bộ 6 buổi học` : item[0]))}</h2>
+        <p>Tuần ${week.number} · ${escapeHtml(dayLabel)} · ${dayLabel === "Thứ 7" ? "50" : isShowAllDays ? "Toàn bộ tuần" : "25"} phút</p>
       </div>
       <div class="study-hero-actions">
         ${isParentPreview ? `
           <span class="parent-preview-indicator">👁️ Phụ huynh đang xem trước</span>
           <a class="text-button parent-back-link study-parent-link" href="#plan">Quay lại lộ trình</a>
         ` : `
-          <a class="text-button study-parent-link" href="#plan">Phụ huynh xem lộ trình →</a>
+          <a class="text-button study-parent-link" href="#plan">Phụ huynh xem lộ trình 36 tuần →</a>
         `}
       </div>
     </section>
-    ${isMath ? renderMentalMathForToday(week.number, dayIndex, isParentPreview) : ""}
     ${!isMath && !isParentPreview ? `<section class="writing-submission-panel study-writing-shortcut">
       <div class="eyebrow">VIẾT TRÊN GIẤY · RỒI ĐỌC VÀO ĐÂY</div>
       <p>Bách viết xong thì đọc bài vào ô dưới đây. Bàn phím và ảnh chụp là phương án dự phòng.</p>
@@ -745,12 +992,19 @@ export function createRenderViews(dependencies = {}) {
     const visibleDays = item.dailyPlan
       .map((day, dayIndex) => ({ day, dayIndex }))
       .filter(({ dayIndex }) => focusedDayIndex === null || dayIndex === focusedDayIndex);
+    const records = state?.db?.gameRecords || {};
+    const speedRecord = records.speedMath?.highScore ? `${records.speedMath.highScore} đ` : "Chưa đấu";
+    const barStars = records.barModel?.stars ? `${records.barModel.stars} ⭐` : "Chưa có sao";
+    const bugSolved = `${records.spotTheBug?.solvedCount || 0} vụ`;
     return `<details class="daily-plan"${anchor} ${open ? "open" : ""}>
     <summary>${summaryLabel} · ${label} · bám mạch ${escapeHtml(curriculum?.meta?.textbook || "chương trình lớp 4")}</summary>
     <div class="daily-plan-alignment">${escapeHtml(item.textbookAlignment || "Củng cố nền lớp 3 và chuẩn bị lớp 4")}</div>
     <div class="daily-plan-grid">
       ${visibleDays.map(({ day, dayIndex }) => {
         const responseKey = `${weekId}-${subject}-${dayIndex + 1}`;
+        const weekNumber = Number(weekId.replace(/\D/g, "")) || 1;
+        const dailyBarChallenges = subject === "math" ? getDailyGameChallenges({ gameType: "bar-model", weekNumber, dayIndex }) : [];
+        const dailyBugCases = subject === "math" ? getDailyGameChallenges({ gameType: "spot-the-bug", weekNumber, dayIndex }) : [];
         const adaptiveNote = adaptiveNextStep(subject, weekId, dayIndex);
         const difficulty = lessonDifficulty(subject, phaseId, weekId, dayIndex);
         const timerKey = responseKey;
@@ -774,7 +1028,7 @@ export function createRenderViews(dependencies = {}) {
         const isTooEasy = savedQuality === "too_easy";
         const isHard = savedQuality === "hard";
 
-        return `<details class="daily-plan-day" ${focusedDayIndex !== null || dayIndex === 0 ? "open" : ""}>
+        return `<details class="daily-plan-day" ${focusedDayIndex !== null || dayIndex === 0 || isParentPreview ? "open" : ""}>
         <summary class="daily-plan-day-head"><span class="daily-plan-day-label">${escapeHtml(day.day)}</span><b>${escapeHtml(day.title)}</b><span class="daily-plan-duration">${day.day === "Thứ 7" ? "50 phút" : "25 phút"}</span></summary>
         <div class="daily-plan-sections">
           ${isParentPreview ? "" : `<div class="lesson-timer-panel" data-timer-container="${timerKey}" data-day-label="${escapeHtml(day.day)}">
@@ -793,6 +1047,7 @@ export function createRenderViews(dependencies = {}) {
             </div>
             ${isCompleted ? `<div class="lesson-timer-notice" role="status">Hết giờ học bài này! Bách có thể thư thả xem lại, hoàn thành phần đang làm hoặc nộp bài; không bị ép nộp ngay.</div>` : ""}
           </div>`}
+          ${subject === "math" ? renderMentalMathForToday(weekNumber, dayIndex, isParentPreview) : ""}
           <div class="lesson-difficulty difficulty-${difficulty.level}"><div><span>Độ khó cho Bách</span><strong>${escapeHtml(difficulty.label)} · ${difficulty.level}/5</strong></div><p>${escapeHtml(difficulty.note)}</p></div>
           <div class="daily-plan-section"><span class="daily-plan-label">Mục tiêu bài học</span><p>${escapeHtml(day.objective)}</p></div>
           ${day.concrete ? `<div class="daily-plan-concrete">
@@ -808,8 +1063,37 @@ export function createRenderViews(dependencies = {}) {
               <div class="stage-body">
                 <div class="stage-item"><b>Khởi động</b>: ${escapeHtml(day.concrete.warmup)}</div>
                 <div class="stage-item"><b>Khám phá</b>: ${escapeHtml(day.concrete.discover)}</div>
-                <div class="stage-item"><b>Ví dụ</b>: ${escapeHtml(day.concrete.worked)}</div>
+                ${(() => {
+                  const workedStr = day.concrete.worked || "";
+                  const match = workedStr.match(/(?:^|\s)(Đoạn luyện riêng hôm nay:\s*)(.*)$/s);
+                  if (match) {
+                    const exPart = workedStr.substring(0, match.index).trim();
+                    const passage = match[2].trim();
+                    return `
+                      ${exPart ? `<div class="stage-item"><b>Ví dụ</b>: ${escapeHtml(exPart)}</div>` : ""}
+                      <div class="stage-item reading-passage-card" style="margin:10px 0; background:#f0f9ff; border:1px solid #bae6fd; border-left:4px solid #0284c7; border-radius:8px; padding:10px 14px">
+                        <div style="font-weight:700; color:#0369a1; font-size:0.9rem; margin-bottom:4px">
+                          📖 Đoạn văn luyện đọc hôm nay (Bách đọc kĩ đoạn này):
+                        </div>
+                        <div style="font-size:0.95rem; color:#0f172a; font-style:italic; line-height:1.6">
+                          ${escapeHtml(passage)}
+                        </div>
+                      </div>
+                    `;
+                  }
+                  return `<div class="stage-item"><b>Ví dụ</b>: ${escapeHtml(workedStr)}</div>`;
+                })()}
                 ${visualSvg ? `<div class="stage-visual">${visualSvg}</div>` : ""}
+                ${subject === "math" ? `
+                  <div class="stage-mini-game speed-math">
+                    <div class="stage-mini-game-info">
+                      <span class="smg-badge">⚡ Trò chơi Chặng 1</span>
+                      <h5>Đấu tính nhẩm 90s</h5>
+                      <p>Phản xạ tính nhanh có chiến lược để đánh thức bộ não. Kỷ lục: <strong>${escapeHtml(speedRecord)}</strong></p>
+                    </div>
+                    <a href="#games/speed-math" class="primary-button stage-game-btn">Vào đấu 90s ngay →</a>
+                  </div>
+                ` : ""}
               </div>
             </div>
 
@@ -826,6 +1110,42 @@ export function createRenderViews(dependencies = {}) {
                 </div>
                 ${day.concrete.variant ? `<div class="lesson-task-group"><b>Bài làm thêm:</b>${renderInstructionSteps(day.concrete.variant)}</div>` : ""}
                 ${day.concrete.drill ? `<div class="lesson-task-group"><b>Đề riêng hôm nay:</b><ul class="lesson-inline-list">${splitInlineItems(day.concrete.drill).map(task => `<li>${escapeHtml(task)}</li>`).join("")}</ul></div>` : ""}
+                ${subject === "math" ? `
+                  <div class="stage-mini-game bar-model">
+                    <div class="stage-mini-game-info">
+                      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:6px">
+                        <span class="smg-badge">📐 Trò chơi Chặng 2 · Mini Bar Model Studio</span>
+                        <div style="display:flex; align-items:center; gap:8px">
+                          <span style="font-size:0.82rem; font-weight:700; color:#0369a1">Điểm: ${escapeHtml(barStars)}</span>
+                          <a href="#games/bar-model" class="text-button" style="font-size:0.82rem; font-weight:700; color:#0284c7">Kho 120 bài →</a>
+                        </div>
+                      </div>
+                      <div style="font-size:0.86rem; color:#475569; margin-bottom:10px">
+                        Mục tiêu hôm nay: <b>${dailyBarChallenges.length} bài</b> dựng mô hình (${dayIndex === 5 ? "Thứ 7: 3 bài tổng hợp" : "Bài 1 dễ &amp; Bài 2 khó"})
+                      </div>
+                      <div class="stage-game-tasks">
+                        ${dailyBarChallenges.map(item => `
+                          <div class="stage-game-task-row stage-game-task-row--bar">
+                            <div class="stage-game-task-main">
+                              <div class="stage-game-task-lead">
+                                <span class="stage-game-task-role stage-game-task-role--bar">${item.roleLabel}</span>
+                                <span class="stage-game-task-title">${escapeHtml(item.challenge.title.replace(/^Thử thách \d+:\s*/, ""))}</span>
+                              </div>
+                              <div class="stage-game-task-level">
+                                <span class="stage-game-task-diff" style="background:${item.diffMeta.bg}; color:${item.diffMeta.color}; border:1px solid ${item.diffMeta.border}">
+                                  ${item.diffMeta.stars} ${item.diffMeta.text}
+                                </span>
+                              </div>
+                            </div>
+                            <div class="stage-game-task-action">
+                              <a href="#games/bar-model?challenge=${item.challenge.index}&week=${weekNumber}&day=${dayIndex}&step=${item.order}&total=${item.total}" class="primary-button stage-game-task-cta stage-game-task-cta--bar">Làm bài →</a>
+                            </div>
+                          </div>
+                        `).join("")}
+                      </div>
+                    </div>
+                  </div>
+                ` : ""}
               </div>
             </div>
 
@@ -833,31 +1153,67 @@ export function createRenderViews(dependencies = {}) {
             <div class="daily-stage daily-stage-challenge daily-plan-advanced">
               <div class="stage-header">
                 <span class="stage-pill">Chặng 3</span>
-                <span class="stage-title">Thử thách mở rộng & Tự đánh giá (5–7 phút)</span>
+                <span class="stage-title">${subject === "vietnamese" ? "Khám phá mở rộng & Tự nhận xét (5–7 phút)" : "Thử thách mở rộng & Tự đánh giá (5–7 phút)"}</span>
               </div>
               <div class="stage-body">
-                ${isTooEasy ? `<div class="level-up-badge">🚀 <b>Bách làm rất nhanh!</b> Hệ thống đã mở khóa Thử thách Olympic nâng cao và tăng độ khó cho buổi tiếp theo.</div>` : ""}
-                ${isHard ? `<div class="adaptive-support-badge">🌱 <b>Cố lên Bách!</b> Buổi tiếp theo hệ thống sẽ củng cố nền tảng để con làm bài chắc tay hơn nhé.</div>` : ""}
-                <div class="lesson-task-group"><b>Thử thách Olympic / Nâng cao:</b>${renderInstructionSteps(day.concrete.challenge)}</div>
+                ${isTooEasy ? `<div class="level-up-badge">🚀 <b>Bách làm rất nhanh!</b> ${subject === "vietnamese" ? "Hệ thống đã mở khóa phần tìm hiểu sâu hơn để Bách thỏa sức sáng tạo." : "Hệ thống đã mở khóa Thử thách Olympic nâng cao và tăng độ khó cho buổi tiếp theo."}</div>` : ""}
+                ${isHard ? `<div class="adaptive-support-badge">🌱 <b>Cố lên Bách!</b> Buổi tiếp theo hệ thống sẽ củng cố nền tảng để Bách làm bài chắc tay hơn nhé.</div>` : ""}
+                <div class="lesson-task-group"><b>${subject === "vietnamese" ? "🔍 Tìm hiểu sâu hơn:" : "Thử thách Olympic / Nâng cao:"}</b>${renderInstructionSteps(day.concrete.challenge)}</div>
                 ${renderProgressiveHints(day.concrete?.hint || day.hint || "", responseKey, isParentPreview)}
-                ${day.advanced ? `<div class="lesson-task-group"><b>Luyện thêm nếu còn thời gian:</b>${renderInstructionSteps(day.advanced)}</div>` : ""}
-                <div class="daily-plan-check"><span class="daily-plan-label">Tự kiểm tra</span>${renderInstructionSteps(day.concrete.check || day.selfCheck)}</div>
+                ${day.advanced ? `<div class="lesson-task-group"><b>${subject === "vietnamese" ? "Góc sáng tạo (nếu còn thời gian):" : "Luyện thêm nếu còn thời gian:"}</b>${renderInstructionSteps(day.advanced)}</div>` : ""}
+                <div class="daily-plan-check"><span class="daily-plan-label">${subject === "vietnamese" ? "Tự đọc lại & nhận xét" : "Tự kiểm tra"}</span>${renderInstructionSteps(day.concrete.check || day.selfCheck)}</div>
                 ${adaptiveNote ? `<p class="adaptive-next-step"><b>Điều chỉnh cho buổi sau:</b> ${escapeHtml(adaptiveNote)}</p>` : ""}
-
-                ${subject === "math" && !isParentPreview ? `<div class="lesson-response" data-lesson-response="${responseKey}">
-                  <div class="daily-plan-label">Nộp bài Câu 1 - Nhờ AI chấm &amp; góp ý</div>
-                  <p class="lesson-response-note">Thầy cô Gia sư AI sẽ xem xét cả đáp số và cách làm để nhận xét đúng sai, chiến lược giải đã thông minh chưa và cách trình bày có rõ ràng không nhé.</p>
-                  <label class="lesson-field-label">Đáp số Câu 1 (phần Thực hành cốt lõi - Bách tự làm):</label>
-                  <div class="lesson-response-row"><input data-lesson-answer="${responseKey}" inputmode="decimal" autocomplete="off" placeholder="Nhập đáp số Câu 1 (phần Bách tự làm)" aria-label="Đáp số Câu 1 phần Thực hành cốt lõi" /><button class="small-button" data-save-lesson="${responseKey}" type="button">Lưu</button><button class="text-button" data-review-lesson-ai="${responseKey}" type="button" title="Mở gia sư AI để nhận xét độ đúng sai, chiến lược và cách trình bày">Nhờ AI chấm &amp; góp ý</button></div>
-                  <p class="lesson-response-note">Nếu muốn AI xem câu khác hoặc bài thử thách, Bách chỉ cần ghi rõ tên câu và cách làm ở ô bên dưới nhé.</p>
-                  <label class="lesson-quality"><span>Buổi sau nên điều chỉnh?</span><select data-lesson-quality="${responseKey}" aria-label="Tự đánh giá độ vừa sức"><option value="">Chọn nếu cần</option><option value="too_easy">Bách làm nhanh, bài còn nhẹ</option><option value="right">Vừa sức</option><option value="hard">Còn vướng, cần củng cố</option></select></label>
-                  <div class="lesson-explanation-guide">
-                    <label class="lesson-field-label">Cách giải / suy nghĩ của Bách (không bắt buộc):</label>
-                    <p class="lesson-field-subnote">Bách có thể tự gõ vào ô hoặc bấm nút micro 🎤 để nói cách làm (tùy chọn). AI sẽ xem xét cả đáp án và cách làm để chấm &amp; góp ý cho con.</p>
+                ${subject === "math" ? `
+                  <div class="stage-mini-game spot-bug">
+                    <div class="stage-mini-game-info">
+                      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:6px">
+                        <span class="smg-badge">🕵️ Trò chơi Chặng 3 · AI Thám Tử Bắt Lỗi Sai</span>
+                        <div style="display:flex; align-items:center; gap:8px">
+                          <span style="font-size:0.82rem; font-weight:700; color:#9d174d">Đã phá: ${escapeHtml(bugSolved)}</span>
+                          <a href="#games/spot-the-bug" class="text-button" style="font-size:0.82rem; font-weight:700; color:#db2777">Kho 120 vụ →</a>
+                        </div>
+                      </div>
+                      <div style="font-size:0.86rem; color:#475569; margin-bottom:10px">
+                        Mục tiêu hôm nay: <b>${dailyBugCases.length} vụ án</b> (${dayIndex === 5 ? "Thứ 7: 3 vụ án tổng hợp" : "Vụ 1 dễ &amp; Vụ 2 khó"})
+                      </div>
+                      <div class="stage-game-tasks">
+                        ${dailyBugCases.map(item => `
+                          <div class="stage-game-task-row stage-game-task-row--bug">
+                            <div class="stage-game-task-main">
+                              <div class="stage-game-task-lead">
+                                <span class="stage-game-task-role stage-game-task-role--bug">${item.roleLabel.replace("Bài", "Vụ")}</span>
+                                <span class="stage-game-task-title">${escapeHtml(item.challenge.title.replace(/^Vụ án \d+:\s*/, ""))}</span>
+                              </div>
+                              <div class="stage-game-task-level">
+                                <span class="stage-game-task-diff" style="background:${item.diffMeta.bg}; color:${item.diffMeta.color}; border:1px solid ${item.diffMeta.border}">
+                                  ${item.diffMeta.stars} ${item.diffMeta.text}
+                                </span>
+                              </div>
+                            </div>
+                            <div class="stage-game-task-action">
+                              <a href="#games/spot-the-bug?case=${item.challenge.index}&week=${weekNumber}&day=${dayIndex}&step=${item.order}&total=${item.total}" class="primary-button stage-game-task-cta stage-game-task-cta--bug">Phá án →</a>
+                            </div>
+                          </div>
+                        `).join("")}
+                      </div>
+                    </div>
                   </div>
-                  <div class="lesson-response-explanation"><textarea data-lesson-explanation="${responseKey}" rows="2" placeholder="Gõ cách giải hoặc bấm nút mic để đọc suy nghĩ (không bắt buộc)…" aria-label="Cách giải hoặc suy nghĩ của Bách (không bắt buộc)"></textarea><button class="voice-button" data-voice-for="[data-lesson-explanation='${responseKey}']" type="button">🎤 Bấm để nói cách giải</button></div>
-                </div>` : ""}
+                ` : ""}
               </div>
+            </div>
+          </div>` : ""}
+          ${subject === "math" && !isParentPreview ? `<div class="lesson-response lesson-response-bottom" data-lesson-response="${responseKey}">
+            <div class="lesson-quality-wrapper" style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; margin-top:14px; padding:12px 14px; border:1px dashed var(--line, #cbd6df); border-radius:8px; background:#f8fafc">
+              <label class="lesson-quality" style="margin:0">
+                <span>Buổi sau nên điều chỉnh?</span>
+                <select data-lesson-quality="${responseKey}" aria-label="Tự đánh giá độ vừa sức">
+                  <option value="">Chọn nếu cần</option>
+                  <option value="too_easy">Bách làm nhanh, bài còn nhẹ</option>
+                  <option value="right">Vừa sức</option>
+                  <option value="hard">Còn vướng, cần củng cố</option>
+                </select>
+              </label>
+              <button class="small-button adaptive-confirm-btn" data-confirm-adaptive="${responseKey}" type="button">Xác nhận điều chỉnh</button>
             </div>
           </div>` : ""}
         </div>
@@ -885,7 +1241,9 @@ export function createRenderViews(dependencies = {}) {
     getStudyWeek,
     resolveStudyDayIndex,
     getStudyDayIndex,
+    resolveNextLesson,
     renderMentalMathForToday,
+    renderStudyGamesTrilogy,
     renderSubject,
     renderSubjectLegacyPlan,
     parseHintSteps,

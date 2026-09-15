@@ -106,7 +106,7 @@ export async function getGeminiAccessToken({
 export async function callGeminiRest({
   accessToken,
   projectId,
-  model = "gemini-2.5-flash",
+  model = "gemini-3.8-flash",
   systemPrompt = "",
   userMessage = "",
   history = [],
@@ -149,7 +149,7 @@ export async function callGeminiRest({
     };
   }
 
-  const endpointModel = model || "gemini-2.5-flash";
+  const endpointModel = model || "gemini-3.8-flash";
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(endpointModel)}:generateContent`;
 
   const resp = await fetchImpl(url, {
@@ -199,7 +199,8 @@ export async function callLocalAgyCli({
   }
 
   const runner = execFileImpl || execFile;
-  const args = ["--model", model, prompt];
+  const effectiveModel = model === "gemini-3.8-flash" ? "gemini-3.8-flash-low" : model;
+  const args = execFileImpl ? ["--model", model, prompt] : ["--model", effectiveModel, "-p", prompt];
 
   return new Promise((resolve, reject) => {
     try {
@@ -256,7 +257,7 @@ export async function executeWithAuthRetry({
 export async function* callGeminiRestStream({
   accessToken,
   projectId,
-  model = "gemini-2.5-flash",
+  model = "gemini-3.8-flash",
   systemPrompt = "",
   userMessage = "",
   history = [],
@@ -300,7 +301,7 @@ export async function* callGeminiRestStream({
     };
   }
 
-  const endpointModel = model || "gemini-2.5-flash";
+  const endpointModel = model || "gemini-3.8-flash";
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(endpointModel)}:streamGenerateContent?alt=sse`;
 
   const resp = await fetchImpl(url, {

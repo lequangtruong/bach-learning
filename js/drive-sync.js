@@ -79,11 +79,22 @@ export const driveSync = {
   },
 
   requestLogin() {
-    const clientId = getGoogleClientId();
+    let clientId = getGoogleClientId();
     if (!clientId || clientId.startsWith("PLACEHOLDER")) {
-      state.drive.syncStatus = "Google Drive chưa được cấu hình cho bản triển khai này";
+      state.drive.syncStatus = "Google Drive chưa được cấu hình Client ID";
       _render();
-      alert("Ứng dụng chưa được cấu hình Google OAuth. Khi deployment đã có Client ID, nút này sẽ mở cửa sổ đăng nhập Google; người dùng không cần nhập mã.");
+      const entered = window.prompt(
+        "Ứng dụng chưa được cấu hình Google OAuth Web Client ID.\n\n" +
+        "• Nếu bạn đã có Client ID (dạng xxx.apps.googleusercontent.com), hãy dán vào đây để lưu:\n" +
+        "• Hoặc cấu hình trong file .env / public-config.js rồi tải lại trang."
+      );
+      if (entered && entered.trim().includes(".apps.googleusercontent.com")) {
+        try {
+          localStorage.setItem("bach_google_client_id", entered.trim());
+          location.reload();
+          return;
+        } catch {}
+      }
       return;
     }
 
@@ -103,9 +114,20 @@ export const driveSync = {
   },
 
   requestTutorLogin() {
-    const clientId = getGoogleClientId();
+    let clientId = getGoogleClientId();
     if (!clientId || clientId.startsWith("PLACEHOLDER")) {
-      alert("Cần cấu hình Google OAuth Web Client ID trước khi dùng Gemini trực tuyến.");
+      const entered = window.prompt(
+        "Cần Google OAuth Web Client ID để đăng nhập Gemini trực tuyến.\n\n" +
+        "• Dán Client ID (dạng xxx.apps.googleusercontent.com) vào đây để lưu:\n" +
+        "• Mẹo chạy cục bộ: Đặt BACH_ENABLE_AGY_FALLBACK=1 trong .env để dùng Gemini không cần đăng nhập Google."
+      );
+      if (entered && entered.trim().includes(".apps.googleusercontent.com")) {
+        try {
+          localStorage.setItem("bach_google_client_id", entered.trim());
+          location.reload();
+          return;
+        } catch {}
+      }
       return;
     }
     if (!this.tokenClient && !this.initGIS()) {

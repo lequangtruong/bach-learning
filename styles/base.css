@@ -23,6 +23,7 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: "Be 
 button, input { font: inherit; }
 button { cursor: pointer; }
 a { color: inherit; text-decoration: none; }
+[hidden] { display: none !important; }
 
 /* App Shell & Layout Primitives */
 .app-shell { min-height: 100vh; max-width: 1440px; margin: 0 auto; }

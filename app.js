@@ -43,6 +43,13 @@ import { driveSync, renderGoogleTutorButton } from "./js/drive-sync.js";
 import { lessonTimerManager, setTimerCallbacks } from "./js/study-timer.js";
 import { createRenderViews } from "./js/render-views.js";
 import { askAi as _askAi, setAiClientHandlers } from "./js/ai-client.js";
+import {
+  renderGamesHub,
+  renderSpeedMathArena,
+  renderBarModelStudioView,
+  renderSpotTheBugView,
+  cleanupActiveGames
+} from "./js/render-games.js";
 
 const curriculum = window.BACH_CURRICULUM;
 const app = document.querySelector("#app");
@@ -90,7 +97,23 @@ export const tutorAudio = _tutorAudio;
 export { updateVoiceUi };
 
 
-// Lưu tiến độ cục bộ và kích hoạt đồng bộ debounced nếu có Drive token
+let lanSyncTimer = null;
+export function scheduleLanSync(delayMs = 800) {
+  clearTimeout(lanSyncTimer);
+  lanSyncTimer = setTimeout(async () => {
+    try {
+      await fetch("/api/db", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(state.db)
+      });
+    } catch {
+      // Offline / LAN server unreachable: fail silently, iPad retains local data
+    }
+  }, delayMs);
+}
+
+// Lưu tiến độ cả 2 nơi: trên iPad (localStorage/IndexedDB) và máy chủ LAN
 export async function saveLocal(touched = true) {
   if (touched) {
     state.db = touchUserEdit(state.db);
@@ -102,6 +125,9 @@ export async function saveLocal(touched = true) {
     render();
     throw err;
   }
+
+  // Đồng bộ ngầm lên máy chủ LAN ở nhà
+  scheduleLanSync(800);
 
   if (state.drive.token && !state.drive.hasSessionExpired && navigator.onLine) {
     driveSync.scheduleSync(1200);
@@ -319,9 +345,19 @@ function renderGuide() {
             <span>${currentFocus}</span>
           </div>
           <div class="learning-profile-card">
-            <div><span class="eyebrow">PHƯƠNG PHÁP HIỆN TẠI</span><strong>${escapeHtml(learningProfile.method || "Gợi ý từng bước")}</strong></div>
-            <div><span class="eyebrow">NHỊP HỌC</span><strong>${escapeHtml(learningProfile.pace || "ổn định")}</strong></div>
-            ${learningProfile.focus ? `<div><span class="eyebrow">TRỌNG TÂM CẦN ÔN</span><strong>${escapeHtml(learningProfile.focus)}</strong></div>` : ""}
+            <div class="learning-profile-item">
+              <span class="learning-profile-label eyebrow">PHƯƠNG PHÁP HIỆN TẠI</span>
+              <strong class="learning-profile-value">${escapeHtml(learningProfile.method || "Gợi ý từng bước")}</strong>
+            </div>
+            <div class="learning-profile-item">
+              <span class="learning-profile-label eyebrow">NHỊP HỌC</span>
+              <strong class="learning-profile-value">${escapeHtml(learningProfile.pace || "ổn định")}</strong>
+            </div>
+            ${learningProfile.focus ? `
+            <div class="learning-profile-item">
+              <span class="learning-profile-label eyebrow">TRỌNG TÂM CẦN ÔN</span>
+              <strong class="learning-profile-value">${escapeHtml(learningProfile.focus)}</strong>
+            </div>` : ""}
           </div>
 
           <div class="weekly-summary-panel">
@@ -334,30 +370,20 @@ function renderGuide() {
           </div>
           ${state.db.weeklySummaries?.[currentSelectedWeekObj.id] ? `<div class="weekly-summary-output"><div class="eyebrow">BÁO CÁO ĐÃ LƯU · TUẦN ${currentSelectedWeekObj.number}</div><div>${escapeHtml(state.db.weeklySummaries[currentSelectedWeekObj.id])}</div></div>` : ""}
 
-          <div class="input-with-voice">
-            <textarea id="aiPrompt" class="ai-input" rows="4" placeholder="Ví dụ: Con chưa biết bắt đầu bài toán tìm hai số khi biết tổng và hiệu... hoặc nói ý đoạn văn con định viết..."></textarea>
-            <div class="voice-toolbar">
-              <button class="voice-button" id="voicePromptBtn" data-voice-for="#aiPrompt" title="Nhập bằng giọng nói (Tiếng Việt)">🎤 Bấm để nói</button>
-              <span id="voiceIndicator" class="voice-listening-label" hidden>● Đang nghe Bách nói…</span>
-            </div>
+          <div class="ai-input-wrap">
+            <textarea id="aiPrompt" class="ai-input" rows="4" placeholder="Nhập bài toán hoặc câu hỏi Bách chưa hiểu (Ví dụ: Bách chưa biết bắt đầu bài toán tìm hai số khi biết tổng và hiệu... hoặc đoạn văn cần gợi ý ý tưởng)..."></textarea>
           </div>
           <div class="ai-row">
             <button class="primary-button" id="askAi" ${state.tutor.isLoading ? "disabled" : ""}>
-              ${state.tutor.isLoading ? "Đang suy nghĩ…" : "Hỏi gợi ý"}
+              ${state.tutor.isLoading ? "Đang suy nghĩ…" : "💡 Nhận hướng dẫn giải"}
             </button>
             <div id="aiThinkingIndicator" class="ai-thinking-indicator" role="status" aria-live="polite" aria-hidden="${state.tutor.isLoading ? "false" : "true"}" ${state.tutor.isLoading ? "" : "hidden"}>
               <span class="thinking-dots" aria-hidden="true"><i></i><i></i><i></i></span>
               <span id="aiThinkingText">AI đang suy nghĩ…</span>
             </div>
-            <span id="aiStatus" class="week-focus">Sẵn sàng trợ giúp học sinh lớp 4.</span>
+            <span id="aiStatus" class="week-focus">Sẵn sàng trợ giúp học sinh lớp 4 tự suy nghĩ lời giải.</span>
           </div>
-          ${state.drive.idToken ? "" : `<div class="ai-auth-row"><span class="week-focus">Cần đăng nhập Google để xác thực phiên Gemini.</span><button class="small-button" id="loginTutorBtn">Đăng nhập để dùng Gemini</button><div id="googleTutorButton" class="google-tutor-button" hidden></div></div>`}
           <div id="aiAnswer" class="ai-answer" ${state.tutor.lastAnswer ? "" : "hidden"}>${escapeHtml(state.tutor.lastAnswer)}</div>
-          ${state.tutor.lastAnswer ? `<div class="speech-output-toolbar" aria-label="Đọc câu trả lời bằng giọng nói">
-            <button class="small-button" id="speakTutorBtn" type="button">🔊 Đọc câu trả lời</button>
-            <button class="text-button" id="stopTutorBtn" type="button">Dừng đọc</button>
-            <span class="speech-output-note">Giọng đọc tiếng Việt trên iPad · Bấm khi muốn nghe</span>
-          </div>` : ""}
           ${renderLearningAction(state.tutor.lastAction)}
 
           <!-- Lịch sử hội thoại đã lưu vào DB -->
@@ -379,7 +405,7 @@ function renderGuide() {
           ` : ""}
 
           <div class="callout" style="margin-top:16px;">
-            <strong>Nguyên tắc bảo mật:</strong> Không lưu API key ở trình duyệt. Mọi câu hỏi được bảo vệ bằng Google ID Token và xử lý qua endpoint <code>/api/tutor</code> Google OAuth server-side.
+            <strong>Nguyên tắc bảo mật:</strong> Không lưu API key ở trình duyệt. Mọi câu hỏi được xử lý bảo mật trực tiếp qua máy chủ của gia đình.
           </div>
         </div>`
       )}`
@@ -392,6 +418,7 @@ function renderGuide() {
       prompt.value = state.tutor.prefillPrompt;
       state.tutor.prefillPrompt = "";
       prompt.focus();
+      askAi({ mode: "student_tutor" });
     }
   }
 }
@@ -473,13 +500,19 @@ export function parseRoute() {
 }
 
 export function render() {
+  cleanupActiveGames();
   const { route, params } = parseRoute();
   state.openWeek = state.openWeek || null;
   if (route === "plan") renderPlan();
   else if (route === "math" || route === "vietnamese") renderSubject(route, params);
   else if (route === "guide") renderGuide();
+  else if (route === "games/speed-math") renderSpeedMathArena({ state, appRoot: app, saveLocal });
+  else if (route === "games/bar-model") renderBarModelStudioView({ state, appRoot: app, saveLocal, params });
+  else if (route === "games/spot-the-bug") renderSpotTheBugView({ state, appRoot: app, saveLocal, params });
+  else if (route.startsWith("games")) renderGamesHub({ state, appRoot: app });
   else renderHome();
-  document.querySelectorAll("[data-nav]").forEach(a => a.classList.toggle("active", a.dataset.nav === route));
+  const activeNav = route.startsWith("games") ? "games" : route;
+  document.querySelectorAll("[data-nav]").forEach(a => a.classList.toggle("active", a.dataset.nav === activeNav));
 }
 
 // Global Event Listeners
@@ -519,6 +552,14 @@ document.addEventListener("click", async e => {
   const toggle = e.target.closest("[data-toggle]");
   if (toggle) {
     state.openWeek = state.openWeek === toggle.dataset.toggle ? null : toggle.dataset.toggle;
+    render();
+    return;
+  }
+
+  // 3b. Mở / Thu gọn tất cả 36 tuần cho phụ huynh
+  const toggleAll = e.target.closest("[data-toggle-all-weeks]");
+  if (toggleAll) {
+    state.openWeek = state.openWeek === "all" ? null : "all";
     render();
     return;
   }
@@ -622,16 +663,16 @@ document.addEventListener("click", async e => {
       tutorAudio.init();
       tutorSpeech.speaking = true;
       audioReadBtn.textContent = "⏹ Dừng đọc";
-      tutorSpeech.speak(text);
-      if (tutorSpeech.synthesis) {
-        const checkTimer = setInterval(() => {
-          if (!tutorSpeech.synthesis.speaking) {
-            clearInterval(checkTimer);
-            tutorSpeech.speaking = false;
-            if (audioReadBtn.isConnected) audioReadBtn.textContent = "🔊 Nghe đọc bài mẫu";
-          }
-        }, 300);
-      }
+      tutorSpeech.speak(text, () => {
+        tutorSpeech.speaking = false;
+        if (audioReadBtn.isConnected) audioReadBtn.textContent = "🔊 Nghe đọc bài mẫu";
+      });
+      const checkTimer = setInterval(() => {
+        if (!tutorSpeech.speaking) {
+          clearInterval(checkTimer);
+          if (audioReadBtn.isConnected) audioReadBtn.textContent = "🔊 Nghe đọc bài mẫu";
+        }
+      }, 300);
     }
     return;
   }
@@ -660,6 +701,35 @@ document.addEventListener("click", async e => {
     await saveLocal(true);
     saveLesson.textContent = "Đã lưu ✓";
     setTimeout(() => { if (saveLesson.isConnected) saveLesson.textContent = "Lưu"; }, 1500);
+    return;
+  }
+
+  const confirmAdaptiveBtn = e.target.closest("[data-confirm-adaptive]");
+  if (confirmAdaptiveBtn) {
+    const key = confirmAdaptiveBtn.dataset.confirmAdaptive;
+    const wrap = confirmAdaptiveBtn.closest("[data-lesson-response]");
+    const quality = wrap?.querySelector("[data-lesson-quality]")?.value || "";
+    if (!state.db.lessonResponses) state.db.lessonResponses = {};
+    if (!state.db.lessonResponses[key]) state.db.lessonResponses[key] = {};
+    state.db.lessonResponses[key].quality = quality;
+    state.db.lessonResponses[key].updatedAt = new Date().toISOString();
+    if (quality) {
+      const subject = key.includes("-vietnamese-") ? "vietnamese" : "math";
+      const lastDay = Math.max(0, Number(key.split("-").pop()) - 1);
+      if (!state.db.adaptive) state.db.adaptive = {};
+      const previous = adaptivePlan(subject);
+      state.db.adaptive[subject] = quality === "too_easy"
+        ? { level: Math.min(3, previous.level + 1), extraCount: Math.min(3, Math.max(1, previous.extraCount + 1)), reason: quality, lastDay, updatedAt: new Date().toISOString() }
+        : quality === "hard"
+          ? { level: Math.max(0, previous.level - 1), extraCount: Math.max(0, previous.extraCount - 1), reason: quality, lastDay, updatedAt: new Date().toISOString() }
+          : { level: previous.level, extraCount: previous.extraCount, reason: quality, lastDay, updatedAt: new Date().toISOString() };
+      tutorAudio.playSuccessChime();
+    }
+    await saveLocal(true);
+    confirmAdaptiveBtn.textContent = "Đã cập nhật ✓";
+    setTimeout(() => {
+      if (confirmAdaptiveBtn.isConnected) confirmAdaptiveBtn.textContent = "Xác nhận điều chỉnh";
+    }, 1800);
     return;
   }
 
@@ -772,10 +842,6 @@ document.addEventListener("click", async e => {
     return;
   }
 
-  if (e.target.closest("#loginTutorBtn")) {
-    driveSync.requestTutorLogin();
-    return;
-  }
 
   // 10. Voice STT Mic trigger
   const voiceBtn = e.target.closest("[data-voice-for]");
@@ -882,6 +948,11 @@ document.addEventListener("change", async e => {
     return;
   }
 
+  if (e.target.id === "tutorVoiceSelect") {
+    tutorSpeech.setVoice(e.target.value);
+    return;
+  }
+
   if (e.target.id === "guideSubjectSelect") {
     state.tutor.selectedSubject = e.target.value;
     render();
@@ -891,6 +962,30 @@ document.addEventListener("change", async e => {
   } else if (e.target.id === "mentalMathContinuationWeekSelect") {
     state.tutor.selectedWeek = e.target.value;
     render();
+  }
+
+  const qualitySelect = e.target.closest("[data-lesson-quality]");
+  if (qualitySelect) {
+    const key = qualitySelect.dataset.lessonQuality;
+    const quality = qualitySelect.value || "";
+    if (!state.db.lessonResponses) state.db.lessonResponses = {};
+    if (!state.db.lessonResponses[key]) state.db.lessonResponses[key] = {};
+    state.db.lessonResponses[key].quality = quality;
+    state.db.lessonResponses[key].updatedAt = new Date().toISOString();
+    if (quality) {
+      const subject = key.includes("-vietnamese-") ? "vietnamese" : "math";
+      const lastDay = Math.max(0, Number(key.split("-").pop()) - 1);
+      if (!state.db.adaptive) state.db.adaptive = {};
+      const previous = adaptivePlan(subject);
+      state.db.adaptive[subject] = quality === "too_easy"
+        ? { level: Math.min(3, previous.level + 1), extraCount: Math.min(3, Math.max(1, previous.extraCount + 1)), reason: quality, lastDay, updatedAt: new Date().toISOString() }
+        : quality === "hard"
+          ? { level: Math.max(0, previous.level - 1), extraCount: Math.max(0, previous.extraCount - 1), reason: quality, lastDay, updatedAt: new Date().toISOString() }
+          : { level: previous.level, extraCount: previous.extraCount, reason: quality, lastDay, updatedAt: new Date().toISOString() };
+      tutorAudio.playSuccessChime();
+    }
+    await saveLocal(true);
+    return;
   }
 });
 
@@ -962,6 +1057,28 @@ async function init() {
 
   render();
   registerServiceWorker();
+  syncWithLanServer().catch(() => {});
+}
+
+// Đồng bộ ngầm hai chiều giữa iPad (local) và máy chủ LAN
+export async function syncWithLanServer() {
+  try {
+    const res = await fetch("/api/db");
+    if (!res.ok) return;
+    const remoteDb = await res.json();
+    if (remoteDb && validateDatabasePayload(remoteDb)) {
+      const merged = mergeDatabases(state.db, remoteDb);
+      if (JSON.stringify(merged) !== JSON.stringify(state.db)) {
+        state.db = merged;
+        await storage.saveDatabase(state.db);
+        render();
+      }
+    } else if (!remoteDb && state.db && state.db.hasLocalEdits) {
+      scheduleLanSync(100);
+    }
+  } catch {
+    // Offline / Không có mạng LAN: chạy 100% bằng local DB trên iPad
+  }
 }
 
 init();

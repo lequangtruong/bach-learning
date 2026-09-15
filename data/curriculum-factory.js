@@ -17,12 +17,12 @@ function mathLessonVariant(title, phaseId) {
     ? "Góc nhìn Singapore: dùng vật thật, sơ đồ phần–toàn thể hoặc bảng trước khi chuyển sang ký hiệu."
     : phaseId === "P2" || phaseId === "P3"
       ? "Góc nhìn Singapore: thử CPA, sơ đồ thanh, làm ngược hoặc kiểm tra bằng một biểu diễn khác."
-      : "Góc nhìn Singapore: chọn heuristic phù hợp như lập bảng, thử–kiểm tra, chia trường hợp hoặc tìm quy luật; nói rõ vì sao chọn nó.";
+      : "Góc nhìn Singapore: chọn cách giải phù hợp như lập bảng, thử–kiểm tra, chia trường hợp hoặc tìm quy luật; nói rõ vì sao chọn nó.";
   const gentleChallenge = phaseId === "P1"
     ? `Thử thách nhẹ: đổi một dữ kiện hoặc tự đặt một câu hỏi mới từ đề; chỉ cần giải thích lựa chọn, chưa cần cách giải Olympic. ${singaporeLens}`
     : phaseId === "P2" || phaseId === "P3"
-      ? `Thử thách mở rộng: tìm một trường hợp đặc biệt, vẽ thêm một biểu diễn hoặc kiểm tra kết quả bằng cách thứ hai. ${singaporeLens}`
-      : `Thử thách Olympic: chia trường hợp có tổ chức, tìm quy luật hoặc so sánh hai chiến lược; ghi rõ vì sao không bỏ sót trường hợp. ${singaporeLens}`;
+      ? `Thử thách mở rộng: tìm một tình huống thử thách, vẽ thêm một biểu diễn hoặc kiểm tra kết quả bằng cách thứ hai. ${singaporeLens}`
+      : `Thử thách tư duy: chia trường hợp có tổ chức, tìm quy luật hoặc so sánh hai cách làm; ghi rõ vì sao không bỏ sót trường hợp. ${singaporeLens}`;
   if (title.includes("Đọc đề")) return {
     sampleExample: "Ví dụ mẫu: gạch dữ kiện, khoanh điều phải tìm, viết câu hỏi bằng lời của mình rồi chọn sơ đồ đoạn thẳng.",
     practiceBasic: "Bài cơ bản: với 3 đề ngắn, chỉ tóm tắt và chọn phép tính, chưa cần tính ngay.",
@@ -169,14 +169,14 @@ const AUTHORED_MATH_KITS = {
   "Suy luận từ hình": ["Một hình chữ nhật 10×6 cm bị cắt bỏ một hình vuông 3×3 cm ở góc: diện tích còn lại 51 cm².", "Vẽ ba hình ghép ô vuông, đếm diện tích bằng tách thành hình chữ nhật nhỏ.", "Một hình vuông cạnh 8 cm được kẻ hai đường chia thành bốn hình chữ nhật bằng nhau. Mỗi phần có chu vi bao nhiêu?", "Cắt một hình chữ nhật 12×8 thành hai phần có diện tích bằng nhau theo hai cách.", "Bạn cộng chu vi các phần sau khi ghép rồi gọi là chu vi hình lớn. Vẽ cạnh trong bị đếm thừa.", "Mini-test: hình ghép, phần bị cắt, đường phụ."] ,
   "Tối ưu hóa đơn giản": ["Dùng 24 que tạo hình chữ nhật có cạnh nguyên. Các cặp 1×11, 2×10, 3×9, 4×8, 5×7, 6×6; diện tích lớn nhất là 36.", "Lập bảng các hình chữ nhật chu vi 20 cm và tìm diện tích lớn nhất.", "Có 30.000 đồng mua bút 4.000 và vở 6.000 đồng. Tìm cách mua nhiều món nhất nhưng không vượt tiền.", "Tìm hai số có tổng 30 để tích lớn nhất bằng bảng nhỏ.", "Bạn chọn ngay 1 và 14 vì tổng 15. Thiếu tiêu chí nào để biết tốt nhất?", "Mini-test: tối đa/tối thiểu với bảng các trường hợp."] ,
   "Bài toán nhiều lời giải": ["48×25 = 48×100:4 = 1.200; cũng có thể 50×25 − 2×25 = 1.200.", "Tính 36×15 bằng hai cách; gạch bước nào cả hai cách đều dựa vào.", "Một lớp xếp 84 học sinh thành hàng đều. Tìm ba cách xếp hàng và giải thích cách nào dễ quan sát.", "Tổng 1+2+…+10 có thể ghép đầu–cuối. Tự vẽ cách ghép và kiểm tra.", "Một cách giải dài nhưng đúng có nên bỏ? Viết tiêu chí: đúng, rõ, kiểm tra được.", "Mini-test: một phép tính hai cách, một bài lời văn hai sơ đồ."] ,
-  "Thi thử có chiến thuật": ["Đề 25 phút: 3.998+2.007; phân số 3/8+2/8; chu vi 14×9; một dãy số; một bài bảng trường hợp.", "Đánh dấu C (chắc), V (vừa), K (khó); làm C trước, sau 8 phút đổi câu nếu bế tắc.", "Chữa một câu sai bằng bảng lỗi: đọc đề, mô hình, tính, kiểm tra.", "Tự đặt thời gian 6 phút cho câu C và chỉ tính giờ khi đã tóm tắt xong.", "Bạn bỏ trống câu khó mà không ghi hướng. Viết một hình/sơ đồ hoặc điều đã biết để còn điểm lập luận.", "Mini-test mới 25 phút và so sánh chiến lược, không chỉ so điểm."] ,
-  "Olympic mini set 2": ["Set: tìm x từ (x+5)×3=36; đếm hình chữ nhật trong lưới 2×3; số có tổng chữ số 10; bài chia có dư.", "Làm từng câu, ghi heuristic đã chọn: làm ngược, vẽ hình, lập bảng hay kiểm tra dư.", "Chữa sâu câu đếm hình: chia theo kích thước hình chữ nhật để không trùng.", "Viết lời giải cho một bạn lớp 4 khác hiểu, không dùng ‘rõ ràng là’ mà không giải thích.", "Một đáp án có đúng số nhưng sai lý do. Tìm chỗ thiếu lập luận.", "Mini-test: một bài mỗi mạch số–hình–đếm–logic."] ,
-  "Chẩn đoán lỗ hổng": ["Làm 6 câu chẩn đoán: số lớn, cộng trừ, phân số, diện tích, dãy số, bài lời văn; ghi loại lỗi thay vì chỉ đáp án.", "Với mỗi câu sai, chọn một nhãn: chưa hiểu, sai chiến lược, tính ẩu, đọc thiếu điều kiện.", "Làm lại duy nhất hai câu sai cùng loại, đổi số để kiểm tra đã hiểu hay chỉ nhớ đáp án.", "Tạo sổ lỗi: dấu hiệu nhận biết, ví dụ sai, bước phòng tránh.", "Nếu làm nhanh nhưng thiếu lời giải, xếp đó vào lỗi nào? Viết cách nâng tiêu chuẩn.", "Mini-test cá nhân hóa dựa trên hai nhãn lỗi nhiều nhất."] ,
-  "Sổ tay chiến lược": ["Trang mẫu: ‘bù trừ’ — dấu hiệu: số gần tròn; ví dụ 498+37; kiểm tra: cộng ngược.", "Viết ba trang: sơ đồ thanh, lập bảng, làm việc ngược; mỗi trang có dấu hiệu và một ví dụ tự tạo.", "Nhìn ba đề không giải, chọn chiến lược phù hợp và giải thích lựa chọn.", "Một đề có thể dùng hai chiến lược. Viết lúc nào nên đổi cách để không mắc kẹt.", "Sửa một trang sổ tay có ví dụ sai hoặc quá chung chung.", "Mini-test: nhận diện chiến lược trước, giải sau."] ,
+  "Thi thử có chiến thuật": ["Đề 25 phút: 3.998+2.007; phân số 3/8+2/8; chu vi 14×9; một dãy số; một bài bảng trường hợp.", "Đánh dấu C (chắc), V (vừa), K (khó); làm C trước, sau 8 phút đổi câu nếu bế tắc.", "Chữa một câu sai bằng bảng lỗi: đọc đề, mô hình, tính, kiểm tra.", "Tự đặt thời gian 6 phút cho câu C và chỉ tính giờ khi đã tóm tắt xong.", "Bạn bỏ trống câu khó mà không ghi hướng. Viết một hình/sơ đồ hoặc điều đã biết để còn điểm lập luận.", "Mini-test mới 25 phút và so sánh cách làm, không chỉ so điểm."] ,
+  "Olympic mini set 2": ["Set: tìm x từ (x+5)×3=36; đếm hình chữ nhật trong lưới 2×3; số có tổng chữ số 10; bài chia có dư.", "Làm từng câu, ghi cách làm đã chọn: làm ngược, vẽ hình, lập bảng hay kiểm tra dư.", "Chữa sâu câu đếm hình: chia theo kích thước hình chữ nhật để không trùng.", "Viết lời giải cho một bạn lớp 4 khác hiểu, không dùng ‘rõ ràng là’ mà không giải thích.", "Một đáp án có đúng số nhưng sai lý do. Tìm chỗ thiếu lập luận.", "Mini-test: một bài mỗi mạch số–hình–đếm–logic."] ,
+  "Chẩn đoán lỗ hổng": ["Làm 6 câu chẩn đoán: số lớn, cộng trừ, phân số, diện tích, dãy số, bài lời văn; ghi loại lỗi thay vì chỉ đáp án.", "Với mỗi câu sai, chọn một nhãn: chưa hiểu, sai phương pháp, tính ẩu, đọc thiếu điều kiện.", "Làm lại duy nhất hai câu sai cùng loại, đổi số để kiểm tra đã hiểu hay chỉ nhớ đáp án.", "Tạo sổ lỗi: dấu hiệu nhận biết, ví dụ sai, bước phòng tránh.", "Nếu làm nhanh nhưng thiếu lời giải, xếp đó vào lỗi nào? Viết cách nâng tiêu chuẩn.", "Mini-test cá nhân hóa dựa trên hai nhãn lỗi nhiều nhất."] ,
+  "Sổ tay phương pháp": ["Trang mẫu: ‘bù trừ’ — dấu hiệu: số gần tròn; ví dụ 498+37; kiểm tra: cộng ngược.", "Viết ba trang: sơ đồ thanh, lập bảng, làm việc ngược; mỗi trang có dấu hiệu và một ví dụ tự tạo.", "Nhìn ba đề không giải, chọn phương pháp phù hợp và giải thích lựa chọn.", "Một đề có thể dùng hai phương pháp. Viết lúc nào nên đổi cách để không mắc kẹt.", "Sửa một trang sổ tay có ví dụ sai hoặc quá chung chung.", "Mini-test: nhận diện phương pháp trước, giải sau."] ,
   "Đề mô phỏng Singapore": ["Một bể có 3/5 dung tích là 120 lít. Hỏi đầy bể có bao nhiêu lít? Vẽ sơ đồ thanh 5 phần.", "Giải ba bài mô hình phần–toàn thể, so sánh, tỉ số đơn giản bằng sơ đồ trước phép tính.", "Cửa hàng giảm 20.000 đồng cho một cặp vở, mua 3 cặp và một bút 7.000 đồng. Lập bảng tiền rồi tính.", "Tạo bài ‘có dữ kiện thừa’ và chỉ ra dữ kiện nào không dùng.", "Một sơ đồ thanh chia phần không đều nhưng ghi 5 phần bằng nhau. Chỉ lỗi bằng hình.", "Mini-test 25 phút: hai bài bar model, một bài dữ liệu, một bài suy luận."] ,
   "Đề mô phỏng Trung Quốc": ["Tìm số tự nhiên nhỏ nhất có hai chữ số, chia 5 dư 2 và chia 3 dư 1. Lập bảng các số dư.", "Giải ba bài số học/hình học có yêu cầu nêu điều kiện và kiểm tra từng trường hợp.", "Một hình vuông cạnh 10 cm cắt thành bốn hình chữ nhật bằng nhau. Tìm chu vi mỗi hình trong hai kiểu cắt.", "Viết lời giải ngắn: giả thiết, các bước, kết luận; không bỏ trường hợp đã loại.", "Bạn thử số ngẫu nhiên rồi gặp đáp án. Chuyển thành bảng có điểm bắt đầu và quy tắc dừng.", "Mini-test: một bài số, một hình, một quy luật; ưu tiên lời giải đủ."] ,
   "Dự án Toán quanh nhà": ["Đo bàn học: dài, rộng, cao; chọn một đại lượng có ích để tính, ví dụ diện tích mặt bàn.", "Lập bảng số liệu thật gồm ít nhất 5 dòng: vật, số đo, đơn vị, cách đo.", "Dùng số liệu để giải một câu hỏi hai bước, ví dụ tính số giấy phủ mặt bàn và tiền mua.", "Vẽ biểu đồ cột nhỏ từ một dữ liệu thật: số trang đọc, số bước đi hoặc chi tiêu nhỏ.", "Kiểm tra dự án: đơn vị thống nhất, số liệu hợp lý, có ảnh/chú thích nếu cần.", "Trình bày dự án 3 phút: câu hỏi, số liệu, cách tính, điều Bách phát hiện."] ,
-  "Ngày hội Bách giải thích": ["Chọn ba bài đại diện: một tính nhẩm, một sơ đồ, một suy luận; mỗi bài phải có bản nháp đã sửa.", "Thu âm/đọc lời giải 60–90 giây cho một bài: nêu dữ kiện, chiến lược, kiểm tra.", "Một người nghe hỏi ‘vì sao?’ ở bất kỳ bước nào; Bách bổ sung lời giải nếu bước đó chưa rõ.", "So sánh lời giải tuần đầu và tuần cuối: phần nào gọn hơn, phần nào chắc hơn.", "Chọn một lỗi cũ và minh họa cách Bách nay tự phát hiện lỗi đó.", "Ngày hội: trình bày ba bài, tự nhận xét một điểm mạnh và một mục tiêu kế tiếp."]
+  "Ngày hội Bách giải thích": ["Chọn ba bài đại diện: một tính nhẩm, một sơ đồ, một suy luận; mỗi bài phải có bản nháp đã sửa.", "Thu âm/đọc lời giải 60–90 giây cho một bài: nêu dữ kiện, cách làm, kiểm tra.", "Một người nghe hỏi ‘vì sao?’ ở bất kỳ bước nào; Bách bổ sung lời giải nếu bước đó chưa rõ.", "So sánh lời giải tuần đầu và tuần cuối: phần nào gọn hơn, phần nào chắc hơn.", "Chọn một lỗi cũ và minh họa cách Bách nay tự phát hiện lỗi đó.", "Ngày hội: trình bày ba bài, tự nhận xét một điểm mạnh và một mục tiêu kế tiếp."]
 };
 
 const AUTHORED_VIETNAMESE_KITS = {
@@ -422,7 +422,7 @@ function authoredDailyPlan(item, subject, weekNumber, phase) {
       `Nắm vững bản chất và quy tắc cốt lõi của “${title}” qua ví dụ mẫu.`,
       `Rèn luyện thành thạo kỹ thuật tính toán và giải các bài tập cơ bản về “${title}”.`,
       `Vận dụng kiến thức “${title}” để giải quyết bài toán thực tế có lời văn.`,
-      `Thử sức với bài toán nâng cao, rèn luyện tư duy heuristic và mô hình hóa.`,
+      `Thử sức với bài toán nâng cao, rèn luyện tư duy tìm quy luật và mô hình hóa.`,
       `Phát hiện bẫy sai lầm, phân tích nguyên nhân và trình bày lại lời giải chuẩn.`,
       `Đánh giá năng lực toàn diện tuần ${weekNumber} với đề kiểm tra 50 phút đa mức độ.`
     ]
@@ -453,141 +453,149 @@ function authoredDailyPlan(item, subject, weekNumber, phase) {
     return `Thực hiện chữa lại bài toán tuần ${weekNumber} (${title}): ${repair} Vận dụng số liệu từ ví dụ (${example}) để sửa lại lời giải hoàn chỉnh gồm 2 bước tính có số liệu rõ ràng.`;
   };
 
+  const cleanExampleText = (text) => {
+    if (!text || typeof text !== "string") return "";
+    return text.trim()
+      .replace(/^(?:Ví dụ(?: của ngày| đã giải| mẫu)?:\s*)+/i, "")
+      .replace(/^Neo lại ví dụ:\s*/i, "")
+      .trim();
+  };
+
   const mathDays = [
     {
-      example: example,
-      basic: `Phân tích ví dụ mẫu: ${example}. Viết lại các bước tính trung gian và giải thích quy tắc tìm ra kết quả.`,
-      applied: `Áp dụng quy tắc từ ví dụ (${example}): Nếu mở rộng thêm 2 bước tính nữa với cùng quy luật số liệu thì giá trị tiếp theo là bao nhiêu? Giải thích bằng phép tính cụ thể.`,
-      challenge: `Dựa vào ví dụ mẫu “${example}”, thử tìm một trường hợp đặc biệt hoặc số liệu lớn hơn có cùng quy luật.`,
-      reasoning: `Trong ví dụ “${example}”, bước biến đổi nào là quan trọng nhất để tìm ra kết quả đúng?`,
-      selfCheck: "Kiểm tra lại xem con đã hiểu rõ vì sao có từng con số trong ví dụ mẫu chưa.",
-      drill: example,
-      variant: basic,
-      advanced: `Mở rộng từ ví dụ: ${example}`
+      example: cleanExampleText(example),
+      basic: "1. Vận dụng quy tắc từ ví dụ mẫu, hãy giải bài toán sau với các bước tính rõ ràng: " + cleanExampleText(basic),
+      applied: "1. Tình huống thực tế (Tuần " + weekNumber + " - " + title + "): " + getMathAppliedForDay2(),
+      challenge: "1. Bài toán mở rộng tư duy: " + cleanExampleText(challenge),
+      reasoning: "Khi học chủ đề “" + title + "”, con cần xác định rõ bản chất và quy tắc cốt lõi của bài toán trước khi đặt phép tính nháp.",
+      selfCheck: "Kiểm tra lại xem con đã hiểu rõ vì sao có từng con số trong ví dụ mẫu và bài tập chưa.",
+      drill: cleanExampleText(example),
+      variant: cleanExampleText(basic),
+      advanced: "Mở rộng nâng cao: " + cleanExampleText(challenge)
     },
     {
-      example: `Bài toán mẫu định hướng phương pháp: ${basic}`,
-      basic: basic,
-      applied: `Đổi dữ kiện trong bài tập “${basic}”: Nếu cộng thêm 5 đơn vị vào số liệu ban đầu hoặc thay đổi một điều kiện, kết quả thay đổi thế nào? Thực hiện phép tính chi tiết.`,
-      challenge: `Thử giải bài toán “${basic}” bằng một cách khác hoặc nhẩm nhanh xem có rút ngắn được bước tính nào không.`,
-      reasoning: `Khi thực hiện bài tập “${basic}”, con làm thế nào để kiểm tra tính chính xác của từng bước tính?`,
-      selfCheck: "Dừng 1 phút: đối chiếu từng phép tính với thứ tự thực hiện phép toán.",
-      drill: basic,
-      variant: applied,
-      advanced: `Biến thể kỹ thuật: ${basic}`
+      example: "Bài toán mẫu rèn kỹ thuật tính: " + cleanExampleText(basic),
+      basic: "1. Thực hành kỹ thuật tính toán chính xác: " + cleanExampleText(basic) + " Trình bày đầy đủ các bước nháp và phép tính.",
+      applied: "1. Ứng dụng kỹ thuật tính vào bài toán thực tế: " + getMathAppliedForDay2(),
+      challenge: "1. Thử sức giải bài toán sau bằng cách tính nhanh hoặc tìm hướng giải ngắn gọn hơn: " + cleanExampleText(challenge),
+      reasoning: "Với dạng bài “" + title + "”, con thực hiện phép tính cẩn thận theo đúng thứ tự ưu tiên và kiểm tra lại bằng phép tính ngược.",
+      selfCheck: "Dừng 1 phút đối chiếu từng phép tính với thứ tự thực hiện phép toán.",
+      drill: cleanExampleText(basic),
+      variant: cleanExampleText(applied),
+      advanced: "Biến thể kỹ thuật nâng cao: " + cleanExampleText(basic)
     },
     {
-      example: `Tình huống thực tế mẫu cần giải quyết: ${applied}`,
-      basic: `Tóm tắt bài toán thực tế sau bằng sơ đồ đoạn thẳng hoặc bảng số liệu: ${applied}. Ghi rõ đại lượng đã biết và đại lượng cần tìm.`,
-      applied: getMathAppliedForDay2(),
-      challenge: `Nếu bài toán “${applied}” có thêm một điều kiện phụ trong thực tế, hướng giải sẽ cần điều chỉnh thế nào?`,
-      reasoning: `Với bài toán “${applied}”, vì sao việc tóm tắt hoặc vẽ mô hình giúp con chọn đúng phép tính?`,
-      selfCheck: "Đọc lại câu hỏi của bài toán thực tế: đáp số đã có danh số và đơn vị đo chưa?",
-      drill: applied,
-      variant: challenge,
-      advanced: `Nâng cao bài toán thực tế: ${applied}`
+      example: "Bài toán thực tế làm mẫu: " + cleanExampleText(applied),
+      basic: "1. Tóm tắt các đại lượng đã biết và đại lượng cần tìm của bài toán sau: " + cleanExampleText(applied) + " Vẽ sơ đồ đoạn thẳng nếu cần.",
+      applied: "1. Giải bài toán thực tế sau gồm 2 bước tính có danh số rõ ràng: " + getMathAppliedForDay2(),
+      challenge: "1. Mở rộng bài toán thực tế với điều kiện chọn lựa tối ưu: " + cleanExampleText(challenge),
+      reasoning: "Tóm tắt bài toán “" + title + "” bằng sơ đồ đoạn thẳng hoặc bảng số liệu giúp con nhìn rõ mối quan hệ giữa các đại lượng.",
+      selfCheck: "Đọc lại câu hỏi của bài toán thực tế: đáp số đã có đầy đủ danh số và đơn vị đo chưa.",
+      drill: cleanExampleText(applied),
+      variant: cleanExampleText(challenge),
+      advanced: "Nâng cao bài toán thực tế: " + cleanExampleText(applied)
     },
     {
-      example: `Thử thách tư duy cần tìm chiến lược: ${challenge}`,
-      basic: `Thử nghiệm với trường hợp số nhỏ hơn của bài toán “${challenge}” để tìm quy luật trước khi giải trọn vẹn.`,
-      applied: `Giải bài toán thử thách sau bằng ít nhất 1 chiến lược (lập bảng, vẽ sơ đồ hoặc thử ngược): ${challenge}`,
-      challenge: challenge,
-      reasoning: `Chiến lược hoặc heuristic nào đã giúp con mở nút thắt của bài toán “${challenge}”?`,
-      selfCheck: "Ghi lại tên chiến lược tư duy con đã áp dụng để mở bài toán khó này.",
-      drill: challenge,
-      variant: basic,
-      advanced: `Thử thách Olympic mở rộng: ${challenge}`
+      example: "Bài toán thử thách tư duy mẫu: " + cleanExampleText(challenge),
+      basic: "1. Thử nghiệm với các trường hợp số nhỏ hơn để tìm ra quy luật suy luận cho bài toán: " + cleanExampleText(challenge),
+      applied: "1. Giải bài toán thử thách sau bằng cách vẽ sơ đồ hoặc lập bảng thử giá trị: " + cleanExampleText(challenge),
+      challenge: "1. Thử thách tư duy đa bước: " + cleanExampleText(challenge),
+      reasoning: "Khi giải bài nâng cao về “" + title + "”, con hãy chia nhỏ bài toán phức tạp thành các bước đơn giản hơn để tìm lời giải.",
+      selfCheck: "Kiểm tra xem lời giải đã chứng minh được kết quả chưa hay chỉ là phán đoán ngẫu nhiên.",
+      drill: cleanExampleText(challenge),
+      variant: cleanExampleText(basic),
+      advanced: "Thử thách tư duy mở rộng: " + cleanExampleText(challenge)
     },
     {
-      example: `Tình huống có lỗi sai điển hình cần phân tích: ${repair}`,
-      basic: repair,
-      applied: getMathAppliedForDay4(),
-      challenge: `Chỉ ra nguyên nhân sâu xa vì sao học sinh hay nhầm lẫn ở bước này và đặt ra 1 mẹo để ghi nhớ không mắc lại.`,
-      reasoning: `Vì sao học sinh dễ mắc lỗi trong trường hợp “${repair}” và con làm thế nào để không lặp lại lỗi đó?`,
-      selfCheck: "Kiểm tra lại lời giải đã chữa: đã thay thế hoàn toàn bước suy luận sai chưa?",
-      drill: repair,
-      variant: example,
-      advanced: `Chữa sâu và phòng tránh lỗi: ${repair}`
+      example: "Tình huống có lỗi sai điển hình cần phân tích: " + cleanExampleText(repair),
+      basic: "1. Phân tích nguyên nhân sai và sửa lại cho đúng: " + cleanExampleText(repair),
+      applied: "1. Giải lại bài toán sau một cách hoàn chỉnh và chính xác: " + getMathAppliedForDay4(),
+      challenge: "1. Tìm bẫy sai lầm tiềm ẩn trong bài toán sau và nêu mẹo phòng tránh: " + cleanExampleText(challenge),
+      reasoning: "Phân tích vì sao bài “" + title + "” dễ nhầm lẫn sẽ giúp con hình thành thói quen kiểm tra bài cẩn thận và tránh bẫy sai sót.",
+      selfCheck: "Kiểm tra lại lời giải đã chữa: đã thay thế hoàn toàn bước suy luận sai chưa.",
+      drill: cleanExampleText(repair),
+      variant: cleanExampleText(example),
+      advanced: "Chữa sâu và phòng tránh lỗi: " + cleanExampleText(repair)
     },
     {
-      example: `Đề bài tổng hợp và trọng tâm ôn tập tuần ${weekNumber} (50 phút): Dựa trên ví dụ trọng tâm (${example}), thực hiện kiểm tra các nội dung: ${test}`,
-      basic: `Đề thi Mini-test 50 phút (Tuần ${weekNumber}):\n- Câu 1 (Cơ bản - 3đ): Dựa vào ví dụ “${example}”, giải bài toán tương tự khi đổi số liệu.\n- Câu 2 (Kỹ thuật tính - 3đ): ${basic}\n- Câu 3 (Vận dụng - 2đ): ${applied}\n- Câu 4 (Olympic thử thách - 2đ): ${challenge}`,
-      applied: `Tự chấm điểm bài thi tuần ${weekNumber} theo thang 10 điểm: Hoàn thành bài toán thực tế “${applied}” (3đ), câu thử thách “${challenge}” (2đ) và các câu nền (5đ). Trình bày sạch đẹp có danh số.`,
-      challenge: `Câu hỏi điểm 10 trong đề thi: ${challenge}`,
-      reasoning: `Sau khi hoàn thành đề kiểm tra về “${title}”, câu nào làm con mất nhiều thời gian nhất và vì sao?`,
+      example: "Đề bài tổng hợp và trọng tâm ôn tập tuần " + weekNumber + " (50 phút): " + cleanExampleText(test),
+      basic: "Đề thi Mini-test 50 phút (Tuần " + weekNumber + " - " + title + "):\n- Câu 1 (Cơ bản - 3đ): " + cleanExampleText(example) + "\n- Câu 2 (Kỹ thuật tính - 3đ): " + cleanExampleText(basic) + "\n- Câu 3 (Vận dụng - 2đ): " + cleanExampleText(applied) + "\n- Câu 4 (Olympic thử thách - 2đ): " + cleanExampleText(challenge),
+      applied: "1. Tự chấm điểm bài thi tuần " + weekNumber + " theo thang 10 điểm: Hoàn thành bài toán thực tế (3đ), câu thử thách tư duy (2đ) và các câu nền (5đ). Trình bày sạch đẹp có danh số.",
+      challenge: "1. Câu hỏi điểm 10 trong đề thi: " + cleanExampleText(challenge),
+      reasoning: "Phân bổ 50 phút thi Tuần " + weekNumber + " (“" + title + "”): Câu 1 (10 phút), Câu 2 (10 phút), Câu 3 (15 phút), Câu 4 (10 phút), soát bài (5 phút).",
       selfCheck: "Tự chấm điểm theo thang 10: Cơ bản (6đ), Vận dụng (2đ), Nâng cao (2đ). Trình bày sạch đẹp, có danh số rõ ràng.",
-      drill: test,
-      variant: challenge,
-      advanced: `Tổng hợp năng lực tuần ${weekNumber}: ${test}`
+      drill: cleanExampleText(test),
+      variant: cleanExampleText(challenge),
+      advanced: "Tổng hợp năng lực tuần " + weekNumber + ": " + cleanExampleText(test)
     }
   ];
 
   const vietnameseDays = [
     {
-      example: example,
-      basic: `Đọc kỹ ngữ liệu hoặc yêu cầu mẫu: ${example}. Tìm 2 chi tiết quan trọng và nói thành 3 câu trọn ý trước khi viết.`,
-      applied: `Dựa trên yêu cầu mẫu “${example}”, hãy nói 1 đoạn 4–5 câu cho bạn cùng bàn nghe, nêu rõ trình tự quan sát hoặc cảm nhận của con.`,
-      challenge: `Tìm thêm 1 từ ngữ gợi cảm hoặc hình ảnh liên tưởng độc đáo phù hợp với ngữ liệu “${example}”.`,
-      reasoning: `Trong phần mở đầu của bài “${title}”, chi tiết hoặc từ ngữ nào giúp người nghe hình dung rõ nhất?`,
+      example: cleanExampleText(example),
+      basic: "1. Đọc kỹ văn bản về chủ đề “" + title + "”: " + cleanExampleText(example) + " Tìm 2 chi tiết quan trọng và nói thành 3 câu trọn ý trước khi viết.",
+      applied: "1. Kể hoặc miêu tả bằng lời của Bách về “" + title + "” (4–5 câu) cho người thân nghe: " + cleanExampleText(applied),
+      challenge: "1. Thử thách diễn đạt sáng tạo cho chủ đề “" + title + "”: " + cleanExampleText(challenge),
+      reasoning: "Trong phần mở đầu bài “" + title + "”, chọn chi tiết quan sát thật giúp người nghe hình dung rõ đối tượng nhất.",
       selfCheck: "Tự nói to trước gương hoặc nhờ người thân nghe 1 lượt để kiểm tra độ trôi chảy.",
-      drill: example,
-      variant: basic,
-      advanced: `Mở rộng ngữ liệu đọc hiểu: ${example}`
+      drill: cleanExampleText(example),
+      variant: cleanExampleText(basic),
+      advanced: "Mở rộng ngữ liệu đọc hiểu: " + cleanExampleText(example)
     },
     {
-      example: `Ngữ liệu định hướng lập dàn ý: ${basic}`,
-      basic: basic,
-      applied: `Thực hiện lập dàn ý theo yêu cầu “${basic}”: Viết 4 gạch đầu dòng tương ứng 4 ý chính vào vở, mỗi gạch đầu dòng là 1 câu ngắn gọn.`,
-      challenge: `Sắp xếp lại trật tự 4 ý vừa lập theo trình tự thời gian hoặc không gian để bài viết logic hơn.`,
-      reasoning: `Khi sắp xếp các ý cho chủ đề “${title}”, ý nào đóng vai trò làm trục chính xuyên suốt bài viết?`,
-      selfCheck: "Đọc lại dàn ý: các ý đã nối tiếp nhau tự nhiên chưa, có ý nào bị trùng lặp không?",
-      drill: basic,
-      variant: applied,
-      advanced: `Kỹ thuật lập dàn ý nâng cao: ${basic}`
+      example: "Ngữ liệu định hướng lập dàn ý cho bài “" + title + "”: " + cleanExampleText(basic),
+      basic: "1. Lập dàn ý 4 gạch đầu dòng tương ứng 4 ý chính vào vở cho chủ đề “" + title + "”: " + cleanExampleText(basic),
+      applied: "1. Thêm 1–2 chi tiết cụ thể vào từng ý của dàn ý bài “" + title + "” vừa lập: " + cleanExampleText(applied),
+      challenge: "1. Sắp xếp lại trật tự 4 ý vừa lập cho bài “" + title + "” theo trình tự thời gian hoặc không gian logic: " + cleanExampleText(challenge),
+      reasoning: "Khi sắp xếp các ý cho chủ đề “" + title + "”, chọn 1 ý trọng tâm đóng vai trò làm trục chính xuyên suốt.",
+      selfCheck: "Đọc lại dàn ý: các ý đã nối tiếp nhau tự nhiên chưa, có ý nào bị trùng lặp không.",
+      drill: cleanExampleText(basic),
+      variant: cleanExampleText(applied),
+      advanced: "Kỹ thuật lập dàn ý nâng cao: " + cleanExampleText(basic)
     },
     {
-      example: `Đề bài và ngữ cảnh viết đoạn văn: ${applied}`,
-      basic: `Chuẩn bị viết theo yêu cầu “${applied}”: Viết 1 câu mở đoạn trực tiếp giới thiệu đối tượng và 1 câu kết đoạn nêu cảm nghĩ riêng.`,
-      applied: applied,
-      challenge: `Thêm 1 biện pháp so sánh hoặc nhân hóa vào đoạn văn “${applied}” để câu văn sinh động hơn.`,
-      reasoning: `Đoạn văn viết cho chủ đề “${title}”, câu nào có hình ảnh hoặc chi tiết chân thật làm con hài lòng nhất?`,
-      selfCheck: "Đọc liền mạch bản nháp: không dừng lại sửa từ khi đang viết để giữ mạch cảm xúc.",
-      drill: applied,
-      variant: challenge,
-      advanced: `Bản viết hoàn chỉnh có cảm xúc: ${applied}`
+      example: "Đề bài và ngữ cảnh viết đoạn văn về “" + title + "”: " + cleanExampleText(applied),
+      basic: "1. Chuẩn bị viết cho chủ đề “" + title + "”: Viết 1 câu mở đoạn trực tiếp giới thiệu đối tượng và 1 câu kết đoạn nêu cảm nghĩ riêng: " + cleanExampleText(basic),
+      applied: "1. Viết hoàn chỉnh bản nháp đầu tiên 7–10 câu cho đề bài “" + title + "”: " + cleanExampleText(applied),
+      challenge: "1. Thêm 1 biện pháp so sánh hoặc từ ngữ gợi cảm vào đoạn văn “" + title + "”: " + cleanExampleText(challenge),
+      reasoning: "Đoạn văn viết cho chủ đề “" + title + "”, câu nào có hình ảnh hoặc chi tiết chân thật làm con hài lòng nhất?",
+      selfCheck: "Đoạn văn đã có đủ câu mở đoạn, thân đoạn và kết đoạn chưa.",
+      drill: cleanExampleText(applied),
+      variant: cleanExampleText(challenge),
+      advanced: "Rèn luyện bút lực nâng cao: " + cleanExampleText(applied)
     },
     {
-      example: `Kỹ thuật viết sáng tạo mở rộng: ${challenge}`,
-      basic: `Thử nghiệm cách diễn đạt mới: ${challenge}. Viết 2 phương án câu khác nhau rồi chọn phương án giàu hình ảnh hơn.`,
-      applied: `Áp dụng cách viết sáng tạo vào bài văn: ${challenge}. Viết hoàn chỉnh 1 đoạn 5–6 câu gửi cho người thân hoặc thầy cô đọc.`,
-      challenge: challenge,
-      reasoning: `Cách diễn đạt thử nghiệm trong bài “${title}”, con thấy điều gì giúp câu văn khác biệt và truyền cảm hơn?`,
+      example: "Câu văn gợi ý thử nghiệm phong cách viết về “" + title + "”: " + cleanExampleText(challenge),
+      basic: "1. Thử viết lại 1 câu trong bài “" + title + "” bằng 2 cách diễn đạt khác nhau (1 cách dùng từ gợi tả âm thanh/màu sắc, 1 cách dùng so sánh): " + cleanExampleText(basic),
+      applied: "1. Viết đoạn văn nâng cấp 5–7 câu cho chủ đề “" + title + "” có sử dụng từ gợi cảm giác hoặc hình ảnh giàu sức gợi: " + cleanExampleText(applied),
+      challenge: "1. Thử thách diễn đạt sáng tạo tuần " + weekNumber + " cho chủ đề “" + title + "”: " + cleanExampleText(challenge),
+      reasoning: "Cách diễn đạt trong bài “" + title + "”, điều gì giúp câu văn khác biệt và truyền cảm hơn?",
       selfCheck: "Kiểm tra xem câu văn sáng tạo có tự nhiên và phù hợp với lứa tuổi học sinh lớp 4 không.",
-      drill: challenge,
-      variant: basic,
-      advanced: `Thử nghiệm phong cách diễn đạt: ${challenge}`
+      drill: cleanExampleText(challenge),
+      variant: cleanExampleText(basic),
+      advanced: "Thử nghiệm phong cách diễn đạt: " + cleanExampleText(challenge)
     },
     {
-      example: `Mẫu câu hoặc đoạn văn cần soát lỗi: ${repair}`,
-      basic: repair,
-      applied: `Thực hiện biên tập và nâng cấp: ${repair}. Viết lại thành bản hoàn chỉnh gồm 5–7 câu rõ ý, không mắc lỗi lặp từ hay câu què.`,
-      challenge: `Đọc to bản đã sửa thành tiếng, phát hiện 1 chỗ ngắt nghỉ chưa hợp lý và điều chỉnh dấu câu thích hợp.`,
-      reasoning: `Sau khi chỉnh sửa bài viết về “${title}”, lỗi nào con thấy cần chú ý tránh nhất trong những bài viết sau?`,
-      selfCheck: "Rà soát 4 bước: đúng ý, câu đủ thành phần, dùng từ chính xác, không sai chính tả.",
-      drill: repair,
-      variant: example,
-      advanced: `Biên tập chuyên sâu: ${repair}`
+      example: "Mẫu câu hoặc đoạn văn cần soát lỗi về “" + title + "”: " + cleanExampleText(repair),
+      basic: "1. Tìm và chỉ rõ 2 lỗi dùng từ hoặc ngắt câu trong đoạn văn về “" + title + "”: " + cleanExampleText(repair),
+      applied: "1. Thực hiện biên tập và nâng cấp cho bài “" + title + "”: Viết lại thành bản hoàn chỉnh gồm 5–7 câu rõ ý: " + cleanExampleText(repair),
+      challenge: "1. Đọc to bản đã sửa của bài “" + title + "” thành tiếng, phát hiện 1 chỗ ngắt nghỉ chưa hợp lý và điều chỉnh dấu câu.",
+      reasoning: "Sau khi chỉnh sửa bài viết về “" + title + "”, lỗi nào con thấy cần chú ý tránh nhất trong những bài sau?",
+      selfCheck: "Kiểm tra lại xem bản sửa đã khắc phục triệt để lỗi của bản gốc chưa.",
+      drill: cleanExampleText(repair),
+      variant: cleanExampleText(example),
+      advanced: "Biên tập chuyên sâu: " + cleanExampleText(repair)
     },
     {
-      example: `Khung đề kiểm tra Tiếng Việt tổng hợp tuần ${weekNumber} (50 phút): Dựa trên ngữ liệu trọng tâm (${example}), hoàn thành các phần kiểm tra: ${test}`,
-      basic: `Đề kiểm tra Tiếng Việt 50 phút (Tuần ${weekNumber}):\n- Phần 1 - Đọc hiểu & Phân tích (15 phút): Đọc văn bản ngữ liệu về “${title}” (ngữ liệu: “${example}”) và trả lời 3 câu hỏi trọn ý: nêu ý chính, tìm 2 chi tiết đắt giá và nêu cảm nhận.\n- Phần 2 - Luyện câu & Viết đoạn (25 phút): ${applied}\n- Phần 3 - Soát lỗi 4 bước (10 phút): ${repair}`,
-      applied: `Tự chấm điểm bài thi tuần ${weekNumber} theo thang điểm 10: Đọc hiểu (3đ), Viết đoạn văn theo đề “${applied}” (5đ), Chính tả và soát lỗi “${repair}” (2đ). Đạt tối đa 10/10.`,
-      challenge: `Yêu cầu sáng tạo đạt điểm tối đa: ${challenge}`,
-      reasoning: `Đọc to toàn bộ bài viết kiểm tra tuần này về “${title}”, con tự đánh giá bài làm đạt mức mấy trên thang điểm 10?`,
+      example: "Khung đề kiểm tra Tiếng Việt tổng hợp tuần " + weekNumber + " (50 phút): Dựa trên ngữ liệu trọng tâm về “" + title + "”, hoàn thành các phần kiểm tra: " + cleanExampleText(test),
+      basic: "Đề kiểm tra Tiếng Việt 50 phút (Tuần " + weekNumber + " - " + title + "):\n- Phần 1 - Đọc hiểu & Phân tích (15 phút): Đọc văn bản ngữ liệu về “" + title + "” và trả lời 3 câu hỏi trọn ý: nêu ý chính, tìm 2 chi tiết đắt giá và nêu cảm nhận.\n- Phần 2 - Luyện câu & Viết đoạn (25 phút): " + cleanExampleText(applied) + "\n- Phần 3 - Soát lỗi 4 bước (10 phút): " + cleanExampleText(repair),
+      applied: "1. Tự chấm điểm bài thi tuần " + weekNumber + " theo thang điểm 10: Đọc hiểu (3đ), Viết đoạn văn theo đề “" + cleanExampleText(applied) + "” (5đ), Chính tả và soát lỗi (2đ). Đạt tối đa 10/10.",
+      challenge: "1. Yêu cầu sáng tạo đạt điểm tối đa cho bài “" + title + "”: " + cleanExampleText(challenge),
+      reasoning: "Phân bổ thời gian làm bài Tiếng Việt Tuần " + weekNumber + " (“" + title + "”): Đọc hiểu 15 phút, viết đoạn 25 phút, soát lỗi và sửa bài 10 phút.",
       selfCheck: "Tự chấm điểm theo thang 10: Đọc hiểu (3đ), Viết đoạn văn (5đ), Chính tả và chữ đẹp (2đ). Đạt tối đa 10/10.",
-      drill: test,
-      variant: challenge,
-      advanced: `Đánh giá năng lực Tiếng Việt tuần ${weekNumber}: ${test}`
+      drill: cleanExampleText(test),
+      variant: cleanExampleText(challenge),
+      advanced: "Đánh giá năng lực Tiếng Việt tuần " + weekNumber + ": " + cleanExampleText(test)
     }
   ];
 
@@ -672,9 +680,9 @@ function createDetailedDailyPlan(item, subject, weekNumber, phase) {
         { day: "Thứ 2", title: `Hiểu lõi · ${title}`, objective: `Nắm ý chính của “${title}” và nói lại bằng lời của Bách.`, example, basic: "Làm 2 câu khởi động từ kiến thức đã biết; chỉ dùng giấy, bút và vật thật nếu cần.", applied: "Vẽ hoặc lập mô hình cho một tình huống ngắn trước khi giải.", reasoning: "Điều gì luôn đúng trong bài này? Điều gì chỉ đúng vì dữ kiện cụ thể?", selfCheck: "Khoanh dữ kiện, gạch câu hỏi và kiểm tra mình có dùng đúng đơn vị không." },
         { day: "Thứ 3", title: `Luyện có hướng dẫn · ${title}`, objective: "Chuyển từ hình/bảng/lời nói sang phép tính hoặc lập luận rõ ràng.", example: "Giải lại ví dụ mẫu nhưng che lời giải; Bách nói từng bước trước khi viết.", basic, applied: "Làm một bài có dữ kiện thay đổi; giữ nguyên cách nghĩ nhưng điều chỉnh bước tính.", reasoning: "Vì sao chọn cách này thay vì thử ngẫu nhiên hoặc làm thật dài?", selfCheck: "So sánh với ví dụ mẫu, chỉ sửa tối đa 3 lỗi và ghi nguyên nhân từng lỗi." },
         { day: "Thứ 4", title: `Vận dụng thực tế · ${title}`, objective: "Dùng kiến thức trong một bài toán có lời văn hoặc nhiều dữ kiện hơn.", example: "Đọc đề hai lần: lần một hiểu tình huống, lần hai gạch số liệu và điều phải tìm.", basic, applied, reasoning: "Nếu bỏ một dữ kiện thì bài còn giải được không? Nếu không, dữ kiện đó giữ vai trò gì?", selfCheck: "Ước lượng trước; đáp số phải hợp lý với cỡ số và câu hỏi." },
-        { day: "Thứ 5", title: `Thử thách Singapore/Olympic · ${title}`, objective: "Chọn một heuristic phù hợp và trình bày được chiến lược.", example: "Làm phiên bản nhỏ trước, lập bảng hoặc dùng sơ đồ thanh; sau đó quay lại bài chính.", basic: "Làm một bài nền để chắc kỹ thuật trước khi thử bài lạ.", applied: "Giải bài thử thách ở mức vừa sức; được nhận tối đa hai gợi ý theo từng nấc.", reasoning: "Có cách giải khác không? Cách nào ngắn hơn, cách nào dễ kiểm tra hơn?", selfCheck: "Ghi chiến lược đã thử, chỗ bế tắc và bước tiếp theo thay vì chỉ ghi đáp số." },
-        { day: "Thứ 6", title: `Chữa lỗi và dạy lại · ${title}`, objective: "Nhận diện lỗi kiến thức, lỗi chiến lược và lỗi cẩu thả.", example: "Đọc một lời giải sai, tìm đúng dòng sai rồi sửa bằng lời của mình.", basic: "Làm lại 2 câu từng sai mà không xem đáp án.", applied: "Tự tạo một bài tương tự, đổi ít nhất một điều kiện và giải cho người khác hiểu.", reasoning: "Lỗi này sẽ xuất hiện lại trong tình huống nào? Cách phòng tránh là gì?", selfCheck: "Đọc lời giải thành tiếng, kiểm tra phép ngược và câu kết luận." },
-        { day: "Thứ 7", title: `Mini-test tuần ${weekNumber} · ${title}`, objective: "Đo mức hiểu thật qua câu cơ bản, vận dụng và một câu suy luận.", example: "Làm theo ba lượt: câu chắc, câu vừa, câu khó; không mắc kẹt quá 8 phút.", basic: "4–6 câu cơ bản, không dùng máy tính bỏ túi.", applied: "Một bài thực tế hai bước hoặc một bài cần mô hình hóa.", reasoning: "Chọn một câu khó để viết hướng giải dù chưa giải xong.", selfCheck: "Chấm riêng độ đúng, chiến lược, trình bày và ghi mục tiêu ôn lại tuần sau." }
+        { day: "Thứ 5", title: `Thử thách Singapore/Olympic · ${title}`, objective: "Chọn một cách giải phù hợp và trình bày được các bước làm.", example: "Làm phiên bản nhỏ trước, lập bảng hoặc dùng sơ đồ thanh; sau đó quay lại bài chính.", basic: "Làm một bài nền để chắc kỹ thuật trước khi thử bài lạ.", applied: "Giải bài thử thách ở mức vừa sức; được nhận tối đa hai gợi ý theo từng nấc.", reasoning: "Có cách giải khác không? Cách nào ngắn hơn, cách nào dễ kiểm tra hơn?", selfCheck: "Ghi cách làm đã thử, chỗ bế tắc và bước tiếp theo thay vì chỉ ghi đáp số." },
+        { day: "Thứ 6", title: `Chữa lỗi và dạy lại · ${title}`, objective: "Nhận diện lỗi kiến thức, lỗi phương pháp và lỗi cẩu thả.", example: "Đọc một lời giải sai, tìm đúng dòng sai rồi sửa bằng lời của mình.", basic: "Làm lại 2 câu từng sai mà không xem đáp án.", applied: "Tự tạo một bài tương tự, đổi ít nhất một điều kiện và giải cho người khác hiểu.", reasoning: "Lỗi này sẽ xuất hiện lại trong tình huống nào? Cách phòng tránh là gì?", selfCheck: "Đọc lời giải thành tiếng, kiểm tra phép ngược và câu kết luận." },
+        { day: "Thứ 7", title: `Mini-test tuần ${weekNumber} · ${title}`, objective: "Đo mức hiểu thật qua câu cơ bản, vận dụng và một câu suy luận.", example: "Làm theo ba lượt: câu chắc, câu vừa, câu khó; không mắc kẹt quá 8 phút.", basic: "4–6 câu cơ bản, không dùng máy tính bỏ túi.", applied: "Một bài thực tế hai bước hoặc một bài cần mô hình hóa.", reasoning: "Chọn một câu khó để viết hướng giải dù chưa giải xong.", selfCheck: "Chấm riêng độ đúng, cách làm, trình bày và ghi mục tiêu ôn lại tuần sau." }
       ]
     };
   }
@@ -1079,7 +1087,7 @@ function createConcreteLesson(item, subject, weekNumber, dayIndex, rawDay = null
     vietnameseTemplate.challenge = `${vietnameseTemplate.challenge} Không dùng lại câu mẫu; viết một câu mới dựa trên chi tiết của đoạn luyện riêng hôm nay.`;
   }
   const vietnameseWarmups = [
-    "Đọc đoạn luyện một lần để hiểu ý, lần hai đọc thành tiếng và khoanh một chi tiết làm mình chú ý.",
+    "Đọc đoạn luyện bên dưới một lần để hiểu ý, lần hai đọc thành tiếng và khoanh một chi tiết làm mình chú ý.",
     "Nói lại đề bằng một câu đủ ý; chọn ba từ khóa trước khi viết.",
     "Sắp xếp ba mảnh ý lộn xộn thành trình tự hợp lý rồi giải thích lựa chọn.",
     "Tìm một câu còn chung chung và thay bằng chi tiết nhìn, nghe hoặc hành động cụ thể.",
@@ -1095,22 +1103,22 @@ function createConcreteLesson(item, subject, weekNumber, dayIndex, rawDay = null
     "Đọc bản 1 và bản 2 cạnh nhau, chỉ ra một thay đổi làm bài mạch lạc hơn."
   ];
   const vietnameseHints = [
-    "Gợi ý 1: nói thành tiếng. Gợi ý 2: viết từ khóa. Gợi ý 3: chọn một chi tiết làm bằng chứng.",
-    "Gợi ý 1: chia 3 phần. Gợi ý 2: mỗi ý viết một câu. Gợi ý 3: thêm từ nối nếu mạch bị nhảy.",
-    "Gợi ý 1: bỏ câu lặp. Gợi ý 2: thay từ mơ hồ bằng hành động. Gợi ý 3: đọc lại như người chưa biết câu chuyện.",
-    "Gợi ý 1: viết bản ngắn trước. Gợi ý 2: thêm một chi tiết riêng. Gợi ý 3: kiểm tra chi tiết đó có phục vụ ý không.",
-    "Gợi ý 1: tìm dòng làm người đọc vấp. Gợi ý 2: sửa một lỗi mỗi lượt. Gợi ý 3: đọc to để kiểm tra.",
-    "Gợi ý 1: giữ câu chắc trước. Gợi ý 2: viết hướng sửa. Gợi ý 3: không chép văn mẫu."
+    "Gợi ý 1: Đọc to bài văn thành tiếng để cảm nhận giai điệu của câu chữ.\nGợi ý 2: Gạch chân 2–3 từ khóa quan trọng nhất trong đề bài.\nGợi ý 3: Chọn một chi tiết hay hoặc một câu văn mẫu mà con thích nhất làm điểm tựa.",
+    "Gợi ý 1: Chia dàn ý làm 3 phần rõ ràng: Mở đoạn, Thân đoạn, Kết đoạn.\nGợi ý 2: Mỗi ý trong dàn ý, con viết thành một câu văn trọn vẹn.\nGợi ý 3: Thêm từ nối (Đầu tiên, Tiếp theo, Sau đó...) để bài viết liền mạch.",
+    "Gợi ý 1: Đọc lại xem có từ nào bị lặp đi lặp lại nhiều lần để tìm từ thay thế.\nGợi ý 2: Thay từ ngữ chung chung bằng chi tiết cụ thể về màu sắc, âm thanh hoặc hành động.\nGợi ý 3: Đóng vai một người bạn đọc lần đầu xem bài đã dễ hiểu và sinh động chưa.",
+    "Gợi ý 1: Viết nháp ngắn gọn các ý chính trước.\nGợi ý 2: Thêm một chi tiết hoặc cảm xúc thật của riêng con.\nGợi ý 3: Kiểm tra xem chi tiết đó có giúp đoạn văn tự nhiên và gần gũi hơn không.",
+    "Gợi ý 1: Đọc to cả bài lên; chỗ nào đọc thấy ngượng miệng hoặc khó hiểu thì lấy bút chì gạch chân.\nGợi ý 2: Sửa từng bước một: sửa câu và ý cho rõ trước, sau đó mới soát lỗi chính tả và dấu câu.\nGợi ý 3: Đọc lại lần cuối sau khi sửa xem bài văn đã trôi chảy và vui tai chưa.",
+    "Gợi ý 1: Giữ lại những câu văn con thấy tâm đắc và ưng ý nhất.\nGợi ý 2: Chọn ra một câu muốn làm hay hơn nữa và thử viết lại thật tự nhiên.\nGợi ý 3: Tự hào vì đây là sản phẩm do chính con sáng tạo, không chép bài mẫu."
   ];
   const isAuthoredUnit = Boolean(day?.advanced);
   vietnameseTemplate.warmup = isAuthoredUnit
-    ? "Đọc đề/đoạn luyện hai lượt: lượt đầu hiểu sự việc hoặc ý chính; lượt sau khoanh một chi tiết sẽ dùng trong bài của mình."
+    ? "Đọc đề hoặc đoạn luyện bên dưới hai lượt: lượt đầu hiểu sự việc hoặc ý chính; lượt sau khoanh một chi tiết sẽ dùng trong bài của mình."
     : vietnameseWarmups[dayIndex] || vietnameseWarmups[0];
   vietnameseTemplate.discover = isAuthoredUnit
     ? `Khám phá từ ví dụ: ${day.objective} Ghi từ khóa trước, chỉ chuyển sang câu hoàn chỉnh khi đã biết mỗi ý phục vụ phần nào của bài.`
     : vietnameseDiscoveries[dayIndex] || vietnameseDiscoveries[0];
   vietnameseTemplate.hint = isAuthoredUnit
-    ? "Gợi ý 1: nói ý bằng lời của mình. Gợi ý 2: chọn một chi tiết thật hoặc dẫn chứng. Gợi ý 3: đọc thành tiếng để tìm chỗ người đọc sẽ vấp."
+    ? "Gợi ý 1: Tự nói lại ý tưởng bằng lời kể tự nhiên của con.\nGợi ý 2: Chọn một chi tiết có thật hoặc hình ảnh so sánh sinh động.\nGợi ý 3: Đọc to thành tiếng để nghe xem câu văn đã êm tai và rõ ý chưa."
     : vietnameseHints[dayIndex] || vietnameseHints[0];
   const dayFocus = [
     "đọc/nói lại yêu cầu bằng 3–5 câu",
@@ -1216,18 +1224,18 @@ function createMentalMathContinuation() {
 function addAdvancedLayer(days, item, subject, weekNumber, phase) {
   const advanced = subject === "math"
     ? phase.id === "P1"
-      ? "Nâng tầm học sinh giỏi: sau bài chính, giải thêm một biến thể có số lớn hơn hoặc hai bước; ưu tiên tìm cách nhẩm gọn, nhưng phải giải thích và kiểm tra."
+      ? "Thử sức thêm: Sau bài chính, giải thêm một bài biến thể tương tự hoặc tìm cách nhẩm nhanh hơn, sau đó tự giải thích cách làm."
       : phase.id === "P6"
-        ? "Nâng tầm: viết lời giải ngắn như đang trình bày trong đề thi chọn học sinh giỏi; nêu điều kiện, không bỏ trường hợp và thử một cách kiểm tra độc lập."
-        : "Nâng tầm học sinh giỏi: giải một bài biến thể khó hơn, tìm cách thứ hai hoặc chứng minh vì sao cách làm không bỏ sót; không tăng số lượng bài một cách máy móc."
+        ? "Thử sức thêm: Trình bày lời giải ngắn gọn, rõ ràng từng bước và thử lại bằng phép tính ngược để chắc chắn đúng."
+        : "Thử sức thêm: Giải bài toán theo một cách khác hoặc chứng minh vì sao cách làm này chắc chắn không bỏ sót trường hợp."
     : phase.id === "P1"
-      ? "Nâng tầm: giữ yêu cầu diễn đạt ở mức lớp 4 khá–giỏi; thêm một chi tiết có chủ đích, một câu chuyển ý và tự giải thích lựa chọn, không viết bài mẫu rập khuôn."
-      : "Nâng tầm: tạo một phiên bản có góc nhìn hoặc cách diễn đạt riêng, giữ mạch logic; chọn một câu giàu hình ảnh nhưng vẫn tự nhiên, đúng tuổi.";
+      ? "Góc sáng tạo: Thử viết thêm 1–2 câu thật sinh động — thêm một chi tiết về màu sắc, âm thanh hoặc cảm xúc của riêng Bách để bài văn thêm hấp dẫn nhé."
+      : "Góc sáng tạo: Viết thêm một phiên bản với góc nhìn mới hoặc cái kết bất ngờ, dùng từ ngữ tự nhiên đúng lứa tuổi của con.";
   return days.map((rawDay, index) => {
     const day = subject === "math" ? normalizeMathDay(rawDay, weekNumber, index) : rawDay;
     return {
       ...day,
-      advanced: day.advanced || `${advanced} (nấc ${index + 1}/6 của tuần ${weekNumber})`,
+      advanced: day.advanced || advanced,
       concrete: createConcreteLesson(item, subject, weekNumber, index, day)
     };
   });

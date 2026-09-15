@@ -42,6 +42,11 @@ export function createEmptyDatabase() {
       fileId: null,
       lastSyncedAt: null,
       driver: "indexeddb"
+    },
+    gameRecords: {
+      speedMath: { highScore: 0, lastScore: 0, gamesPlayed: 0, bestStreak: 0 },
+      barModel: { stars: 0, completedChallenges: [] },
+      spotTheBug: { stars: 0, solvedCount: 0, solvedBugs: [] }
     }
   };
 }
@@ -158,6 +163,15 @@ export function validateDatabasePayload(data) {
       if (item.subject !== undefined && !(item.subject === "math" || item.subject === "vietnamese")) return false;
       if (item.weekId !== undefined && (typeof item.weekId !== "string" || !/^w[1-9][0-9]*$/.test(item.weekId))) return false;
     }
+  }
+
+  // gameRecords nếu có phải là plain object hợp lệ
+  if (data.gameRecords !== undefined) {
+    if (!data.gameRecords || typeof data.gameRecords !== "object" || Array.isArray(data.gameRecords)) return false;
+    const { speedMath, barModel, spotTheBug } = data.gameRecords;
+    if (speedMath !== undefined && (!speedMath || typeof speedMath !== "object" || Array.isArray(speedMath))) return false;
+    if (barModel !== undefined && (!barModel || typeof barModel !== "object" || Array.isArray(barModel))) return false;
+    if (spotTheBug !== undefined && (!spotTheBug || typeof spotTheBug !== "object" || Array.isArray(spotTheBug))) return false;
   }
 
   return true;
