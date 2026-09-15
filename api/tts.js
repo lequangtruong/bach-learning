@@ -2,8 +2,22 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
-import { EdgeTTS } from "node-edge-tts";
 import { verifyGoogleIdToken } from "./tutor.js";
+
+let EdgeTTSConstructor = null;
+let edgeTtsCheckDone = false;
+
+async function getEdgeTTSConstructor() {
+  if (edgeTtsCheckDone) return EdgeTTSConstructor;
+  edgeTtsCheckDone = true;
+  try {
+    const mod = await import("node-edge-tts");
+    EdgeTTSConstructor = mod.EdgeTTS || mod.default?.EdgeTTS || mod.default || null;
+  } catch {
+    EdgeTTSConstructor = null;
+  }
+  return EdgeTTSConstructor;
+}
 
 export function cleanTextForSpeech(rawText) {
   if (typeof rawText !== "string") return "";
@@ -244,6 +258,10 @@ export default async function ttsHandler(req, res, { env = process.env, verifyFn
     // 7. Nếu chưa có cache, gọi Edge Neural TTS (với Google fallback)
     if (!hasValidCache) {
       try {
+        const EdgeTTS = await getEdgeTTSConstructor();
+        if (!EdgeTTS) {
+          throw new Error("node-edge-tts module is not installed");
+        }
         const tts = new EdgeTTS({ voice, lang: "vi-VN", timeout: 8000 });
         await tts.ttsPromise(cleanText, cacheFile);
         const newStats = await fs.promises.stat(cacheFile);

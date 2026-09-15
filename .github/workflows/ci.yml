@@ -24,11 +24,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
 
       - name: Syntax Check
         run: npm run check
 
-      - name: Run 86 Unit Tests
+      - name: Run Test Suite
         run: npm test
 
       - name: Audit 432 Curriculum Lessons
