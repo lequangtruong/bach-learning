@@ -134,13 +134,13 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t3", text: "Đi dây ống dẫn nước mềm phân nhánh đến từng chậu cây", icon: "🪢", requires: ["t2"], hint: "Dẫn nước phân bổ đều khắp khu vườn." },
       { id: "t4", text: "Gắn các đầu vòi nhỏ giọt có van chỉnh lưu lượng vào từng gốc cây", icon: "🌱", requires: ["t3"], hint: "Tưới nhỏ giọt tiết kiệm 70% lượng nước ngọt." },
       { id: "t5", text: "Lắp tấm pin mặt trời trên mái hướng về phía Nam nhận nắng nhiều nhất", icon: "☀️", hint: "Góc nghiêng hứng trọn vẹn quang năng mặt trời." },
-      { id: "t6", text: "Nối dây điện từ tấm pin mặt trời qua bộ rơ-le hẹn giờ vào máy bơm", icon: "⚡", requires: ["t2", "t5"], hint: "Trời nắng -> Pin phát điện -> Bơm tự chạy tưới mát rượi." }
+      { id: "t6", text: "Nối dây điện từ tấm pin mặt trời qua bộ rơ-le hẹn giờ vào máy bơm", icon: "⚡", requires: ["t4", "t5"], hint: "Phải hoàn tất toàn bộ đường ống và vòi tưới rồi mới cấp điện vận hành máy bơm!" }
     ],
     distractors: [
       { id: "d1", text: "Lắp tấm pin mặt trời úp mặt xuống nền đất tối om", icon: "🌑", failReason: "Tấm pin bị che khuất trong bóng tối sẽ không thể tạo ra dòng điện để bơm nước!" },
       { id: "d2", text: "Cắm trực tiếp máy bơm công suất lớn vào pin không qua bộ điều áp", icon: "🔌", failReason: "Điện áp không ổn định sẽ làm cháy động cơ máy bơm nước!" }
     ],
-    lesson: "Năng lượng tái tạo xanh: Dùng ánh nắng nuôi cây, tuần hoàn tự nhiên bền vững."
+    lesson: "Hoàn thiện đường ống trước khi bật bơm: Tránh thất thoát nước và cháy máy bơm do nghẽn mạch."
   },
   {
     id: "tm-47",
@@ -214,17 +214,17 @@ export const TASK_MASTER_LEVELS_PART2 = [
   {
     id: "tm-50",
     level: 50,
-    title: "Chế Tạo Kính Xem Phim 3D Phân Cực",
+    title: "Chế Tạo Kính Xem Phim 3D Anaglyph (Lọc Màu)",
     category: "engineering",
     categoryName: "Xưởng Sáng Chế",
     icon: "👓",
     difficulty: 3,
-    description: "Tự làm chiếc kính ma thuật để xem phim nổi 3 chiều sống động như ngoài rạp.",
+    description: "Tự chế tạo chiếc kính 3D Anaglyph lọc màu đỏ - xanh để xem hình ảnh nổi 3 chiều kỳ thú.",
     tasks: [
       { id: "t1", text: "In bản vẽ mẫu gọng kính lên tấm bìa các-tông cứng", icon: "🖨️", hint: "Bìa các-tông giúp gọng kính cứng cáp ôm vừa khuôn mặt." },
       { id: "t2", text: "Dùng kéo cắt tỉa cẩn thận khung gọng và khoét 2 lỗ mắt kính", icon: "✂️", requires: ["t1"], hint: "Cắt đúng đường viền để gọng kính cân xứng." },
-      { id: "t3", text: "Cắt tấm kính lọc màu Đỏ trong suốt gắn vào mắt kính bên TRÁI", icon: "🔴", requires: ["t2"], hint: "Mắt trái chuẩn quốc tế luôn dùng màng lọc màu Đỏ (Cyan/Red)." },
-      { id: "t4", text: "Cắt tấm kính lọc màu Xanh Lam trong suốt gắn vào mắt kính bên PHẢI", icon: "🔵", requires: ["t2"], hint: "Mắt phải luôn dùng màng lọc màu Xanh Lam để lọc hình ảnh riêng." },
+      { id: "t3", text: "Cắt màng lọc màu Đỏ trong suốt gắn vào mắt kính bên TRÁI", icon: "🔴", requires: ["t2"], hint: "Mắt trái kính Anaglyph chuẩn luôn dùng màng lọc sắc đỏ." },
+      { id: "t4", text: "Cắt màng lọc màu Xanh Lam (Cyan) trong suốt gắn vào mắt kính bên PHẢI", icon: "🔵", requires: ["t2"], hint: "Mắt phải kính Anaglyph luôn dùng màng lọc sắc xanh lơ (Cyan)." },
       { id: "t5", text: "Dán cố định 2 tròng kính bằng băng keo hai mặt trong suốt", icon: "🩹", requires: ["t3", "t4"], hint: "Gắn phẳng phiu không để vết keo bẩn che tầm nhìn." },
       { id: "t6", text: "Đeo kính lên và mở video 3D Anaglyph chiêm ngưỡng hình ảnh bay ra khỏi màn hình", icon: "👓", requires: ["t5"], hint: "Bộ não kết hợp 2 ảnh màu đỏ-xanh thành không gian 3D nổi kỳ thú!" }
     ],
@@ -232,7 +232,7 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "d1", text: "Lắp cả hai mắt kính đều bằng giấy bóng kính màu đỏ giống nhau", icon: "🔴", failReason: "Cả hai mắt cùng màu thì não không thể phân tách hình ảnh tạo hiệu ứng 3D nổi!" },
       { id: "d2", text: "Dùng băng dính đen bịt kín mít cả hai mắt kính", icon: "🕶️", failReason: "Bịt kín kính thì con chỉ thấy bóng tối đen kịt chứ không thấy phim đâu!" }
     ],
-    lesson: "Mắt trái đỏ, mắt phải xanh — não bộ tự gộp 2 luồng ảnh thành chiều sâu 3D."
+    lesson: "Nguyên lý Anaglyph: Mắt trái đỏ, mắt phải xanh lọc hai góc nhìn riêng — não bộ tự gộp thành chiều sâu 3D."
   },
   {
     id: "tm-51",

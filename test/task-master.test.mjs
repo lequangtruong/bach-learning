@@ -262,18 +262,28 @@ test("task-master: TaskMasterSession timeline manipulation and validation rules"
   assert.ok(hint2);
   assert.equal(hint2.taskId, "t2", "Next hint should recommend task whose requirement is satisfied");
 
-  // 5. Giải đúng và tính sao theo số lần thử (Star Rating)
+  // 4b. Kiểm tra sửa lỗi P1: Xem gợi ý -> xoá timeline -> giải đúng vẫn bị trừ sao (không được 3 sao do đã được chỉ điểm)
   session.clearTimeline();
   session.addTaskToTimeline("t1");
   session.addTaskToTimeline("t2");
   session.addTaskToTimeline("t3");
   session.addTaskToTimeline("t4");
+  const cheatedRes = session.validateTimeline();
+  assert.equal(cheatedRes.success, true);
+  assert.equal(cheatedRes.stars, 1, "Hints used before clearTimeline must persist and penalize stars");
 
-  // Lần thử đầu tiên: 3 sao
+  // 5. Giải đúng và tính sao theo số lần thử khi tự lực hoàn toàn (Star Rating)
+  session.initLevel(); // Bắt đầu màn mới độc lập
+  session.addTaskToTimeline("t1");
+  session.addTaskToTimeline("t2");
+  session.addTaskToTimeline("t3");
+  session.addTaskToTimeline("t4");
+
+  // Lần thử đầu tiên độc lập: 3 sao
   session.attemptsCount = 0;
   const win1 = session.validateTimeline();
   assert.equal(win1.success, true);
-  assert.equal(win1.stars, 3, "First try gives 3 stars");
+  assert.equal(win1.stars, 3, "First try without hints gives 3 stars");
 
   // Lần thử thứ 2: 2 sao
   session.attemptsCount = 2;
@@ -517,5 +527,29 @@ test("task-master: 5 pedagogy improvements (branching, distractors, move penalti
   assert.equal(resTimer.success, true);
   assert.equal(resTimer.timeExceeded, true, "Should flag time exceeded for long duration");
   assert.ok(resTimer.stars <= 2, "Time exceeded should reduce 1 star");
+
+  // 6. Kiểm tra sửa lỗi P2 Màn 46: Bơm nước không được phép bật trước khi nối xong đường ống (t4)
+  const lvl46 = getLevelById("tm-46");
+  const task6_46 = lvl46.tasks.find(t => t.id === "t6");
+  assert.ok(task6_46.requires.includes("t4"), "Level 46 task t6 must require t4 (pipe network completed)");
+  assert.ok(task6_46.requires.includes("t5"), "Level 46 task t6 must require t5 (solar power)");
+
+  const session46Invalid = new TaskMasterSession({ levelIndex: 45 }); // Level 46
+  // Cố tình bật bơm t6 trước khi nối ống t3, t4:
+  ["t1", "t2", "t5", "t6", "t3", "t4"].forEach(id => session46Invalid.addTaskToTimeline(id));
+  const res46Invalid = session46Invalid.validateTimeline();
+  assert.equal(res46Invalid.success, false, "Turning on pump before piping completed must fail");
+  assert.ok(res46Invalid.reason.includes("chưa làm bước"), "Must report missing pipe prerequisite");
+
+  // Thứ tự hợp lệ cho Màn 46
+  const session46Valid = new TaskMasterSession({ levelIndex: 45 });
+  ["t1", "t2", "t3", "t4", "t5", "t6"].forEach(id => session46Valid.addTaskToTimeline(id));
+  assert.equal(session46Valid.validateTimeline().success, true, "Piping then pump must succeed");
+
+  // 7. Kiểm tra sửa lỗi P1 Màn 50: Thuật ngữ khoa học chuẩn xác Anaglyph (lọc màu đỏ - xanh)
+  const lvl50 = getLevelById("tm-50");
+  assert.ok(lvl50.title.includes("Anaglyph"), "Level 50 title must use Anaglyph, not polarized");
+  assert.ok(!lvl50.title.toLowerCase().includes("phân cực"), "Level 50 title must not say polarized");
+  assert.ok(lvl50.lesson.includes("Anaglyph"), "Level 50 lesson must explain Anaglyph color filtering");
 });
 

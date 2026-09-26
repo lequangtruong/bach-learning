@@ -116,7 +116,7 @@ export class TaskMasterSession {
     if (this.isSimulating || this.isSolved) return;
     this.timeline = [];
     this.moveCount = 0;
-    this.hintCount = 0;
+    // Không xóa hintCount: đã xem gợi ý thì kiến thức đã được tiết lộ, điểm số phải phản ánh trung thực
     this.simulationResult = null;
     this.notifyChange();
   }
