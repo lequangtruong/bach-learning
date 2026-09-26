@@ -9,6 +9,7 @@ import { renderLogicGridView } from "./render-logic-grid.js";
 import { renderRushHourView } from "./render-rush-hour.js";
 import { renderChimpMemoryView } from "./render-chimp-memory.js";
 import { renderTangramView } from "./render-tangram.js";
+import { renderTaskMasterView } from "./render-task-master.js";
 import { CHC_PILLARS, calculateChcPillars, getSmartDailyRecommendation, getAdaptiveProfile, recordGameOutcome } from "./adaptive-engine.js";
 import { getBadgesStatus, checkAndAwardBadges, showBadgeCelebration } from "./badge-system.js";
 
@@ -20,6 +21,7 @@ export {
   renderRushHourView,
   renderChimpMemoryView,
   renderTangramView,
+  renderTaskMasterView,
   calculateChcPillars,
   getSmartDailyRecommendation,
   getAdaptiveProfile,
@@ -144,6 +146,7 @@ export function renderGamesHub({ state, appRoot } = {}) {
   const rushHour = records.rushHour || { stars: 0, completedBoards: [] };
   const chimp = records.chimpMemory || { highScore: 0, maxLevel: 1 };
   const tangram = records.tangram || { stars: 0, completedPuzzles: [] };
+  const taskMaster = records.taskMaster || { stars: 0, completedLevels: [] };
 
   // 1. Phân tích 5 Trụ cột Trí tuệ CHC và Năng lực IQ
   const chcAnalysis = calculateChcPillars(records);
@@ -198,14 +201,15 @@ export function renderGamesHub({ state, appRoot } = {}) {
       <div>
         <div class="eyebrow">CỬU CUNG TRÍ TUỆ &amp; THẬP TOÀN OLYMPIC · BÁCH LEARNING LAB</div>
         <h1>Vừa chơi, vừa nghĩ,<br><em>vững vàng phản xạ &amp; kỹ năng tư duy.</em></h1>
-        <p>5 thử thách toán học được thiết kế riêng (đấu nhẩm 90s, Bar Model, bắt lỗi sai, cân bằng và Make 24) cùng 5 trò rèn luyện tư duy không gian &amp; logic (Khối 3D, Lưới Logic, Kẹt xe chiến thuật, Trí nhớ chuỗi &amp; Tangram hình học).</p>
+        <p>5 thử thách toán học được thiết kế riêng (đấu nhẩm 90s, Bar Model, bắt lỗi sai, cân bằng và Make 24) cùng các trò rèn luyện tư duy không gian, logic &amp; kế hoạch điều hành (Khối 3D, Lưới Logic, Kẹt xe chiến thuật, Trí nhớ chuỗi, Tangram hình học &amp; Bậc thầy kế hoạch).</p>
       </div>
       <div class="hero-note">
         <div class="eyebrow">BẢNG VÀNG THÀNH TÍCH</div>
-        <h3 style="margin-top:6px">⚡ 90s: ${speed.highScore} đ · 🧠 Chimp: ${chimp.highScore} đ</h3>
+        <h3 style="margin-top:6px">⚡ 90s (1 lượt cao nhất): ${speed.highScore} đ · 🧠 Chimp: ${chimp.highScore} đ</h3>
         <p>★ ${bar.stars || (bar.completedChallenges?.length || 0)} sao Bar Model · 🕵️ ${bug.solvedCount || 0} vụ án lỗi sai</p>
         <p style="margin-top:2px">⚖️ ${balance.completedChallenges?.length || 0} bài Cân Bằng · 🎯 ${make24.solvedCount || make24.completedChallenges?.length || 0} bài Make 24</p>
         <p style="margin-top:2px; font-weight:700; color:#c7d2fe">🧊 ${spatial3D.stars || 0} sao Khối 3D · 📐 ${tangram.stars || 0} sao Tangram · 🚗 ${rushHour.stars || 0} sao Kẹt Xe</p>
+        <p style="margin-top:2px; font-weight:700; color:#fef08a">📋 ${taskMaster.stars || 0} sao Bậc Thầy Kế Hoạch (${taskMaster.completedLevels?.length || 0}/80 màn)</p>
       </div>
     </section>
 
@@ -275,7 +279,7 @@ export function renderGamesHub({ state, appRoot } = {}) {
         </div>
         <div>
           <div class="game-card-footer">
-            <div class="game-stat">Kỷ lục: <strong>${speed.highScore} đ</strong> (Streak: ${speed.bestStreak || 0})</div>
+            <div class="game-stat">Kỷ lục 1 lượt: <strong>${speed.highScore} đ</strong> (Streak cao nhất: ${speed.bestStreak || 0})</div>
             <a href="#games/speed-math" class="primary-button" style="padding:10px 20px; font-size:0.95rem">Bắt đầu →</a>
           </div>
         </div>
@@ -420,6 +424,21 @@ export function renderGamesHub({ state, appRoot } = {}) {
           <div class="game-card-footer">
             <div class="game-stat">Đã ghép: <strong>${tangram.completedPuzzles?.length || 0}</strong> hình (${tangram.stars || 0} sao)</div>
             <a href="#games/tangram" class="primary-button" style="padding:10px 20px; font-size:0.95rem; background:#059669">Ghép hình ngay →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Game 11: Bậc Thầy Kế Hoạch (Task Master) -->
+      <div class="game-card">
+        <div>
+          <span class="game-card-badge" style="background:#e0f2fe; color:#0284c7">📋 LẬP KẾ HOẠCH &amp; ĐIỀU HÀNH</span>
+          <h3>Bậc Thầy Kế Hoạch (Task Master) · 80 Màn</h3>
+          <p>Khắc phục tính làm ẩu, lười suy nghĩ trước khi hành động. Rèn luyện tư duy lập kế hoạch tuần tự, phân tích điều kiện tiên quyết và loại bỏ các bước bẫy qua 4 chặng nhiệm vụ phong phú.</p>
+        </div>
+        <div>
+          <div class="game-card-footer">
+            <div class="game-stat">Đã vượt: <strong>${taskMaster.completedLevels?.length || 0}</strong>/80 màn (${taskMaster.stars || 0} sao)</div>
+            <a href="#games/task-master" class="primary-button" style="padding:10px 20px; font-size:0.95rem; background:#0284c7">Lập kế hoạch ngay →</a>
           </div>
         </div>
       </div>
@@ -593,7 +612,7 @@ export function renderSpeedMathArena({ state, appRoot, saveLocal } = {}) {
 
             <div class="results-stats-grid" style="grid-template-columns:repeat(4, 1fr); margin-top:20px">
               <div class="results-stat-box">
-                <small>TỔNG ĐIỂM</small>
+                <small>ĐIỂM LƯỢT NÀY</small>
                 <span style="color:var(--coral)">${score}</span>
               </div>
               <div class="results-stat-box">
@@ -608,6 +627,11 @@ export function renderSpeedMathArena({ state, appRoot, saveLocal } = {}) {
                 <small>CÂU THẦN TỐC ⚡</small>
                 <span style="color:#ea580c">${fastSolveCount || 0}</span>
               </div>
+            </div>
+
+            <div style="margin-top:14px; display:flex; justify-content:center; gap:20px; font-size:0.92rem; color:var(--muted); flex-wrap:wrap">
+              <span>🏆 Kỷ lục 1 lượt (90s): <strong style="color:var(--ink)">${Math.max(score, prevHighScore)} đ</strong></span>
+              <span>🔥 Chuỗi đúng cao nhất: <strong style="color:var(--ink)">${Math.max(bestStreak, sm.bestStreak || 0)} câu</strong></span>
             </div>
 
             <div style="margin-top:16px; padding:10px 16px; background:#f0f9ff; border:1px solid #bae6fd; border-radius:12px; font-size:0.92rem; color:#0369a1; font-weight:700">

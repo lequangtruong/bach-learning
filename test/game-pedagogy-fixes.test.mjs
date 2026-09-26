@@ -141,8 +141,9 @@ test("pedagogy-fixes: Speed Math strategy strings do not leak direct calculation
       const p = generateSpeedMathProblem(s);
       if (p.strategy) {
         // Không được chứa phép tính lộ liễu dẫn thẳng đến đáp án dạng "= <answer>"
+        const spoilerRegex = new RegExp(`=\\s*${p.answer}(?!\\d)`);
         assert.ok(
-          !p.strategy.includes(`= ${p.answer}`),
+          !spoilerRegex.test(p.strategy),
           `Strategy spoiler found: "${p.strategy}" leaks answer "${p.answer}" for prompt "${p.prompt}"`
         );
       }

@@ -100,7 +100,8 @@ test("core-buttons: Games Hub renders all 10 game CTAs and ZPD recommendation bu
     "#games/logic-grid",
     "#games/rush-hour",
     "#games/chimp-memory",
-    "#games/tangram"
+    "#games/tangram",
+    "#games/task-master"
   ];
 
   for (const route of expectedRoutes) {

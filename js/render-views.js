@@ -701,7 +701,7 @@ export function createRenderViews(dependencies = {}) {
             <div>
               <span class="sg-badge">Về đích 1 · Thần tốc</span>
               <h4>⚡ Đấu tính nhẩm 90s</h4>
-              <p>Phản xạ tính nhanh có chiến lược để đánh thức bộ não. Kỷ lục: <strong>${escapeHtml(speedRecord)}</strong>.</p>
+              <p>Phản xạ tính nhanh có chiến lược để đánh thức bộ não. Kỷ lục 1 lượt (90s): <strong>${escapeHtml(speedRecord)}</strong>.</p>
             </div>
             <a href="#games/speed-math" class="primary-button" style="padding:10px 14px; font-size:0.92rem; text-align:center; font-weight:700">Vào đấu 90s ngay →</a>
           </article>
@@ -1089,7 +1089,7 @@ export function createRenderViews(dependencies = {}) {
                     <div class="stage-mini-game-info">
                       <span class="smg-badge">⚡ Trò chơi Chặng 1</span>
                       <h5>Đấu tính nhẩm 90s</h5>
-                      <p>Phản xạ tính nhanh có chiến lược để đánh thức bộ não. Kỷ lục: <strong>${escapeHtml(speedRecord)}</strong></p>
+                      <p>Phản xạ tính nhanh có chiến lược để đánh thức bộ não. Kỷ lục 1 lượt (90s): <strong>${escapeHtml(speedRecord)}</strong></p>
                     </div>
                     <a href="#games/speed-math" class="primary-button stage-game-btn">Vào đấu 90s ngay →</a>
                   </div>

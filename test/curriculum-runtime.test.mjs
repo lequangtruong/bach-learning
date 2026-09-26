@@ -691,3 +691,82 @@ test("Week 1 Wednesday math curriculum has concrete two-step applied budget prob
   assert.doesNotMatch(hint, /đáp số là/i);
   assert.doesNotMatch(hint, /chữ số x duy nhất/i);
 });
+
+test("Curriculum Pedagogy Audit Fixes: Dirichlet, shopping price, concrete applied, visual model, hints, mini-test & grading scale", () => {
+  const sandbox = { window: {} };
+  vm.runInNewContext(curriculumSource, sandbox);
+  const factory = sandbox.window.BACH_CURRICULUM_FACTORY;
+  const mathPhases = sandbox.window.BACH_CURRICULUM.phases.slice(1);
+  const allMathWeeks = mathPhases.flatMap(p => p.math);
+
+  // 1. P1: Dirichlet problem (13 bạn, 12 tháng) - no contradiction
+  const dirichletKit = factory.AUTHORED_MATH_KITS["Nguyên lý Dirichlet trực quan"];
+  assert.ok(dirichletKit, "Dirichlet kit must exist");
+  assert.match(dirichletKit[2], /13\s*bạn\s*\(mỗi năm có 12 tháng\)/i, "Must specify 13 bạn and 12 tháng");
+  assert.doesNotMatch(dirichletKit[2], /13\s*tháng sinh của 14 bạn/i, "Must not have self-contradictory 13 tháng sinh của 14 bạn");
+
+  // 2. P1: Mua vở problem (giá gốc 45.000đ/cặp) - solvable with all parameters
+  const singaporeKit = factory.AUTHORED_MATH_KITS["Đề mô phỏng Singapore"];
+  assert.ok(singaporeKit, "Singapore kit must exist");
+  assert.match(singaporeKit[2], /giá gốc 45\.000 đồng/i, "Must have explicit original price per pair");
+  assert.match(singaporeKit[2], /giảm giá 20\.000 đồng/i, "Must have discount amount");
+  assert.match(singaporeKit[2], /3 cặp vở/i, "Must specify quantity of pairs");
+  assert.match(singaporeKit[2], /7\.000 đồng/i, "Must specify pen price");
+
+  // 3. P2: Day 2 applied problems are fully concrete with no vague fallback template
+  for (const [topic, kit] of Object.entries(factory.AUTHORED_MATH_KITS)) {
+    const applied = kit[2];
+    assert.doesNotMatch(applied, /Dựa vào số liệu từ ví dụ \(/, `Topic '${topic}' applied must not use vague example-derivation template`);
+    assert.ok(applied.length > 30, `Topic '${topic}' applied must be detailed`);
+  }
+
+  // 4. P1: Week 33 Visual model (total: 200, 3/5 = 120)
+  const week33 = allMathWeeks.find(w => w[0] === "Đề mô phỏng Singapore");
+  assert.ok(week33, "Week 33 (Đề mô phỏng Singapore) must exist");
+  const week33Visual = week33.dailyPlan[0].visual;
+  assert.equal(week33Visual.type, "part-whole", "Visual type must be part-whole");
+  assert.equal(week33Visual.total, 200, "Visual total must be 200 so 3/5 equals 120");
+  assert.equal(week33Visual.parts, 5, "Visual parts must be 5");
+  assert.equal(week33Visual.filledParts, 3, "Visual filled parts must be 3");
+  assert.equal(week33Visual.total * (week33Visual.filledParts / week33Visual.parts), 120, "3/5 of 200 must be 120");
+
+  // 5. P1: Week 33 Fraction hint guides bar model / fractions, NOT multi-digit place-value comparison
+  const day1 = week33.dailyPlan[0];
+  const skillType = factory.getMathSkillType(day1, [week33[0], week33[1]]);
+  assert.equal(skillType, "bar_model_fractions", "Week 33 skillType must be bar_model_fractions, not comparison");
+  const concreteLesson = factory.createConcreteLesson([week33[0], week33[1]], "math", 33, 0, day1);
+  assert.doesNotMatch(concreteLesson.hint, /Đếm số chữ số của mỗi số/i, "Must not give multi-digit place value comparison hint");
+  assert.doesNotMatch(concreteLesson.hint, /So sánh lần lượt từng hàng từ trái sang phải/i, "Must not give whole-number place comparison hint");
+  assert.match(concreteLesson.hint, /Vẽ sơ đồ thanh chia thành các phần bằng nhau/i, "Must give Singapore Bar Model fraction hint");
+
+  // 6. P2: Saturday Mini-test uses fresh questions without repeating worked examples
+  assert.ok(factory.AUTHORED_MATH_MINI_TESTS, "AUTHORED_MATH_MINI_TESTS must be exported");
+  assert.equal(Object.keys(factory.AUTHORED_MATH_MINI_TESTS).length, 30, "Must have 30 authored mini-tests");
+
+  for (let w = 1; w < allMathWeeks.length; w++) {
+    const satPlan = allMathWeeks[w].dailyPlan[5];
+    const satBasic = satPlan.basic;
+    // Câu 1 must not just be the worked example
+    const testKit = factory.AUTHORED_MATH_MINI_TESTS[allMathWeeks[w][0]];
+    assert.ok(testKit, `Mini-test kit must exist for ${allMathWeeks[w][0]}`);
+    assert.ok(satBasic.includes(testKit.q1), `Week ${w + 7} Saturday test must contain fresh q1`);
+    assert.ok(satBasic.includes(testKit.q2), `Week ${w + 7} Saturday test must contain fresh q2`);
+    assert.ok(satBasic.includes(testKit.q3), `Week ${w + 7} Saturday test must contain fresh q3`);
+    assert.ok(satBasic.includes(testKit.q4), `Week ${w + 7} Saturday test must contain fresh q4`);
+  }
+
+  // 7. P2: Scoring scale consistency across mini-test fields (6đ Cơ bản - 2đ Vận dụng - 2đ Olympic = 10đ)
+  for (let w = 1; w < allMathWeeks.length; w++) {
+    const satPlan = allMathWeeks[w].dailyPlan[5];
+    assert.match(satPlan.applied, /Cơ bản & Kỹ thuật tính \(6đ - mỗi câu 3đ\)/, `Week ${w + 7} applied grading scale must specify 6đ`);
+    assert.match(satPlan.applied, /Vận dụng thực tế \(2đ\)/, `Week ${w + 7} applied grading scale must specify 2đ`);
+    assert.match(satPlan.applied, /Thử thách Olympic \(2đ\)/, `Week ${w + 7} applied grading scale must specify 2đ`);
+
+    assert.match(satPlan.selfCheck, /Cơ bản & Kỹ thuật tính \(6đ\)/, `Week ${w + 7} selfCheck grading scale must specify 6đ`);
+    assert.match(satPlan.selfCheck, /Vận dụng thực tế \(2đ\)/, `Week ${w + 7} selfCheck grading scale must specify 2đ`);
+    assert.match(satPlan.selfCheck, /Thử thách Olympic \(2đ\)/, `Week ${w + 7} selfCheck grading scale must specify 2đ`);
+
+    assert.doesNotMatch(satPlan.applied, /các câu nền \(5đ\)/, `Week ${w + 7} must not have conflicting 5đ nền`);
+    assert.doesNotMatch(satPlan.applied, /Hoàn thành bài toán thực tế \(3đ\)/, `Week ${w + 7} must not have conflicting 3đ vận dụng`);
+  }
+});

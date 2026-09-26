@@ -1369,3 +1369,324 @@
   transform: scale(0.95);
   transition: all 0.25s ease;
 }
+
+/* ==========================================================================
+   Bậc Thầy Kế Hoạch (Task Master) Styling
+   Rèn tư duy lập kế hoạch, phản xạ ức chế & trình tự logic
+   ========================================================================== */
+.badge-taskmaster {
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+.task-master-container {
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.tm-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 20px 24px;
+  box-shadow: var(--shadow);
+}
+
+.tm-info {
+  flex: 1 1 320px;
+}
+
+.tm-nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tm-section-block {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 22px 24px;
+  box-shadow: var(--shadow);
+}
+
+/* Timeline Container */
+.tm-timeline-slots {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 120px;
+  background: #f8fafc;
+  border: 2px dashed #cbd5e1;
+  border-radius: 16px;
+  padding: 14px;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.tm-empty-timeline-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 28px 16px;
+}
+
+/* Timeline Item (Step in plan) */
+.tm-timeline-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 10px 14px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+  position: relative;
+}
+
+.tm-timeline-item:hover {
+  border-color: #38bdf8;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.08);
+}
+
+.tm-timeline-item.status-running {
+  border-color: #f59e0b;
+  background: #fffbeb;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25);
+  animation: pulseSim 1s infinite alternate;
+}
+
+.tm-timeline-item.status-success {
+  border-color: #10b981;
+  background: #f0fdf4;
+}
+
+.tm-timeline-item.status-failed {
+  border-color: #ef4444;
+  background: #fef2f2;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25);
+}
+
+@keyframes pulseSim {
+  from { transform: scale(1); }
+  to { transform: scale(1.015); }
+}
+
+.tm-step-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  color: #475569;
+  font-weight: 800;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.tm-timeline-item.status-success .tm-step-num {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.tm-timeline-item.status-running .tm-step-num {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.tm-timeline-item.status-failed .tm-step-num {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.tm-step-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  width: 36px;
+  text-align: center;
+}
+
+.tm-step-content {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.tm-step-title {
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 1.35;
+}
+
+.tm-step-deps {
+  font-size: 0.78rem;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.tm-step-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.tm-btn-move,
+.tm-btn-remove {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: #475569;
+  transition: all 0.15s ease;
+}
+
+.tm-btn-move:hover:not(:disabled) {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.tm-btn-remove {
+  color: #dc2626;
+}
+
+.tm-btn-remove:hover:not(:disabled) {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #b91c1c;
+}
+
+.tm-btn-move:disabled,
+.tm-btn-remove:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* Available Tasks Grid */
+.tm-available-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.tm-task-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.tm-task-card:hover {
+  transform: translateY(-2px);
+  border-color: #0284c7;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.12);
+}
+
+.tm-task-card:active {
+  transform: scale(0.98);
+}
+
+.tm-task-card.is-placed {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  opacity: 0.65;
+}
+
+.tm-task-card.is-placed:hover {
+  border-color: #dc2626;
+  background: #fef2f2;
+}
+
+.tm-task-card-icon {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+  width: 40px;
+  text-align: center;
+}
+
+.tm-task-card-info {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.tm-task-card-text {
+  font-size: 0.94rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.35;
+}
+
+.tm-task-card-req {
+  font-size: 0.76rem;
+  color: #64748b;
+  margin-top: 3px;
+  line-height: 1.25;
+}
+
+.tm-task-card-action {
+  flex-shrink: 0;
+}
+
+.tm-badge-add {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #0284c7;
+  background: #e0f2fe;
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+.tm-badge-placed {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #64748b;
+  background: #e2e8f0;
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+.tm-task-card.is-placed:hover .tm-badge-placed {
+  color: #dc2626;
+  background: #fee2e2;
+  content: "Gỡ bỏ";
+}
+
+@media (max-width: 640px) {
+  .tm-topbar {
+    padding: 16px;
+  }
+  .tm-nav-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .tm-nav-controls select {
+    flex: 1;
+  }
+  .tm-available-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

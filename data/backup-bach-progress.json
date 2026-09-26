@@ -53,10 +53,10 @@
   },
   "gameRecords": {
     "speedMath": {
-      "highScore": 5190,
+      "highScore": 680,
       "lastScore": 320,
       "gamesPlayed": 9,
-      "bestStreak": 29
+      "bestStreak": 6
     },
     "barModel": {
       "stars": 5,

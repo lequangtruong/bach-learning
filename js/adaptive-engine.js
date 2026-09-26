@@ -11,7 +11,7 @@ export const CHC_PILLARS = {
     bg: "#ede9fe",
     border: "#c4b5fd",
     description: "Khả năng phân tích bài toán, tìm quy luật và suy luận loại trừ.",
-    games: ["logicGrid", "balanceScale", "rushHour"]
+    games: ["logicGrid", "balanceScale", "rushHour", "taskMaster"]
   },
   spatial: {
     id: "spatial",
@@ -76,7 +76,8 @@ export function getAdaptiveProfile(records = {}) {
       logicGrid: profile.levels?.logicGrid || 2,
       rushHour: profile.levels?.rushHour || 2,
       chimpMemory: profile.levels?.chimpMemory || 2,
-      tangram: profile.levels?.tangram || 2
+      tangram: profile.levels?.tangram || 2,
+      taskMaster: profile.levels?.taskMaster || 2
     },
     streaks: {
       speedMath: profile.streaks?.speedMath || 0,
@@ -88,7 +89,8 @@ export function getAdaptiveProfile(records = {}) {
       logicGrid: profile.streaks?.logicGrid || 0,
       rushHour: profile.streaks?.rushHour || 0,
       chimpMemory: profile.streaks?.chimpMemory || 0,
-      tangram: profile.streaks?.tangram || 0
+      tangram: profile.streaks?.tangram || 0,
+      taskMaster: profile.streaks?.taskMaster || 0
     },
     history: Array.isArray(profile.history) ? profile.history.slice(-50) : [],
     unlockedBadges: Array.isArray(profile.unlockedBadges) ? profile.unlockedBadges : [],
@@ -163,6 +165,7 @@ export function calculateChcPillars(records = {}) {
   const rush = records.rushHour || { stars: 0, completedBoards: [] };
   const chimp = records.chimpMemory || { highScore: 0, maxLevel: 1 };
   const tangram = records.tangram || { completedPuzzles: [], stars: 0 };
+  const taskMaster = records.taskMaster || { completedLevels: [], stars: 0 };
 
   const barCount = bar.completedChallenges?.length || 0;
   const bugCount = bug.solvedCount || 0;
@@ -172,10 +175,11 @@ export function calculateChcPillars(records = {}) {
   const logicCount = logic.completedCases?.length || 0;
   const rushCount = rush.completedBoards?.length || 0;
   const tangramCount = tangram.completedPuzzles?.length || 0;
+  const taskMasterCount = taskMaster.completedLevels?.length || 0;
 
   // 1. Fluid Intelligence (Gf)
-  // Đóng góp: Logic Grid (max 20 bài), Detective Scale (max 24 bài), Rush Hour (max 50 boards)
-  const gfRaw = (logicCount * 4) + (balanceCount * 1.5) + (rushCount * 1.2);
+  // Đóng góp: Logic Grid (max 20 bài), Detective Scale (max 24 bài), Rush Hour (max 50 boards), Task Master (max 80 levels)
+  const gfRaw = (logicCount * 4) + (balanceCount * 1.5) + (rushCount * 1.2) + (taskMasterCount * 1.0);
   const fluidScore = Math.min(100, Math.round(gfRaw));
 
   // 2. Visual-Spatial (Gv)

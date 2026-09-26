@@ -59,6 +59,7 @@ import {
   renderRushHourView,
   renderChimpMemoryView,
   renderTangramView,
+  renderTaskMasterView,
   cleanupActiveGames
 } from "./js/render-games.js";
 
@@ -527,6 +528,7 @@ export function render() {
   else if (route === "games/rush-hour") renderRushHourView({ state, appRoot: app, saveLocal, params });
   else if (route === "games/chimp-memory") renderChimpMemoryView({ state, appRoot: app, saveLocal, params });
   else if (route === "games/tangram") renderTangramView({ state, appRoot: app, saveLocal, params });
+  else if (route === "games/task-master") renderTaskMasterView({ state, appRoot: app, saveLocal, params });
   else if (route.startsWith("games")) renderGamesHub({ state, appRoot: app });
   else renderHome();
   const activeNav = route.startsWith("games") ? "games" : route;

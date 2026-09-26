@@ -113,6 +113,16 @@ export const BADGES_DEFINITION = [
     progress: (records) => Math.min(100, Math.round(((records.tangram?.completedPuzzles?.length || 0) / 5) * 100))
   },
   {
+    id: "task_master_strategist",
+    title: "Chỉ Huy Chiến Lược Thần Sầu",
+    pillar: "fluid",
+    icon: "📋",
+    rank: "Olympic",
+    description: "Lập kế hoạch chính xác vượt qua 10 màn chơi trong Bậc Thầy Kế Hoạch.",
+    check: (records) => (records.taskMaster?.completedLevels?.length || 0) >= 10,
+    progress: (records) => Math.min(100, Math.round(((records.taskMaster?.completedLevels?.length || 0) / 10) * 100))
+  },
+  {
     id: "olympic_allrounder",
     title: "Đại Sứ Toàn Năng Olympic",
     pillar: "fluid",

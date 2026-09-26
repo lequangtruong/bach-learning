@@ -156,28 +156,212 @@ const AUTHORED_MATH_KITS = {
   "Đơn vị và đổi đơn vị": ["3 m 45 cm = 345 cm vì 3 m = 300 cm; chỉ cộng khi đã cùng đơn vị.", "Đổi 4 kg 250 g, 2 giờ 35 phút và 5 m 8 cm sang đơn vị nhỏ hơn.", "Một cuộn dây dài 8 m 40 cm, cắt 2 m 75 cm. Còn lại bao nhiêu xăng-ti-mét?", "Có 2 l 250 ml nước, chia đều vào 5 chai. Mỗi chai bao nhiêu ml?", "Bạn cộng 2 m 30 cm + 75 cm = 2 m 105 cm. Viết lại kết quả chuẩn hơn.", "Mini-test: đổi đơn vị, cộng trừ khác đơn vị và một bài chia."] ,
   "Chu vi hình": ["Hình chữ nhật dài 14 cm, rộng 9 cm: chu vi = (14 + 9) × 2 = 46 cm.", "Tính chu vi hình vuông cạnh 8 cm và hai hình chữ nhật 12×5, 15×4 cm.", "Một mảnh vườn chữ nhật chu vi 36 m, dài 11 m. Tìm chiều rộng rồi kiểm tra bằng chu vi.", "Ghép hai hình vuông cạnh 4 cm sát nhau. Chu vi hình mới là bao nhiêu? Vẽ để không đếm cạnh chung.", "Bạn tính chu vi 12×5 là 60 cm. Sửa bằng cách nêu các cạnh được cộng.", "Mini-test: chu vi trực tiếp, tìm cạnh thiếu, hình ghép."] ,
   "Diện tích hình chữ nhật": ["Hình chữ nhật 9 cm × 6 cm có 54 ô vuông đơn vị, nên diện tích là 54 cm².", "Tính diện tích các hình 7×8, 12×5 cm; ghi đúng cm².", "Một tấm bìa diện tích 72 cm², rộng 8 cm. Tìm chiều dài và kiểm tra bằng phép nhân.", "Tìm ba cặp số nguyên có diện tích 36 cm²; cặp nào có chu vi nhỏ nhất?", "Bạn viết diện tích 8×5 là 40 cm. Chỉ ra đơn vị còn thiếu và vì sao.", "Mini-test: diện tích, bài ngược, so sánh hai hình cùng diện tích."] ,
-  "Góc và đường thẳng": ["Góc vuông bằng một góc của tờ giấy; hai đường cùng tạo bốn góc vuông là vuông góc.", "Dùng êke tìm 5 góc vuông trong phòng và vẽ một cặp đường song song, một cặp vuông góc.", "Vẽ hình chữ nhật ABCD, chỉ ra các cặp cạnh song song và các góc vuông.", "Một hình có bốn góc vuông nhưng các cạnh kề không bằng nhau: đó có thể là hình gì? Giải thích.", "Bạn gọi hai đường cắt nhau là song song. Vẽ phản ví dụ để sửa.", "Mini-test: nhận dạng góc, song song/vuông góc và vẽ theo yêu cầu."] ,
+  "Góc và đường thẳng": ["Góc vuông bằng một góc của tờ giấy; hai đường cùng tạo bốn góc vuông là vuông góc.", "Dùng êke tìm 5 góc vuông trong phòng và vẽ một cặp đường song song, một cặp vuông góc.", "Một khung tranh hình chữ nhật ABCD có chiều dài AB = 40 cm, chiều rộng BC = 25 cm. Hãy chỉ ra các cặp cạnh song song, các góc vuông và tính chu vi của khung tranh đó.", "Một hình có bốn góc vuông nhưng các cạnh kề không bằng nhau: đó có thể là hình gì? Giải thích.", "Bạn Nam vẽ hai đoạn thẳng AB dài 15 cm và CD dài 12 cm cắt nhau tại điểm O rồi nói ‘hai đoạn này song song vì chúng không bằng nhau’. Hãy chỉ ra lỗi sai của Nam và nêu đúng định nghĩa hai đường thẳng song song.", "Mini-test: nhận dạng góc, song song/vuông góc và vẽ theo yêu cầu."] ,
   "Thời gian và lịch": ["Phim bắt đầu 14:35, dài 1 giờ 45 phút, kết thúc lúc 16:20.", "Tính khoảng thời gian: 7:25–8:10; 9:50–11:05; 13:40–15:15.", "Bách đọc 18 trang mỗi ngày từ thứ Hai đến thứ Sáu, cuối tuần đọc thêm 25 trang. Cả tuần đọc bao nhiêu trang?", "Một tàu chạy mỗi 18 phút từ 7:00. Chuyến thứ 6 rời ga lúc mấy giờ?", "Bạn trừ 14:10 − 13:45 = 1:35. Chỉ lỗi khi mượn giờ.", "Mini-test: thời lượng, lịch tuần, quy luật thời điểm."] ,
   "Sơ đồ hóa bài khó": ["An có 36 nhãn vở, Bình có ít hơn An 8 nhãn; tổng hai bạn là 64. Vẽ sơ đồ đoạn thẳng để kiểm tra dữ kiện.", "Vẽ sơ đồ cho ba bài: hơn/kém, gấp/lần, tổng–hiệu; chưa cần giải ngay.", "Một bể có 120 lít nước, dùng 1/4 số nước rồi thêm 18 lít. Còn bao nhiêu lít? Chọn sơ đồ hoặc bảng.", "Tự tạo một bài có hai cách biểu diễn: sơ đồ thanh và phép tính. So sánh cách nào nhìn quan hệ rõ hơn.", "Một lời giải lấy 120 − 1/4 + 18. Giải thích vì sao cần biết 1/4 của số nào.", "Mini-test: chọn đúng mô hình cho ba đề và giải một đề hai bước."] ,
   "Bảng và thử giá trị": ["Tìm hai số có tổng 20, số lớn hơn số bé 4: thử cặp 8–12 rồi kiểm tra cả tổng lẫn hiệu.", "Lập bảng các cặp số có tổng 18; khoanh các cặp có hiệu 6.", "Ba hộp có tổng 30 viên bi. Hộp đỏ hơn hộp xanh 4 viên, hộp vàng có 10 viên. Tìm hai hộp còn lại.", "Tìm số hai chữ số có tổng chữ số 9 và lớn hơn 60; liệt kê có thứ tự, không đoán.", "Bạn thử 9 và 11 cho tổng 20 rồi kết luận ngay. Nêu điều kiện còn thiếu.", "Mini-test: bảng cặp số, số hai chữ số, bài lời văn."] ,
   "Làm việc ngược": ["Một số nhân 3 rồi cộng 7 được 31. Làm ngược: 31 − 7 = 24, 24 : 3 = 8.", "Tìm x: x + 28 = 65; 4×x = 52; x : 6 = 9.", "Sau khi mua vở hết 18.000 đồng, Nam còn 27.000 đồng. Lúc đầu Nam có bao nhiêu tiền? Viết phép ngược.", "Một số qua hai bước ‘gấp đôi rồi bớt 5’ được 37. Tìm số ban đầu và tự kiểm tra.", "Bạn làm ngược 37 : 2 + 5. Chỉ ra thứ tự đảo phép đúng.", "Mini-test: số bị che một bước, hai bước và bài tiền."] ,
-  "Chẵn lẻ và bất biến": ["Tổng hai số chẵn là chẵn; chẵn + lẻ là lẻ. Ví dụ 14 + 9 = 23.", "Phân loại 12, 17, 25, 40 theo chẵn/lẻ rồi dự đoán tính chẵn lẻ của ba tổng.", "Có 15 bạn bắt tay từng người đúng một lần với một bạn khác. Có thể không ai lẻ lượt bắt tay không? Thử trường hợp nhỏ.", "Đổi chỗ hai chữ số của số có hai chữ số: tổng hai chữ số có đổi không? Kiểm tra 34 và 43.", "Bạn nói lẻ + lẻ = lẻ. Phản ví dụ nhỏ nhất là gì?", "Mini-test: chẵn lẻ của tổng/tích, một bất biến đơn giản."] ,
-  "Nguyên lý Dirichlet trực quan": ["5 quả táo bỏ vào 4 giỏ thì chắc chắn có một giỏ có ít nhất 2 quả.", "Với 7 chiếc tất đỏ/xanh, có chắc lấy được 2 chiếc cùng màu không? Vẽ các trường hợp xấu nhất.", "Trong 13 tháng sinh của 14 bạn (tính theo 12 tháng), vì sao chắc có hai bạn cùng tháng sinh?", "Có 10 viên bi bỏ vào 3 hộp. Ít nhất một hộp có bao nhiêu viên? Dự đoán rồi chia đều nhất có thể.", "Bạn nói 4 đồ vật vào 4 hộp chắc có một hộp 2 đồ vật. Vẽ cách xếp phản ví dụ.", "Mini-test: ba tình huống giỏ–đồ vật bằng lời, không dùng thuật ngữ khó."] ,
+  "Chẵn lẻ và bất biến": ["Tổng hai số chẵn là chẵn; chẵn + lẻ là lẻ. Ví dụ 14 + 9 = 23.", "Phân loại 12, 17, 25, 40 theo chẵn/lẻ rồi dự đoán tính chẵn lẻ của ba tổng.", "Có 15 bạn bắt tay từng người đúng một lần với một bạn khác. Có thể không ai lẻ lượt bắt tay không? Thử trường hợp nhỏ.", "Đổi chỗ hai chữ số của số có hai chữ số: tổng hai chữ số có đổi không? Kiểm tra 34 và 43.", "Bạn nói ‘Tổng của hai số lẻ bất kỳ luôn là một số lẻ’. Hãy lấy ví dụ cụ thể 3 + 5 = 8 để chứng minh bạn nói sai, và giải thích vì sao tổng của hai số lẻ luôn là số chẵn.", "Mini-test: chẵn lẻ của tổng/tích, một bất biến đơn giản."] ,
+  "Nguyên lý Dirichlet trực quan": ["5 quả táo bỏ vào 4 giỏ thì chắc chắn có một giỏ có ít nhất 2 quả.", "Với 7 chiếc tất đỏ/xanh, có chắc lấy được 2 chiếc cùng màu không? Vẽ các trường hợp xấu nhất.", "Trong một nhóm 13 bạn (mỗi năm có 12 tháng), vì sao chắc chắn có ít nhất hai bạn cùng tháng sinh?", "Có 10 viên bi bỏ vào 3 hộp. Ít nhất một hộp có bao nhiêu viên? Dự đoán rồi chia đều nhất có thể.", "Bạn nói 4 đồ vật vào 4 hộp chắc có một hộp 2 đồ vật. Vẽ cách xếp phản ví dụ.", "Mini-test: ba tình huống giỏ–đồ vật bằng lời, không dùng thuật ngữ khó."] ,
   "Tổ hợp cơ bản": ["Áo đỏ/xanh và quần đen/xám tạo 4 bộ: liệt kê theo bảng 2×2.", "Liệt kê các số hai chữ số từ 1, 2, 3 không lặp chữ số; đếm rồi kiểm tra bằng nhánh cây.", "Quán có 3 loại bánh và 2 loại nước. Có bao nhiêu cách chọn một bánh, một nước? Viết toàn bộ.", "Từ A, B, C đi qua hai trạm X, Y bằng hai tuyến khác nhau. Vẽ sơ đồ nhánh và tính số lộ trình.", "Bạn đếm 3×2 nhưng một lựa chọn bị cấm. Cách sửa bảng đếm là gì?", "Mini-test: bảng, nhánh cây, một điều kiện loại trừ."] ,
-  "Olympic mini set 1": ["Set gồm: số bị che 3×□+5=29; hình chữ nhật chu vi 30 cm; dãy 1,4,9,16; đếm bộ áo-quần 3×2.", "Làm bốn câu theo thứ tự câu chắc → câu cần sơ đồ → câu cần bảng → câu khó.", "Chọn một câu sai, viết lại lời giải chỉ giữ các bước cần thiết.", "Giải câu dãy số bằng cách hiệu và cách nhận dạng số chính phương đơn giản.", "Một lời giải chỉ ghi đáp số cho câu hình. Thêm dữ kiện và kết luận đủ để người khác chấm.", "Mini-test 25 phút: bốn câu mới cùng bốn kiểu tư duy."] ,
+  "Olympic mini set 1": ["Set gồm: số bị che 3×□+5=29; hình chữ nhật chu vi 30 cm; dãy 1,4,9,16; đếm bộ áo-quần 3×2.", "Làm bốn câu theo thứ tự câu chắc → câu cần sơ đồ → câu cần bảng → câu khó.", "Trong đợt thi Olympic Toán, có bài toán: ‘Tìm một số biết rằng lấy số đó nhân với 3 rồi cộng 5 thì được 29’. Bạn An giải nhầm thành (29 + 5) : 3. Em hãy tìm lỗi sai của An và tính đúng số cần tìm.", "Giải câu dãy số bằng cách hiệu và cách nhận dạng số chính phương đơn giản.", "Một thửa ruộng hình chữ nhật có chu vi 30 m, chiều dài hơn chiều rộng 3 m. Lời giải của bạn chỉ ghi ‘Chiều rộng = 6 m’ mà không trình bày các bước. Hãy viết lời giải hoàn chỉnh gồm 2 bước tính tìm chiều dài và chiều rộng thửa ruộng.", "Mini-test 25 phút: bốn câu mới cùng bốn kiểu tư duy."] ,
   "Phân tích trường hợp": ["Tìm các số hai chữ số có tổng chữ số 7: 16,25,34,43,52,61,70; lập theo hàng chục để không sót.", "Tìm các số hai chữ số có chữ số hàng chục lớn hơn hàng đơn vị và tổng bằng 9.", "Ba bạn chọn một trong hai trò chơi. Liệt kê các cách có đúng hai bạn chọn cờ vua.", "Tìm số lẻ nhỏ hơn 50 chia 3 dư 1; chia theo các bội của 3 trước.", "Bạn liệt kê 16,25,34 rồi dừng. Cách kiểm tra điểm bắt đầu–kết thúc là gì?", "Mini-test: số chữ số, lựa chọn, điều kiện dư."] ,
-  "Suy luận từ hình": ["Một hình chữ nhật 10×6 cm bị cắt bỏ một hình vuông 3×3 cm ở góc: diện tích còn lại 51 cm².", "Vẽ ba hình ghép ô vuông, đếm diện tích bằng tách thành hình chữ nhật nhỏ.", "Một hình vuông cạnh 8 cm được kẻ hai đường chia thành bốn hình chữ nhật bằng nhau. Mỗi phần có chu vi bao nhiêu?", "Cắt một hình chữ nhật 12×8 thành hai phần có diện tích bằng nhau theo hai cách.", "Bạn cộng chu vi các phần sau khi ghép rồi gọi là chu vi hình lớn. Vẽ cạnh trong bị đếm thừa.", "Mini-test: hình ghép, phần bị cắt, đường phụ."] ,
+  "Suy luận từ hình": ["Một hình chữ nhật 10×6 cm bị cắt bỏ một hình vuông 3×3 cm ở góc: diện tích còn lại 51 cm².", "Vẽ ba hình ghép ô vuông, đếm diện tích bằng tách thành hình chữ nhật nhỏ.", "Một hình vuông cạnh 8 cm được kẻ hai đường chia thành bốn hình chữ nhật bằng nhau. Mỗi phần có chu vi bao nhiêu?", "Cắt một hình chữ nhật 12×8 thành hai phần có diện tích bằng nhau theo hai cách.", "Ghép hai hình chữ nhật cùng kích thước 6 cm × 4 cm sát nhau theo cạnh 4 cm để tạo thành một hình chữ nhật lớn. Bạn tính chu vi hình mới bằng cách lấy 20 + 20 = 40 cm. Hãy chỉ ra vì sao sai và tính đúng chu vi hình chữ nhật mới.", "Mini-test: hình ghép, phần bị cắt, đường phụ."] ,
   "Tối ưu hóa đơn giản": ["Dùng 24 que tạo hình chữ nhật có cạnh nguyên. Các cặp 1×11, 2×10, 3×9, 4×8, 5×7, 6×6; diện tích lớn nhất là 36.", "Lập bảng các hình chữ nhật chu vi 20 cm và tìm diện tích lớn nhất.", "Có 30.000 đồng mua bút 4.000 và vở 6.000 đồng. Tìm cách mua nhiều món nhất nhưng không vượt tiền.", "Tìm hai số có tổng 30 để tích lớn nhất bằng bảng nhỏ.", "Bạn chọn ngay 1 và 14 vì tổng 15. Thiếu tiêu chí nào để biết tốt nhất?", "Mini-test: tối đa/tối thiểu với bảng các trường hợp."] ,
-  "Bài toán nhiều lời giải": ["48×25 = 48×100:4 = 1.200; cũng có thể 50×25 − 2×25 = 1.200.", "Tính 36×15 bằng hai cách; gạch bước nào cả hai cách đều dựa vào.", "Một lớp xếp 84 học sinh thành hàng đều. Tìm ba cách xếp hàng và giải thích cách nào dễ quan sát.", "Tổng 1+2+…+10 có thể ghép đầu–cuối. Tự vẽ cách ghép và kiểm tra.", "Một cách giải dài nhưng đúng có nên bỏ? Viết tiêu chí: đúng, rõ, kiểm tra được.", "Mini-test: một phép tính hai cách, một bài lời văn hai sơ đồ."] ,
-  "Thi thử có chiến thuật": ["Đề 25 phút: 3.998+2.007; phân số 3/8+2/8; chu vi 14×9; một dãy số; một bài bảng trường hợp.", "Đánh dấu C (chắc), V (vừa), K (khó); làm C trước, sau 8 phút đổi câu nếu bế tắc.", "Chữa một câu sai bằng bảng lỗi: đọc đề, mô hình, tính, kiểm tra.", "Tự đặt thời gian 6 phút cho câu C và chỉ tính giờ khi đã tóm tắt xong.", "Bạn bỏ trống câu khó mà không ghi hướng. Viết một hình/sơ đồ hoặc điều đã biết để còn điểm lập luận.", "Mini-test mới 25 phút và so sánh cách làm, không chỉ so điểm."] ,
-  "Olympic mini set 2": ["Set: tìm x từ (x+5)×3=36; đếm hình chữ nhật trong lưới 2×3; số có tổng chữ số 10; bài chia có dư.", "Làm từng câu, ghi cách làm đã chọn: làm ngược, vẽ hình, lập bảng hay kiểm tra dư.", "Chữa sâu câu đếm hình: chia theo kích thước hình chữ nhật để không trùng.", "Viết lời giải cho một bạn lớp 4 khác hiểu, không dùng ‘rõ ràng là’ mà không giải thích.", "Một đáp án có đúng số nhưng sai lý do. Tìm chỗ thiếu lập luận.", "Mini-test: một bài mỗi mạch số–hình–đếm–logic."] ,
-  "Chẩn đoán lỗ hổng": ["Làm 6 câu chẩn đoán: số lớn, cộng trừ, phân số, diện tích, dãy số, bài lời văn; ghi loại lỗi thay vì chỉ đáp án.", "Với mỗi câu sai, chọn một nhãn: chưa hiểu, sai phương pháp, tính ẩu, đọc thiếu điều kiện.", "Làm lại duy nhất hai câu sai cùng loại, đổi số để kiểm tra đã hiểu hay chỉ nhớ đáp án.", "Tạo sổ lỗi: dấu hiệu nhận biết, ví dụ sai, bước phòng tránh.", "Nếu làm nhanh nhưng thiếu lời giải, xếp đó vào lỗi nào? Viết cách nâng tiêu chuẩn.", "Mini-test cá nhân hóa dựa trên hai nhãn lỗi nhiều nhất."] ,
-  "Sổ tay phương pháp": ["Trang mẫu: ‘bù trừ’ — dấu hiệu: số gần tròn; ví dụ 498+37; kiểm tra: cộng ngược.", "Viết ba trang: sơ đồ thanh, lập bảng, làm việc ngược; mỗi trang có dấu hiệu và một ví dụ tự tạo.", "Nhìn ba đề không giải, chọn phương pháp phù hợp và giải thích lựa chọn.", "Một đề có thể dùng hai phương pháp. Viết lúc nào nên đổi cách để không mắc kẹt.", "Sửa một trang sổ tay có ví dụ sai hoặc quá chung chung.", "Mini-test: nhận diện phương pháp trước, giải sau."] ,
-  "Đề mô phỏng Singapore": ["Một bể có 3/5 dung tích là 120 lít. Hỏi đầy bể có bao nhiêu lít? Vẽ sơ đồ thanh 5 phần.", "Giải ba bài mô hình phần–toàn thể, so sánh, tỉ số đơn giản bằng sơ đồ trước phép tính.", "Cửa hàng giảm 20.000 đồng cho một cặp vở, mua 3 cặp và một bút 7.000 đồng. Lập bảng tiền rồi tính.", "Tạo bài ‘có dữ kiện thừa’ và chỉ ra dữ kiện nào không dùng.", "Một sơ đồ thanh chia phần không đều nhưng ghi 5 phần bằng nhau. Chỉ lỗi bằng hình.", "Mini-test 25 phút: hai bài bar model, một bài dữ liệu, một bài suy luận."] ,
-  "Đề mô phỏng Trung Quốc": ["Tìm số tự nhiên nhỏ nhất có hai chữ số, chia 5 dư 2 và chia 3 dư 1. Lập bảng các số dư.", "Giải ba bài số học/hình học có yêu cầu nêu điều kiện và kiểm tra từng trường hợp.", "Một hình vuông cạnh 10 cm cắt thành bốn hình chữ nhật bằng nhau. Tìm chu vi mỗi hình trong hai kiểu cắt.", "Viết lời giải ngắn: giả thiết, các bước, kết luận; không bỏ trường hợp đã loại.", "Bạn thử số ngẫu nhiên rồi gặp đáp án. Chuyển thành bảng có điểm bắt đầu và quy tắc dừng.", "Mini-test: một bài số, một hình, một quy luật; ưu tiên lời giải đủ."] ,
-  "Dự án Toán quanh nhà": ["Đo bàn học: dài, rộng, cao; chọn một đại lượng có ích để tính, ví dụ diện tích mặt bàn.", "Lập bảng số liệu thật gồm ít nhất 5 dòng: vật, số đo, đơn vị, cách đo.", "Dùng số liệu để giải một câu hỏi hai bước, ví dụ tính số giấy phủ mặt bàn và tiền mua.", "Vẽ biểu đồ cột nhỏ từ một dữ liệu thật: số trang đọc, số bước đi hoặc chi tiêu nhỏ.", "Kiểm tra dự án: đơn vị thống nhất, số liệu hợp lý, có ảnh/chú thích nếu cần.", "Trình bày dự án 3 phút: câu hỏi, số liệu, cách tính, điều Bách phát hiện."] ,
-  "Ngày hội Bách giải thích": ["Chọn ba bài đại diện: một tính nhẩm, một sơ đồ, một suy luận; mỗi bài phải có bản nháp đã sửa.", "Thu âm/đọc lời giải 60–90 giây cho một bài: nêu dữ kiện, cách làm, kiểm tra.", "Một người nghe hỏi ‘vì sao?’ ở bất kỳ bước nào; Bách bổ sung lời giải nếu bước đó chưa rõ.", "So sánh lời giải tuần đầu và tuần cuối: phần nào gọn hơn, phần nào chắc hơn.", "Chọn một lỗi cũ và minh họa cách Bách nay tự phát hiện lỗi đó.", "Ngày hội: trình bày ba bài, tự nhận xét một điểm mạnh và một mục tiêu kế tiếp."]
+  "Bài toán nhiều lời giải": ["48×25 = 48×100:4 = 1.200; cũng có thể 50×25 − 2×25 = 1.200.", "Tính 36×15 bằng hai cách; gạch bước nào cả hai cách đều dựa vào.", "Một lớp xếp 84 học sinh thành hàng đều. Tìm ba cách xếp hàng và giải thích cách nào dễ quan sát.", "Tổng 1+2+…+10 có thể ghép đầu–cuối. Tự vẽ cách ghép và kiểm tra.", "Tính giá trị biểu thức 25 × 36 bằng hai cách khác nhau: Cách 1 nhân với 100 rồi chia 4; Cách 2 tách 36 thành 4 × 9. So sánh xem cách nào giúp nhẩm nhanh hơn.", "Mini-test: một phép tính hai cách, một bài lời văn hai sơ đồ."] ,
+  "Thi thử có chiến thuật": ["Đề 25 phút: 3.998+2.007; phân số 3/8+2/8; chu vi 14×9; một dãy số; một bài bảng trường hợp.", "Đánh dấu C (chắc), V (vừa), K (khó); làm C trước, sau 8 phút đổi câu nếu bế tắc.", "Trong đề thi thử, câu hỏi yêu cầu tính tổng: 3.998 + 2.007. Bạn Bình đặt tính nhầm ra 5.005. Hãy phân tích nguyên nhân sai và tính nhẩm nhanh kết quả đúng bằng phương pháp làm tròn bù trừ.", "Tự đặt thời gian 6 phút cho câu C và chỉ tính giờ khi đã tóm tắt xong.", "Một mảnh đất hình chữ nhật có chu vi 46 m, nếu tăng chiều rộng thêm 5 m thì được hình vuông. Hãy vẽ sơ đồ đoạn thẳng biểu diễn hiệu giữa chiều dài và chiều rộng, từ đó tính diện tích mảnh đất.", "Mini-test mới 25 phút và so sánh cách làm, không chỉ so điểm."] ,
+  "Olympic mini set 2": ["Set: tìm x từ (x+5)×3=36; đếm hình chữ nhật trong lưới 2×3; số có tổng chữ số 10; bài chia có dư.", "Làm từng câu, ghi cách làm đã chọn: làm ngược, vẽ hình, lập bảng hay kiểm tra dư.", "Cho lưới ô vuông gồm 2 hàng và 3 cột (tổng cộng 6 ô vuông nhỏ cạnh 1 cm). Hãy đếm xem có tất cả bao nhiêu hình chữ nhật trong lưới bằng cách phân loại theo các kích thước.", "Viết lời giải cho một bạn lớp 4 khác hiểu, không dùng ‘rõ ràng là’ mà không giải thích.", "Khi giải bài: ‘Tìm số tự nhiên x biết (x + 5) × 3 = 36’, bạn Nam đoán mò ‘x = 7’ và ghi luôn đáp số. Em hãy viết lời giải chuẩn xác theo phương pháp làm việc ngược từng bước để tìm x.", "Mini-test: một bài mỗi mạch số–hình–đếm–logic."] ,
+  "Chẩn đoán lỗ hổng": ["Làm 6 câu chẩn đoán: số lớn, cộng trừ, phân số, diện tích, dãy số, bài lời văn; ghi loại lỗi thay vì chỉ đáp án.", "Với mỗi câu sai, chọn một nhãn: chưa hiểu, sai phương pháp, tính ẩu, đọc thiếu điều kiện.", "Chẩn đoán 2 bài toán hay nhầm lẫn: (1) Tính 45.000 − 18.250; (2) Một đội trồng rừng có 120 cây bạch đàn, đã trồng được 1/3 số cây. Hỏi còn lại bao nhiêu cây chưa trồng? Trình bày lời giải chi tiết cả 2 câu.", "Tạo sổ lỗi: dấu hiệu nhận biết, ví dụ sai, bước phòng tránh.", "Khi giải bài: ‘Một hình chữ nhật có chiều dài 24 cm, chiều rộng bằng 1/3 chiều dài. Tính diện tích hình chữ nhật’, một bạn ghi luôn ‘Diện tích = 192 cm²’ mà không tính chiều rộng. Hãy chữa lại thành lời giải đầy đủ 2 bước tính.", "Mini-test cá nhân hóa dựa trên hai nhãn lỗi nhiều nhất."] ,
+  "Sổ tay phương pháp": ["Trang mẫu: ‘bù trừ’ — dấu hiệu: số gần tròn; ví dụ 498+37; kiểm tra: cộng ngược.", "Viết ba trang: sơ đồ thanh, lập bảng, làm việc ngược; mỗi trang có dấu hiệu và một ví dụ tự tạo.", "Áp dụng phương pháp làm việc ngược và sơ đồ thanh để giải bài toán sau: ‘Mẹ cho Bách một số tiền. Bách mua sách hết 45.000 đồng, sau đó được bố cho thêm 20.000 đồng thì có tất cả 60.000 đồng. Hỏi lúc đầu mẹ cho Bách bao nhiêu tiền?’", "Một đề có thể dùng hai phương pháp. Viết lúc nào nên đổi cách để không mắc kẹt.", "Trong sổ tay phương pháp, bạn ghi: ‘Tính 498 + 37 bằng cách lấy 500 + 37 + 2 = 539’. Hãy chỉ ra bước sai, giải thích vì sao phải trừ 2 thay vì cộng 2 và viết lại phép tính nhẩm chính xác.", "Mini-test: nhận diện phương pháp trước, giải sau."] ,
+  "Đề mô phỏng Singapore": ["Một bể có 3/5 dung tích là 120 lít. Hỏi đầy bể có bao nhiêu lít? Vẽ sơ đồ thanh 5 phần.", "Giải ba bài mô hình phần–toàn thể, so sánh, tỉ số đơn giản bằng sơ đồ trước phép tính.", "Một cặp vở có giá gốc 45.000 đồng, cửa hàng giảm giá 20.000 đồng cho mỗi cặp. Bách mua 3 cặp vở và một chiếc bút 7.000 đồng. Lập bảng tính tiền rồi tính tổng số tiền phải trả.", "Tạo bài ‘có dữ kiện thừa’ và chỉ ra dữ kiện nào không dùng.", "Một sơ đồ thanh chia phần không đều nhưng ghi 5 phần bằng nhau. Chỉ lỗi bằng hình.", "Mini-test 25 phút: hai bài bar model, một bài dữ liệu, một bài suy luận."] ,
+  "Đề mô phỏng Trung Quốc": ["Tìm số tự nhiên nhỏ nhất có hai chữ số, chia 5 dư 2 và chia 3 dư 1. Lập bảng các số dư.", "Giải ba bài số học/hình học có yêu cầu nêu điều kiện và kiểm tra từng trường hợp.", "Một hình vuông cạnh 10 cm cắt thành bốn hình chữ nhật bằng nhau. Tìm chu vi mỗi hình trong hai kiểu cắt.", "Viết lời giải ngắn: giả thiết, các bước, kết luận; không bỏ trường hợp đã loại.", "Để tìm số tự nhiên nhỏ nhất có hai chữ số chia 5 dư 2 và chia 3 dư 1, bạn Nam đoán mò các số ngẫu nhiên. Em hãy hướng dẫn Nam lập bảng liệt kê các số chia 5 dư 2 bắt đầu từ 12, 17, 22... rồi kiểm tra điều kiện chia 3 dư 1 để tìm ra đáp số 22 nhanh nhất.", "Mini-test: một bài số, một hình, một quy luật; ưu tiên lời giải đủ."] ,
+  "Dự án Toán quanh nhà": ["Đo bàn học: dài, rộng, cao; chọn một đại lượng có ích để tính, ví dụ diện tích mặt bàn.", "Lập bảng số liệu thật gồm ít nhất 5 dòng: vật, số đo, đơn vị, cách đo.", "Mặt bàn học của Bách có chiều dài 120 cm, chiều rộng 60 cm. (1) Tính diện tích mặt bàn bằng xăng-ti-mét vuông; (2) Nếu mua tấm kính phủ mặt bàn với giá 500 đồng cho mỗi 10 cm², hỏi cần trả bao nhiêu tiền?", "Vẽ biểu đồ cột nhỏ từ một dữ liệu thật: số trang đọc, số bước đi hoặc chi tiêu nhỏ.", "Bạn đo chiều dài phòng khách được 6 m, chiều rộng 450 cm và tính diện tích là 6 × 450 = 2.700 m². Hãy chỉ ra lỗi chưa đổi đơn vị và tính lại đúng diện tích phòng khách theo đơn vị mét vuông.", "Trình bày dự án 3 phút: câu hỏi, số liệu, cách tính, điều Bách phát hiện."] ,
+  "Ngày hội Bách giải thích": ["Chọn ba bài đại diện: một tính nhẩm, một sơ đồ, một suy luận; mỗi bài phải có bản nháp đã sửa.", "Thu âm/đọc lời giải 60–90 giây cho một bài: nêu dữ kiện, cách làm, kiểm tra.", "Một người nghe hỏi ‘vì sao?’ ở bất kỳ bước nào; Bách bổ sung lời giải nếu bước đó chưa rõ.", "So sánh lời giải tuần đầu và tuần cuối: phần nào gọn hơn, phần nào chắc hơn.", "Trong bài toán chia có dư: ‘Có 45 cái kẹo chia đều cho 6 bạn, mỗi bạn được 7 cái kẹo và còn thừa 5 cái’. Hãy kiểm tra lại bằng phép tính 6 × 7 + 5 và giải thích vì sao số dư 5 là hợp lý (so sánh số dư với số chia).", "Ngày hội: trình bày ba bài, tự nhận xét một điểm mạnh và một mục tiêu kế tiếp."]
 };
+
+const AUTHORED_MATH_MINI_TESTS = {
+  "Dãy số và quy luật": {
+    q1: "Cho dãy số: 3, 7, 13, 21, 31, ... Tìm quy luật của dãy và viết số hạng tiếp theo.",
+    q2: "Tìm số hạng thứ 10 của dãy số cách đều: 4, 7, 10, 13, 16, ...",
+    q3: "Một rạp xiếc xếp các hàng ghế: hàng thứ nhất có 12 ghế, mỗi hàng sau nhiều hơn hàng liền trước 3 ghế. Hỏi hàng thứ 8 có bao nhiêu chiếc ghế?",
+    q4: "Cho dãy số: 1, 4, 9, 16, 25, ... Tìm số hạng thứ 8 của dãy và nêu quy luật tổng quát."
+  },
+  "Bội, ước và chia hết": {
+    q1: "Tìm tất cả các ước của số 30 và viết thành từng cặp hai số nhân với nhau bằng 30.",
+    q2: "Tìm ước chung lớn nhất của hai số 24 và 36.",
+    q3: "Cô giáo có 48 chiếc bút chì muốn chia đều vào các hộp, mỗi hộp có từ 5 đến 15 chiếc bút. Hỏi có thể chia thành mấy hộp, mỗi hộp mấy chiếc bút?",
+    q4: "Tìm số tự nhiên nhỏ nhất lớn hơn 50 vừa chia hết cho 4 vừa chia hết cho 6."
+  },
+  "Phân số qua hình ảnh": {
+    q1: "Một hình vuông được chia thành 16 ô vuông nhỏ bằng nhau, trong đó có 6 ô được tô màu. Viết phân số chỉ số phần được tô màu và rút gọn về phân số tối giản.",
+    q2: "Viết ba phân số khác nhau cùng bằng phân số 2/5 có mẫu số nhỏ hơn 25.",
+    q3: "Bác thợ may có một cuộn vải dài. Ngày đầu bác dùng hết 1/4 cuộn vải, ngày thứ hai dùng hết 3/8 cuộn vải đó. Hỏi ngày nào bác dùng nhiều vải hơn?",
+    q4: "Hãy vẽ một hình chữ nhật thích hợp để biểu thị rằng 2/3 bằng 4/6."
+  },
+  "Cộng trừ phân số cùng mẫu": {
+    q1: "Tính các phép tính sau và rút gọn kết quả (nếu có): (a) 4/9 + 3/9; (b) 7/12 - 3/12.",
+    q2: "Tính giá trị của biểu thức: 11/15 - 4/15 + 2/15.",
+    q3: "Một bình nước có 7/10 lít nước. Bách uống hết 3/10 lít, sau đó rót thêm vào bình 4/10 lít nước. Hỏi trong bình lúc này có bao nhiêu lít nước?",
+    q4: "Tìm phân số x biết: x + 3/8 = 7/8."
+  },
+  "Số thập phân làm quen": {
+    q1: "Đọc và viết các số đo sau: 3 m 40 cm dưới dạng số thập phân có đơn vị mét, và 2 kg 500 g dưới dạng số thập phân có đơn vị ki-lô-gam.",
+    q2: "Sắp xếp các số sau theo thứ tự từ bé đến lớn: 0,65; 0,7; 0,605; 0,72.",
+    q3: "Một chai dầu ăn chứa 1,5 lít. Mỗi ngày gia đình dùng hết 0,25 lít. Hỏi sau 4 ngày trong chai còn lại bao nhiêu lít dầu ăn?",
+    q4: "Một chiếc thước kẻ dài 1 m. Bạn An đo sợi dây được 0,8 m; bạn Bình đo được 85 cm. Hỏi sợi dây của bạn nào dài hơn và dài hơn bao nhiêu xăng-ti-mét?"
+  },
+  "Bảng và biểu đồ": {
+    q1: "Bảng số cây 3 lớp trồng được: Lớp 4A: 35 cây; Lớp 4B: 42 cây; Lớp 4C: 38 cây. Hỏi cả ba lớp trồng được tất cả bao nhiêu cây?",
+    q2: "Lớp 4B trồng được nhiều hơn lớp 4A bao nhiêu cây? Lớp nào trồng được nhiều cây nhất?",
+    q3: "Khảo sát sở thích đọc sách của 40 học sinh lớp 4: có 18 bạn thích truyện tranh, 14 bạn thích sách khoa học, còn lại là sách lịch sử. Lập bảng số liệu và tính số bạn thích sách lịch sử.",
+    q4: "Nếu lớp 4A trồng thêm 8 cây nữa thì thứ hạng trồng cây giữa 3 lớp thay đổi như thế nào?"
+  },
+  "Đơn vị và đổi đơn vị": {
+    q1: "Đổi các đơn vị sau: (a) 5 m 35 cm = ... cm; (b) 4 kg 150 g = ... g; (c) 3 giờ 15 phút = ... phút.",
+    q2: "Thực hiện phép tính: 6 m 40 cm - 2 m 75 cm; 3 kg 400 g + 1 kg 800 g.",
+    q3: "Một can chứa 5 lít nước. Người ta rót nước từ can vào 6 chai nhỏ, mỗi chai chứa 650 ml nước. Hỏi trong can còn lại bao nhiêu mi-li-lít nước?",
+    q4: "Một sợi dây thép dài 4 m được uốn thành một hình vuông. Tính diện tích của hình vuông đó theo đơn vị đề-xi-mét vuông."
+  },
+  "Chu vi hình": {
+    q1: "Một hình chữ nhật có chiều dài 18 cm, chiều rộng 11 cm. Tính chu vi của hình chữ nhật đó.",
+    q2: "Một hình vuông có chu vi bằng chu vi hình chữ nhật dài 15 cm, rộng 9 cm. Tính độ dài cạnh của hình vuông đó.",
+    q3: "Một mảnh vườn hình chữ nhật có chu vi 54 m, chiều dài là 18 m. Tính chiều rộng của mảnh vườn đó.",
+    q4: "Ghép hai hình chữ nhật cùng kích thước 10 cm × 4 cm sát nhau theo chiều rộng 4 cm để tạo thành một hình chữ nhật mới. Tính chu vi của hình chữ nhật mới tạo thành."
+  },
+  "Diện tích hình chữ nhật": {
+    q1: "Một hình chữ nhật có chiều dài 15 cm, chiều rộng 8 cm. Tính diện tích hình chữ nhật đó theo xăng-ti-mét vuông.",
+    q2: "Một mảnh đất hình chữ nhật có diện tích 96 m², chiều rộng là 8 m. Tính chu vi của mảnh đất đó.",
+    q3: "Một phòng học hình chữ nhật dài 9 m, rộng 6 m được lát bằng các viên gạch vuông cạnh 30 cm. Hỏi cần bao nhiêu viên gạch để lát kín phòng học đó?",
+    q4: "Tìm hai số nguyên dương là chiều dài và chiều rộng của một hình chữ nhật có diện tích 48 cm² sao cho chu vi của hình đó là nhỏ nhất."
+  },
+  "Góc và đường thẳng": {
+    q1: "Nêu đặc điểm của hai đường thẳng vuông góc và hai đường thẳng song song. Chỉ ra 2 ví dụ thực tế trong phòng học của em.",
+    q2: "Cho hình chữ nhật MNPQ. Hãy kể tên: (a) Các cặp cạnh song song với nhau; (b) Các góc vuông có đỉnh tại các đỉnh của hình chữ nhật.",
+    q3: "Một khung cửa sổ hình chữ nhật ABCD có chiều dài AB = 120 cm, chiều rộng BC = 80 cm. Hỏi hai thanh gỗ nẹp theo cạnh AB và CD có song song với nhau không? Tính tổng độ dài 4 thanh nẹp viền quanh cửa sổ.",
+    q4: "Cho tứ giác có hai góc đối nhau là góc vuông. Hai cạnh còn lại có nhất thiết phải song song với nhau không? Vẽ hình minh họa cho câu trả lời."
+  },
+  "Thời gian và lịch": {
+    q1: "Một buổi học bắt đầu lúc 7 giờ 45 phút và kết thúc lúc 11 giờ 15 phút. Hỏi buổi học đó kéo dài bao nhiêu giờ và bao nhiêu phút?",
+    q2: "Tính khoảng thời gian giữa: (a) 8:20 và 9:05; (b) 14:40 và 16:15.",
+    q3: "Từ thứ Hai đến thứ Sáu, mỗi ngày Bách đọc 20 trang sách. Thứ Bảy và Chủ nhật, mỗi ngày Bách đọc 35 trang. Hỏi trong cả tuần Bách đọc được tất cả bao nhiêu trang sách?",
+    q4: "Một đoàn tàu cứ sau 25 phút lại có một chuyến xuất bến. Chuyến đầu tiên xuất bến lúc 6 giờ sáng. Hỏi chuyến tàu thứ 5 xuất bến lúc mấy giờ?"
+  },
+  "Sơ đồ hóa bài khó": {
+    q1: "Hai bạn An và Bình có tất cả 58 viên bi. An có nhiều hơn Bình 12 viên bi. Hãy vẽ sơ đồ đoạn thẳng và tìm số bi của mỗi bạn.",
+    q2: "Thùng thứ nhất có nhiều hơn thùng thứ hai 24 lít dầu. Biết số dầu thùng thứ hai bằng 1/3 số dầu thùng thứ nhất. Vẽ sơ đồ và tìm số lít dầu ở mỗi thùng.",
+    q3: "Một cửa hàng có 150 kg gạo. Buổi sáng bán được 1/3 số gạo đó, buổi chiều bán thêm 25 kg. Hỏi cửa hàng còn lại bao nhiêu ki-lô-gam gạo?",
+    q4: "Tổng của ba số là 90. Số thứ hai hơn số thứ nhất 5 đơn vị và kém số thứ ba 5 đơn vị. Vẽ sơ đồ thanh để tìm ba số đó."
+  },
+  "Bảng và thử giá trị": {
+    q1: "Lập bảng để tìm hai số tự nhiên có tổng bằng 24 và tích bằng 140.",
+    q2: "Tìm số có hai chữ số biết rằng tổng hai chữ số của nó bằng 11 và chữ số hàng chục lớn hơn chữ số hàng đơn vị là 3.",
+    q3: "Bác nông dân nuôi tổng cộng 22 con gà và thỏ. Bạn Nam đếm được tất cả 60 cái chân. Lập bảng giả thiết tạm hoặc thử giá trị để tìm số gà và số thỏ.",
+    q4: "Có ba thùng nước ngọt chứa tổng cộng 45 chai. Thùng A hơn thùng B 5 chai, thùng C có 16 chai. Lập bảng tìm số chai ở thùng A và thùng B."
+  },
+  "Làm việc ngược": {
+    q1: "Tìm số tự nhiên x biết: (x × 4) + 15 = 55.",
+    q2: "Một số sau khi bớt đi 8 rồi nhân với 5 thì được 45. Tìm số ban đầu bằng phương pháp làm việc ngược.",
+    q3: "Nam có một số tiền tiết kiệm. Nam mua sách hết 25.000 đồng, sau đó mua một cây bút hết 12.000 đồng thì còn lại 33.000 đồng. Hỏi lúc đầu Nam có bao nhiêu tiền?",
+    q4: "Bác bảo vệ chia một bao gạo: lần đầu lấy đi một nửa số gạo và thêm 2 kg; lần thứ hai lấy đi một nửa số gạo còn lại và thêm 3 kg thì trong bao còn lại 5 kg. Tính số gạo lúc đầu trong bao."
+  },
+  "Chẵn lẻ và bất biến": {
+    q1: "Tổng của 3 số lẻ liên tiếp là số chẵn hay số lẻ? Cho ví dụ minh họa.",
+    q2: "Không cần tính cụ thể, hãy cho biết kết quả của phép tính: 246 + 358 + 791 là số chẵn hay số lẻ? Giải thích vì sao.",
+    q3: "Có 11 bạn học sinh đứng thành một vòng tròn. Mỗi bạn bắt tay với đúng 2 bạn đứng cạnh mình. Hỏi tổng số lượt bắt tay của tất cả các bạn là số chẵn hay số lẻ?",
+    q4: "Trên bảng viết các số từ 1 đến 10. Mỗi lần xóa đi hai số bất kỳ rồi thay bằng hiệu của chúng. Hỏi số cuối cùng còn lại trên bảng là số chẵn hay số lẻ?"
+  },
+  "Nguyên lý Dirichlet trực quan": {
+    q1: "Trong một hộp có 5 chiếc bút bi đen và 5 chiếc bút bi xanh. Hỏi không nhìn vào hộp, phải lấy ra ít nhất bao nhiêu chiếc bút để chắc chắn có 2 chiếc bút cùng màu?",
+    q2: "Có 13 bạn học sinh. Giải thích vì sao chắc chắn có ít nhất 2 bạn có cùng tháng sinh trong năm (biết một năm có 12 tháng).",
+    q3: "Có 25 quả bóng được xếp vào 6 chiếc rổ. Chứng minh rằng chắc chắn có ít nhất một chiếc rổ chứa từ 5 quả bóng trở lên.",
+    q4: "Một lớp học có 35 học sinh. Trong đợt kiểm tra môn Toán, bài thi được chấm theo thang điểm từ 7 đến 10 (chỉ lấy điểm nguyên). Chứng minh rằng có ít nhất 9 bạn có cùng điểm số."
+  },
+  "Tổ hợp cơ bản": {
+    q1: "Bạn Mai có 3 chiếc áo màu khác nhau (xanh, đỏ, vàng) và 2 chiếc chân váy (đen, trắng). Hỏi Mai có thể phối được bao nhiêu bộ trang phục khác nhau? Lập bảng liệt kê.",
+    q2: "Từ các chữ số 2, 4, 7, có thể lập được bao nhiêu số có hai chữ số khác nhau? Hãy viết tất cả các số đó.",
+    q3: "Một quán ăn sáng phục vụ 4 món ăn (phở, bún, bánh mì, xôi) và 3 loại đồ uống (sữa, nước cam, trà). Một bữa sáng gồm 1 món ăn và 1 loại đồ uống. Hỏi có bao nhiêu cách chọn bữa sáng?",
+    q4: "Có 4 đội bóng thi đấu vòng tròn một lượt (mỗi đội đều gặp nhau đúng một lần). Hỏi có tất cả bao nhiêu trận đấu diễn ra?"
+  },
+  "Olympic mini set 1": {
+    q1: "Tìm x biết: 4 × x + 18 = 50.",
+    q2: "Cho dãy số: 1, 4, 9, 16, 25, ... Tìm số hạng thứ 7 của dãy.",
+    q3: "Một mảnh vườn hình chữ nhật có chu vi 36 m, chiều dài hơn chiều rộng 4 m. Tính diện tích của mảnh vườn đó.",
+    q4: "Có bao nhiêu số có hai chữ số mà chữ số hàng chục lớn hơn chữ số hàng đơn vị?"
+  },
+  "Phân tích trường hợp": {
+    q1: "Tìm tất cả các số có hai chữ số mà tổng hai chữ số của nó bằng 8. Liệt kê theo thứ tự tăng dần để không bỏ sót.",
+    q2: "Tìm các số lẻ có hai chữ số nhỏ hơn 40 chia cho 3 dư 1.",
+    q3: "Ba bạn An, Bình, Cúc cùng chọn một trong hai môn thể thao: cờ vua hoặc bóng bàn. Hãy liệt kê tất cả các khả năng mà có đúng hai bạn chọn cờ vua.",
+    q4: "Một người có các tờ tiền loại 2.000 đồng và 5.000 đồng. Hãy tìm tất cả các cách để trả đúng 19.000 đồng mà không cần trả lại tiền thừa."
+  },
+  "Suy luận từ hình": {
+    q1: "Một hình vuông cạnh 12 cm được chia thành 4 hình vuông nhỏ bằng nhau. Tính chu vi và diện tích của mỗi hình vuông nhỏ.",
+    q2: "Một tấm bìa hình chữ nhật 14 cm × 8 cm bị cắt bỏ một hình vuông cạnh 4 cm ở một góc. Tính diện tích phần bìa còn lại.",
+    q3: "Một hình chữ nhật có chiều dài 20 cm, chiều rộng 10 cm. Người ta kẻ một đoạn thẳng song song với chiều rộng để chia nó thành một hình vuông và một hình chữ nhật nhỏ. Tính chu vi hình chữ nhật nhỏ đó.",
+    q4: "Cắt một hình chữ nhật kích thước 12 cm × 8 cm thành hai mảnh để ghép lại thành một hình có chu vi lớn nhất có thể. Tính chu vi đó."
+  },
+  "Tối ưu hóa đơn giản": {
+    q1: "Dùng 20 đoạn que dài 1 cm để xếp thành một hình chữ nhật có kích thước nguyên. Liệt kê các kích thước và tìm hình chữ nhật có diện tích lớn nhất.",
+    q2: "Tìm hai số tự nhiên có tổng bằng 20 sao cho tích của chúng đạt giá trị lớn nhất.",
+    q3: "Bạn có 50.000 đồng để mua bút giá 5.000 đồng/chiếc và vở giá 8.000 đồng/quyển. Tìm cách mua sao cho mua được tổng số món đồ nhiều nhất mà không vượt quá số tiền có.",
+    q4: "Một mảnh đất hình chữ nhật có diện tích 36 m². Tìm các kích thước chiều dài và chiều rộng (số nguyên mét) để chi phí làm hàng rào bao quanh là ít nhất."
+  },
+  "Bài toán nhiều lời giải": {
+    q1: "Tính giá trị biểu thức 35 × 18 bằng 2 cách khác nhau và chỉ ra cách nào thuận tiện hơn.",
+    q2: "Tính nhanh: 48 × 25 bằng cách nhân với 100 rồi chia cho 4.",
+    q3: "Một trường tiểu học có 96 học sinh khối 4. Hãy tìm 3 cách xếp số học sinh này thành các hàng đều nhau (mỗi hàng từ 6 đến 20 học sinh) và nêu số học sinh mỗi hàng.",
+    q4: "Tính tổng dãy số cách đều: 2 + 4 + 6 + 8 + 10 + 12 + 14 + 16 + 18 + 20 bằng 2 cách khác nhau (cách ghép cặp đầu-cuối và cách dùng công thức)."
+  },
+  "Thi thử có chiến thuật": {
+    q1: "Tính nhẩm nhanh bằng phương pháp bù trừ: (a) 4.995 + 2.348; (b) 6.002 - 1.997.",
+    q2: "Tính chu vi và diện tích của hình chữ nhật có chiều dài 16 cm, chiều rộng 9 cm.",
+    q3: "Hai kho chứa tất cả 180 tấn thóc. Sau khi chuyển 20 tấn thóc từ kho A sang kho B thì hai kho có số thóc bằng nhau. Hỏi lúc đầu mỗi kho có bao nhiêu tấn thóc?",
+    q4: "Tìm số tự nhiên nhỏ nhất có ba chữ số khác nhau chia hết cho cả 2, 3 và 5."
+  },
+  "Olympic mini set 2": {
+    q1: "Tìm x biết: (x - 7) × 5 = 45.",
+    q2: "Một số chia cho 8 được thương là 14 và số dư là số dư lớn nhất có thể. Tìm số đó.",
+    q3: "Cho một lưới ô vuông kích thước 2 hàng và 3 cột (gồm 6 ô vuông nhỏ). Hãy đếm xem có tất cả bao nhiêu hình chữ nhật trong lưới đó.",
+    q4: "Tìm số có hai chữ số biết rằng khi viết thêm chữ số 2 vào bên trái số đó thì được số mới gấp 9 lần số ban đầu."
+  },
+  "Chẩn đoán lỗ hổng": {
+    q1: "Đặt tính rồi tính: (a) 408.256 + 93.874; (b) 500.000 - 64.382.",
+    q2: "Tính: 5/12 + 4/12 - 3/12 và rút gọn kết quả về phân số tối giản.",
+    q3: "Một mảnh đất hình chữ nhật có chu vi 48 m, chiều dài gấp 3 lần chiều rộng. Tính diện tích của mảnh đất đó.",
+    q4: "Cho dãy số: 2, 5, 10, 17, 26, ... Tìm số hạng thứ 7 của dãy số và giải thích quy luật."
+  },
+  "Sổ tay phương pháp": {
+    q1: "Nêu các bước tính nhẩm phép cộng 597 + 86 bằng phương pháp bù trừ số tròn và tính kết quả.",
+    q2: "Dùng phương pháp sơ đồ đoạn thẳng giải bài toán: Hai bạn có 42 chiếc kẹo, bạn Hoa có gấp đôi số kẹo của bạn Mai. Hỏi mỗi bạn có bao nhiêu chiếc kẹo?",
+    q3: "Áp dụng phương pháp làm việc ngược để giải bài toán: Nghĩ ra một số, lấy số đó nhân 3 rồi cộng 12, sau đó chia cho 6 thì được 7. Hỏi số đã nghĩ là số nào?",
+    q4: "Nêu dấu hiệu nhận biết khi nào nên dùng phương pháp ‘Lập bảng thử chọn’ để giải một bài toán đố lớp 4 và cho 1 ví dụ minh họa."
+  },
+  "Đề mô phỏng Singapore": {
+    q1: "Một thùng dầu chứa 80 lít dầu, người ta đã lấy ra 3/4 số dầu trong thùng. Hỏi trong thùng còn lại bao nhiêu lít dầu? Vẽ sơ đồ thanh minh họa.",
+    q2: "Một bể nước có 3/5 dung tích chứa được 150 lít nước. Hỏi khi đầy bể, bể đó chứa được tất cả bao nhiêu lít nước?",
+    q3: "Một cặp sách có giá gốc 120.000 đồng, cửa hàng giảm giá 30.000 đồng mỗi chiếc. Bạn mua 2 chiếc cặp sách và 3 cuốn sổ tay giá 15.000 đồng/cuốn. Hỏi bạn phải trả tất cả bao nhiêu tiền?",
+    q4: "Tổng số kẹo của hai hộp A và B là 72 cái. Nếu chuyển 6 cái kẹo từ hộp A sang hộp B thì số kẹo ở hộp A gấp đôi số kẹo ở hộp B. Vẽ sơ đồ thanh và tìm số kẹo ban đầu ở mỗi hộp."
+  },
+  "Đề mô phỏng Trung Quốc": {
+    q1: "Tìm số tự nhiên nhỏ nhất có hai chữ số chia cho 5 dư 3 và chia cho 2 dư 1.",
+    q2: "Một hình vuông có cạnh 12 cm được cắt thành 4 hình chữ nhật bằng nhau bởi 3 đường thẳng song song. Tính chu vi của mỗi hình chữ nhật nhỏ.",
+    q3: "Một phép chia có số chia là 7, thương là 25 và số dư là số dư lớn nhất có thể có. Hãy tìm số bị chia của phép chia đó.",
+    q4: "Tìm số tự nhiên nhỏ nhất chia cho 4 dư 2, chia cho 5 dư 3 và chia cho 6 dư 4."
+  },
+  "Dự án Toán quanh nhà": {
+    q1: "Bạn đo một chiếc khăn trải bàn hình chữ nhật có chiều dài 150 cm, chiều rộng 80 cm. Tính diện tích của chiếc khăn trải bàn đó theo đơn vị đề-xi-mét vuông.",
+    q2: "Một phòng ngủ hình chữ nhật có chiều dài 5 m, chiều rộng 4 m. Người ta dùng các tấm xốp lót sàn hình vuông cạnh 50 cm để phủ kín nền phòng. Tính số tấm xốp cần dùng để trải kín nền phòng.",
+    q3: "Mỗi ngày gia đình bạn Bách dùng hết 450 lít nước sinh hoạt. Hỏi trong 1 tuần lễ (7 ngày), gia đình bạn dùng hết bao nhiêu mét khối và bao nhiêu lít nước?",
+    q4: "Một chiếc đồng hồ quả lắc cứ mỗi giờ đánh chuông đúng số tiếng bằng số giờ (lúc 1 giờ đánh 1 tiếng, lúc 2 giờ đánh 2 tiếng...). Hỏi từ 6 giờ sáng đến 12 giờ trưa cùng ngày, đồng hồ đã đánh tất cả bao nhiêu tiếng chuông?"
+  },
+  "Ngày hội Bách giải thích": {
+    q1: "Em hãy giải thích vì sao phép tính 45 × 11 có thể tính nhẩm nhanh bằng cách lấy 4 cộng 5 bằng 9 rồi viết chữ số 9 vào giữa hai chữ số 4 và 5 thành 495.",
+    q2: "Cho bài toán: ‘Một hình chữ nhật có chu vi 32 cm, chiều dài hơn chiều rộng 4 cm. Tính diện tích’. Hãy trình bày lời giải gồm 3 bước và giải thích rõ từng bước tính.",
+    q3: "Trong phép chia 58 : 6 = 9 (dư 4), em hãy giải thích vì sao số dư 4 là hợp lý và nêu cách kiểm tra lại kết quả phép chia này bằng phép tính nhân và cộng.",
+    q4: "Hãy trình bày cách suy luận để giải bài toán sau mà không cần đoán mò: ‘Tìm một số có hai chữ số, biết tổng hai chữ số bằng 10 và hiệu giữa hai chữ số bằng 4’."
+  }
+};
+
 
 const AUTHORED_VIETNAMESE_KITS = {
   "Tả đồ vật": ["Đề: tả chiếc hộp bút đã dùng lâu. Ghi 6 chi tiết theo thứ tự ngoài → trong → kỉ niệm.", "Viết câu chủ đề và 4 câu phát triển, không dùng ‘rất đẹp’ hoặc ‘rất thích’.", "Chọn một vết xước, mùi giấy hoặc âm thanh khóa kéo để viết đoạn 8–10 câu.", "Viết hai câu tả cùng chiếc hộp: một câu liệt kê, một câu có hành động; chọn câu có hình hơn.", "Sửa đoạn có ba tính từ chung chung thành chi tiết quan sát được.", "Mini-test: quan sát một đồ vật mới, lập ý 4 dòng, viết và sửa 3 lỗi."] ,
@@ -436,22 +620,8 @@ function authoredDailyPlan(item, subject, weekNumber, phase) {
     ];
 
   // Đảm bảo bài vận dụng môn Toán luôn có dữ liệu số và ngữ cảnh cụ thể
-  const getMathAppliedForDay2 = () => {
-    const hasNum = /\d+/.test(applied) || /\b(?:một|hai|ba|bốn|năm|sáu|bảy|tám|chín|mười)\s+(?:bạn|người|hộp|quả|chiếc|cái|thùng|bao|con|đội|nhóm|lớp|viên)\b/i.test(applied);
-    const isMeta = /^chọn một câu sai|^chữa (?:sâu |một )?câu sai|^làm lại duy nhất hai câu sai|^nhìn \w+ đề không giải/i.test(applied.trim());
-    if (hasNum && !isMeta) {
-      return applied;
-    }
-    return `Bài toán vận dụng thực tế tuần ${weekNumber} (${title}): Dựa vào số liệu từ ví dụ (${example}), hãy giải bài toán trong tình huống thực tế gồm 2 bước tính với đầy đủ đơn vị và đáp số.`;
-  };
-
-  const getMathAppliedForDay4 = () => {
-    const hasNum = /\d+/.test(repair) || /\b(?:một|hai|ba|bốn|năm|sáu|bảy|tám|chín|mười)\s+(?:bạn|người|hộp|quả|chiếc|cái|thùng|bao|con|đội|nhóm|lớp|viên)\b/i.test(repair);
-    if (hasNum) {
-      return `Thực hiện chữa lại bài toán tuần ${weekNumber}: ${repair} Viết lời giải đúng hoàn chỉnh gồm 2 bước tính cụ thể kèm đáp số.`;
-    }
-    return `Thực hiện chữa lại bài toán tuần ${weekNumber} (${title}): ${repair} Vận dụng số liệu từ ví dụ (${example}) để sửa lại lời giải hoàn chỉnh gồm 2 bước tính có số liệu rõ ràng.`;
-  };
+  const getMathAppliedForDay2 = () => applied;
+  const getMathAppliedForDay4 = () => `Thực hiện chữa lại bài toán tuần ${weekNumber} (${title}): ${repair}`;
 
   const cleanExampleText = (text) => {
     if (!text || typeof text !== "string") return "";
@@ -460,6 +630,12 @@ function authoredDailyPlan(item, subject, weekNumber, phase) {
       .replace(/^Neo lại ví dụ:\s*/i, "")
       .trim();
   };
+
+  const miniTestKit = isMath ? AUTHORED_MATH_MINI_TESTS[title] : null;
+  const miniTestQ1 = miniTestKit ? miniTestKit.q1 : cleanExampleText(example);
+  const miniTestQ2 = miniTestKit ? miniTestKit.q2 : cleanExampleText(basic);
+  const miniTestQ3 = miniTestKit ? miniTestKit.q3 : cleanExampleText(applied);
+  const miniTestQ4 = miniTestKit ? miniTestKit.q4 : cleanExampleText(challenge);
 
   const mathDays = [
     {
@@ -519,13 +695,13 @@ function authoredDailyPlan(item, subject, weekNumber, phase) {
     },
     {
       example: "Đề bài tổng hợp và trọng tâm ôn tập tuần " + weekNumber + " (50 phút): " + cleanExampleText(test),
-      basic: "Đề thi Mini-test 50 phút (Tuần " + weekNumber + " - " + title + "):\n- Câu 1 (Cơ bản - 3đ): " + cleanExampleText(example) + "\n- Câu 2 (Kỹ thuật tính - 3đ): " + cleanExampleText(basic) + "\n- Câu 3 (Vận dụng - 2đ): " + cleanExampleText(applied) + "\n- Câu 4 (Olympic thử thách - 2đ): " + cleanExampleText(challenge),
-      applied: "1. Tự chấm điểm bài thi tuần " + weekNumber + " theo thang 10 điểm: Hoàn thành bài toán thực tế (3đ), câu thử thách tư duy (2đ) và các câu nền (5đ). Trình bày sạch đẹp có danh số.",
-      challenge: "1. Câu hỏi điểm 10 trong đề thi: " + cleanExampleText(challenge),
+      basic: "Đề thi Mini-test 50 phút (Tuần " + weekNumber + " - " + title + "):\n- Câu 1 (Cơ bản - 3đ): " + miniTestQ1 + "\n- Câu 2 (Kỹ thuật tính - 3đ): " + miniTestQ2 + "\n- Câu 3 (Vận dụng thực tế - 2đ): " + miniTestQ3 + "\n- Câu 4 (Olympic thử thách - 2đ): " + miniTestQ4,
+      applied: "1. Tự chấm điểm bài thi tuần " + weekNumber + " theo thang 10 điểm: Cơ bản & Kỹ thuật tính (6đ - mỗi câu 3đ), Vận dụng thực tế (2đ), Thử thách Olympic (2đ). Trình bày sạch đẹp có danh số.",
+      challenge: "1. Câu hỏi điểm 10 trong đề thi: " + miniTestQ4,
       reasoning: "Phân bổ 50 phút thi Tuần " + weekNumber + " (“" + title + "”): Câu 1 (10 phút), Câu 2 (10 phút), Câu 3 (15 phút), Câu 4 (10 phút), soát bài (5 phút).",
-      selfCheck: "Tự chấm điểm theo thang 10: Cơ bản (6đ), Vận dụng (2đ), Nâng cao (2đ). Trình bày sạch đẹp, có danh số rõ ràng.",
+      selfCheck: "Tự chấm điểm theo thang 10: Cơ bản & Kỹ thuật tính (6đ), Vận dụng thực tế (2đ), Thử thách Olympic (2đ). Trình bày sạch đẹp, có danh số rõ ràng.",
       drill: cleanExampleText(test),
-      variant: cleanExampleText(challenge),
+      variant: miniTestQ3,
       advanced: "Tổng hợp năng lực tuần " + weekNumber + ": " + cleanExampleText(test)
     }
   ];
@@ -609,7 +785,7 @@ function authoredDailyPlan(item, subject, weekNumber, phase) {
     if (/chu vi/i.test(t)) return { type: "grid-area", length: 14, width: 9, area: 126, unit: "cm" };
     if (/diện tích/i.test(t)) return { type: "grid-area", length: 9, width: 6, area: 54, unit: "cm" };
     if (/sơ đồ hóa|bài khó|tổng.*hiệu/i.test(t)) return { type: "sum-diff", larger: 36, smaller: 28, diff: 8, total: 64, labelA: "Số lớn (An)", labelB: "Số bé (Bình)" };
-    if (/singapore|phần.*toàn thể/i.test(t)) return { type: "part-whole", total: 120, parts: 5, filledParts: 3, unitLabel: "1 phần", wholeLabel: "Dung tích bể" };
+    if (/singapore|phần.*toàn thể/i.test(t)) return { type: "part-whole", total: 200, parts: 5, filledParts: 3, unitLabel: "1 phần = 40l", wholeLabel: "Bể nước (Đầy: 200l)" };
     return null;
   };
 
@@ -724,6 +900,12 @@ function getMathSkillType(day, item) {
     item?.[1]
   ].filter(Boolean).join(" ");
 
+  if (/singapore|bar model|sơ đồ thanh|mô hình thanh|phần[–\s]toàn thể/i.test(fullText)) {
+    return "bar_model_fractions";
+  }
+  if (/phân số|thập phân/i.test(fullText)) {
+    return "fractions_decimals";
+  }
   if (/so sánh|sắp xếp|thứ tự|lớn hơn|bé hơn|tăng dần|giảm dần|hàng cao nhất|nằm giữa/i.test(fullText) && !/cộng|trừ|bù trừ|tách số/i.test(day?.title || "")) {
     return "comparison";
   }
@@ -744,9 +926,6 @@ function getMathSkillType(day, item) {
   }
   if (/dãy số|quy luật|chẵn lẻ|bội|ước|tổ hợp|trường hợp|ngăn kéo|dirichlet/i.test(fullText)) {
     return "sequences_patterns";
-  }
-  if (/phân số|thập phân/i.test(fullText)) {
-    return "fractions_decimals";
   }
   if (/hình|chu vi|diện tích|góc|đơn vị|thời gian|đo lường|mét|vuông|cm/i.test(fullText)) {
     return "geometry_measurement";
@@ -863,6 +1042,15 @@ function createConcreteLesson(item, subject, weekNumber, dayIndex, rawDay = null
     const skillType = getMathSkillType(day, item);
 
     const domainDefaults = {
+      bar_model_fractions: {
+        discover: "Vẽ sơ đồ thanh (Bar Model): chia thanh thành các phần bằng nhau tương ứng với mẫu số, điền giá trị đã biết vào các phần tương ứng để tìm giá trị 1 phần và dung tích toàn phần.",
+        warmup: "Đọc kĩ đề: xác định phân số (số phần đã biết trên tổng số phần), giá trị tương ứng và câu hỏi cần tìm (1 phần, một số phần, hay toàn thể).",
+        hint: "Gợi ý 1: Vẽ sơ đồ thanh chia thành các phần bằng nhau theo mẫu số.\nGợi ý 2: Tìm giá trị của 1 phần bằng cách lấy giá trị đã biết chia cho số phần tương ứng.\nGợi ý 3: Nhân giá trị 1 phần với tổng số phần để tìm dung tích/đại lượng toàn phần.",
+        variant: "Đổi phân số thành 2/5 hoặc 3/4 với số lít tương ứng rồi vẽ lại sơ đồ thanh.",
+        drill: "Biết 3/5 bể chứa 120 lít: 1 phần là 120 : 3 = 40 lít; đầy bể (5 phần) là 40 × 5 = 200 lít.",
+        check: "Lấy kết quả toàn phần nhân ngược lại với phân số xem có đúng bằng số lượng ban đầu không.",
+        challenge: "Một bể đang chứa 3/5 dung tích, người ta mở vòi chảy thêm một lượng nước bằng 1/4 dung tích bể. Hỏi lúc này nước chiếm bao nhiêu phần của bể?"
+      },
       comparison: {
         discover: "So sánh các số cùng số chữ số từ hàng cao nhất bên trái sang phải; khi gặp hàng đầu tiên có chữ số khác nhau, số nào có chữ số lớn hơn thì số đó lớn hơn.",
         warmup: "Đọc các số cần so sánh; xác định hàng cao nhất và tìm hàng đầu tiên có chữ số khác nhau trước khi chọn dấu so sánh.",
@@ -1278,6 +1466,7 @@ const CurriculumFactory = {
   vietnameseLessonVariant,
   createLessonPlan,
   AUTHORED_MATH_KITS,
+  AUTHORED_MATH_MINI_TESTS,
   AUTHORED_VIETNAMESE_KITS,
   AUTHORED_P2_WEEK7_MATH,
   authoredP2DailyPlan,

@@ -315,7 +315,7 @@ export function generateAreaProblem(rand, level = 2) {
     return {
       prompt: `${a} m² ${b} dm² + ${c} m² ${d} dm² = ? m²`,
       answer: a + c + 1,
-      strategy: `Nhóm dm²: ${b} + ${d} = 100 dm² = 1 m², rồi lấy ${a} + ${c} + 1`
+      strategy: `Gộp dm² bù tròn 100 dm² (đổi thành 1 m²), rồi lấy ${a} + ${c} + 1`
     };
   }
   if (mode === 2) {
@@ -325,7 +325,7 @@ export function generateAreaProblem(rand, level = 2) {
     return {
       prompt: `${a} dm² ${b} cm² + ${c} cm² = ? dm²`,
       answer: a + 1,
-      strategy: `Nhóm cm²: ${b} + ${c} = 100 cm² = 1 dm², rồi lấy ${a} + 1`
+      strategy: `Gộp cm² bù tròn 100 cm² (đổi thành 1 dm²), rồi lấy ${a} + 1`
     };
   }
   if (mode === 3) {
@@ -418,7 +418,7 @@ export function generateTimeProblem(rand, level = 1) {
     return {
       prompt: `${h} giờ ${m1} phút + ${m2} phút = ? giờ`,
       answer: h + 1,
-      strategy: `Nhóm: ${m1} + ${m2} = 60 phút = 1 giờ, rồi lấy ${h} + 1`
+      strategy: `Gộp phút bù tròn 60 phút (đổi thành 1 giờ), rồi lấy ${h} + 1`
     };
   }
   if (mode === 3) {
@@ -535,7 +535,7 @@ export function generateOlympicUnitProblem(rand) {
     return {
       prompt: `${t1} tấn ${ta1} tạ + ${t2} tấn ${ta2} tạ = ? tấn`,
       answer: t1 + t2 + 1,
-      strategy: `Nhóm: ${ta1} tạ + ${ta2} tạ = 10 tạ = 1 tấn, rồi tính ${t1} + ${t2} + 1`
+      strategy: `Gộp tạ bù tròn 10 tạ (đổi thành 1 tấn), rồi tính ${t1} + ${t2} + 1`
     };
   }
   if (mode === 2) {

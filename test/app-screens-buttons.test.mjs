@@ -223,7 +223,7 @@ test("app-screens: Navigation uses data-nav for active state and data-go for has
   // Hash routes recognized by render()
   const routes = ["plan", "math", "vietnamese", "guide", "games/speed-math", "games/bar-model",
     "games/spot-the-bug", "games/balance-scale", "games/make-24", "games/spatial-3d",
-    "games/logic-grid", "games/rush-hour", "games/chimp-memory", "games/tangram"];
+    "games/logic-grid", "games/rush-hour", "games/chimp-memory", "games/tangram", "games/task-master"];
   for (const r of routes) {
     assert.ok(appSrc.includes(`"${r}"`), `render() must handle route "${r}"`);
   }
