@@ -10,6 +10,7 @@ import { renderRushHourView } from "./render-rush-hour.js";
 import { renderChimpMemoryView } from "./render-chimp-memory.js";
 import { renderTangramView } from "./render-tangram.js";
 import { renderTaskMasterView } from "./render-task-master.js";
+import { TASK_MASTER_LEVELS } from "./task-master-levels.js";
 import { CHC_PILLARS, calculateChcPillars, getSmartDailyRecommendation, getAdaptiveProfile, recordGameOutcome } from "./adaptive-engine.js";
 import { getBadgesStatus, checkAndAwardBadges, showBadgeCelebration } from "./badge-system.js";
 
@@ -209,7 +210,7 @@ export function renderGamesHub({ state, appRoot } = {}) {
         <p>★ ${bar.stars || (bar.completedChallenges?.length || 0)} sao Bar Model · 🕵️ ${bug.solvedCount || 0} vụ án lỗi sai</p>
         <p style="margin-top:2px">⚖️ ${balance.completedChallenges?.length || 0} bài Cân Bằng · 🎯 ${make24.solvedCount || make24.completedChallenges?.length || 0} bài Make 24</p>
         <p style="margin-top:2px; font-weight:700; color:#c7d2fe">🧊 ${spatial3D.stars || 0} sao Khối 3D · 📐 ${tangram.stars || 0} sao Tangram · 🚗 ${rushHour.stars || 0} sao Kẹt Xe</p>
-        <p style="margin-top:2px; font-weight:700; color:#fef08a">📋 ${taskMaster.stars || 0} sao Bậc Thầy Kế Hoạch (${taskMaster.completedLevels?.length || 0}/80 màn)</p>
+        <p style="margin-top:2px; font-weight:700; color:#fef08a">📋 ${taskMaster.stars || 0} sao Bậc Thầy Kế Hoạch (${taskMaster.completedLevels?.length || 0}/${TASK_MASTER_LEVELS.length} màn)</p>
       </div>
     </section>
 
@@ -432,12 +433,12 @@ export function renderGamesHub({ state, appRoot } = {}) {
       <div class="game-card">
         <div>
           <span class="game-card-badge" style="background:#e0f2fe; color:#0284c7">📋 LẬP KẾ HOẠCH &amp; ĐIỀU HÀNH</span>
-          <h3>Bậc Thầy Kế Hoạch (Task Master) · 80 Màn</h3>
-          <p>Khắc phục tính làm ẩu, lười suy nghĩ trước khi hành động. Rèn luyện tư duy lập kế hoạch tuần tự, phân tích điều kiện tiên quyết và loại bỏ các bước bẫy qua 4 chặng nhiệm vụ phong phú.</p>
+          <h3>Bậc Thầy Kế Hoạch (Task Master) · ${TASK_MASTER_LEVELS.length} Màn</h3>
+          <p>Khắc phục tính làm ẩu, lười suy nghĩ trước khi hành động. Rèn luyện tư duy lập kế hoạch tuần tự, phân tích điều kiện tiên quyết, luồng song song và đại dự án vũ trụ qua 10 chủ đề phong phú.</p>
         </div>
         <div>
           <div class="game-card-footer">
-            <div class="game-stat">Đã vượt: <strong>${taskMaster.completedLevels?.length || 0}</strong>/80 màn (${taskMaster.stars || 0} sao)</div>
+            <div class="game-stat">Đã vượt: <strong>${taskMaster.completedLevels?.length || 0}</strong>/${TASK_MASTER_LEVELS.length} màn (${taskMaster.stars || 0} sao)</div>
             <a href="#games/task-master" class="primary-button" style="padding:10px 20px; font-size:0.95rem; background:#0284c7">Lập kế hoạch ngay →</a>
           </div>
         </div>

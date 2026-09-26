@@ -1,4 +1,4 @@
-// test/task-master.test.mjs - Kiểm thử toàn diện Trò Chơi Bậc Thầy Kế Hoạch (Task Master) 80 Màn Chơi
+// test/task-master.test.mjs - Kiểm thử toàn diện Trò Chơi Bậc Thầy Kế Hoạch (Task Master) 200 Màn Chơi
 import test from "node:test";
 import assert from "node:assert/strict";
 
@@ -12,6 +12,12 @@ import {
 import { 
   TaskMasterSession 
 } from "../js/task-master.js";
+
+import { 
+  MEGAPROJECTS, 
+  renderMoonBaseVisual, 
+  getMegaprojectForLevel 
+} from "../js/task-master-megaprojects.js";
 
 import { renderTaskMasterView } from "../js/render-task-master.js";
 import { renderGamesHub } from "../js/render-games.js";
@@ -61,16 +67,22 @@ function createMockEl(tag = "div", props = {}) {
 }
 
 // -------------------------------------------------------------
-// 1. KIỂM THỬ TÍNH TOÀN VẸN CỦA DỮ LIỆU NGÂN HÀNG (80 MÀN CHƠI)
+// 1. KIỂM THỬ TÍNH TOÀN VẸN CỦA DỮ LIỆU NGÂN HÀNG (200 MÀN CHƠI)
 // -------------------------------------------------------------
-test("task-master: TASK_MASTER_LEVELS data integrity and complete 80 levels", () => {
-  assert.equal(TASK_MASTER_LEVELS.length, 80, "Game must contain exactly 80 authored levels");
+test("task-master: TASK_MASTER_LEVELS data integrity and complete 200 levels", () => {
+  assert.equal(TASK_MASTER_LEVELS.length, 200, "Game must contain exactly 200 authored levels");
 
   const categoriesCount = {
     routine: 0,
     cooking: 0,
     engineering: 0,
-    mission: 0
+    mission: 0,
+    medical: 0,
+    computing: 0,
+    ecology: 0,
+    architecture: 0,
+    detective: 0,
+    megaproject: 0
   };
 
   const idSet = new Set();
@@ -84,7 +96,7 @@ test("task-master: TASK_MASTER_LEVELS data integrity and complete 80 levels", ()
     assert.equal(lvl.level, i + 1, `Level numbering must match index + 1 (expected ${i + 1}, got ${lvl.level})`);
     assert.ok(typeof lvl.title === "string" && lvl.title.trim().length > 0, `Level ${lvl.id} must have title`);
     assert.ok(typeof lvl.description === "string" && lvl.description.trim().length > 0, `Level ${lvl.id} must have description`);
-    assert.ok(lvl.difficulty >= 1 && lvl.difficulty <= 4, `Level ${lvl.id} difficulty must be between 1 and 4`);
+    assert.ok(lvl.difficulty >= 1 && lvl.difficulty <= 5, `Level ${lvl.id} difficulty must be between 1 and 5`);
     assert.ok(typeof lvl.lesson === "string" && lvl.lesson.trim().length > 0, `Level ${lvl.id} must have pedagogical lesson`);
     assert.ok(TASK_CATEGORIES[lvl.category], `Level ${lvl.id} has invalid category: ${lvl.category}`);
 
@@ -129,17 +141,23 @@ test("task-master: TASK_MASTER_LEVELS data integrity and complete 80 levels", ()
     }
   }
 
-  // Phân bố đều 4 chặng: mỗi chặng đúng 20 màn
+  // Phân bố đều 10 chặng: mỗi chặng đúng 20 màn
   assert.equal(categoriesCount.routine, 20, "Category routine must have 20 levels");
   assert.equal(categoriesCount.cooking, 20, "Category cooking must have 20 levels");
   assert.equal(categoriesCount.engineering, 20, "Category engineering must have 20 levels");
   assert.equal(categoriesCount.mission, 20, "Category mission must have 20 levels");
+  assert.equal(categoriesCount.medical, 20, "Category medical must have 20 levels");
+  assert.equal(categoriesCount.computing, 20, "Category computing must have 20 levels");
+  assert.equal(categoriesCount.ecology, 20, "Category ecology must have 20 levels");
+  assert.equal(categoriesCount.architecture, 20, "Category architecture must have 20 levels");
+  assert.equal(categoriesCount.detective, 20, "Category detective must have 20 levels");
+  assert.equal(categoriesCount.megaproject, 20, "Category megaproject must have 20 levels");
 });
 
 // -------------------------------------------------------------
-// 2. KIỂM THỬ TÍNH GIẢI ĐƯỢC CỦA TOÀN BỘ 80 MÀN (TOPOLOGICAL SORT / SOLVABILITY)
+// 2. KIỂM THỬ TÍNH GIẢI ĐƯỢC CỦA TOÀN BỘ 200 MÀN (TOPOLOGICAL SORT / SOLVABILITY)
 // -------------------------------------------------------------
-test("task-master: all 80 levels have a solvable sequence with no circular prerequisites", () => {
+test("task-master: all 200 levels have a solvable sequence with no circular prerequisites", () => {
   for (const lvl of TASK_MASTER_LEVELS) {
     const tasks = lvl.tasks;
     const taskMap = new Map(tasks.map(t => [t.id, t]));
@@ -427,7 +445,7 @@ test("task-master: renderGamesHub renders Task Master card and statistics", () =
 
   assert.ok(mockRoot.innerHTML.includes("Bậc Thầy Kế Hoạch"), "Hub should display Task Master card");
   assert.ok(mockRoot.innerHTML.includes("#games/task-master"), "Hub card should link to #games/task-master");
-  assert.ok(mockRoot.innerHTML.includes("4</strong>/80 màn"), "Hub should show 4/80 completed levels");
+  assert.ok(mockRoot.innerHTML.includes("4</strong>/200 màn"), "Hub should show 4/200 completed levels");
   assert.ok(mockRoot.innerHTML.includes("12 sao"), "Hub should show 12 earned stars");
 });
 
@@ -456,13 +474,24 @@ test("task-master: 5 pedagogy improvements (branching, distractors, move penalti
   ["t1", "t2", "t4", "t3", "t5"].forEach(id => s5_b.addTaskToTimeline(id));
   assert.equal(s5_b.validateTimeline().success, true, "Level 5 branch B (right first) must succeed");
 
-  // 2. Toàn bộ 80 màn chơi đều có đúng 2 distractors với thông điệp failReason sâu sắc
-  for (const lvl of TASK_MASTER_LEVELS) {
+  // 2. Toàn bộ 80 màn chơi đầu tiên đều có đúng 2 distractors với thông điệp failReason sâu sắc
+  for (const lvl of TASK_MASTER_LEVELS.slice(0, 80)) {
     assert.ok(Array.isArray(lvl.distractors), `Level ${lvl.id} must have distractors array`);
     assert.equal(lvl.distractors.length, 2, `Level ${lvl.id} must have exactly 2 distractors`);
     for (const d of lvl.distractors) {
       assert.ok(d.id === "d1" || d.id === "d2", `Distractor id should be d1 or d2, got ${d.id} in ${lvl.id}`);
       assert.ok(d.failReason.length >= 10, `Distractor in ${lvl.id} missing detailed failReason`);
+    }
+  }
+
+  // Các màn chơi từ 81 đến 200 có thẻ bẫy phải đảm bảo chất lượng sư phạm và giải thích khoa học
+  for (const lvl of TASK_MASTER_LEVELS.slice(80)) {
+    if (lvl.distractors) {
+      assert.ok(lvl.distractors.length >= 1 && lvl.distractors.length <= 2);
+      for (const d of lvl.distractors) {
+        assert.ok(d.id.startsWith("d"), `Distractor id should start with d in ${lvl.id}`);
+        assert.ok(d.failReason.length >= 10, `Distractor in ${lvl.id} missing detailed failReason`);
+      }
     }
   }
 
@@ -552,4 +581,41 @@ test("task-master: 5 pedagogy improvements (branching, distractors, move penalti
   assert.ok(!lvl50.title.toLowerCase().includes("phân cực"), "Level 50 title must not say polarized");
   assert.ok(lvl50.lesson.includes("Anaglyph"), "Level 50 lesson must explain Anaglyph color filtering");
 });
+
+// -------------------------------------------------------------
+// 8. KIỂM THỬ ĐẠI DỰ ÁN (MEGAPROJECTS & MOON BASE 2.5D SVG)
+// -------------------------------------------------------------
+test("task-master: megaprojects configuration and Moon Base Artemis 2.5D SVG visual", () => {
+  assert.equal(MEGAPROJECTS.length, 5, "Must define 5 major megaprojects");
+  const artemis = MEGAPROJECTS.find(p => p.id === "moon-base");
+  assert.ok(artemis, "Moon Base project must exist");
+  assert.equal(artemis.levelStart, 181);
+  assert.equal(artemis.levelEnd, 200);
+
+  // SVG Visual tests across milestones
+  const svg0 = renderMoonBaseVisual(0);
+  assert.ok(svg0.includes("<svg"), "Must render SVG element");
+  assert.ok(svg0.includes("Bệ Hạ Cánh"), "Must render landing pad");
+  assert.ok(svg0.includes("Căn Cứ Mặt Trăng: 0%"), "Must show 0% progress");
+
+  const svg6 = renderMoonBaseVisual(6);
+  assert.ok(svg6.includes("Trạm Năng Lượng"), "Energy station should be present");
+  assert.ok(svg6.includes("Căn Cứ Mặt Trăng: 30%"), "Must show 30% progress");
+
+  const svg14 = renderMoonBaseVisual(14);
+  assert.ok(svg14.includes("Vòm Sinh Quyển"), "Dome should appear around 14 completed levels");
+  assert.ok(svg14.includes("Căn Cứ Mặt Trăng: 70%"), "Must show 70% progress");
+
+  const svg20 = renderMoonBaseVisual(20);
+  assert.ok(svg20.includes("Căn Cứ Mặt Trăng: 100%"), "100% progress for 20 completed levels");
+
+  // Helper getMegaprojectForLevel
+  const mp185 = getMegaprojectForLevel(185);
+  assert.ok(mp185);
+  assert.equal(mp185.id, "moon-base");
+
+  const mp50 = getMegaprojectForLevel(50);
+  assert.equal(mp50, null, "Level 50 is not in a megaproject");
+});
+
 

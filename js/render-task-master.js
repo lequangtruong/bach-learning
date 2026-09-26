@@ -1,9 +1,10 @@
-// js/render-task-master.js - Giao diện Game "Bậc Thầy Kế Hoạch" (Task Master) 80 Màn Chơi
+// js/render-task-master.js - Giao diện Game "Bậc Thầy Kế Hoạch" (Task Master) 200 Màn Chơi & 5 Đại Dự Án
 import { TaskMasterSession, TASK_MASTER_LEVELS } from "./task-master.js";
 import { TASK_CATEGORIES } from "./task-master-levels.js";
 import { getDifficultyMeta } from "./render-games.js";
 import { recordGameOutcome } from "./adaptive-engine.js";
 import { checkAndAwardBadges, showBadgeCelebration } from "./badge-system.js";
+import { getMegaprojectByLevel, getMegaprojectProgress, renderMoonBaseVisual } from "./task-master-megaprojects.js";
 
 let activeTaskMasterSession = null;
 const esc = str => String(str ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -44,14 +45,16 @@ export function renderTaskMasterView({ state, appRoot, saveLocal, levelIndex = 0
         const newlyUnlocked = checkAndAwardBadges(state);
 
         if (typeof saveLocal === "function") {
-          await saveLocal(true);
+          saveLocal();
         }
 
-        // Render lại với trạng thái chiến thắng
-        renderTaskMasterView({ state, appRoot, saveLocal, levelIndex: activeTaskMasterSession.levelIndex });
+        // Kích hoạt pháo hoa chúc mừng
+        if (typeof window !== "undefined" && typeof window.confetti === "function") {
+          window.confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
+        }
 
-        if (newlyUnlocked.length > 0) {
-          setTimeout(() => showBadgeCelebration(newlyUnlocked[0]), 400);
+        if (newlyUnlocked && newlyUnlocked.length > 0) {
+          setTimeout(() => showBadgeCelebration(newlyUnlocked[0]), 600);
         }
       },
       onStateChange: () => {
@@ -68,11 +71,15 @@ export function renderTaskMasterView({ state, appRoot, saveLocal, levelIndex = 0
   const isCompleted = records.completedLevels?.includes(level.id);
   const earnedStars = records.levelStars?.[level.id] || 0;
 
+  // Kiểm tra xem màn này có thuộc Đại Dự Án nào không
+  const megaproject = getMegaprojectByLevel(level.level);
+  const megaprojectProgress = megaproject ? getMegaprojectProgress(megaproject.id, records.completedLevels || []) : null;
+
   appRoot.innerHTML = `
     <div style="margin-bottom:20px; display:flex; gap:12px; align-items:center; flex-wrap:wrap">
       <a href="#games" class="text-button" style="display:inline-flex; align-items:center; gap:6px; font-weight:700">← Sảnh Trò Chơi</a>
       <span style="color:var(--line)">•</span>
-      <span style="font-weight:600; color:var(--muted)">Bậc Thầy Kế Hoạch (Task Master) · 80 Màn Chơi</span>
+      <span style="font-weight:600; color:var(--muted)">Bậc Thầy Kế Hoạch (Task Master) · 200 Màn Chơi & 5 Đại Dự Án</span>
     </div>
 
     <div class="task-master-container" id="taskMasterContainer">
@@ -102,11 +109,18 @@ export function renderTaskMasterView({ state, appRoot, saveLocal, levelIndex = 0
           <button id="btnPrevLevel" class="ghost-button" style="padding:8px 12px" ${session.levelIndex === 0 ? "disabled" : ""}>
             ← Màn trước
           </button>
-          <select id="tmLevelSelector" class="form-select" style="padding:8px 14px; font-weight:700; border-radius:10px; border:1px solid var(--line); font-size:0.9rem">
-            ${TASK_MASTER_LEVELS.map((lvl, idx) => `
-              <option value="${idx}" ${idx === session.levelIndex ? "selected" : ""}>
-                Màn ${idx + 1}: ${esc(lvl.title)} ${records.completedLevels?.includes(lvl.id) ? "★" : ""}
-              </option>
+          <select id="tmLevelSelector" class="form-select" style="padding:8px 14px; font-weight:700; border-radius:10px; border:1px solid var(--line); font-size:0.9rem; max-width:280px">
+            ${Object.values(TASK_CATEGORIES).map(c => `
+              <optgroup label="${c.badge} (${c.range})">
+                ${TASK_MASTER_LEVELS
+                  .map((lvl, idx) => ({ lvl, idx }))
+                  .filter(({ lvl }) => lvl.category === c.id)
+                  .map(({ lvl, idx }) => `
+                    <option value="${idx}" ${idx === session.levelIndex ? "selected" : ""}>
+                      Màn ${idx + 1}: ${esc(lvl.title)} ${records.completedLevels?.includes(lvl.id) ? "★" : ""}
+                    </option>
+                  `).join("")}
+              </optgroup>
             `).join("")}
           </select>
           <button id="btnNextLevel" class="ghost-button" style="padding:8px 12px" ${session.levelIndex === TASK_MASTER_LEVELS.length - 1 ? "disabled" : ""}>
@@ -114,6 +128,29 @@ export function renderTaskMasterView({ state, appRoot, saveLocal, levelIndex = 0
           </button>
         </div>
       </div>
+
+      <!-- Banner Đại Dự Án (Nếu thuộc 1 trong 5 Đại Dự Án) -->
+      ${megaproject ? `
+        <div class="tm-megaproject-banner" style="background:${megaproject.bg}; border:2px solid ${megaproject.color}; border-radius:14px; padding:14px 18px; margin:16px 0">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px">
+            <div>
+              <span style="font-size:0.85rem; font-weight:800; color:${megaproject.color}">${megaproject.badge}</span>
+              <h4 style="margin:2px 0 4px; font-size:1.15rem; color:#1e293b">${megaproject.icon} ${esc(megaproject.title)}</h4>
+              <p style="margin:0; font-size:0.86rem; color:#475569">${esc(megaproject.description)}</p>
+            </div>
+            <div style="text-align:right">
+              <span style="font-size:1.2rem; font-weight:800; color:${megaproject.color}">${megaprojectProgress.percent}%</span>
+              <div style="font-size:0.78rem; font-weight:700; color:#64748b">Hoàn thành: ${megaprojectProgress.completedCount}/${megaprojectProgress.totalCount} màn</div>
+            </div>
+          </div>
+          <!-- Đồ họa 2.5D của Căn Cứ Mặt Trăng nếu là chặng Mặt Trăng -->
+          ${megaproject.id === "moon-base" ? `
+            <div style="margin-top:12px">
+              ${renderMoonBaseVisual(megaprojectProgress.completedCount, megaprojectProgress.totalCount)}
+            </div>
+          ` : ""}
+        </div>
+      ` : ""}
 
       <!-- Mô tả nhiệm vụ & Lời khuyên tư duy trước khi làm -->
       <div class="tm-mission-card" style="background:${cat.bg}; border-left:4px solid ${cat.color}; padding:14px 18px; border-radius:12px; margin:16px 0">
@@ -188,6 +225,9 @@ export function renderTaskMasterView({ state, appRoot, saveLocal, levelIndex = 0
             const task = session.getTaskById(taskId);
             if (!task) return "";
             
+            const isAnchor = session.isAnchor(task.id);
+            const isStartAnchorLocked = isAnchor && level.anchors?.some(a => a.position === 0 && a.taskId === task.id && idx === 0);
+
             let slotClass = "tm-timeline-item";
             let statusIcon = `${idx + 1}`;
             
@@ -214,15 +254,21 @@ export function renderTaskMasterView({ state, appRoot, saveLocal, levelIndex = 0
                 <div class="tm-step-num">${statusIcon}</div>
                 <div class="tm-step-icon">${task.icon}</div>
                 <div class="tm-step-content">
-                  <div class="tm-step-title">${esc(task.text)}</div>
+                  <div class="tm-step-title">
+                    ${esc(task.text)}
+                    ${isAnchor ? `<span style="display:inline-block; font-size:0.75rem; font-weight:800; color:#d97706; background:#fef3c7; padding:2px 6px; border-radius:6px; margin-left:6px">🔒 Mốc Neo</span>` : ""}
+                    ${task.track === "alpha" ? `<span style="display:inline-block; font-size:0.75rem; font-weight:800; color:#0284c7; background:#e0f2fe; padding:2px 6px; border-radius:6px; margin-left:6px">🔵 Alpha</span>` : ""}
+                    ${task.track === "beta" ? `<span style="display:inline-block; font-size:0.75rem; font-weight:800; color:#7c3aed; background:#ede9fe; padding:2px 6px; border-radius:6px; margin-left:6px">🟣 Beta</span>` : ""}
+                    ${task.track === "merge" ? `<span style="display:inline-block; font-size:0.75rem; font-weight:800; color:#b45309; background:#fef3c7; padding:2px 6px; border-radius:6px; margin-left:6px">🟡 Hợp Nhất</span>` : ""}
+                  </div>
                   ${task.requires?.length ? `
                     <div class="tm-step-deps">Cần trước: ${task.requires.map(r => session.getTaskById(r)?.icon || "•").join(" ")}</div>
                   ` : `<div class="tm-step-deps" style="color:#059669">Khởi đầu độc lập</div>`}
                 </div>
                 <div class="tm-step-actions">
-                  <button class="tm-btn-move" data-move-up="${idx}" title="Chuyển lên trước" ${idx === 0 || session.isSimulating ? "disabled" : ""}>▲</button>
-                  <button class="tm-btn-move" data-move-down="${idx}" title="Chuyển ra sau" ${idx === session.timeline.length - 1 || session.isSimulating ? "disabled" : ""}>▼</button>
-                  <button class="tm-btn-remove" data-remove-index="${idx}" title="Gỡ bước này" ${session.isSimulating ? "disabled" : ""}>✕</button>
+                  <button class="tm-btn-move" data-move-up="${idx}" title="Chuyển lên trước" ${idx === 0 || session.isSimulating || isStartAnchorLocked ? "disabled" : ""}>▲</button>
+                  <button class="tm-btn-move" data-move-down="${idx}" title="Chuyển ra sau" ${idx === session.timeline.length - 1 || session.isSimulating || isStartAnchorLocked ? "disabled" : ""}>▼</button>
+                  <button class="tm-btn-remove" data-remove-index="${idx}" title="Gỡ bước này" ${session.isSimulating || isStartAnchorLocked ? "disabled" : ""}>✕</button>
                 </div>
               </div>
             `;
@@ -234,8 +280,15 @@ export function renderTaskMasterView({ state, appRoot, saveLocal, levelIndex = 0
           <div class="tm-fail-alert animate-pop-in" style="margin-top:14px; background:#fff1f2; border:2px solid #fecdd3; border-radius:12px; padding:12px 16px; display:flex; gap:12px; align-items:center">
             <span style="font-size:2rem">🚨</span>
             <div>
-              <div style="font-weight:800; color:#be123c; font-size:0.95rem">KẾ HOẠCH BỊ LỖI THỨ TỰ!</div>
+              <div style="font-weight:800; color:#be123c; font-size:0.95rem">
+                ${simResult.isDistractor ? "BẪY KHOA HỌC / HÀNH ĐỘNG SAI LẦM!" : (simResult.isAnchorError ? "SAI VỊ TRÍ MỐC NEO CỐ ĐỊNH!" : "KẾ HOẠCH BỊ LỖI THỨ TỰ!")}
+              </div>
               <p style="margin:2px 0 0; color:#9f1239; font-size:0.9rem">${esc(simResult.reason || simResult.message)}</p>
+              ${simResult.scientificExplanation ? `
+                <div style="margin-top:6px; font-size:0.85rem; color:#881337; background:#ffe4e6; padding:6px 10px; border-radius:8px">
+                  💡 <strong>Giải thích khoa học:</strong> ${esc(simResult.scientificExplanation)}
+                </div>
+              ` : ""}
             </div>
           </div>
         ` : ""}
@@ -266,7 +319,7 @@ export function renderTaskMasterView({ state, appRoot, saveLocal, levelIndex = 0
                   Tiếp tục Màn ${session.levelIndex + 2} →
                 </button>
               ` : `
-                <div style="font-weight:800; color:#065f46">🏆 Chúc mừng Bách đã phá đảo toàn bộ 80 Màn Bậc Thầy Kế Hoạch!</div>
+                <div style="font-weight:800; color:#065f46; font-size:1.1rem">🏆 Chúc mừng Tổng Chỉ Huy Bách đã phá đảo toàn bộ 200 Màn Bậc Thầy Kế Hoạch và xây dựng thành công Căn Cứ Mặt Trăng!</div>
               `}
             </div>
           </div>
@@ -295,13 +348,19 @@ export function renderTaskMasterView({ state, appRoot, saveLocal, levelIndex = 0
         <div class="tm-available-grid" id="tmAvailableTasks">
           ${availablePool.map(task => {
             const isPlaced = placedTaskIds.has(task.id);
-            const isDistractor = level.distractors?.some(d => d.id === task.id);
+            const isAnchor = session.isAnchor(task.id);
 
             return `
               <div class="tm-task-card ${isPlaced ? "is-placed" : ""}" data-task-id="${task.id}" tabindex="0">
                 <div class="tm-task-card-icon">${task.icon}</div>
                 <div class="tm-task-card-info">
-                  <div class="tm-task-card-text">${esc(task.text)}</div>
+                  <div class="tm-task-card-text">
+                    ${esc(task.text)}
+                    ${isAnchor ? `<span style="display:inline-block; font-size:0.75rem; font-weight:800; color:#d97706; background:#fef3c7; padding:1px 6px; border-radius:6px; margin-left:4px">🔒 Neo</span>` : ""}
+                    ${task.track === "alpha" ? `<span style="display:inline-block; font-size:0.75rem; font-weight:800; color:#0284c7; background:#e0f2fe; padding:1px 6px; border-radius:6px; margin-left:4px">🔵 Alpha</span>` : ""}
+                    ${task.track === "beta" ? `<span style="display:inline-block; font-size:0.75rem; font-weight:800; color:#7c3aed; background:#ede9fe; padding:1px 6px; border-radius:6px; margin-left:4px">🟣 Beta</span>` : ""}
+                    ${task.track === "merge" ? `<span style="display:inline-block; font-size:0.75rem; font-weight:800; color:#b45309; background:#fef3c7; padding:1px 6px; border-radius:6px; margin-left:4px">🟡 Chung</span>` : ""}
+                  </div>
                   ${task.requires?.length ? `
                     <div class="tm-task-card-req">
                       🔒 Điều kiện cần: ${task.requires.map(r => session.getTaskById(r)?.text || r).join(", ")}

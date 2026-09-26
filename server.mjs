@@ -32,7 +32,8 @@ const PUBLIC_ALLOWLIST = new Set([
   "sw.js",
   "icon-192.png",
   "icon-512.png",
-  "apple-touch-icon.png"
+  "apple-touch-icon.png",
+  "qr_bach_learning.png"
 ]);
 
 const MIME_TYPES = {

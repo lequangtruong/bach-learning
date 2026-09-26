@@ -8,3 +8,4 @@ node_modules/
 data/db-lan.json*
 scratch/
 .anti-gemini/
+__pycache__/

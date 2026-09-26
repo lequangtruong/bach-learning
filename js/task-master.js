@@ -37,7 +37,6 @@ export class TaskMasterSession {
   }
 
   initLevel() {
-    this.timeline = [];
     this.isSolved = false;
     this.isSimulating = false;
     this.simulationStep = -1;
@@ -48,6 +47,10 @@ export class TaskMasterSession {
     this.startTime = Date.now();
 
     const level = this.currentLevel;
+    // Khởi tạo mốc neo cố định ở vị trí khởi đầu nếu có
+    const startAnchor = level.anchors?.find(a => a.position === 0);
+    this.timeline = startAnchor ? [startAnchor.taskId] : [];
+
     const all = [...(level.tasks || []), ...(level.distractors || [])];
     // Xáo trộn ngẫu nhiên để trẻ không thể chỉ bấm theo thứ tự hiển thị sẵn
     this.availableTasks = shuffleTasks(all);
@@ -78,6 +81,22 @@ export class TaskMasterSession {
     return level.distractors?.find(t => t.id === taskId) || null;
   }
 
+  isAnchor(taskId) {
+    return Boolean(this.currentLevel?.anchors?.some(a => a.taskId === taskId));
+  }
+
+  getAnchor(taskId) {
+    return this.currentLevel?.anchors?.find(a => a.taskId === taskId) || null;
+  }
+
+  isDistractor(taskId) {
+    return Boolean(this.currentLevel?.distractors?.some(d => d.id === taskId));
+  }
+
+  getDistractor(taskId) {
+    return this.currentLevel?.distractors?.find(d => d.id === taskId) || null;
+  }
+
   addTaskToTimeline(taskId) {
     if (this.isSimulating || this.isSolved) return;
     if (this.timeline.includes(taskId)) return; // không lặp lại thẻ đã chọn
@@ -93,6 +112,11 @@ export class TaskMasterSession {
   removeTaskFromTimeline(index) {
     if (this.isSimulating || this.isSolved) return;
     if (index >= 0 && index < this.timeline.length) {
+      const taskId = this.timeline[index];
+      // Không cho phép gỡ mốc neo khởi đầu bị khóa
+      const isStartAnchor = this.currentLevel.anchors?.some(a => a.position === 0 && a.taskId === taskId && index === 0);
+      if (isStartAnchor) return;
+
       this.timeline.splice(index, 1);
       this.simulationResult = null;
       this.notifyChange();
@@ -105,6 +129,11 @@ export class TaskMasterSession {
     if (toIndex < 0 || toIndex >= this.timeline.length) return;
     if (fromIndex === toIndex) return;
 
+    // Không cho phép dịch chuyển mốc neo khởi đầu ra khỏi vị trí 0
+    const level = this.currentLevel;
+    const isStartAnchorLocked = level.anchors?.some(a => a.position === 0 && (fromIndex === 0 || toIndex === 0));
+    if (isStartAnchorLocked) return;
+
     this.moveCount++;
     const [moved] = this.timeline.splice(fromIndex, 1);
     this.timeline.splice(toIndex, 0, moved);
@@ -114,7 +143,9 @@ export class TaskMasterSession {
 
   clearTimeline() {
     if (this.isSimulating || this.isSolved) return;
-    this.timeline = [];
+    const level = this.currentLevel;
+    const startAnchor = level.anchors?.find(a => a.position === 0);
+    this.timeline = startAnchor ? [startAnchor.taskId] : [];
     this.moveCount = 0;
     // Không xóa hintCount: đã xem gợi ý thì kiến thức đã được tiết lộ, điểm số phải phản ánh trung thực
     this.simulationResult = null;
@@ -184,14 +215,16 @@ export class TaskMasterSession {
       }
 
       // Kiểm tra xem có phải thẻ bẫy (distractor) không
-      const isDistractor = level.distractors?.some(d => d.id === taskId);
-      if (isDistractor) {
+      const distractor = level.distractors?.find(d => d.id === taskId);
+      if (distractor) {
         return {
           status: "failed",
           success: false,
           failedIndex: i,
           failedTask: task,
-          reason: task.failReason || `Ối Bách ơi! Bước “${task.text}” là hành động bẫy làm hỏng toàn bộ công việc!`
+          isDistractor: true,
+          reason: distractor.failReason || task.failReason || `Ối Bách ơi! Bước “${task.text}” là hành động bẫy làm hỏng toàn bộ công việc!`,
+          scientificExplanation: distractor.scientificExplanation || ""
         };
       }
 
@@ -213,6 +246,23 @@ export class TaskMasterSession {
       }
 
       executedSet.add(taskId);
+    }
+
+    // 2.5 Kiểm tra mốc neo cố định nếu có
+    if (level.anchors?.length) {
+      for (const anchor of level.anchors) {
+        if (timeline[anchor.position] !== anchor.taskId) {
+          const anchorTask = this.getTaskById(anchor.taskId);
+          const anchorName = anchorTask ? anchorTask.text : anchor.taskId;
+          return {
+            status: "failed",
+            success: false,
+            failedIndex: anchor.position,
+            isAnchorError: true,
+            reason: `Mốc neo cố định “${anchorName}” bắt buộc phải nằm ở vị trí số ${anchor.position + 1} trong kế hoạch!`
+          };
+        }
+      }
     }
 
     // 3. Kiểm tra xem có bỏ sót nhiệm vụ bắt buộc nào không
