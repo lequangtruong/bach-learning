@@ -1,4 +1,4 @@
-import { createServer } from "node:http";
+import { createServer, request } from "node:http";
 import { readFile, writeFile, rename } from "node:fs/promises";
 import { watch } from "node:fs";
 import { extname, join, normalize } from "node:path";
@@ -216,11 +216,48 @@ const server = createServer(async (req, res) => {
     return;
   }
 
+  // Proxy /kikitori sang máy chủ Kikitori (port 8088)
+  if (requested === "/kikitori" || requested.startsWith("/kikitori/")) {
+    const proxyReq = request({
+      hostname: "127.0.0.1",
+      port: 8088,
+      path: req.url,
+      method: req.method,
+      headers: req.headers
+    }, (proxyRes) => {
+      res.writeHead(proxyRes.statusCode, proxyRes.headers);
+      proxyRes.pipe(res);
+    });
+    proxyReq.on("error", () => {
+      res.writeHead(502, { "Content-Type": "text/plain; charset=utf-8" });
+      res.end("502 Bad Gateway: Kikitori server (port 8088) chưa khởi động.");
+    });
+    req.pipe(proxyReq);
+    return;
+  }
+
+
+  const rawUrl = (req.url || "/").split("?")[0];
+  const hasBachPrefix = rawUrl === "/bach-learning" || rawUrl.startsWith("/bach-learning/");
+
   // Tự động strip prefix /bach-learning hoặc /bach-learning/
   if (requested === "/bach-learning" || requested === "/bach-learning/") {
     requested = "/";
   } else if (requested.startsWith("/bach-learning/")) {
     requested = requested.slice("/bach-learning".length);
+  }
+
+  // Tự động chuyển hướng các đường dẫn SPA sạch (ví dụ /bach-learning/games/task-master -> /bach-learning/#games/task-master)
+  const cleanRoute = requested.replace(/^\/+/, "");
+  if (
+    !isStaticAllowed(cleanRoute) &&
+    !cleanRoute.includes(".") &&
+    (cleanRoute.startsWith("games") || cleanRoute === "plan" || cleanRoute === "guide" || cleanRoute.startsWith("math") || cleanRoute.startsWith("vietnamese"))
+  ) {
+    const prefix = hasBachPrefix ? "/bach-learning" : "";
+    res.writeHead(302, { "Location": `${prefix}/#${cleanRoute}` });
+    res.end();
+    return;
   }
 
   const relative = requested === "/" ? "index.html" : requested.replace(/^\/+/, "");
