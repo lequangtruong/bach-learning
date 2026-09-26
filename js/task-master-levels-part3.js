@@ -9,58 +9,58 @@ export const TASK_MASTER_LEVELS_PART3 = [
     "categoryName": "Bác Sĩ Cấp Cứu",
     "icon": "🧯",
     "difficulty": 3,
-    "description": "Xử lý khẩn cấp khi chẳng may làm đổ phích nước sôi vào cẳng tay.",
+    "description": "Sơ cứu bỏng chuẩn Hội Chữ Thập Đỏ: Làm mát bằng nước sạch và che phủ nhẹ, không tự ý bôi kem thuốc.",
     "tasks": [
       {
         "id": "t1",
-        "text": "Đưa tay dưới vòi nước sạch mát xả liên tục 15-20 phút",
+        "text": "Đưa cẳng tay dưới vòi nước sạch mát chảy nhẹ liên tục 15-20 phút",
         "icon": "🚰",
-        "hint": "Hạ nhiệt nhanh giảm tổn thương sâu cho da."
+        "hint": "Hội Chữ Thập Đỏ nhấn mạnh: Làm mát bằng nước sạch mát 20 phút là bước quan trọng nhất để ngăn tổn thương sâu."
       },
       {
         "id": "t2",
-        "text": "Nhẹ nhàng cởi bỏ vòng tay, đồng hồ trước khi vết bỏng sưng phù",
+        "text": "Nhẹ nhàng cởi bỏ vòng tay, đồng hồ quanh vùng bỏng trước khi da sưng phù",
         "icon": "⌚",
         "requires": [
           "t1"
         ],
-        "hint": "Tháo đồ trang sức tránh chèn ép mạch máu."
+        "hint": "Tháo đồ trang sức sớm để tránh chèn ép mạch máu khi vùng mô bị sưng."
       },
       {
         "id": "t3",
-        "text": "Dùng kéo sạch cắt nhẹ vạt áo quanh vết thương, không lột mạnh",
+        "text": "Dùng kéo sạch cắt nhẹ vạt áo quanh vết bỏng, tuyệt đối không lột mạnh phần vải dính vào da",
         "icon": "✂️",
         "requires": [
           "t2"
         ],
-        "hint": "Không lột mạnh vải dính vào da non."
+        "hint": "Cắt vải xung quanh, giữ nguyên phần dính để không làm lột da non gây nhiễm trùng."
       },
       {
         "id": "t4",
-        "text": "Bôi kem trị bỏng chứa bạc sulfadiazine làm dịu vết thương",
-        "icon": "🧴",
+        "text": "Che phủ nhẹ nhàng vết bỏng bằng màng bọc thực phẩm sạch hoặc gạc vô trùng, không quấn chặt",
+        "icon": "🩹",
         "requires": [
           "t3"
         ],
-        "hint": "Bôi thuốc sau khi da đã hạ nhiệt."
+        "hint": "Màng bọc thực phẩm sạch hoặc gạc không dính giúp che bụi bẩn mà không bám vào vết bỏng."
       },
       {
         "id": "t5",
-        "text": "Dùng gạc vô trùng khô che phủ nhẹ nhàng vết bỏng",
-        "icon": "🩹",
+        "text": "Giữ ấm cơ thể bằng chăn mỏng, tuyệt đối không tự ý bôi kem, thuốc mỡ hay hóa chất khi chưa có chỉ định",
+        "icon": "🧥",
         "requires": [
           "t4"
         ],
-        "hint": "Che gạc ngăn bụi bẩn và vi khuẩn."
+        "hint": "Red Cross khuyến cáo không tự ý bôi bất kỳ loại kem, mỡ hay thuốc nào vì cản trở thoát nhiệt."
       },
       {
         "id": "t6",
-        "text": "Uống nước điện giải oresol và đến cơ sở y tế gần nhất",
+        "text": "Uống từng ngụm nước lọc nhỏ bù dịch và đưa ngay đến cơ sở y tế để bác sĩ thăm khám",
         "icon": "🏥",
         "requires": [
           "t5"
         ],
-        "hint": "Bù dịch chống sốc bỏng và để bác sĩ thăm khám."
+        "hint": "Bác sĩ chuyên khoa bỏng sẽ đánh giá độ sâu và kê đơn thuốc điều trị phù hợp."
       }
     ],
     "distractors": [
@@ -68,11 +68,18 @@ export const TASK_MASTER_LEVELS_PART3 = [
         "id": "d1",
         "text": "Bôi kem đánh răng hoặc mỡ trăn lên vết bỏng vừa xuất hiện",
         "icon": "🦷",
-        "failReason": "Kem đánh răng chứa kiềm và tinh dầu cay làm bỏng nặng thêm và nhiễm trùng!",
+        "failReason": "Kem đánh răng chứa kiềm và tinh dầu cay làm bỏng nặng thêm; mỡ trăn giữ nhiệt lại dưới da gây nhiễm trùng nghiêm trọng!",
         "scientificExplanation": "Dân gian hay bôi kem đánh răng nhưng y khoa cấm vì giữ nhiệt lại dưới da."
+      },
+      {
+        "id": "d2",
+        "text": "Tự ý bôi kem chứa bạc sulfadiazine hoặc thuốc mỡ kháng sinh lên vết bỏng tại nhà",
+        "icon": "🧴",
+        "failReason": "Hội Chữ Thập Đỏ và các chuyên gia bỏng khuyến cáo không tự bôi kem hay thuốc khi sơ cứu vì che lấp tổn thương và gây cản trở bác sĩ chẩn đoán độ bỏng!",
+        "scientificExplanation": "Sơ cứu chuẩn quốc tế chỉ làm mát bằng nước sạch và che phủ nhẹ bằng màng bọc sạch; thuốc đặc trị chỉ dùng theo chỉ định bác sĩ."
       }
     ],
-    "lesson": "Bỏng nước: Xả nước mát 20 phút -> Cắt bỏ áo chật -> Bôi thuốc chuyên dụng -> Băng gạc vô trùng."
+    "lesson": "Bỏng nhiệt: Xả nước mát 20 phút -> Tháo đồ chật -> Che phủ màng sạch/gạc vô trùng -> Không tự bôi kem thuốc -> Đến cơ sở y tế."
   },
   {
     "id": "tm-82",
@@ -82,7 +89,7 @@ export const TASK_MASTER_LEVELS_PART3 = [
     "categoryName": "Bác Sĩ Cấp Cứu",
     "icon": "⚡",
     "difficulty": 4,
-    "description": "Nguyên tắc an toàn số 1: Bảo vệ bản thân trước khi tiếp cận nạn nhân bị giật điện.",
+    "description": "Nguyên tắc an toàn số 1: Ngắt điện trước khi tiếp cận. Chỉ ép tim CPR/AED khi nạn nhân bất tỉnh và ngừng thở bình thường.",
     "tasks": [
       {
         "id": "t1",
@@ -97,43 +104,43 @@ export const TASK_MASTER_LEVELS_PART3 = [
         "requires": [
           "t1"
         ],
-        "hint": "Dùng vật liệu cách điện tuyệt đối."
+        "hint": "Dùng vật liệu cách điện tuyệt đối, không dùng kim loại hay vật ẩm ướt."
       },
       {
         "id": "t3",
-        "text": "Gọi to số khẩn cấp 115 yêu cầu xe cứu thương hỗ trợ gấp",
+        "text": "Gọi to nhờ người xung quanh gọi ngay 115 và lấy máy khử rung tim tự động AED",
         "icon": "📞",
         "requires": [
           "t2"
         ],
-        "hint": "Gọi cấp cứu sớm để đội ngũ y tế đến kịp thời."
+        "hint": "Kích hoạt hệ thống cấp cứu sớm nhất có thể."
       },
       {
         "id": "t4",
-        "text": "Lay vai và ghé tai sát miệng kiểm tra nhịp thở và tri giác",
+        "text": "Lay vai và quan sát lồng ngực trong 10 giây để kiểm tra tri giác và nhịp thở",
         "icon": "👂",
         "requires": [
-          "t2"
+          "t3"
         ],
-        "hint": "Xác định nạn nhân còn thở hay đã ngưng tim."
+        "hint": "AHA nhấn mạnh: Đánh giá xem nạn nhân còn thở bình thường hay đã ngưng tim ngưng thở."
       },
       {
         "id": "t5",
-        "text": "Thực hiện ép tim ngoài lồng ngực liên tục 100-120 lần/phút",
+        "text": "Chỉ khi nạn nhân bất tỉnh và không thở bình thường: Tiến hành ép tim ngoài lồng ngực 100-120 lần/phút",
         "icon": "🫀",
         "requires": [
           "t4"
         ],
-        "hint": "Ép tim duy trì dòng máu nuôi não bộ."
+        "hint": "AHA quy định: Tuyệt đối không ép tim nếu nạn nhân còn thở bình thường; chỉ CPR khi bất tỉnh và ngừng thở."
       },
       {
         "id": "t6",
-        "text": "Đưa máy khử rung tim tự động AED dán điện cực theo hướng dẫn giọng nói",
+        "text": "Mở máy AED dán điện cực lên ngực trần và thực hiện sốc điện theo chỉ dẫn giọng nói",
         "icon": "🩺",
         "requires": [
           "t5"
         ],
-        "hint": "Máy AED sốc điện tái lập nhịp tim bình thường."
+        "hint": "Máy AED sẽ tự phân tích nhịp tim và chỉ phát xung điện nếu phát hiện rung thất."
       }
     ],
     "distractors": [
@@ -142,9 +149,16 @@ export const TASK_MASTER_LEVELS_PART3 = [
         "text": "Lao thẳng vào dùng tay trần kéo nạn nhân đang dính vào dây điện",
         "icon": "✋",
         "failReason": "Cơ thể người dẫn điện tốt, chạm vào nạn nhân chưa ngắt điện sẽ khiến bạn bị giật theo!"
+      },
+      {
+        "id": "d2",
+        "text": "Vội vã ép tim ngay lập tức khi nạn nhân vẫn còn tỉnh táo và thở đều",
+        "icon": "⚠️",
+        "failReason": "AHA cảnh báo: Tuyệt đối không ép tim khi nạn nhân còn thở và tim đang đập bình thường vì có thể gây loạn nhịp tim nguy hiểm! Chỉ CPR khi không đáp ứng và không thở bình thường.",
+        "scientificExplanation": "CPR dùng để thay thế chức năng tim khi ngưng tuần hoàn. Ép tim trên người tim đang đập có thể gây chấn thương xương ức và rối loạn nhịp tim."
       }
     ],
-    "lesson": "Ngắt cầu dao -> Gạt dây bằng gậy gỗ -> Ép tim ngoài lồng ngực -> Dùng máy sốc tim AED."
+    "lesson": "Sơ cứu điện giật: Ngắt điện an toàn -> Gọi 115 -> Kiểm tra tri giác & nhịp thở -> Chỉ ép tim CPR & dùng AED khi bất tỉnh và ngừng thở."
   },
   {
     "id": "tm-83",
@@ -419,61 +433,71 @@ export const TASK_MASTER_LEVELS_PART3 = [
     "categoryName": "Bác Sĩ Cấp Cứu",
     "icon": "☀️",
     "difficulty": 3,
-    "description": "Hạ nhiệt độ cơ thể khẩn cấp khi chạy bộ ngoài trời nắng gắt bị choáng ngất.",
+    "description": "Sốc nhiệt là tình trạng khẩn cấp: Phải gọi 115 sớm và tích cực làm mát cơ thể trong khi chờ y tế đến.",
     "tasks": [
       {
         "id": "t1",
-        "text": "Dìu nạn nhân vào nơi râm mát hoặc phòng có điều hòa thoáng khí",
+        "text": "Dìu ngay nạn nhân vào nơi râm mát hoặc phòng có điều hòa thoáng khí",
         "icon": "🌳",
-        "hint": "Cắt đứt ngay nguồn nhiệt bức xạ mặt trời."
+        "hint": "Cắt đứt ngay nguồn nhiệt bức xạ mặt trời là bước ưu tiên hàng đầu."
       },
       {
         "id": "t2",
-        "text": "Nới lỏng cúc áo, thắt lưng và cởi bớt lớp quần áo dày bên ngoài",
+        "text": "Gọi ngay cấp cứu 115 hoặc nhờ người lớn hỗ trợ y tế khẩn cấp",
+        "icon": "📞",
+        "requires": [
+          "t1"
+        ],
+        "hint": "CDC & Hội Chữ Thập Đỏ khuyến cáo: Sốc nhiệt là tình huống đe dọa tính mạng, phải gọi 115 ngay từ đầu."
+      },
+      {
+        "id": "t3",
+        "text": "Nới lỏng cúc áo, thắt lưng và cởi bỏ lớp quần áo dày bên ngoài để tản nhiệt",
         "icon": "👕",
         "requires": [
           "t1"
         ],
-        "hint": "Để bề mặt da tiếp xúc không khí tản nhiệt."
-      },
-      {
-        "id": "t3",
-        "text": "Đặt khăn ướt mát vào 3 vị trí mạch máu lớn: nách, bẹn và cổ",
-        "icon": "🧊",
-        "requires": [
-          "t2"
-        ],
-        "hint": "Làm mát dòng máu chảy về tim nhanh nhất."
+        "hint": "Để bề mặt da thông thoáng, tiếp xúc không khí giúp tản nhiệt nhanh."
       },
       {
         "id": "t4",
-        "text": "Bật quạt thổi gió nhẹ kết hợp phun sương nước mát lên cơ thể",
-        "icon": "💨",
+        "text": "Chườm khăn ướt mát vào 3 vị trí mạch máu lớn: nách, bẹn và hai bên cổ trong lúc chờ 115",
+        "icon": "🧊",
         "requires": [
           "t3"
         ],
-        "hint": "Hiệu ứng bay hơi nước mang nhiệt lượng ra ngoài."
+        "hint": "Làm mát các dòng máu lớn chảy về tim và não nhanh nhất trong thời gian chờ xe cứu thương."
       },
       {
         "id": "t5",
-        "text": "Cho uống từng ngụm nhỏ nước oresol bù muối khoáng nếu tỉnh táo",
-        "icon": "🥤",
+        "text": "Bật quạt thổi gió mát kết hợp phun sương nước mát lên cơ thể để tăng bay hơi nhiệt",
+        "icon": "💨",
         "requires": [
           "t4"
         ],
-        "hint": "Bù natri và kali đã mất theo mồ hôi."
+        "hint": "Hiệu ứng bay hơi nước liên tục giúp kéo hạ nhiệt độ lõi cơ thể."
       },
       {
         "id": "t6",
-        "text": "Đo nhiệt độ hạ dưới 38.5°C rồi chuyển tới trạm y tế theo dõi",
-        "icon": "🌡️",
+        "text": "Theo dõi liên tục tri giác và nhịp thở, chỉ cho uống nước nếu nạn nhân hoàn toàn tỉnh táo",
+        "icon": "🥤",
         "requires": [
-          "t5"
+          "t5",
+          "t2"
         ],
-        "hint": "Đề phòng biến chứng tổn thương tế bào não."
+        "hint": "Nếu nạn nhân lơ mơ hoặc hôn mê, tuyệt đối không ép uống nước vì sẽ gây sặc vào đường thở."
       }
     ],
-    "lesson": "Vào bóng râm -> Nới lỏng áo -> Chườm mát nách bẹn cổ -> Quạt phun sương -> Bù nước Oresol."
+    "distractors": [
+      {
+        "id": "d1",
+        "text": "Chờ nhiệt độ tự hạ xuống dưới 38.5°C rồi mới gọi cấp cứu 115",
+        "icon": "⏳",
+        "failReason": "Sốc nhiệt (Heat stroke) là tình trạng cấp cứu khẩn cấp, trì hoãn gọi 115 có thể gây tổn thương não vĩnh viễn hoặc tử vong! Phải gọi 115 ngay và hạ nhiệt tích cực trong lúc chờ.",
+        "scientificExplanation": "Khi thân nhiệt vượt quá 40°C, các enzyme và protein trong tế bào não bắt đầu bị biến tính, mỗi phút chậm trễ cấp cứu đều tăng nguy cơ biến chứng."
+      }
+    ],
+    "lesson": "Sốc nhiệt: Vào bóng râm -> Gọi 115 ngay lập tức -> Nới áo -> Chườm mát nách bẹn cổ & quạt mát trong khi chờ cấp cứu."
   },
   {
     "id": "tm-88",
@@ -799,66 +823,75 @@ export const TASK_MASTER_LEVELS_PART3 = [
   {
     "id": "tm-93",
     "level": 93,
-    "title": "Cấp Cứu Ngộ Độc Thực Phẩm Đường Tiêu Hóa",
+    "title": "Sơ Cứu Đúng Cách Khi Nghi Ngờ Ngộ Độc Thực Phẩm",
     "category": "medical",
     "categoryName": "Bác Sĩ Cấp Cứu",
     "icon": "🍄",
     "difficulty": 3,
-    "description": "Xử lý ngộ độc nấm độc hoặc thức ăn ôi thiu chứa độc tố vi khuẩn.",
+    "description": "Quy tắc an toàn tối thượng của NHS: Không tự ý móc họng hay tự uống thuốc; báo người lớn và gọi 115 ngay.",
     "tasks": [
       {
         "id": "t1",
-        "text": "Xác định nạn nhân còn tỉnh táo và mới ăn thức ăn nghi nhiễm độc dưới 2 giờ",
-        "icon": "🕒",
-        "hint": "Gây nôn chỉ áp dụng khi thức ăn còn ở trong dạ dày."
+        "text": "Dừng ăn ngay lập tức và thu gom mẫu thức ăn thừa hoặc nấm độc nghi nhiễm vào túi sạch",
+        "icon": "🍄",
+        "hint": "Giữ lại mẫu vật phẩm và bao bì để bác sĩ xét nghiệm định danh chính xác loại độc tố."
       },
       {
         "id": "t2",
-        "text": "Cho uống 300-500ml nước ấm pha muối nhạt làm loãng dịch dạ dày",
-        "icon": "🧂",
+        "text": "Báo ngay cho người lớn và gọi đường dây nóng cấp cứu 115 hoặc Trung tâm Chống Độc",
+        "icon": "📞",
         "requires": [
           "t1"
         ],
-        "hint": "Nước muối làm loãng nồng độ độc chất."
+        "hint": "NHS hướng dẫn: Luôn tìm kiếm trợ giúp y tế khẩn cấp đầu tiên khi nghi ngộ độc."
       },
       {
         "id": "t3",
-        "text": "Dùng ngón tay sạch kích thích nhẹ thành sau họng gây nôn tống thức ăn",
-        "icon": "🤮",
+        "text": "Cung cấp rõ thông tin cho chuyên viên y tế: ăn món gì, lúc mấy giờ và triệu chứng hiện tại",
+        "icon": "📋",
         "requires": [
           "t2"
         ],
-        "hint": "Tống bớt phần lớn độc tố ra khỏi dạ dày."
+        "hint": "Thời gian phơi nhiễm và triệu chứng giúp chuyên viên chỉ dẫn phương án xử lý phù hợp."
       },
       {
         "id": "t4",
-        "text": "Cho uống huyền dịch than hoạt tính (Activated Charcoal) 25-50g",
-        "icon": "⚫",
+        "text": "Đặt nạn nhân ở tư thế nằm nghiêng an toàn để thông thoáng đường thở nếu bị nôn tự nhiên",
+        "icon": "🛌",
         "requires": [
           "t3"
         ],
-        "hint": "Than hoạt tính hấp phụ độc tố còn sót lại ngăn ngấm vào máu."
+        "hint": "Tư thế nằm nghiêng (Recovery position) ngăn nguy cơ hít sặc dịch nôn vào phổi."
       },
       {
         "id": "t5",
-        "text": "Bù dịch oresol liên tục từng ngụm nhỏ chống mất nước do tiêu chảy",
-        "icon": "🥤",
+        "text": "Làm theo chỉ dẫn của chuyên viên y tế, tuyệt đối không tự ý móc họng hay tự cho uống thuốc",
+        "icon": "🩺",
         "requires": [
           "t4"
         ],
-        "hint": "Bù lượng nước và ion muối khoáng bị nôn mất."
+        "hint": "NHS cảnh báo nghiêm cấm tự móc họng gây nôn hoặc tự uống than hoạt tính tại nhà."
       },
       {
         "id": "t6",
-        "text": "Giữ lại mẫu thức ăn thừa nấm độc và chuyển nạn nhân tới trung tâm chống độc",
+        "text": "Khẩn trương chuyển nạn nhân cùng mẫu thức ăn thừa đến bệnh viện theo chỉ dẫn cấp cứu",
         "icon": "🏥",
         "requires": [
           "t5"
         ],
-        "hint": "Mẫu thức ăn giúp xét nghiệm tìm chính xác loại độc tố."
+        "hint": "Tại bệnh viện, các bác sĩ sẽ sử dụng thuốc giải độc đặc hiệu và theo dõi chuyên sâu."
       }
     ],
-    "lesson": "Uống nước muối -> Kích thích nôn -> Uống than hoạt tính -> Bù dịch Oresol -> Mang mẫu thức ăn đi viện."
+    "distractors": [
+      {
+        "id": "d1",
+        "text": "Dùng ngón tay móc họng gây nôn hoặc tự ý cho uống than hoạt tính tại nhà",
+        "icon": "🤮",
+        "failReason": "NHS và các tổ chức y tế quốc tế nghiêm cấm tự móc họng gây nôn vì dễ làm trào ngược chất độc vào phổi gây ngạt thở, bỏng thực quản! Chỉ chuyên viên y tế mới được chỉ định phương pháp xử lý.",
+        "scientificExplanation": "Kích thích gây nôn làm tăng nguy cơ hít sặc vào phế quản và tổn thương niêm mạc; than hoạt tính dùng sai thời điểm hoặc sai loại độc có thể gây tắc ruột."
+      }
+    ],
+    "lesson": "Nghi ngộ độc: Dừng ăn & giữ mẫu vật -> Gọi 115 / Báo người lớn -> Nằm nghiêng an toàn -> Làm theo chuyên viên (Không tự móc họng)."
   },
   {
     "id": "tm-94",

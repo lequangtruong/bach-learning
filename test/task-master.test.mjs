@@ -618,4 +618,54 @@ test("task-master: megaprojects configuration and Moon Base Artemis 2.5D SVG vis
   assert.equal(mp50, null, "Level 50 is not in a megaproject");
 });
 
+// -------------------------------------------------------------
+// 9. KIỂM THỬ SỬA LỖI P1 SƠ CỨU Y TẾ CHUẨN QUỐC TẾ (MÀN 81, 82, 87, 93)
+// -------------------------------------------------------------
+test("task-master: 4 medical first-aid P1 fixes adhere to Red Cross, AHA, and NHS protocols", () => {
+  // Màn 81: Bỏng nhiệt (Chuẩn Hội Chữ Thập Đỏ / Red Cross)
+  const lvl81 = getLevelById("tm-81");
+  assert.ok(lvl81, "Level 81 must exist");
+  const lvl81ValidTexts = lvl81.tasks.map(t => t.text.toLowerCase()).join(" ");
+  assert.ok(!lvl81ValidTexts.includes("sulfadiazine"), "Level 81 valid steps must NOT instruct applying silver sulfadiazine");
+  assert.ok(!lvl81.tasks.some(t => t.text.toLowerCase().startsWith("bôi kem") || t.text.toLowerCase().startsWith("bôi thuốc")), "Level 81 valid steps must NOT instruct self-applying burn creams");
+  assert.ok(lvl81ValidTexts.includes("15-20 phút"), "Level 81 must instruct cooling with clean water for 15-20 minutes");
+  assert.ok(lvl81ValidTexts.includes("che phủ"), "Level 81 must instruct covering loosely with clean film or sterile dressing");
+  const lvl81Distractor = lvl81.distractors.find(d => d.id === "d2");
+  assert.ok(lvl81Distractor, "Level 81 must have distractor d2 warning against applying silver sulfadiazine");
+  assert.ok(lvl81Distractor.text.includes("sulfadiazine"), "Distractor d2 text must mention sulfadiazine");
 
+  // Màn 82: Điện giật (Chuẩn AHA)
+  const lvl82 = getLevelById("tm-82");
+  assert.ok(lvl82, "Level 82 must exist");
+  const cprTask = lvl82.tasks.find(t => t.id === "t5");
+  assert.ok(cprTask, "Level 82 must have CPR task");
+  assert.ok(cprTask.text.includes("Chỉ khi nạn nhân bất tỉnh và không thở bình thường"), "CPR must be conditional on unresponsiveness and abnormal breathing");
+  const lvl82Distractor = lvl82.distractors.find(d => d.id === "d2");
+  assert.ok(lvl82Distractor, "Level 82 must have distractor d2 warning against performing CPR on breathing victim");
+  assert.ok(lvl82Distractor.failReason.includes("AHA cảnh báo"), "Must explain AHA guidelines in failReason");
+
+  // Màn 87: Say nắng, sốc nhiệt (Chuẩn CDC & Red Cross)
+  const lvl87 = getLevelById("tm-87");
+  assert.ok(lvl87, "Level 87 must exist");
+  const call115Task = lvl87.tasks.find(t => t.id === "t2");
+  assert.ok(call115Task, "Level 87 must have early emergency call task");
+  assert.ok(call115Task.text.includes("115"), "Emergency call step must call 115 immediately");
+  const lvl87ValidTexts = lvl87.tasks.map(t => t.text).join(" ");
+  assert.ok(!lvl87ValidTexts.includes("Đo nhiệt độ hạ dưới 38.5°C rồi"), "Must NOT wait for temperature to drop below 38.5°C before calling");
+  const lvl87Distractor = lvl87.distractors.find(d => d.id === "d1");
+  assert.ok(lvl87Distractor, "Level 87 must have distractor d1 warning against waiting for temperature drop");
+  assert.ok(lvl87Distractor.failReason.includes("Sốc nhiệt (Heat stroke) là tình trạng cấp cứu khẩn cấp"), "Must explain urgency of heat stroke");
+
+  // Màn 93: Ngộ độc thực phẩm (Chuẩn NHS & AAP)
+  const lvl93 = getLevelById("tm-93");
+  assert.ok(lvl93, "Level 93 must exist");
+  assert.ok(!lvl93.tasks.some(t => t.text.toLowerCase().includes("kích thích") || t.text.toLowerCase().includes("gây nôn") || t.text.toLowerCase().includes("than hoạt tính")), "Level 93 valid steps must NOT teach inducing vomiting or giving charcoal");
+  const lvl93ValidTexts = lvl93.tasks.map(t => t.text.toLowerCase()).join(" ");
+  assert.ok(lvl93ValidTexts.includes("tuyệt đối không tự ý móc họng"), "Level 93 must instruct not to induce vomiting");
+  assert.ok(lvl93ValidTexts.includes("dừng ăn") && lvl93ValidTexts.includes("mẫu"), "Level 93 must preserve sample");
+  assert.ok(lvl93ValidTexts.includes("115") || lvl93ValidTexts.includes("chống độc"), "Level 93 must call 115 / poison center");
+  assert.ok(lvl93ValidTexts.includes("nằm nghiêng an toàn"), "Level 93 must place victim in recovery position");
+  const lvl93Distractor = lvl93.distractors.find(d => d.id === "d1");
+  assert.ok(lvl93Distractor, "Level 93 must have distractor d1 warning against inducing vomiting or taking charcoal");
+  assert.ok(lvl93Distractor.failReason.includes("NHS"), "Distractor failReason must cite NHS warning against self-induced vomiting");
+});
