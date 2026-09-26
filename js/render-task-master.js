@@ -5,6 +5,7 @@ import { getDifficultyMeta } from "./render-games.js";
 import { recordGameOutcome } from "./adaptive-engine.js";
 import { checkAndAwardBadges, showBadgeCelebration } from "./badge-system.js";
 import { getMegaprojectByLevel, getMegaprojectProgress, getCategoryStageStatus, renderCategoryVisual, renderMoonBaseVisual } from "./task-master-megaprojects.js";
+import { renderPlanInfoModalContent } from "./task-master-info.js";
 
 let activeTaskMasterSession = null;
 const esc = str => String(str ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -172,6 +173,11 @@ export function renderTaskMasterView({ state, appRoot, saveLocal, levelIndex = 0
             ← Trước
           </button>
 
+          <!-- Nút mở Sổ Tay Chỉ Huy & Thuật Ngữ Khó (Info Button) -->
+          <button id="btnOpenPlanInfo" class="secondary-button" style="padding:8px 12px; font-size:0.86rem; font-weight:800; display:inline-flex; align-items:center; gap:6px; color:#0369a1; border-color:#7dd3fc; background:#f0f9ff" title="Sổ tay kế hoạch: Vì sao phải làm như thế? & Giải nghĩa thuật ngữ khó">
+            ℹ️ Vì Sao Làm Thế?
+          </button>
+
           <!-- Nút mở Bản Đồ Màn Chơi Toàn Cảnh (Grid) -->
           <button id="btnOpenLevelMap" class="primary-button" style="padding:8px 14px; font-size:0.86rem; font-weight:800; display:inline-flex; align-items:center; gap:6px; background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%)">
             🗺️ Bản Đồ ${TASK_MASTER_LEVELS.length} Màn
@@ -215,19 +221,33 @@ export function renderTaskMasterView({ state, appRoot, saveLocal, levelIndex = 0
 
       <!-- Mô tả nhiệm vụ & Lời khuyên tư duy trước khi làm -->
       <div class="tm-mission-card" style="background:${cat.bg}; border-left:4px solid ${cat.color}; padding:14px 18px; border-radius:12px; margin:16px 0">
-        <div style="font-size:0.85rem; font-weight:800; color:${cat.color}; text-transform:uppercase; letter-spacing:0.04em">
-          📋 NHIỆM VỤ CỦA CHỈ HUY BÁCH:
-        </div>
-        <p style="margin:4px 0 6px; font-size:0.98rem; font-weight:700; color:#1e293b">
-          ${esc(level.description)}
-        </p>
-        <div style="font-size:0.86rem; color:#475569; display:flex; align-items:center; gap:6px">
-          <span>💡 <em>Thần chú: "Dừng lại 15 giây nhìn trước toàn bộ các thẻ, việc gì phải xong trước thì xếp trước!"</em></span>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap">
+          <div style="flex:1; min-width:260px">
+            <div style="font-size:0.85rem; font-weight:800; color:${cat.color}; text-transform:uppercase; letter-spacing:0.04em">
+              📋 NHIỆM VỤ CỦA CHỈ HUY BÁCH:
+            </div>
+            <p style="margin:4px 0 6px; font-size:0.98rem; font-weight:700; color:#1e293b">
+              ${esc(level.description)}
+            </p>
+            <div style="font-size:0.86rem; color:#475569; display:flex; align-items:center; gap:6px">
+              <span>💡 <em>Thần chú: "Dừng lại 15 giây nhìn trước toàn bộ các thẻ, việc gì phải xong trước thì xếp trước!"</em></span>
+            </div>
+          </div>
+          <button id="btnMissionCardInfo" type="button" class="secondary-button" style="padding:7px 12px; font-size:0.84rem; font-weight:800; color:#0369a1; border-color:#7dd3fc; background:#ffffff; box-shadow:0 2px 4px rgba(2,132,199,0.08); display:inline-flex; align-items:center; gap:6px; cursor:pointer" title="Bấm để xem vì sao phải làm theo thứ tự này & giải nghĩa thuật ngữ khó">
+            ℹ️ Sổ Tay Chỉ Huy &amp; Thuật Ngữ →
+          </button>
         </div>
       </div>
 
       <!-- Khu vực chính: Dòng Kế Hoạch & Kho Thẻ Hành Động -->
       <div id="tmInteractiveArea"></div>
+
+      <!-- 5. MODAL SỔ TAY CHỈ HUY: GIẢI NGHĨA KẾ HOẠCH & TỪ ĐIỂN THUẬT NGỮ (PLAN INFO MODAL) -->
+      <div id="tmPlanInfoModal" class="tm-level-map-overlay" style="display:none">
+        <div class="tm-level-map-dialog" style="max-width:780px">
+          <div id="tmPlanInfoContent"></div>
+        </div>
+      </div>
     </div>
   `;
 
@@ -617,6 +637,48 @@ export function renderTaskMasterView({ state, appRoot, saveLocal, levelIndex = 0
           populateMapGrid(tab.dataset.catId);
         };
       });
+    }
+
+    // Modal Sổ Tay Chỉ Huy: Giải thích vì sao phải làm thế & Từ điển thuật ngữ (Plan Info Modal)
+    const planInfoModal = document.getElementById("tmPlanInfoModal");
+    const planInfoContent = document.getElementById("tmPlanInfoContent");
+    const openPlanInfoBtn = document.getElementById("btnOpenPlanInfo");
+    const missionCardInfoBtn = document.getElementById("btnMissionCardInfo");
+
+    function showPlanInfoModal() {
+      if (!planInfoModal || !planInfoContent) return;
+      planInfoContent.innerHTML = renderPlanInfoModalContent(session.currentLevel || level);
+      planInfoModal.style.display = "flex";
+
+      const closeBtn = document.getElementById("btnClosePlanInfo");
+      if (closeBtn) {
+        closeBtn.onclick = () => {
+          planInfoModal.style.display = "none";
+        };
+      }
+
+      const gotItBtn = document.getElementById("btnGotItPlanInfo");
+      if (gotItBtn) {
+        gotItBtn.onclick = () => {
+          planInfoModal.style.display = "none";
+        };
+      }
+    }
+
+    if (openPlanInfoBtn) {
+      openPlanInfoBtn.onclick = showPlanInfoModal;
+    }
+
+    if (missionCardInfoBtn) {
+      missionCardInfoBtn.onclick = showPlanInfoModal;
+    }
+
+    if (planInfoModal) {
+      planInfoModal.onclick = (e) => {
+        if (e.target === planInfoModal) {
+          planInfoModal.style.display = "none";
+        }
+      };
     }
 
     const modalNextBtn = document.getElementById("btnNextLevelModal");

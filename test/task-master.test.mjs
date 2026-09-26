@@ -25,6 +25,12 @@ import {
 
 import { renderTaskMasterView } from "../js/render-task-master.js";
 import { renderGamesHub } from "../js/render-games.js";
+import { 
+  TASK_MASTER_GLOSSARY, 
+  LEVEL_DEEP_DIVES, 
+  getLevelInfo, 
+  renderPlanInfoModalContent 
+} from "../js/task-master-info.js";
 
 // Helper tạo Mock Element gọn nhẹ cho UI Audit
 function createMockEl(tag = "div", props = {}) {
@@ -365,6 +371,10 @@ test("task-master: renderTaskMasterView UI buttons interaction audit", async () 
   const elements = {
     btnPrevLevel: createMockEl("button"),
     btnNextLevel: createMockEl("button"),
+    btnOpenPlanInfo: createMockEl("button"),
+    btnMissionCardInfo: createMockEl("button"),
+    tmPlanInfoModal: createMockEl("div", { style: { display: "none" } }),
+    tmPlanInfoContent: createMockEl("div"),
     tmLevelSelector: createMockEl("select", { value: "0" }),
     btnClearTimeline: createMockEl("button"),
     btnHintTask: createMockEl("button"),
@@ -414,8 +424,17 @@ test("task-master: renderTaskMasterView UI buttons interaction audit", async () 
   assert.ok(mockRoot.innerHTML.includes("Bậc Thầy Kế Hoạch"), "Should render Task Master heading");
   assert.ok(mockRoot.innerHTML.includes("Dòng Kế Hoạch"), "Should render Timeline section");
   assert.ok(mockRoot.innerHTML.includes("Kho Thẻ Hành Động"), "Should render Available tasks section");
+  assert.ok(mockRoot.innerHTML.includes("btnOpenPlanInfo"), "Should render Info button in topbar");
+  assert.ok(mockRoot.innerHTML.includes("btnMissionCardInfo"), "Should render Info button in mission card");
+  assert.ok(mockRoot.innerHTML.includes("tmPlanInfoModal"), "Should render Plan Info modal container");
 
   // Test các nút tương tác
+  if (elements.btnOpenPlanInfo.onclick) {
+    elements.btnOpenPlanInfo.onclick();
+    assert.equal(elements.tmPlanInfoModal.style.display, "flex", "Clicking btnOpenPlanInfo should open modal");
+    assert.ok(elements.tmPlanInfoContent.innerHTML.toLowerCase().includes("sổ tay chỉ huy"), "Modal should display Plan Info header");
+  }
+
   if (elements.btnHintTask.onclick) elements.btnHintTask.onclick();
   assert.ok(alertMsg.includes("GỢI Ý"), "Hint button should show helpful hint dialog");
 
@@ -725,3 +744,76 @@ test("task-master: pedagogical fixes for visual diagrams, stage-specific trackin
   assert.ok(svgLive.includes("Bước 2"), "Must display Step 2 in live tracker");
   assert.ok(svgLive.includes("Chờ xếp"), "Unplaced slots must be marked as waiting");
 });
+
+test("task-master: plan info notebook, causality explanations, and kid-friendly glossary", () => {
+  // 1. Kiểm tra từ điển thuật ngữ khoa học (TASK_MASTER_GLOSSARY)
+  assert.ok(TASK_MASTER_GLOSSARY["cpr"], "Glossary must define CPR");
+  assert.equal(TASK_MASTER_GLOSSARY["cpr"].term, "CPR");
+  assert.ok(TASK_MASTER_GLOSSARY["cpr"].meaning.includes("100-120 lần/phút"));
+  assert.ok(TASK_MASTER_GLOSSARY["cpr"].whyItMatters.includes("nuôi não"));
+
+  assert.ok(TASK_MASTER_GLOSSARY["aed"], "Glossary must define AED");
+  assert.ok(TASK_MASTER_GLOSSARY["oresol"], "Glossary must define Oresol");
+  assert.ok(TASK_MASTER_GLOSSARY["triage"], "Glossary must define Triage");
+  assert.ok(TASK_MASTER_GLOSSARY["mach-dien-kin"], "Glossary must define Closed Circuit");
+  assert.ok(TASK_MASTER_GLOSSARY["banh-rang-an-khop"], "Glossary must define Interlocking Gears");
+  assert.ok(TASK_MASTER_GLOSSARY["anaglyph"], "Glossary must define Anaglyph 3D");
+  assert.ok(TASK_MASTER_GLOSSARY["rong-roc"], "Glossary must define Pulley");
+  assert.ok(TASK_MASTER_GLOSSARY["heat-stroke"], "Glossary must define Heat Stroke");
+
+  // Tất cả các thuật ngữ phải có cấu trúc chuẩn kid-friendly
+  for (const [key, item] of Object.entries(TASK_MASTER_GLOSSARY)) {
+    assert.ok(item.term, `Term key ${key} must have term name`);
+    assert.ok(item.full, `Term key ${key} must have full title`);
+    assert.ok(item.icon, `Term key ${key} must have icon`);
+    assert.ok(item.meaning, `Term key ${key} must have meaning`);
+    assert.ok(item.whyItMatters, `Term key ${key} must have practical whyItMatters application`);
+  }
+
+  // 2. Kiểm tra giải thích sâu về nhân quả (Causality Deep-Dives)
+  // Màn 81 (Sơ cứu bỏng nhiệt)
+  const info81 = getLevelInfo(getLevelById("tm-81"));
+  assert.ok(info81.whySequence.length >= 3, "Level 81 must provide step-by-step whySequence");
+  assert.ok(info81.whySequence.some(s => s.why.includes("nước") && (s.why.includes("mát") || s.why.includes("hạ nhiệt"))), "Must explain why cooling with clean water comes first");
+  assert.ok(info81.termsList.some(t => t.term === "Bạc Sulfadiazine"), "Must identify Silver Sulfadiazine term");
+
+  // Màn 82 (Sơ cứu điện giật)
+  const info82 = getLevelInfo(getLevelById("tm-82"));
+  assert.ok(info82.whySequence.some(s => s.why.includes("ngắt nguồn") || s.why.includes("cầu dao")), "Must explain why cutting power comes first");
+  assert.ok(info82.whySequence.some(s => s.why.includes("ép tim") || s.why.includes("CPR")), "Must explain CPR trigger only when non-responsive & not breathing");
+  assert.ok(info82.termsList.some(t => t.term === "CPR"), "Must include CPR in glossary list");
+  assert.ok(info82.termsList.some(t => t.term === "AED"), "Must include AED in glossary list");
+
+  // Màn 87 (Say nắng & Sốc nhiệt)
+  const info87 = getLevelInfo(getLevelById("tm-87"));
+  assert.ok(info87.termsList.some(t => t.term === "Sốc nhiệt"), "Must include Heat Stroke");
+  assert.ok(info87.termsList.some(t => t.term === "Oresol"), "Must include Oresol");
+
+  // Màn 93 (Ngộ độc thực phẩm)
+  const info93 = getLevelInfo(getLevelById("tm-93"));
+  assert.ok(info93.whySequence.some(s => s.why.includes("nằm nghiêng") || s.why.includes("mẫu") || s.why.includes("móc họng")), "Must explain food poisoning protocol");
+
+  // Màn 43 (Mạch điện kín)
+  const info43 = getLevelInfo(getLevelById("tm-43"));
+  assert.ok(info43.termsList.some(t => t.term === "Mạch điện kín"), "Must identify Closed Circuit");
+
+  // Màn 41 (Cặp bánh răng ăn khớp)
+  const info41 = getLevelInfo(getLevelById("tm-41"));
+  assert.ok(info41.termsList.some(t => t.term === "Bánh răng ăn khớp"), "Must identify Interlocking Gears");
+
+  // 3. Fallback động cho các màn khác (Dynamic Synthesis for all 200 levels)
+  const infoLevel1 = getLevelInfo(getLevelById("tm-1"));
+  assert.ok(infoLevel1.whySequence.length > 0, "Level 1 without hardcoded deep dive must auto-synthesize why sequence");
+  assert.ok(infoLevel1.goldenRule, "Must have a golden rule");
+
+  // 4. Kiểm tra HTML render (renderPlanInfoModalContent)
+  const modalHtml81 = renderPlanInfoModalContent(getLevelById("tm-81"));
+  assert.ok(modalHtml81.toLowerCase().includes("sổ tay chỉ huy"), "Must render header title");
+  assert.ok(modalHtml81.includes("Vì Sao Phải Làm Theo Trình Tự Này?"), "Must include sequence explanation header");
+  assert.ok(modalHtml81.includes("Cảnh Báo: Các Hành Động Sai Lầm Tuyệt Đối Phải Tránh!"), "Must render distractor warning box for Level 81");
+  assert.ok(modalHtml81.includes("Thuật Ngữ &amp; Từ Viết Tắt Cần Nhớ") || modalHtml81.includes("Thuật Ngữ & Từ Viết Tắt Cần Nhớ"), "Must render glossary section");
+  assert.ok(modalHtml81.includes("BÀI HỌC VÀNG CỦA CHỈ HUY BÁCH"), "Must render golden rule box");
+  assert.ok(modalHtml81.includes("btnGotItPlanInfo"), "Must provide Got it CTA button");
+  assert.ok(modalHtml81.includes("btnClosePlanInfo"), "Must provide modal close button");
+});
+
