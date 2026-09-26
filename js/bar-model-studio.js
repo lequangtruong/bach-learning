@@ -61,11 +61,25 @@ export class BarModelStudioState {
         diffMatch = Boolean(this.bar1.extraDiff > 0 && String(this.diffLabel).trim() === t.diffValue);
       } else {
         // Trong bài toán Hiệu – Tỉ: số phần đã phản ánh tỉ lệ chính xác giữa hai đại lượng.
-        // Học sinh nhập đúng giá trị hiệu vào diffLabel (không bắt buộc nối khối đuôi).
+        // Học sinh nhập đúng giá trị hiệu vào diffLabel (SVG hiển thị ngoặc so sánh và không vẽ khối đuôi thừa).
         diffMatch = Boolean(String(this.diffLabel).trim() === t.diffValue);
       }
+    } else {
+      // Khi đề bài KHÔNG CÓ HIỆU:
+      // Nghiêm cấm thêm đoạn hiệu thừa (extraDiff === 0) VÀ nghiêm cấm nhập nhãn hiệu thừa (diffLabel phải rỗng).
+      const hasNoExtraDiff = !this.bar1.extraDiff || this.bar1.extraDiff === 0;
+      const hasNoDiffLabel = !this.diffLabel || String(this.diffLabel).trim() === "";
+      diffMatch = Boolean(hasNoExtraDiff && hasNoDiffLabel);
     }
-    const totalMatch = t.totalValue ? (String(this.totalLabel).trim() === t.totalValue) : true;
+
+    let totalMatch = true;
+    if (t.totalValue) {
+      totalMatch = Boolean(String(this.totalLabel).trim() === t.totalValue);
+    } else {
+      // Khi đề bài KHÔNG CÓ TỔNG:
+      // Nghiêm cấm nhập nhãn tổng thừa (totalLabel phải rỗng).
+      totalMatch = Boolean(!this.totalLabel || String(this.totalLabel).trim() === "");
+    }
 
     this.isSolved = Boolean(partsMatch && diffMatch && totalMatch);
     return {
@@ -175,11 +189,12 @@ export class BarModelStudioState {
       diffMarkup = `${alignLine}${bracketSvg}`;
     }
 
-    // Ngoặc ôm tổng
+    // Ngoặc ôm tổng (chỉ hiển thị khi bài toán có tổng và người học đã nhập nhãn tổng)
     const bracketX = startX + maxLen + 12;
     const bottomY = hasB3 ? (bar3Y + barHeight) : (bar2Y + barHeight);
     const midY = (bar1Y + bottomY) / 2;
-    const totalSvg = this.totalLabel
+    const showTotalBracket = Boolean(ch?.target?.totalValue && this.totalLabel);
+    const totalSvg = showTotalBracket
       ? `<path d="M ${bracketX} ${bar1Y} C ${bracketX + 15} ${bar1Y + 20}, ${bracketX + 15} ${midY}, ${bracketX + 25} ${midY} C ${bracketX + 15} ${midY}, ${bracketX + 15} ${bottomY - 20}, ${bracketX} ${bottomY}" fill="none" stroke="#64748b" stroke-width="2" />
          <text x="${bracketX + 32}" y="${midY + 4}" font-size="13" font-weight="700" fill="#334155">${this.totalLabel}</text>`
       : "";

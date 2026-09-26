@@ -86,17 +86,30 @@ export class LogicGridSession {
     let matched = 0;
     const total = Object.keys(sol).length;
     let hasMistake = false;
+    let extraChecks = 0;
 
-    for (const [r, targetCol] of Object.entries(sol)) {
-      const st = this.gridState[r]?.[targetCol];
-      if (st === CELL_STATE.CHECK) {
-        matched++;
-      } else if (st === CELL_STATE.CROSS) {
-        hasMistake = true;
+    // Kiểm tra toàn bộ các ô trong lưới để bảo đảm tính duy nhất (1-1 matching)
+    for (const r of c.rows.items) {
+      for (const col of c.cols.items) {
+        const st = this.gridState[r]?.[col];
+        const isTarget = sol[r] === col;
+        if (isTarget) {
+          if (st === CELL_STATE.CHECK) {
+            matched++;
+          } else if (st === CELL_STATE.CROSS) {
+            hasMistake = true;
+          }
+        } else {
+          // Ô không phải đáp án: TUYỆT ĐỐI KHÔNG ĐƯỢC đánh dấu CHECK (vi phạm loại trừ)
+          if (st === CELL_STATE.CHECK) {
+            hasMistake = true;
+            extraChecks++;
+          }
+        }
       }
     }
 
-    const isFullyCorrect = matched === total && !hasMistake;
+    const isFullyCorrect = matched === total && !hasMistake && extraChecks === 0;
 
     return {
       ok: true,
@@ -104,7 +117,8 @@ export class LogicGridSession {
       matchedCount: matched,
       totalCount: total,
       explanation: c.explanation,
-      hasMistake
+      hasMistake: hasMistake || extraChecks > 0,
+      extraChecks
     };
   }
 

@@ -69,17 +69,20 @@ export const BUG_CASES = [
       {
         "num": 2,
         "text": "Nhân tiếp với 4: 6 000 × 4 = 24 000",
-        "isBug": false
+        "isBug": false,
+        "isConsequential": true
       },
       {
         "num": 3,
         "text": "Thực hiện phép chia: 3 200 : 8 = 400",
-        "isBug": false
+        "isBug": false,
+        "isValid": true
       },
       {
         "num": 4,
         "text": "Lấy 24 000 − 400 = 23 600",
-        "isBug": false
+        "isBug": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Bẫy thứ tự ưu tiên! Trong biểu thức có cả phép cộng, trừ, nhân, chia, bắt buộc phải thực hiện 'Nhân chia trước, Cộng trừ sau': 1 500 × 4 = 6 000 và 3 200 : 8 = 400 trước. Sau đó mới tính 4 500 + 6 000 − 400 = 10 100!",
@@ -2115,12 +2118,14 @@ export const BUG_CASES = [
       {
         "num": 2,
         "text": "Hiệu số phần: 3 − 1 = 2 (phần)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true
       },
       {
         "num": 3,
         "text": "Tuổi con sau 3 năm: 27 : 2 (không chia hết)",
-        "isBug": false
+        "isBug": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Hiệu số tuổi của hai mẹ con KHÔNG BAO GIỜ THAY ĐỔI THEO THỜI GIAN! Sau 3 năm nữa mẹ VẪN HƠN CON ĐÚNG 24 TUỔI! Hiệu số phần: 3 − 1 = 2 phần. Tuổi con sau 3 năm: 24 : 2 = 12 tuổi. Tuổi con hiện nay: 12 − 3 = 9 tuổi!",

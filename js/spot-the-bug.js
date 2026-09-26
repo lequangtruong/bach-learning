@@ -33,7 +33,12 @@ export class SpotTheBugSession {
 
     const elapsed = Math.max(0.1, Number(((Date.now() - (this.solveStartTime || Date.now())) / 1000).toFixed(1)));
 
-    if (step.isBug) {
+    // Phân loại chính xác 3 trạng thái của từng bước theo nội dung toán học:
+    const isRootBug = Boolean(step.isBug || step.status === "root_bug");
+    const isValidStep = Boolean(!isRootBug && (step.isValid === true || step.status === "valid" || (stepNum < bugStepNum && !step.isConsequential)));
+    const isConsequential = Boolean(!isRootBug && !isValidStep && (step.isConsequential === true || step.status === "consequential" || (bugStepNum !== -1 && stepNum > bugStepNum)));
+
+    if (isRootBug) {
       this.solvedIds.add(currentCase.id);
       const isFast = elapsed <= 10;
       this.feedback = {
@@ -50,20 +55,7 @@ export class SpotTheBugSession {
         solveTime: elapsed,
         isFast
       };
-    } else if (bugStepNum !== -1 && stepNum > bugStepNum) {
-      this.feedback = {
-        isCorrect: false,
-        isRootBug: false,
-        isConsequential: true,
-        isValidStep: false,
-        bugStepNum,
-        message: `⚠️ Bước ${stepNum} này có kết quả sai, nhưng đây chỉ là HỆ QUẢ kéo theo do dùng số liệu sai từ Bước ${bugStepNum}! Về mặt logic phá án, Thám tử Bách hãy tìm ra BƯỚC ĐẦU TIÊN bắt đầu phạm sai lầm nhé!`,
-        explanation: null,
-        solution: null,
-        solveTime: elapsed,
-        isFast: false
-      };
-    } else {
+    } else if (isValidStep) {
       this.feedback = {
         isCorrect: false,
         isRootBug: false,
@@ -71,6 +63,20 @@ export class SpotTheBugSession {
         isValidStep: true,
         bugStepNum,
         message: `Bước ${stepNum} này bạn học sinh tính toán và lập luận hoàn toàn chính xác theo đề bài! Thám tử Bách hãy kiểm tra kĩ quy tắc hoặc phép tính ở các bước tiếp theo nhé!`,
+        explanation: null,
+        solution: null,
+        solveTime: elapsed,
+        isFast: false
+      };
+    } else {
+      // Bước sai hệ quả (consequential)
+      this.feedback = {
+        isCorrect: false,
+        isRootBug: false,
+        isConsequential: true,
+        isValidStep: false,
+        bugStepNum,
+        message: `⚠️ Bước ${stepNum} này có kết quả sai, nhưng đây chỉ là HỆ QUẢ kéo theo do dùng số liệu sai từ Bước ${bugStepNum}! Về mặt logic phá án, Thám tử Bách hãy tìm ra BƯỚC ĐẦU TIÊN bắt đầu phạm sai lầm nhé!`,
         explanation: null,
         solution: null,
         solveTime: elapsed,

@@ -899,7 +899,7 @@ export function renderBarModelStudioView({ state, appRoot, saveLocal, challengeI
             ` : `
               <div class="bar-control-group" style="opacity:0.6">
                 <label>Ngoặc tổng cả ${hasBar3 ? "3" : "2"} thanh</label>
-                <input type="text" id="totalInput" class="bar-studio-input" value="${esc(studio.totalLabel || "")}" placeholder="Tổng số (nếu có)..." style="padding:6px 10px; border:1px solid var(--line); border-radius:10px; width:130px" />
+                <input type="text" id="totalInput" class="bar-studio-input" disabled placeholder="Không có tổng" style="padding:6px 10px; border:1px solid var(--line); border-radius:10px; width:130px; background:#f1f5f9; cursor:not-allowed" />
               </div>
             `}
           `}
