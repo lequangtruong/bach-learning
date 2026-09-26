@@ -518,7 +518,7 @@ export function renderSpeedMathArena({ state, appRoot, saveLocal } = {}) {
       if (timerEl) timerEl.textContent = `${remaining}s`;
       if (fillEl) fillEl.style.width = `${(remaining / duration) * 100}%`;
     },
-    onScoreChange: ({ isCorrect, points, score, streak, problem, expected, responseTime, wasFast }) => {
+    onScoreChange: ({ isCorrect, points, score, streak, problem, expected, responseTime, wasFast, usedHint }) => {
       if (scoreEl) scoreEl.textContent = `${score} đ`;
       if (streakEl) streakEl.textContent = `Streak: ${streak} ${streak >= 3 ? "🔥" : ""}`;
       
@@ -526,9 +526,11 @@ export function renderSpeedMathArena({ state, appRoot, saveLocal } = {}) {
         feedbackEl.style.display = "inline-block";
         if (isCorrect) {
           feedbackEl.className = "math-feedback-badge correct" + (wasFast ? " fast" : "");
-          feedbackEl.innerHTML = wasFast 
-            ? `⚡ ${responseTime}s (Thần tốc!) +${points} đ` 
-            : `✓ Đúng rồi! (${responseTime}s) +${points} đ`;
+          feedbackEl.innerHTML = usedHint
+            ? `✓ Đúng (Có trợ giúp mẹo: không tăng Streak) +${points} đ`
+            : (wasFast 
+                ? `⚡ ${responseTime}s (Thần tốc!) +${points} đ` 
+                : `✓ Đúng rồi! (${responseTime}s) +${points} đ`);
           if (hintEl) {
             hintEl.style.display = "none";
             hintEl.textContent = "";
@@ -538,7 +540,7 @@ export function renderSpeedMathArena({ state, appRoot, saveLocal } = {}) {
           feedbackEl.innerHTML = `✗ Chưa chính xác (Đáp án: <strong>${expected}</strong>)`;
           if (hintEl && problem?.strategy) {
             hintEl.style.display = "block";
-            hintEl.textContent = `💡 Mẹo tính: ${problem.strategy}`;
+            hintEl.innerHTML = `💡 <b>Chiến lược giải:</b> ${problem.strategy}`;
           }
         }
       }
@@ -641,8 +643,9 @@ export function renderSpeedMathArena({ state, appRoot, saveLocal } = {}) {
   toggleHintBtn?.addEventListener("click", () => {
     if (!hintEl || !session.currentProblem) return;
     if (hintEl.style.display === "none") {
+      session.useHint();
       hintEl.style.display = "block";
-      hintEl.textContent = `💡 Mẹo tính: ${session.currentProblem.strategy}`;
+      hintEl.textContent = `💡 Mẹo tính (Chiến lược): ${session.currentProblem.strategy} (⚠️ Đã xem gợi ý: câu này không tăng chuỗi Streak và chỉ nhận 30đ trợ giúp)`;
       toggleHintBtn.textContent = "🙈 Ẩn gợi ý";
     } else {
       hintEl.style.display = "none";
@@ -864,18 +867,41 @@ export function renderBarModelStudioView({ state, appRoot, saveLocal, challengeI
               </div>
             ` : ""}
 
-            <div class="bar-control-group">
-              <label>Đoạn chênh lệch (Hiệu)</label>
-              <div style="display:flex; gap:8px; align-items:center">
-                <input type="checkbox" id="diffToggle" ${studio.bar1.extraDiff > 0 ? "checked" : ""} style="width:20px; height:20px" />
-                <input type="text" id="diffInput" class="bar-studio-input" value="${esc(studio.diffLabel || "")}" placeholder="Số hiệu..." style="padding:6px 10px; border:1px solid var(--line); border-radius:10px; width:110px" />
+            ${ch.target.hasDiff ? `
+              <div class="bar-control-group" style="background:#fffbeb; border:1px solid #fde68a; border-radius:12px; padding:10px 14px">
+                <label style="font-weight:700; color:#b45309">Đoạn chênh lệch (Hiệu hai đại lượng):</label>
+                <div style="display:flex; gap:8px; align-items:center; margin-top:4px">
+                  <input type="checkbox" id="diffToggle" ${studio.bar1.extraDiff > 0 || studio.diffLabel ? "checked" : ""} style="width:20px; height:20px; accent-color:#f59e0b" />
+                  <span style="font-size:0.88rem; font-weight:600; color:#78350f">Giá trị hiệu:</span>
+                  <input type="text" id="diffInput" class="bar-studio-input" value="${esc(studio.diffLabel || "")}" placeholder="Số hiệu..." style="padding:6px 10px; border:1.5px solid #f59e0b; border-radius:10px; width:110px; font-weight:700" />
+                </div>
+                <div style="font-size:0.82rem; color:#92400e; margin-top:4px">
+                  💡 Chênh lệch ứng với <strong>${Math.abs(studio.bar1.parts - studio.bar2.parts)} phần</strong> trên sơ đồ.
+                </div>
               </div>
-            </div>
+            ` : `
+              <div class="bar-control-group" style="opacity:0.6">
+                <label>Đoạn chênh lệch (Hiệu)</label>
+                <div style="display:flex; gap:8px; align-items:center">
+                  <input type="checkbox" id="diffToggle" disabled style="width:20px; height:20px" />
+                  <input type="text" id="diffInput" class="bar-studio-input" disabled placeholder="Không có hiệu" style="padding:6px 10px; border:1px solid var(--line); border-radius:10px; width:110px" />
+                </div>
+              </div>
+            `}
 
-            <div class="bar-control-group">
-              <label>Ngoặc tổng cả ${hasBar3 ? "3" : "2"} thanh</label>
-              <input type="text" id="totalInput" class="bar-studio-input" value="${esc(studio.totalLabel || "")}" placeholder="Tổng số..." style="padding:6px 10px; border:1px solid var(--line); border-radius:10px; width:130px" />
-            </div>
+            ${ch.target.totalValue ? `
+              <div class="bar-control-group" style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:10px 14px">
+                <label style="font-weight:700; color:#15803d">Ngoặc tổng cả ${hasBar3 ? "3" : "2"} thanh:</label>
+                <div style="margin-top:4px">
+                  <input type="text" id="totalInput" class="bar-studio-input" value="${esc(studio.totalLabel || "")}" placeholder="Tổng số..." style="padding:6px 10px; border:1.5px solid #22c55e; border-radius:10px; width:130px; font-weight:700" />
+                </div>
+              </div>
+            ` : `
+              <div class="bar-control-group" style="opacity:0.6">
+                <label>Ngoặc tổng cả ${hasBar3 ? "3" : "2"} thanh</label>
+                <input type="text" id="totalInput" class="bar-studio-input" value="${esc(studio.totalLabel || "")}" placeholder="Tổng số (nếu có)..." style="padding:6px 10px; border:1px solid var(--line); border-radius:10px; width:130px" />
+              </div>
+            `}
           `}
         </div>
 
@@ -1237,7 +1263,7 @@ export function renderSpotTheBugView({ state, appRoot, saveLocal, caseIndex, par
         const fbArea = document.querySelector("#bugFeedbackArea");
 
         document.querySelectorAll("[data-step]").forEach(el => {
-          el.classList.remove("selected-wrong", "selected-correct");
+          el.classList.remove("selected-wrong", "selected-correct", "selected-consequential");
         });
 
         if (fbArea && fb) {
@@ -1306,8 +1332,8 @@ export function renderSpotTheBugView({ state, appRoot, saveLocal, caseIndex, par
               if (typeof saveLocal === "function") await saveLocal(true);
             }
           } else {
-            item.classList.add("selected-wrong");
-            fbArea.className = "bug-feedback-box try-again";
+            item.classList.add(fb.isConsequential ? "selected-consequential" : "selected-wrong");
+            fbArea.className = fb.isConsequential ? "bug-feedback-box warning-consequential" : "bug-feedback-box try-again";
             fbArea.innerHTML = `<strong>${fb.message}</strong>`;
           }
         }

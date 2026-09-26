@@ -28,6 +28,9 @@ export class SpotTheBugSession {
 
     if (!step) return null;
 
+    const bugStep = currentCase.steps.find(s => s.isBug);
+    const bugStepNum = bugStep ? bugStep.num : -1;
+
     const elapsed = Math.max(0.1, Number(((Date.now() - (this.solveStartTime || Date.now())) / 1000).toFixed(1)));
 
     if (step.isBug) {
@@ -35,18 +38,39 @@ export class SpotTheBugSession {
       const isFast = elapsed <= 10;
       this.feedback = {
         isCorrect: true,
+        isRootBug: true,
+        isConsequential: false,
+        isValidStep: false,
+        bugStepNum,
         message: isFast
-          ? `🎉 CHÍNH XÁC! Thám tử Bách đã phá án thần tốc (⚡ ${elapsed}s) và bắt đúng bước làm sai!`
-          : "🎉 CHÍNH XÁC! Thám tử Bách đã phá án xuất sắc và bắt đúng bước làm sai!",
+          ? `🎉 CHÍNH XÁC! Thám tử Bách đã phá án thần tốc (⚡ ${elapsed}s) và bắt đúng BƯỚC SAI ĐẦU TIÊN!`
+          : "🎉 CHÍNH XÁC! Thám tử Bách đã phá án xuất sắc và bắt đúng BƯỚC SAI ĐẦU TIÊN!",
         explanation: currentCase.bugExplanation,
         solution: currentCase.correctSolution,
         solveTime: elapsed,
         isFast
       };
+    } else if (bugStepNum !== -1 && stepNum > bugStepNum) {
+      this.feedback = {
+        isCorrect: false,
+        isRootBug: false,
+        isConsequential: true,
+        isValidStep: false,
+        bugStepNum,
+        message: `⚠️ Bước ${stepNum} này có kết quả sai, nhưng đây chỉ là HỆ QUẢ kéo theo do dùng số liệu sai từ Bước ${bugStepNum}! Về mặt logic phá án, Thám tử Bách hãy tìm ra BƯỚC ĐẦU TIÊN bắt đầu phạm sai lầm nhé!`,
+        explanation: null,
+        solution: null,
+        solveTime: elapsed,
+        isFast: false
+      };
     } else {
       this.feedback = {
         isCorrect: false,
-        message: `Bước ${stepNum} này bạn học sinh tính toán và lập luận hoàn toàn chính xác! Thám tử Bách hãy kiểm tra kĩ quy tắc hoặc phép tính ở các bước còn lại nhé!`,
+        isRootBug: false,
+        isConsequential: false,
+        isValidStep: true,
+        bugStepNum,
+        message: `Bước ${stepNum} này bạn học sinh tính toán và lập luận hoàn toàn chính xác theo đề bài! Thám tử Bách hãy kiểm tra kĩ quy tắc hoặc phép tính ở các bước tiếp theo nhé!`,
         explanation: null,
         solution: null,
         solveTime: elapsed,

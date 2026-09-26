@@ -49,10 +49,22 @@ export class BarModelStudioState {
   checkSolution() {
     const ch = BAR_MODEL_CHALLENGES[this.challengeIndex];
     const t = ch.target;
+    const hasB3 = Boolean(t.hasBar3 && this.bar3);
+    const isPureSumDiff = Boolean(t.bar1Parts === 1 && t.bar2Parts === 1 && (!hasB3 || t.bar3Parts === 1) && t.hasDiff);
 
     const partsMatch = (this.bar1.parts === t.bar1Parts && this.bar2.parts === t.bar2Parts) &&
       (!t.hasBar3 || (this.bar3 && this.bar3.parts === t.bar3Parts));
-    const diffMatch = t.hasDiff ? (this.bar1.extraDiff > 0 && String(this.diffLabel).trim() === t.diffValue) : true;
+    
+    let diffMatch = true;
+    if (t.hasDiff) {
+      if (isPureSumDiff) {
+        diffMatch = Boolean(this.bar1.extraDiff > 0 && String(this.diffLabel).trim() === t.diffValue);
+      } else {
+        // Trong bài toán Hiệu – Tỉ: số phần đã phản ánh tỉ lệ chính xác giữa hai đại lượng.
+        // Học sinh nhập đúng giá trị hiệu vào diffLabel (không bắt buộc nối khối đuôi).
+        diffMatch = Boolean(String(this.diffLabel).trim() === t.diffValue);
+      }
+    }
     const totalMatch = t.totalValue ? (String(this.totalLabel).trim() === t.totalValue) : true;
 
     this.isSolved = Boolean(partsMatch && diffMatch && totalMatch);
@@ -66,22 +78,25 @@ export class BarModelStudioState {
   renderSvgMarkup() {
     const hasB3 = Boolean(this.bar3);
     const svgWidth = 520;
-    const svgHeight = hasB3 ? 270 : 220;
+    const svgHeight = hasB3 ? 270 : 230;
     const maxParts = Math.max(this.bar1.parts, this.bar2.parts, hasB3 ? this.bar3.parts : 1);
     const availableWidth = this.totalLabel ? 260 : 340;
     const ch = BAR_MODEL_CHALLENGES[this.challengeIndex];
     const isComparison = Boolean(this.bar1.parts === 1 && this.bar2.parts === 1 && (!hasB3 || this.bar3.parts === 1) && ch?.target?.hasDiff);
+    const isRatioDiff = Boolean(ch?.target?.hasDiff && !isComparison);
     const maxUnit = isComparison ? 140 : 55;
     const unitWidth = Math.max(34, Math.min(maxUnit, Math.floor(availableWidth / Math.max(maxParts, 1))));
     const barHeight = 28;
     const startX = 110;
-    const bar1Y = hasB3 ? 35 : 45;
-    const bar2Y = hasB3 ? 95 : 115;
-    const bar3Y = 155;
+    const bar1Y = hasB3 ? 38 : (isRatioDiff ? 52 : 45);
+    const bar2Y = hasB3 ? 98 : (isRatioDiff ? 122 : 115);
+    const bar3Y = 158;
     const diffWidth = isComparison ? 60 : 44;
 
     // Tính toán độ dài thanh
-    const len1 = this.bar1.parts * unitWidth + (this.bar1.extraDiff > 0 ? diffWidth : 0);
+    // CHÚ Ý: CHỈ cộng diffWidth nếu là isComparison (Tổng – Hiệu dạng 1 đoạn cơ sở + phần hơn)!
+    // Đối với Hiệu – Tỉ (isRatioDiff), TUYỆT ĐỐI KHÔNG cộng thêm khối vào đuôi thanh 1 vì làm sai tỉ lệ!
+    const len1 = this.bar1.parts * unitWidth + (isComparison && this.bar1.extraDiff > 0 ? diffWidth : 0);
     const len2 = this.bar2.parts * unitWidth;
     const len3 = hasB3 ? (this.bar3.parts * unitWidth) : 0;
     const maxLen = Math.max(len1, len2, len3);
@@ -89,12 +104,22 @@ export class BarModelStudioState {
     const baseLabel = isComparison ? "Đoạn cơ sở" : "1 phần";
 
     let partsRects1 = "";
+    const p1 = this.bar1.parts;
+    const p2 = this.bar2.parts;
+    const minParts12 = Math.min(p1, p2);
+
     for (let i = 0; i < this.bar1.parts; i++) {
       const x = startX + i * unitWidth;
-      partsRects1 += `<rect x="${x}" y="${bar1Y}" width="${unitWidth}" height="${barHeight}" fill="#3b82f6" fill-opacity="0.2" stroke="#2563eb" stroke-width="2" rx="4" />
-      <text x="${x + unitWidth / 2}" y="${bar1Y + 18}" text-anchor="middle" font-size="${unitWidth < 42 ? 10 : 11}" font-weight="600" fill="#1e40af">${baseLabel}</text>`;
+      const isDiffPart = isRatioDiff && p1 > p2 && i >= minParts12;
+      const fill = isDiffPart ? "#fef3c7" : "#3b82f6";
+      const fillOpacity = isDiffPart ? "0.45" : "0.2";
+      const stroke = isDiffPart ? "#d97706" : "#2563eb";
+      const textFill = isDiffPart ? "#92400e" : "#1e40af";
+      partsRects1 += `<rect x="${x}" y="${bar1Y}" width="${unitWidth}" height="${barHeight}" fill="${fill}" fill-opacity="${fillOpacity}" stroke="${stroke}" stroke-width="2" rx="4" />
+      <text x="${x + unitWidth / 2}" y="${bar1Y + 18}" text-anchor="middle" font-size="${unitWidth < 42 ? 10 : 11}" font-weight="600" fill="${textFill}">${baseLabel}</text>`;
     }
-    if (this.bar1.extraDiff > 0) {
+    // Chỉ vẽ khối đuôi dán thêm nếu là bài Tổng – Hiệu so sánh tự do (isComparison)
+    if (isComparison && this.bar1.extraDiff > 0) {
       const diffX = startX + this.bar1.parts * unitWidth;
       partsRects1 += `<rect x="${diffX}" y="${bar1Y}" width="${diffWidth}" height="${barHeight}" fill="#f59e0b" fill-opacity="0.25" stroke="#d97706" stroke-dasharray="3,3" stroke-width="2" rx="4" />
       <text x="${diffX + diffWidth / 2}" y="${bar1Y + 18}" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">${this.diffLabel ? `+${this.diffLabel}` : "?"}</text>`;
@@ -103,8 +128,13 @@ export class BarModelStudioState {
     let partsRects2 = "";
     for (let i = 0; i < this.bar2.parts; i++) {
       const x = startX + i * unitWidth;
-      partsRects2 += `<rect x="${x}" y="${bar2Y}" width="${unitWidth}" height="${barHeight}" fill="#10b981" fill-opacity="0.2" stroke="#059669" stroke-width="2" rx="4" />
-      <text x="${x + unitWidth / 2}" y="${bar2Y + 18}" text-anchor="middle" font-size="${unitWidth < 42 ? 10 : 11}" font-weight="600" fill="#065f46">${baseLabel}</text>`;
+      const isDiffPart = isRatioDiff && p2 > p1 && i >= minParts12;
+      const fill = isDiffPart ? "#fef3c7" : "#10b981";
+      const fillOpacity = isDiffPart ? "0.45" : "0.2";
+      const stroke = isDiffPart ? "#d97706" : "#059669";
+      const textFill = isDiffPart ? "#92400e" : "#065f46";
+      partsRects2 += `<rect x="${x}" y="${bar2Y}" width="${unitWidth}" height="${barHeight}" fill="${fill}" fill-opacity="${fillOpacity}" stroke="${stroke}" stroke-width="2" rx="4" />
+      <text x="${x + unitWidth / 2}" y="${bar2Y + 18}" text-anchor="middle" font-size="${unitWidth < 42 ? 10 : 11}" font-weight="600" fill="${textFill}">${baseLabel}</text>`;
     }
 
     let partsRects3 = "";
@@ -114,6 +144,35 @@ export class BarModelStudioState {
         partsRects3 += `<rect x="${x}" y="${bar3Y}" width="${unitWidth}" height="${barHeight}" fill="#8b5cf6" fill-opacity="0.2" stroke="#7c3aed" stroke-width="2" rx="4" />
         <text x="${x + unitWidth / 2}" y="${bar3Y + 18}" text-anchor="middle" font-size="${unitWidth < 42 ? 10 : 11}" font-weight="600" fill="#5b21b6">${baseLabel}</text>`;
       }
+    }
+
+    // Biểu diễn Hiệu số Singapore (đường gióng đứt nét và ngoặc so sánh phần dôi ra) cho bài toán Hiệu – Tỉ
+    let diffMarkup = "";
+    if (isRatioDiff && p1 !== p2) {
+      const alignX = startX + minParts12 * unitWidth;
+      const maxP = Math.max(p1, p2);
+      const endX = startX + maxP * unitWidth;
+      const midDiffX = (alignX + endX) / 2;
+      const minY = bar1Y - 4;
+      const maxY = bar2Y + barHeight + 4;
+      const alignLine = `<line x1="${alignX}" y1="${minY}" x2="${alignX}" y2="${maxY}" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="3,3" />`;
+
+      const diffValText = this.diffLabel ? `${this.diffLabel}` : (ch?.target?.diffValue || "?");
+      let bracketSvg = "";
+      if (p1 > p2) {
+        const bracketY = bar1Y - 6;
+        bracketSvg = `
+          <path d="M ${alignX} ${bracketY} L ${alignX} ${bracketY - 5} L ${midDiffX} ${bracketY - 5} L ${midDiffX} ${bracketY - 9} L ${midDiffX} ${bracketY - 5} L ${endX} ${bracketY - 5} L ${endX} ${bracketY}" fill="none" stroke="#d97706" stroke-width="1.8" />
+          <text x="${midDiffX}" y="${bracketY - 12}" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">Hiệu: ${diffValText}</text>
+        `;
+      } else {
+        const bracketY = bar2Y + barHeight + 6;
+        bracketSvg = `
+          <path d="M ${alignX} ${bracketY} L ${alignX} ${bracketY + 5} L ${midDiffX} ${bracketY + 5} L ${midDiffX} ${bracketY + 9} L ${midDiffX} ${bracketY + 5} L ${endX} ${bracketY + 5} L ${endX} ${bracketY}" fill="none" stroke="#d97706" stroke-width="1.8" />
+          <text x="${midDiffX}" y="${bracketY + 18}" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">Hiệu: ${diffValText}</text>
+        `;
+      }
+      diffMarkup = `${alignLine}${bracketSvg}`;
     }
 
     // Ngoặc ôm tổng
@@ -136,6 +195,8 @@ export class BarModelStudioState {
         ${partsRects1}
         ${partsRects2}
         ${partsRects3}
+        <!-- Đường gióng và ngoặc so sánh Hiệu (Singapore Bar Model) -->
+        ${diffMarkup}
         <!-- Ngoặc tổng nếu có -->
         ${totalSvg}
       </svg>

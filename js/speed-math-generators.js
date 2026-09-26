@@ -78,7 +78,7 @@ export function generateMultiMulGolden(rand) {
     return {
       prompt: `4 × ${a} × 25`,
       answer: 100 * a,
-      strategy: `Nhóm cặp số vàng: (4 × 25) × ${a} = 100 × ${a}`
+      strategy: "Nhóm cặp số vàng: (4 × 25 = 100) rồi nhân với số còn lại"
     };
   }
   if (mode === 2) {
@@ -86,14 +86,14 @@ export function generateMultiMulGolden(rand) {
     return {
       prompt: `5 × ${a} × 20`,
       answer: 100 * a,
-      strategy: `Nhóm cặp số vàng: (5 × 20) × ${a} = 100 × ${a}`
+      strategy: "Nhóm cặp số tròn trăm: (5 × 20 = 100) rồi nhân với số còn lại"
     };
   }
   const a = rand(14, 48);
   return {
     prompt: `2 × ${a} × 50`,
     answer: 100 * a,
-    strategy: `Nhóm cặp số vàng: (2 × 50) × ${a} = 100 × ${a}`
+    strategy: "Nhóm cặp số tròn trăm: (2 × 50 = 100) rồi nhân với số còn lại"
   };
 }
 
@@ -104,7 +104,7 @@ export function generateMultiMul4Golden(rand) {
     return {
       prompt: `4 × ${a} × 25 × 2`,
       answer: 100 * (a * 2),
-      strategy: `Nhóm (4 × 25) × (${a} × 2) = 100 × ${a * 2}`
+      strategy: "Ghép cặp số vàng: (4 × 25 = 100) rồi nhân với tích các số còn lại"
     };
   }
   if (mode === 2) {
@@ -112,14 +112,14 @@ export function generateMultiMul4Golden(rand) {
     return {
       prompt: `8 × ${a} × 125 × 2`,
       answer: 1000 * (a * 2),
-      strategy: `Nhóm (8 × 125) × (${a} × 2) = 1.000 × ${a * 2}`
+      strategy: "Ghép cặp số vàng: (8 × 125 = 1.000) rồi nhân với tích các số còn lại"
     };
   }
   const a = rand(3, 16);
   return {
     prompt: `25 × ${a} × 4 × 5`,
     answer: 100 * (a * 5),
-    strategy: `Nhóm (25 × 4) × (${a} × 5) = 100 × ${a * 5}`
+    strategy: "Ghép cặp số tròn trăm: (25 × 4 = 100) rồi nhân với tích các số còn lại"
   };
 }
 
@@ -130,7 +130,7 @@ export function generateDistributive3Term(rand) {
   const c = 99 - b;
   const prompt = `${a} × ${b} + ${a} × ${c} + ${a}`;
   const answer = a * 100;
-  const strategy = `Rút ${a} chung: ${a} × (${b} + ${c} + 1) = ${a} × 100`;
+  const strategy = `Đặt thừa số chung: ${a} × (${b} + ${c} + 1) để trong ngoặc tròn trăm`;
   return { prompt, answer, strategy };
 }
 
@@ -144,7 +144,7 @@ export function generateMultiDivComposite(rand) {
     return {
       prompt: `(${a} × ${b}) : ${c}`,
       answer: q * b,
-      strategy: `Chia trước nhân sau: (${a} : ${c}) × ${b} = ${q} × ${b}`
+      strategy: "Đổi thứ tự phép tính: Thực hiện phép chia trước rồi mới nhân"
     };
   }
   if (mode === 2) {
@@ -159,14 +159,14 @@ export function generateMultiDivComposite(rand) {
     return {
       prompt: `${a} : (${b} × ${c})`,
       answer: q,
-      strategy: `Tính trong ngoặc trước: (${b} × ${c} = 100) rồi lấy ${a} : 100`
+      strategy: "Chia một số cho một tích: Tính tích trong ngoặc trước rồi thực hiện phép chia"
     };
   }
   const a = rand(2, 8) * 10;
   return {
     prompt: `(${a} × 25) : (5 × 5)`,
     answer: a,
-    strategy: `(5 × 5) = 25: Lấy (${a} × 25) : 25`
+    strategy: "Tính từng ngoặc trước: Nhận diện 5 × 5 = 25 rồi chia nhẩm"
   };
 }
 
@@ -483,7 +483,7 @@ export function generateOlympic5Operands(rand) {
   return {
     prompt: `8 × ${a} × 125 × 5 × 2`,
     answer: 10000 * a,
-    strategy: `Nhóm cặp số vàng: (8 × 125 = 1.000) × (5 × 2 = 10) × ${a}`
+    strategy: "Nhóm hai cặp số vàng: (8 × 125 = 1.000) và (5 × 2 = 10) rồi nhân tiếp"
   };
 }
 
@@ -495,7 +495,7 @@ export function generateOlympicDistributive(rand) {
   return {
     prompt: `${a} × ${b} + ${a} × ${c} + ${a} × ${d} + ${a}`,
     answer: a * 100,
-    strategy: `Rút ${a} chung: ${a} × (${b} + ${c} + ${d} + 1) = ${a} × 100`
+    strategy: `Đặt thừa số chung: Đưa ${a} ra ngoài để trong ngoặc tạo thành số tròn trăm`
   };
 }
 
@@ -506,7 +506,7 @@ export function generateOlympicBracket(rand) {
     return {
       prompt: `(125 × 8) × (25 × ${multK * 4})`,
       answer: 1000 * (100 * multK),
-      strategy: `Nhóm: (125 × 8 = 1.000) × (25 × 4 = 100) × ${multK}`
+      strategy: "Nhóm hai cặp số vàng: (125 × 8 = 1.000) và (25 × 4 = 100) rồi nhân tiếp"
     };
   }
   if (mode === 2) {
@@ -514,14 +514,14 @@ export function generateOlympicBracket(rand) {
     return {
       prompt: `(25 × ${a * 36} × 4) : 9`,
       answer: 100 * (a * 4),
-      strategy: `Nhóm (25 × 4 = 100) rồi tính (${a * 36} : 9) × 100`
+      strategy: "Nhóm cặp số vàng (25 × 4) rồi chia nhẩm số trong ngoặc trước khi nhân"
     };
   }
   const a = rand(2, 8);
   return {
     prompt: `(125 × ${a * 72}) : 9`,
     answer: 1000 * a,
-    strategy: `Lấy (${a * 72} : 9) = ${a * 8}, rồi nhân với 125`
+    strategy: "Đổi thứ tự phép tính: Lấy số chia hết cho 9 trước rồi nhân với 125"
   };
 }
 

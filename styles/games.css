@@ -678,6 +678,17 @@
   color: #92400e;
 }
 
+.bug-feedback-box.warning-consequential {
+  background: #fef2f2;
+  border: 1.5px solid #fecaca;
+  color: #991b1b;
+}
+
+.step-item.selected-consequential {
+  border-color: #f87171 !important;
+  background: #fff1f2 !important;
+}
+
 /* ==========================================================================
    Stage Mini-Games (Embedded at the end of each lesson stage)
    ========================================================================== */

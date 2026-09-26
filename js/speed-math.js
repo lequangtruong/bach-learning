@@ -158,7 +158,7 @@ export function generateSpeedMathProblem(streak = 0, options = {}) {
       return {
         prompt: `${base} + ${add}`,
         answer: base + add,
-        strategy: `Lấy ${rounded} + ${add} − ${comp}`,
+        strategy: `Làm tròn ${base} lên số tròn trăm (${rounded}) rồi trừ phần bù (${comp})`,
         level: 1,
         type,
         group
@@ -173,7 +173,7 @@ export function generateSpeedMathProblem(streak = 0, options = {}) {
       return {
         prompt: `${base} − ${sub}`,
         answer: base - sub,
-        strategy: `Lấy ${base} − ${rounded} + ${comp}`,
+        strategy: `Trừ số tròn trăm (${rounded}) trước rồi cộng bù lại (${comp})`,
         level: 1,
         type,
         group
@@ -185,7 +185,7 @@ export function generateSpeedMathProblem(streak = 0, options = {}) {
       return {
         prompt: `${a} × ${b}`,
         answer: a * b,
-        strategy: "Bảng nhân cửu chương",
+        strategy: "Vận dụng bảng nhân cửu chương cơ bản",
         level: 1,
         type,
         group
@@ -198,7 +198,7 @@ export function generateSpeedMathProblem(streak = 0, options = {}) {
       return {
         prompt: `${dividend} : ${divisor}`,
         answer: quotient,
-        strategy: "Bảng chia cửu chương",
+        strategy: "Vận dụng bảng chia cửu chương cơ bản",
         level: 1,
         type,
         group
@@ -210,7 +210,7 @@ export function generateSpeedMathProblem(streak = 0, options = {}) {
       return {
         prompt: `${a} × ${b}`,
         answer: a * b,
-        strategy: `Nhân ${a / 10} × ${b} rồi thêm chữ số 0`,
+        strategy: `Nhân nhẩm số tròn chục: Lấy ${a / 10} × ${b} rồi viết thêm chữ số 0`,
         level: 1,
         type,
         group
@@ -223,7 +223,7 @@ export function generateSpeedMathProblem(streak = 0, options = {}) {
       return {
         prompt: `${dividend} : ${divisor}`,
         answer: quotient,
-        strategy: `Lấy ${dividend / 10} : ${divisor} rồi thêm số 0`,
+        strategy: `Chia nhẩm số tròn chục: Lấy ${dividend / 10} : ${divisor} rồi viết thêm chữ số 0`,
         level: 1,
         type,
         group
@@ -238,7 +238,7 @@ export function generateSpeedMathProblem(streak = 0, options = {}) {
       return {
         prompt: `(${a} + ${b}) × ${c}`,
         answer: sum * c,
-        strategy: `Tính trong ngoặc trước: ${sum} × ${c}`,
+        strategy: "Thứ tự phép tính: Tính tổng trong ngoặc tròn trước rồi mới nhân",
         level: 1,
         type,
         group
@@ -254,7 +254,7 @@ export function generateSpeedMathProblem(streak = 0, options = {}) {
     return {
       prompt: `(${a} − ${b}) : ${c}`,
       answer: diff / c,
-      strategy: `Tính trong ngoặc trước: ${diff} : ${c}`,
+      strategy: "Thứ tự phép tính: Tính hiệu trong ngoặc tròn trước rồi mới chia",
       level: 1,
       type,
       group
@@ -296,7 +296,7 @@ export function generateSpeedMathProblem(streak = 0, options = {}) {
       return {
         prompt: `${num} × 11`,
         answer: num * 11,
-        strategy: `Tách ${num}: chèn tổng 2 chữ số vào giữa`,
+        strategy: `Mẹo nhân 11: Tách hai chữ số của ${num} rồi chèn tổng của chúng vào giữa`,
         level: 2,
         type,
         group
@@ -308,7 +308,7 @@ export function generateSpeedMathProblem(streak = 0, options = {}) {
       return {
         prompt: `${num} × 5`,
         answer: num * 5,
-        strategy: `Nhân đôi chia đôi: (${num} : 2) × 10 = ${half} × 10`,
+        strategy: "Mẹo nhân 5: Chia đôi số chẵn rồi nhân với 10 (thêm chữ số 0)",
         level: 2,
         type,
         group
@@ -320,7 +320,7 @@ export function generateSpeedMathProblem(streak = 0, options = {}) {
       return {
         prompt: `${dividend} : 5`,
         answer: quotient,
-        strategy: `Nhân đôi rồi chia 10: (${dividend} × 2) : 10`,
+        strategy: "Mẹo chia 5: Nhân đôi số bị chia rồi chia cho 10 (bớt 1 chữ số 0)",
         level: 2,
         type,
         group
@@ -332,7 +332,7 @@ export function generateSpeedMathProblem(streak = 0, options = {}) {
       return {
         prompt: `${dividend} : 25`,
         answer: hundreds * 4,
-        strategy: `Mỗi 100 có bốn số 25: lấy ${hundreds} × 4`,
+        strategy: "Mẹo chia 25: Mỗi 100 có 4 lần 25, lấy số trăm nhân với 4",
         level: 2,
         type,
         group
@@ -359,7 +359,7 @@ export function generateSpeedMathProblem(streak = 0, options = {}) {
       return {
         prompt: `${a} × ${b}`,
         answer: a * b,
-        strategy: `Lấy ${a / 10} × ${b / 10} rồi thêm 2 số 0`,
+        strategy: `Nhân hai số tròn chục: Lấy ${a / 10} × ${b / 10} rồi thêm hai chữ số 0 vào sau`,
         level: 2,
         type,
         group
@@ -372,7 +372,7 @@ export function generateSpeedMathProblem(streak = 0, options = {}) {
       return {
         prompt: `${dividend} : ${divisor}`,
         answer: quotient,
-        strategy: `Cùng bớt một chữ số 0: ${dividend / 10} : ${divisor / 10}`,
+        strategy: "Chia hai số tròn chục: Cùng bớt một chữ số 0 ở cả hai vế rồi chia nhẩm",
         level: 2,
         type,
         group
@@ -387,7 +387,7 @@ export function generateSpeedMathProblem(streak = 0, options = {}) {
       return {
         prompt: `(${a} + ${b}) × ${c}`,
         answer: sum * c,
-        strategy: `Cộng trong ngoặc trước: ${sum} × ${c}`,
+        strategy: "Tính trong ngoặc trước: Cộng ra số tròn chục hoặc tròn trăm rồi nhân",
         level: 2,
         type,
         group
@@ -403,7 +403,7 @@ export function generateSpeedMathProblem(streak = 0, options = {}) {
     return {
       prompt: `(${a} + ${b}) : ${c}`,
       answer: sumVal / c,
-      strategy: `Cộng trong ngoặc: ${sumVal} : ${c}`,
+      strategy: "Tính trong ngoặc trước: Cộng ra số tròn chục rồi chia",
       level: 2,
       type,
       group
@@ -443,7 +443,7 @@ export function generateSpeedMathProblem(streak = 0, options = {}) {
       return {
         prompt: `25 × ${m}`,
         answer: 25 * m,
-        strategy: `Cặp số vàng: 25 × 4 × ${multK} = 100 × ${multK}`,
+        strategy: "Cặp số vàng: Ghép (25 × 4 = 100) rồi nhân tiếp với thừa số còn lại",
         level: 3,
         type,
         group
@@ -455,7 +455,7 @@ export function generateSpeedMathProblem(streak = 0, options = {}) {
       return {
         prompt: `125 × ${m}`,
         answer: 125 * m,
-        strategy: `Cặp số vàng: 125 × 8 × ${multK} = 1.000 × ${multK}`,
+        strategy: "Cặp số vàng: Ghép (125 × 8 = 1.000) rồi nhân tiếp với thừa số còn lại",
         level: 3,
         type,
         group
@@ -468,7 +468,7 @@ export function generateSpeedMathProblem(streak = 0, options = {}) {
         return {
           prompt: `${a} × 9`,
           answer: a * 9,
-          strategy: `Bù trừ: ${a} × 10 − ${a}`,
+          strategy: "Quy tắc nhân 9: Lấy số đó nhân 10 rồi trừ đi chính nó",
           level: 3,
           type,
           group
@@ -479,7 +479,7 @@ export function generateSpeedMathProblem(streak = 0, options = {}) {
         return {
           prompt: `${a} × 19`,
           answer: a * 19,
-          strategy: `Bù trừ: ${a} × 20 − ${a}`,
+          strategy: "Quy tắc nhân 19: Lấy số đó nhân 20 rồi trừ đi chính nó",
           level: 3,
           type,
           group
@@ -490,7 +490,7 @@ export function generateSpeedMathProblem(streak = 0, options = {}) {
         return {
           prompt: `${a} × 99`,
           answer: a * 99,
-          strategy: `Bù trừ: ${a} × 100 − ${a}`,
+          strategy: "Quy tắc nhân 99: Lấy số đó nhân 100 rồi trừ đi chính nó",
           level: 3,
           type,
           group
@@ -500,7 +500,7 @@ export function generateSpeedMathProblem(streak = 0, options = {}) {
       return {
         prompt: `${a} × 101`,
         answer: a * 101,
-        strategy: `Phân phối: ${a} × 100 + ${a}`,
+        strategy: "Tính chất phân phối: Lấy số đó nhân 100 rồi cộng thêm chính nó",
         level: 3,
         type,
         group
@@ -515,7 +515,7 @@ export function generateSpeedMathProblem(streak = 0, options = {}) {
         return {
           prompt: `(${a} × ${b}) + (${a} × ${c})`,
           answer: a * 10,
-          strategy: `Đặt ${a} làm thừa số chung: ${a} × (${b} + ${c}) = ${a} × 10`,
+          strategy: `Tính chất một số nhân một tổng: Đặt ${a} làm thừa số chung để trong ngoặc tròn chục`,
           level: 3,
           type,
           group
@@ -526,7 +526,7 @@ export function generateSpeedMathProblem(streak = 0, options = {}) {
         return {
           prompt: `(${a} × ${b}) − (${a} × ${c})`,
           answer: a * 10,
-          strategy: `Đặt ${a} làm thừa số chung: ${a} × (${b} − ${c}) = ${a} × 10`,
+          strategy: `Tính chất một số nhân một hiệu: Đặt ${a} làm thừa số chung để trong ngoặc tròn chục`,
           level: 3,
           type,
           group
@@ -542,7 +542,7 @@ export function generateSpeedMathProblem(streak = 0, options = {}) {
       return {
         prompt: `${dividend} : (${b} × ${c})`,
         answer: quotient,
-        strategy: `Lấy ${dividend} chia cho tích trong ngoặc: ${dividend} : ${inner}`,
+        strategy: "Chia một số cho một tích: Tính tích trong ngoặc trước rồi thực hiện phép chia",
         level: 3,
         type,
         group
@@ -550,14 +550,14 @@ export function generateSpeedMathProblem(streak = 0, options = {}) {
     }
     // bracket_composite: biểu thức kết hợp
     const compositeList = [
-      { prompt: "(125 + 75) × (12 : 3)", answer: 800, strategy: "Tính từng ngoặc: 200 × 4" },
-      { prompt: "(800 − 300) : (25 × 2)", answer: 10, strategy: "Tính từng ngoặc: 500 : 50" },
-      { prompt: "(99 + 1) × (45 − 25)", answer: 2000, strategy: "Tính từng ngoặc: 100 × 20" },
-      { prompt: "(140 + 260) : (20 × 2)", answer: 10, strategy: "Tính từng ngoặc: 400 : 40" },
-      { prompt: "6 × (120 − 70)", answer: 300, strategy: "Tính trong ngoặc trước: 6 × 50" },
-      { prompt: "(250 + 150) × (30 : 6)", answer: 2000, strategy: "Tính từng ngoặc: 400 × 5" },
-      { prompt: "(900 − 400) : (10 × 5)", answer: 10, strategy: "Tính từng ngoặc: 500 : 50" },
-      { prompt: "(15 × 4) × (120 : 60)", answer: 120, strategy: "Tính từng ngoặc: 60 × 2" }
+      { prompt: "(125 + 75) × (12 : 3)", answer: 800, strategy: "Tính từng ngoặc trước: ngoặc thứ nhất ra tròn trăm, ngoặc thứ hai chia nhẩm" },
+      { prompt: "(800 − 300) : (25 × 2)", answer: 10, strategy: "Tính từng ngoặc trước để được phép chia hai số tròn chục" },
+      { prompt: "(99 + 1) × (45 − 25)", answer: 2000, strategy: "Tính từng ngoặc trước: tạo tích của hai số tròn chục" },
+      { prompt: "(140 + 260) : (20 × 2)", answer: 10, strategy: "Tính từng ngoặc trước: cộng tròn trăm rồi chia cho tích trong ngoặc sau" },
+      { prompt: "6 × (120 − 70)", answer: 300, strategy: "Tính hiệu trong ngoặc tròn trước để được số tròn chục rồi nhân" },
+      { prompt: "(250 + 150) × (30 : 6)", answer: 2000, strategy: "Tính từng ngoặc trước: cộng tròn trăm rồi nhân với thương của ngoặc sau" },
+      { prompt: "(900 − 400) : (10 × 5)", answer: 10, strategy: "Tính từng ngoặc trước: trừ tròn trăm rồi chia cho tích của ngoặc sau" },
+      { prompt: "(15 × 4) × (120 : 60)", answer: 120, strategy: "Tính từng ngoặc trước: 15 × 4 ra tròn chục, rồi nhân với thương của ngoặc sau" }
     ];
     const item = compositeList[rand(0, compositeList.length - 1)];
     return { ...item, level: 3, type, group };
@@ -565,27 +565,27 @@ export function generateSpeedMathProblem(streak = 0, options = {}) {
 
   // Level 4: streak 10+ (Siêu Thần Tốc Olympic)
   const masterList = [
-    { prompt: "(125 × 8) × (25 × 4)", answer: 100000, strategy: "Nhóm: (125 × 8 = 1.000) × (25 × 4 = 100)" },
-    { prompt: "(1200 − 400) : (15 + 25)", answer: 20, strategy: "Tính từng ngoặc: 800 : 40" },
-    { prompt: "(88 + 12) × (75 − 25)", answer: 5000, strategy: "Tính từng ngoặc: 100 × 50" },
-    { prompt: "(2500 − 500) : (100 : 2)", answer: 40, strategy: "Tính từng ngoặc: 2000 : 50" },
-    { prompt: "(640 : 8) × (150 : 30)", answer: 400, strategy: "Tính từng ngoặc: 80 × 5" },
-    { prompt: "(36 × 25) : 9", answer: 100, strategy: "Chia trước nhân sau: (36 : 9) × 25 = 4 × 25" },
-    { prompt: "(450 × 4) : 90", answer: 20, strategy: "Giao hoán: (450 : 90) × 4 = 5 × 4" },
-    { prompt: "(250 + 750) : (125 : 5)", answer: 40, strategy: "Tính từng ngoặc: 1000 : 25" },
-    { prompt: "(16 × 25) × (15 − 10)", answer: 2000, strategy: "Tính từng ngoặc: 400 × 5" },
-    { prompt: "(125 × 4) × (25 × 2)", answer: 25000, strategy: "Nhóm: 500 × 50" },
-    { prompt: "(4800 : 60) × (35 − 15)", answer: 1600, strategy: "Tính từng ngoặc: 80 × 20" },
-    { prompt: "(75 × 12) − (75 × 2)", answer: 750, strategy: "Rút 75 chung: 75 × (12 − 2) = 75 × 10" },
-    { prompt: "(18 × 25) : 2", answer: 225, strategy: "Chia trước nhân sau: (18 : 2) × 25 = 9 × 25" },
-    { prompt: "(3600 : 40) × (25 × 4)", answer: 9000, strategy: "Tính từng ngoặc: 90 × 100" },
-    { prompt: "(150 + 350) × (48 : 12)", answer: 2000, strategy: "Tính từng ngoặc: 500 × 4" },
-    { prompt: "(24 × 50) : 12", answer: 100, strategy: "Chia trước nhân sau: (24 : 12) × 50 = 2 × 50" },
-    { prompt: "45 × 68 + 45 × 31 + 45", answer: 4500, strategy: "Rút 45 chung: 45 × (68 + 31 + 1) = 45 × 100" },
-    { prompt: "38 × 125 − 38 × 24 − 38", answer: 3800, strategy: "Rút 38 chung: 38 × (125 − 24 − 1) = 38 × 100" },
-    { prompt: "(125 × 72) : 9", answer: 1000, strategy: "Nhóm: 125 × (72 : 9) = 125 × 8" },
-    { prompt: "1/4 thế kỷ + 1/2 thế kỷ = ? năm", answer: 75, strategy: "Đổi về năm: 25 + 50 năm" },
-    { prompt: "3 tấn 5 tạ + 2 tấn 5 tạ = ? tấn", answer: 6, strategy: "Nhóm: 3 tấn + 2 tấn + (5 tạ + 5 tạ)" }
+    { prompt: "(125 × 8) × (25 × 4)", answer: 100000, strategy: "Nhóm hai cặp số vàng: (125 × 8 = 1.000) và (25 × 4 = 100)" },
+    { prompt: "(1200 − 400) : (15 + 25)", answer: 20, strategy: "Tính từng ngoặc trước: trừ tròn trăm rồi chia cho tổng tròn chục" },
+    { prompt: "(88 + 12) × (75 − 25)", answer: 5000, strategy: "Tính từng ngoặc trước: tạo tích của hai số tròn chục/trăm" },
+    { prompt: "(2500 − 500) : (100 : 2)", answer: 40, strategy: "Tính từng ngoặc trước: trừ tròn nghìn rồi chia cho thương" },
+    { prompt: "(640 : 8) × (150 : 30)", answer: 400, strategy: "Chia nhẩm trong từng ngoặc trước rồi nhân hai kết quả" },
+    { prompt: "(36 × 25) : 9", answer: 100, strategy: "Chia trước nhân sau: Lấy (36 : 9) trước rồi mới nhân 25" },
+    { prompt: "(450 × 4) : 90", answer: 20, strategy: "Chia trước nhân sau: Lấy (450 : 90) trước rồi mới nhân 4" },
+    { prompt: "(250 + 750) : (125 : 5)", answer: 40, strategy: "Tính từng ngoặc: Cộng tròn nghìn rồi chia cho thương" },
+    { prompt: "(16 × 25) × (15 − 10)", answer: 2000, strategy: "Tách 16 = 4 × 4 để ghép với 25 tạo tròn trăm rồi nhân với hiệu" },
+    { prompt: "(125 × 4) × (25 × 2)", answer: 25000, strategy: "Nhân đôi chia đôi hoặc tính từng ngoặc trước" },
+    { prompt: "(4800 : 60) × (35 − 15)", answer: 1600, strategy: "Tính từng ngoặc trước: chia nhẩm tròn chục rồi nhân với hiệu" },
+    { prompt: "(75 × 12) − (75 × 2)", answer: 750, strategy: "Đặt 75 làm thừa số chung: 75 × (12 − 2)" },
+    { prompt: "(18 × 25) : 2", answer: 225, strategy: "Chia trước nhân sau: Lấy (18 : 2) trước rồi mới nhân 25" },
+    { prompt: "(3600 : 40) × (25 × 4)", answer: 9000, strategy: "Tính từng ngoặc trước: chia nhẩm tròn chục rồi nhân với tích 25 × 4" },
+    { prompt: "(150 + 350) × (48 : 12)", answer: 2000, strategy: "Tính từng ngoặc trước: cộng tròn trăm rồi nhân với thương" },
+    { prompt: "(24 × 50) : 12", answer: 100, strategy: "Chia trước nhân sau: Lấy (24 : 12) trước rồi mới nhân 50" },
+    { prompt: "45 × 68 + 45 × 31 + 45", answer: 4500, strategy: "Đặt 45 làm thừa số chung: 45 × (68 + 31 + 1) để tạo số tròn trăm" },
+    { prompt: "38 × 125 − 38 × 24 − 38", answer: 3800, strategy: "Đặt 38 làm thừa số chung: 38 × (125 − 24 − 1) để tạo số tròn trăm" },
+    { prompt: "(125 × 72) : 9", answer: 1000, strategy: "Nhóm chia trước nhân sau: 125 × (72 : 9) để tạo cặp số vàng" },
+    { prompt: "1/4 thế kỷ + 1/2 thế kỷ = ? năm", answer: 75, strategy: "Quy đổi các phân số của thế kỷ về số năm rồi cộng lại" },
+    { prompt: "3 tấn 5 tạ + 2 tấn 5 tạ = ? tấn", answer: 6, strategy: "Cộng các đơn vị cùng loại: 5 tạ + 5 tạ = 10 tạ = 1 tấn" }
   ];
 
   const level4Types = [
@@ -622,6 +622,7 @@ export class SpeedMathSession {
     this.responseTimes = [];
     this.fastSolveCount = 0;
     this.problemStartTime = null;
+    this.usedHintInCurrentProblem = false;
     this.onTick = onTick || (() => {});
     this.onEnd = onEnd || (() => {});
     this.onScoreChange = onScoreChange || (() => {});
@@ -705,10 +706,16 @@ export class SpeedMathSession {
     this.responseTimes = [];
     this.fastSolveCount = 0;
     this.problemStartTime = null;
+    this.usedHintInCurrentProblem = false;
     this.isRunning = false;
   }
 
+  useHint() {
+    this.usedHintInCurrentProblem = true;
+  }
+
   nextProblem() {
+    this.usedHintInCurrentProblem = false;
     this.currentProblem = generateSpeedMathProblem(this.streak, {
       recentTypes: this.recentTypes,
       recentGroups: this.recentGroups
@@ -741,15 +748,17 @@ export class SpeedMathSession {
     const num = Number(raw);
     const isCorrect = !Number.isNaN(num) && num === this.currentProblem.answer;
 
-    const wasFast = isCorrect && responseTime <= 2.5;
+    const usedHint = Boolean(this.usedHintInCurrentProblem);
+    const wasFast = isCorrect && responseTime <= 2.5 && !usedHint;
 
     if (isCorrect) {
       this.responseTimes.push(responseTime);
       if (wasFast) this.fastSolveCount += 1;
 
       // Cơ chế tự động đẩy độ khó theo tốc độ (Velocity-Adaptive):
-      // Nếu Bách làm đúng thần tốc (< 2.5s) và streak >= 1, cộng thêm 1 streak nữa để nhanh chóng nhảy cấp!
-      const streakIncrement = (wasFast && this.streak >= 1) ? 2 : 1;
+      // Nếu Bách tự giải không cần gợi ý -> cộng chuỗi streak bình thường
+      // Nếu có dùng gợi ý mẹo -> streak không tăng, điểm là điểm hỗ trợ 30 đ để điểm phản ánh năng lực độc lập
+      const streakIncrement = usedHint ? 0 : ((wasFast && this.streak >= 1) ? 2 : 1);
       this.streak += streakIncrement;
       if (this.streak > this.bestStreak) this.bestStreak = this.streak;
       this.correctCount += 1;
@@ -760,7 +769,7 @@ export class SpeedMathSession {
       else if (this.streak >= 5) multiplier = 1.5;
       else if (this.streak >= 3) multiplier = 1.2;
 
-      const points = Math.round(100 * multiplier);
+      const points = usedHint ? 30 : Math.round(100 * multiplier);
       this.score += points;
 
       this.onScoreChange({
@@ -770,7 +779,8 @@ export class SpeedMathSession {
         streak: this.streak,
         problem: this.currentProblem,
         responseTime,
-        wasFast
+        wasFast,
+        usedHint
       });
     } else {
       // Soft streak reset: chỉ lùi 3 streak thay vì về 0 hẳn
