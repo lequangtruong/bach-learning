@@ -98,42 +98,118 @@ export const MEGAPROJECTS = [
   }
 ];
 
-export function getMegaprojectByLevel(levelNumber) {
+export function parseLevelNumber(val) {
+  if (typeof val === "number" && !Number.isNaN(val)) return val;
+  if (typeof val === "string") {
+    const match = val.match(/\d+/);
+    return match ? parseInt(match[0], 10) : NaN;
+  }
+  return NaN;
+}
+
+export function getMegaprojectByLevel(levelInput) {
+  const levelNumber = parseLevelNumber(levelInput);
+  if (Number.isNaN(levelNumber)) return null;
   return MEGAPROJECTS.find(p => levelNumber >= p.levelStart && levelNumber <= p.levelEnd) || null;
 }
 
 export const getMegaprojectForLevel = getMegaprojectByLevel;
 
+export function getCategoryStageStatus(category, completedLevels = []) {
+  const completedNumSet = new Set(
+    (completedLevels || [])
+      .map(parseLevelNumber)
+      .filter(n => !Number.isNaN(n))
+  );
+
+  const rangeMap = {
+    routine: [1, 20],
+    cooking: [21, 40],
+    engineering: [41, 60],
+    mission: [61, 80],
+    medical: [81, 100],
+    computing: [101, 120],
+    ecology: [121, 140],
+    architecture: [141, 160],
+    detective: [161, 180],
+    megaproject: [181, 200]
+  };
+
+  const [start, end] = rangeMap[category] || [1, 20];
+  const step = Math.round((end - start + 1) / 4);
+
+  const stages = [
+    { start: start, end: start + step - 1 },
+    { start: start + step, end: start + 2 * step - 1 },
+    { start: start + 2 * step, end: start + 3 * step - 1 },
+    { start: start + 3 * step, end: end }
+  ];
+
+  const checkStage = ({ start: s, end: e }) => {
+    let count = 0;
+    const total = e - s + 1;
+    for (let l = s; l <= e; l++) {
+      if (completedNumSet.has(l)) count++;
+    }
+    return {
+      completed: count,
+      total,
+      isDone: count === total,
+      hasStarted: count > 0
+    };
+  };
+
+  return {
+    s1: checkStage(stages[0]),
+    s2: checkStage(stages[1]),
+    s3: checkStage(stages[2]),
+    s4: checkStage(stages[3])
+  };
+}
+
 export function getMegaprojectProgress(projectId, completedLevels = []) {
   const project = MEGAPROJECTS.find(p => p.id === projectId);
-  if (!project) return { completedCount: 0, totalCount: 0, percent: 0, stageProgress: [] };
+  if (!project) return { completedCount: 0, totalCount: 0, percent: 0, stageProgress: [], stageStatus: null };
 
   const totalCount = project.levelEnd - project.levelStart + 1;
-  const completedSet = new Set(completedLevels.map(Number));
+  const completedNumSet = new Set(
+    (completedLevels || [])
+      .map(parseLevelNumber)
+      .filter(n => !Number.isNaN(n))
+  );
 
   let completedCount = 0;
   for (let l = project.levelStart; l <= project.levelEnd; l++) {
-    if (completedSet.has(l)) completedCount++;
+    if (completedNumSet.has(l)) completedCount++;
   }
 
   const percent = Math.round((completedCount / totalCount) * 100);
 
   const stageProgress = project.stages.map(st => {
-    const stCompleted = st.levels.filter(lvl => completedSet.has(lvl)).length;
+    const stCompleted = st.levels.filter(lvl => completedNumSet.has(lvl)).length;
     return {
       ...st,
       completed: stCompleted,
       total: st.levels.length,
-      isFullyComplete: stCompleted === st.levels.length
+      isFullyComplete: stCompleted === st.levels.length,
+      hasStarted: stCompleted > 0
     };
   });
+
+  const stageStatus = {
+    s1: { isDone: stageProgress[0]?.isFullyComplete ?? false, hasStarted: stageProgress[0]?.hasStarted ?? false, completed: stageProgress[0]?.completed ?? 0, total: stageProgress[0]?.total ?? 5 },
+    s2: { isDone: stageProgress[1]?.isFullyComplete ?? false, hasStarted: stageProgress[1]?.hasStarted ?? false, completed: stageProgress[1]?.completed ?? 0, total: stageProgress[1]?.total ?? 5 },
+    s3: { isDone: stageProgress[2]?.isFullyComplete ?? false, hasStarted: stageProgress[2]?.hasStarted ?? false, completed: stageProgress[2]?.completed ?? 0, total: stageProgress[2]?.total ?? 5 },
+    s4: { isDone: stageProgress[3]?.isFullyComplete ?? false, hasStarted: stageProgress[3]?.hasStarted ?? false, completed: stageProgress[3]?.completed ?? 0, total: stageProgress[3]?.total ?? 5 }
+  };
 
   return {
     project,
     completedCount,
     totalCount,
     percent,
-    stageProgress
+    stageProgress,
+    stageStatus
   };
 }
 

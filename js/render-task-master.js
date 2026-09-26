@@ -4,7 +4,7 @@ import { TASK_CATEGORIES } from "./task-master-levels.js";
 import { getDifficultyMeta } from "./render-games.js";
 import { recordGameOutcome } from "./adaptive-engine.js";
 import { checkAndAwardBadges, showBadgeCelebration } from "./badge-system.js";
-import { getMegaprojectByLevel, getMegaprojectProgress, renderCategoryVisual, renderMoonBaseVisual } from "./task-master-megaprojects.js";
+import { getMegaprojectByLevel, getMegaprojectProgress, getCategoryStageStatus, renderCategoryVisual, renderMoonBaseVisual } from "./task-master-megaprojects.js";
 
 let activeTaskMasterSession = null;
 const esc = str => String(str ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -68,8 +68,8 @@ export function renderTaskMasterView({ state, appRoot, saveLocal, levelIndex = 0
   const cat = TASK_CATEGORIES[level.category] || TASK_CATEGORIES.routine;
   const diffMeta = getDifficultyMeta(level.difficulty);
   const records = state?.db?.gameRecords?.taskMaster || { stars: 0, completedLevels: [], levelStars: {} };
-  const isCompleted = records.completedLevels?.includes(level.id);
-  const earnedStars = records.levelStars?.[level.id] || 0;
+  const isCompleted = records.completedLevels?.includes(level.id) || records.completedLevels?.includes(level.level);
+  const earnedStars = records.levelStars?.[level.id] || records.levelStars?.[level.level] || 0;
 
   // Kiểm tra xem màn này có thuộc Đại Dự Án nào không
   const megaproject = getMegaprojectByLevel(level.level);
@@ -81,7 +81,61 @@ export function renderTaskMasterView({ state, appRoot, saveLocal, levelIndex = 0
     .map((lvl, idx) => ({ lvl, idx }))
     .filter(({ lvl }) => lvl.category === currentCat);
   const catTotalCount = currentCatLevels.length;
-  const catCompletedCount = currentCatLevels.filter(({ lvl }) => records.completedLevels?.includes(lvl.id)).length;
+  const catCompletedCount = currentCatLevels.filter(({ lvl }) => records.completedLevels?.includes(lvl.id) || records.completedLevels?.includes(lvl.level)).length;
+
+  function renderBannerHtml() {
+    const timelineState = {
+      currentLevel: level,
+      timeline: session.timeline,
+      isSimulating: session.isSimulating,
+      simulationStep: session.simulationStep,
+      simulationResult: session.simulationResult
+    };
+
+    if (megaproject) {
+      const stageStatus = megaprojectProgress.stageStatus;
+      return `
+        <div class="tm-megaproject-banner" style="background:${megaproject.bg}; border:2px solid ${megaproject.color}; border-radius:14px; padding:14px 18px; margin:16px 0">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px">
+            <div>
+              <span style="font-size:0.85rem; font-weight:800; color:${megaproject.color}">${megaproject.badge}</span>
+              <h4 style="margin:2px 0 4px; font-size:1.15rem; color:#1e293b">${megaproject.icon} ${esc(megaproject.title)}</h4>
+              <p style="margin:0; font-size:0.86rem; color:#475569">${esc(megaproject.description)}</p>
+            </div>
+            <div style="text-align:right">
+              <span style="font-size:1.2rem; font-weight:800; color:${megaproject.color}">${megaprojectProgress.percent}%</span>
+              <div style="font-size:0.78rem; font-weight:700; color:#64748b">Hoàn thành: ${megaprojectProgress.completedCount}/${megaprojectProgress.totalCount} màn</div>
+            </div>
+          </div>
+          <!-- Đồ họa trực quan 2.5D của Đại Dự Án kèm dải tiến trình kế hoạch thời gian thực -->
+          <div style="margin-top:14px">
+            ${renderCategoryVisual(level.category, megaprojectProgress.completedCount, megaprojectProgress.totalCount, stageStatus, timelineState)}
+          </div>
+        </div>
+      `;
+    } else {
+      const catStageStatus = getCategoryStageStatus(level.category, records.completedLevels || []);
+      return `
+        <div class="tm-theme-banner" style="background:${cat.bg}; border:2px solid ${cat.color}; border-radius:14px; padding:14px 18px; margin:16px 0">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px">
+            <div>
+              <span style="font-size:0.85rem; font-weight:800; color:${cat.color}">${cat.badge}</span>
+              <h4 style="margin:2px 0 4px; font-size:1.15rem; color:#1e293b">${cat.icon} ${esc(cat.name)}</h4>
+              <p style="margin:0; font-size:0.86rem; color:#475569">${esc(cat.description)}</p>
+            </div>
+            <div style="text-align:right">
+              <span style="font-size:1.2rem; font-weight:800; color:${cat.color}">${Math.round((catCompletedCount / (catTotalCount || 1)) * 100)}%</span>
+              <div style="font-size:0.78rem; font-weight:700; color:#64748b">Hoàn thành: ${catCompletedCount}/${catTotalCount} màn</div>
+            </div>
+          </div>
+          <!-- Đồ họa trực quan 2.5D của Chủ Đề kèm dải tiến trình kế hoạch thời gian thực -->
+          <div style="margin-top:14px">
+            ${renderCategoryVisual(level.category, catCompletedCount, catTotalCount, catStageStatus, timelineState)}
+          </div>
+        </div>
+      `;
+    }
+  }
 
   appRoot.innerHTML = `
     <div style="margin-bottom:20px; display:flex; gap:12px; align-items:center; flex-wrap:wrap">
@@ -154,45 +208,10 @@ export function renderTaskMasterView({ state, appRoot, saveLocal, levelIndex = 0
         </div>
       </div>
 
-      <!-- Banner Đại Dự Án (Nếu thuộc 1 trong 5 Đại Dự Án) -->
-      ${megaproject ? `
-        <div class="tm-megaproject-banner" style="background:${megaproject.bg}; border:2px solid ${megaproject.color}; border-radius:14px; padding:14px 18px; margin:16px 0">
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px">
-            <div>
-              <span style="font-size:0.85rem; font-weight:800; color:${megaproject.color}">${megaproject.badge}</span>
-              <h4 style="margin:2px 0 4px; font-size:1.15rem; color:#1e293b">${megaproject.icon} ${esc(megaproject.title)}</h4>
-              <p style="margin:0; font-size:0.86rem; color:#475569">${esc(megaproject.description)}</p>
-            </div>
-            <div style="text-align:right">
-              <span style="font-size:1.2rem; font-weight:800; color:${megaproject.color}">${megaprojectProgress.percent}%</span>
-              <div style="font-size:0.78rem; font-weight:700; color:#64748b">Hoàn thành: ${megaprojectProgress.completedCount}/${megaprojectProgress.totalCount} màn</div>
-            </div>
-          </div>
-          <!-- Đồ họa trực quan 2.5D của Đại Dự Án -->
-          <div style="margin-top:14px">
-            ${renderCategoryVisual(level.category, megaprojectProgress.completedCount, megaprojectProgress.totalCount)}
-          </div>
-        </div>
-      ` : `
-        <!-- Banner Minh Họa Trực Quan Cho Các Chặng Thường & Thám Tử CSI -->
-        <div class="tm-theme-banner" style="background:${cat.bg}; border:2px solid ${cat.color}; border-radius:14px; padding:14px 18px; margin:16px 0">
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px">
-            <div>
-              <span style="font-size:0.85rem; font-weight:800; color:${cat.color}">${cat.badge}</span>
-              <h4 style="margin:2px 0 4px; font-size:1.15rem; color:#1e293b">${cat.icon} ${esc(cat.name)}</h4>
-              <p style="margin:0; font-size:0.86rem; color:#475569">${esc(cat.description)}</p>
-            </div>
-            <div style="text-align:right">
-              <span style="font-size:1.2rem; font-weight:800; color:${cat.color}">${Math.round((catCompletedCount / (catTotalCount || 1)) * 100)}%</span>
-              <div style="font-size:0.78rem; font-weight:700; color:#64748b">Hoàn thành: ${catCompletedCount}/${catTotalCount} màn</div>
-            </div>
-          </div>
-          <!-- Đồ họa trực quan 2.5D của Chủ Đề -->
-          <div style="margin-top:14px">
-            ${renderCategoryVisual(level.category, catCompletedCount, catTotalCount)}
-          </div>
-        </div>
-      `}
+      <!-- Banner Minh Họa Trực Quan Kèm Dải Tiến Trình Thời Gian Thực -->
+      <div id="tmVisualBannerSlot">
+        ${renderBannerHtml()}
+      </div>
 
       <!-- Mô tả nhiệm vụ & Lời khuyên tư duy trước khi làm -->
       <div class="tm-mission-card" style="background:${cat.bg}; border-left:4px solid ${cat.color}; padding:14px 18px; border-radius:12px; margin:16px 0">
@@ -215,6 +234,12 @@ export function renderTaskMasterView({ state, appRoot, saveLocal, levelIndex = 0
   function renderLevelContent() {
     const area = document.getElementById("tmInteractiveArea");
     if (!area) return;
+
+    // Cập nhật Banner Đồ Họa 2.5D phản ánh tức thời từng bước Bách đang xếp trong timeline
+    const bannerSlot = document.getElementById("tmVisualBannerSlot");
+    if (bannerSlot) {
+      bannerSlot.innerHTML = renderBannerHtml();
+    }
 
     const placedTaskIds = new Set(session.timeline);
     const availablePool = session.availableTasks || [];

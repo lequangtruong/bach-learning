@@ -16,7 +16,11 @@ import {
 import { 
   MEGAPROJECTS, 
   renderMoonBaseVisual, 
-  getMegaprojectForLevel 
+  getMegaprojectForLevel,
+  getMegaprojectProgress,
+  getCategoryStageStatus,
+  renderEngineeringVisual,
+  renderCategoryVisual
 } from "../js/task-master-megaprojects.js";
 
 import { renderTaskMasterView } from "../js/render-task-master.js";
@@ -668,4 +672,56 @@ test("task-master: 4 medical first-aid P1 fixes adhere to Red Cross, AHA, and NH
   const lvl93Distractor = lvl93.distractors.find(d => d.id === "d1");
   assert.ok(lvl93Distractor, "Level 93 must have distractor d1 warning against inducing vomiting or taking charcoal");
   assert.ok(lvl93Distractor.failReason.includes("NHS"), "Distractor failReason must cite NHS warning against self-induced vomiting");
+});
+
+// -------------------------------------------------------------
+// 10. KIỂM THỬ NÂNG CẤP SƯ PHẠM ĐỒ HỌA & ĐẠI DỰ ÁN (P1 & P2 FIXES)
+// -------------------------------------------------------------
+test("task-master: pedagogical fixes for visual diagrams, stage-specific tracking, and live blueprint ribbon", () => {
+  // P1: Đại dự án nhận diện chính xác ID dạng chuỗi 'tm-81' và tăng tiến độ
+  const resEmergency = getMegaprojectProgress("emergency-hospital", ["tm-81", "tm-82", "tm-83"]);
+  assert.equal(resEmergency.completedCount, 3, "Megaproject must count completed levels from string IDs like 'tm-81'");
+  assert.equal(resEmergency.percent, 15, "3 out of 20 levels must equal 15%");
+  assert.equal(resEmergency.stageStatus.s1.completed, 3);
+  assert.equal(resEmergency.stageStatus.s1.isDone, false);
+  assert.equal(resEmergency.stageStatus.s1.hasStarted, true);
+
+  // P2: Tiến độ đồ họa chuẩn xác theo từng giai đoạn (hoàn thành giai đoạn 4 trước không làm sáng giai đoạn 1)
+  const resMoonStage4 = getMegaprojectProgress("moon-base", ["tm-196", "tm-197", "tm-198", "tm-199", "tm-200"]);
+  assert.equal(resMoonStage4.stageStatus.s4.isDone, true, "Stage 4 (196-200) must be marked done");
+  assert.equal(resMoonStage4.stageStatus.s1.isDone, false, "Stage 1 (181-185) must NOT be marked done");
+  assert.equal(resMoonStage4.stageStatus.s1.hasStarted, false, "Stage 1 has not started");
+
+  const svgStage4Only = renderMoonBaseVisual(5, 20, resMoonStage4.stageStatus);
+  // Khi Giai đoạn 4 xong thì phần Vòm Sinh Quyển phải sáng (opacity 1)
+  assert.ok(svgStage4Only.includes('opacity="1"'), "Completed stage must be fully visible (opacity 1)");
+  // Giai đoạn 1 chưa làm thì phải ở trạng thái chờ mờ (opacity 0.15)
+  assert.ok(svgStage4Only.includes('opacity="0.15"'), "Unstarted stage must remain dim (opacity 0.15)");
+
+  // P2: Hình Cặp Bánh Răng Ăn Khớp (Gear Meshing with 2 gears & motion transmission)
+  const svgEng = renderEngineeringVisual(0, 20);
+  assert.ok(svgEng.includes("Cặp Bánh Răng Ăn Khớp"), "Must render interlocking gear pair with 2 gears");
+  assert.ok(svgEng.includes("Quay Thuận ➔ Truyền Quay Ngược"), "Must explain motion transmission direction");
+
+  // P2: Hình Mạch Điện Kín (Closed Circuit Loop with positive, negative, switch, lamp, and return wire)
+  assert.ok(svgEng.includes("Mạch Điện Kín (Đèn Sáng)"), "Must depict closed electric circuit");
+  assert.ok(svgEng.includes("Công tắc ĐÓNG"), "Must include closed switch");
+  assert.ok(svgEng.includes("+"), "Must label positive terminal");
+  assert.ok(svgEng.includes("-"), "Must label negative terminal");
+  assert.ok(svgEng.includes("Cực (-)"), "Must explain circuit return to negative terminal");
+
+  // Pedagogy: Dải tiến trình kế hoạch thời gian thực (Live Blueprint Step Tracker)
+  const mockLevel = getLevelById("tm-81");
+  const timelineState = {
+    currentLevel: mockLevel,
+    timeline: [mockLevel.tasks[0].id, mockLevel.tasks[1].id],
+    isSimulating: false,
+    simulationStep: -1,
+    simulationResult: null
+  };
+  const svgLive = renderCategoryVisual(mockLevel.category, 0, 20, null, timelineState);
+  assert.ok(svgLive.includes("tm-live-blueprint-ribbon"), "Must render live blueprint ribbon inside SVG");
+  assert.ok(svgLive.includes("Bước 1"), "Must display Step 1 in live tracker");
+  assert.ok(svgLive.includes("Bước 2"), "Must display Step 2 in live tracker");
+  assert.ok(svgLive.includes("Chờ xếp"), "Unplaced slots must be marked as waiting");
 });
