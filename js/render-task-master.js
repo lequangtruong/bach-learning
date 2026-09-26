@@ -75,11 +75,17 @@ export function renderTaskMasterView({ state, appRoot, saveLocal, levelIndex = 0
   const megaproject = getMegaprojectByLevel(level.level);
   const megaprojectProgress = megaproject ? getMegaprojectProgress(megaproject.id, records.completedLevels || []) : null;
 
+  // Dữ liệu chặng hiện tại phục vụ bộ chọn 2 tầng
+  const currentCat = level.category;
+  const currentCatLevels = TASK_MASTER_LEVELS
+    .map((lvl, idx) => ({ lvl, idx }))
+    .filter(({ lvl }) => lvl.category === currentCat);
+
   appRoot.innerHTML = `
     <div style="margin-bottom:20px; display:flex; gap:12px; align-items:center; flex-wrap:wrap">
       <a href="#games" class="text-button" style="display:inline-flex; align-items:center; gap:6px; font-weight:700">← Sảnh Trò Chơi</a>
       <span style="color:var(--line)">•</span>
-      <span style="font-weight:600; color:var(--muted)">Bậc Thầy Kế Hoạch (Task Master) · 200 Màn Chơi & 5 Đại Dự Án</span>
+      <span style="font-weight:600; color:var(--muted)">Bậc Thầy Kế Hoạch (Task Master) · ${TASK_MASTER_LEVELS.length} Màn Chơi & 5 Đại Dự Án</span>
     </div>
 
     <div class="task-master-container" id="taskMasterContainer">
@@ -107,24 +113,41 @@ export function renderTaskMasterView({ state, appRoot, saveLocal, levelIndex = 0
 
         <div class="tm-nav-controls">
           <button id="btnPrevLevel" class="ghost-button" style="padding:8px 12px" ${session.levelIndex === 0 ? "disabled" : ""}>
-            ← Màn trước
+            ← Trước
           </button>
-          <select id="tmLevelSelector" class="form-select" style="padding:8px 14px; font-weight:700; border-radius:10px; border:1px solid var(--line); font-size:0.9rem; max-width:280px">
+
+          <!-- Nút mở Bản Đồ Màn Chơi Toàn Cảnh (Grid) -->
+          <button id="btnOpenLevelMap" class="primary-button" style="padding:8px 14px; font-size:0.86rem; font-weight:800; display:inline-flex; align-items:center; gap:6px; background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%)">
+            🗺️ Bản Đồ ${TASK_MASTER_LEVELS.length} Màn
+          </button>
+
+          <!-- Bộ chọn 2 tầng: Tầng 1 - Chọn Chủ Đề / Chặng -->
+          <select id="tmCategorySelector" class="form-select" style="padding:8px 10px; font-weight:700; border-radius:10px; border:1px solid var(--line); font-size:0.86rem; max-width:170px" title="Chọn Chủ Đề / Chặng">
             ${Object.values(TASK_CATEGORIES).map(c => `
-              <optgroup label="${c.badge} (${c.range})">
-                ${TASK_MASTER_LEVELS
-                  .map((lvl, idx) => ({ lvl, idx }))
-                  .filter(({ lvl }) => lvl.category === c.id)
-                  .map(({ lvl, idx }) => `
-                    <option value="${idx}" ${idx === session.levelIndex ? "selected" : ""}>
-                      Màn ${idx + 1}: ${esc(lvl.title)} ${records.completedLevels?.includes(lvl.id) ? "★" : ""}
-                    </option>
-                  `).join("")}
-              </optgroup>
+              <option value="${c.id}" ${c.id === currentCat ? "selected" : ""}>
+                ${c.badge} (${c.range})
+              </option>
             `).join("")}
           </select>
+
+          <!-- Bộ chọn 2 tầng: Tầng 2 - Chọn Màn trong Chủ Đề này -->
+          <select id="tmSubLevelSelector" class="form-select" style="padding:8px 10px; font-weight:700; border-radius:10px; border:1px solid var(--line); font-size:0.86rem; max-width:180px" title="Chọn Màn Trong Chủ Đề Này">
+            ${currentCatLevels.map(({ lvl, idx }) => `
+              <option value="${idx}" ${idx === session.levelIndex ? "selected" : ""}>
+                Màn ${idx + 1}: ${esc(lvl.title)} ${records.completedLevels?.includes(lvl.id) ? "★" : ""}
+              </option>
+            `).join("")}
+          </select>
+
+          <!-- Select ẩn duy trì 100% tương thích kiểm thử và hợp đồng API cũ -->
+          <select id="tmLevelSelector" style="display:none">
+            ${TASK_MASTER_LEVELS.map((lvl, idx) => `
+              <option value="${idx}" ${idx === session.levelIndex ? "selected" : ""}>Màn ${idx + 1}</option>
+            `).join("")}
+          </select>
+
           <button id="btnNextLevel" class="ghost-button" style="padding:8px 12px" ${session.levelIndex === TASK_MASTER_LEVELS.length - 1 ? "disabled" : ""}>
-            Màn sau →
+            Sau →
           </button>
         </div>
       </div>
@@ -387,6 +410,42 @@ export function renderTaskMasterView({ state, appRoot, saveLocal, levelIndex = 0
           <strong>Góc nhìn Bậc Thầy:</strong> ${esc(level.lesson || "Suy nghĩ trước khi hành động giúp tiết kiệm 80% thời gian sửa sai lầm.")}
         </div>
       </div>
+
+      <!-- 4. MODAL BẢN ĐỒ 200 MÀN CHƠI TOÀN CẢNH (LEVEL MAP MODAL) -->
+      <div id="tmLevelMapModal" class="tm-level-map-overlay" style="display:none">
+        <div class="tm-level-map-dialog">
+          <div class="tm-map-header">
+            <div>
+              <div style="font-size:0.75rem; font-weight:800; color:var(--primary); text-transform:uppercase; letter-spacing:0.5px">Lựa Chọn Màn Nhanh & Trực Quan</div>
+              <h3 style="margin:2px 0; font-size:1.25rem; font-weight:900; color:#0f172a">🗺️ Bản Đồ Bậc Thầy Kế Hoạch</h3>
+              <div style="font-size:0.82rem; color:var(--muted); font-weight:600">
+                ⭐ ${records.stars || 0} sao · Đã vượt: <strong>${records.completedLevels?.length || 0}</strong> / ${TASK_MASTER_LEVELS.length} màn
+              </div>
+            </div>
+            <button id="btnCloseLevelMap" class="ghost-button" style="font-size:1.3rem; padding:4px 12px; border-radius:10px; line-height:1">✕</button>
+          </div>
+
+          <!-- Thanh Tabs 10 Chủ Đề -->
+          <div class="tm-cat-tab-bar" id="tmMapCatTabs">
+            ${Object.values(TASK_CATEGORIES).map(c => {
+              const catLvls = TASK_MASTER_LEVELS.filter(l => l.category === c.id);
+              const catDone = catLvls.filter(l => records.completedLevels?.includes(l.id)).length;
+              const isActive = c.id === currentCat;
+              return `
+                <button type="button" class="tm-cat-tab ${isActive ? "is-active" : ""}" data-cat-id="${c.id}">
+                  <span>${c.badge}</span>
+                  <span style="font-size:0.75rem; opacity:0.85">(${catDone}/${catLvls.length})</span>
+                </button>
+              `;
+            }).join("")}
+          </div>
+
+          <!-- Lưới 20 Màn Chơi của Chủ Đề -->
+          <div class="tm-grid-container">
+            <div class="tm-grid-cards" id="tmMapGridCards"></div>
+          </div>
+        </div>
+      </div>
     `;
 
     // Gắn sự kiện cho các nút tương tác
@@ -394,7 +453,7 @@ export function renderTaskMasterView({ state, appRoot, saveLocal, levelIndex = 0
   }
 
   function wireEventListeners() {
-    // 1. Chuyển màn chơi
+    // 1. Chuyển màn chơi: Các nút điều hướng
     const prevBtn = document.getElementById("btnPrevLevel");
     if (prevBtn) prevBtn.onclick = () => {
       session.prevLevel();
@@ -407,12 +466,113 @@ export function renderTaskMasterView({ state, appRoot, saveLocal, levelIndex = 0
       renderTaskMasterView({ state, appRoot, saveLocal, levelIndex: session.levelIndex });
     };
 
+    // Bộ chọn 2 tầng: Chọn Chặng (Category)
+    const catSelector = document.getElementById("tmCategorySelector");
+    if (catSelector) {
+      catSelector.onchange = (e) => {
+        const targetCatId = e.target.value;
+        const firstLvlIdx = TASK_MASTER_LEVELS.findIndex(l => l.category === targetCatId);
+        if (firstLvlIdx !== -1) {
+          session.setLevel(firstLvlIdx);
+          renderTaskMasterView({ state, appRoot, saveLocal, levelIndex: session.levelIndex });
+        }
+      };
+    }
+
+    // Bộ chọn 2 tầng: Chọn Màn trong Chặng hiện tại
+    const subSelector = document.getElementById("tmSubLevelSelector");
+    if (subSelector) {
+      subSelector.onchange = (e) => {
+        session.setLevel(parseInt(e.target.value, 10));
+        renderTaskMasterView({ state, appRoot, saveLocal, levelIndex: session.levelIndex });
+      };
+    }
+
+    // Đồng bộ select cũ
     const selector = document.getElementById("tmLevelSelector");
     if (selector) {
       selector.onchange = (e) => {
         session.setLevel(parseInt(e.target.value, 10));
         renderTaskMasterView({ state, appRoot, saveLocal, levelIndex: session.levelIndex });
       };
+    }
+
+    // Modal Bản Đồ Màn Chơi Toàn Cảnh
+    const mapModal = document.getElementById("tmLevelMapModal");
+    const openMapBtn = document.getElementById("btnOpenLevelMap");
+    const closeMapBtn = document.getElementById("btnCloseLevelMap");
+
+    function populateMapGrid(targetCatId) {
+      const gridContainer = document.getElementById("tmMapGridCards");
+      if (!gridContainer) return;
+      const catLvls = TASK_MASTER_LEVELS
+        .map((lvl, idx) => ({ lvl, idx }))
+        .filter(({ lvl }) => lvl.category === targetCatId);
+
+      gridContainer.innerHTML = catLvls.map(({ lvl, idx }) => {
+        const isLvlDone = records.completedLevels?.includes(lvl.id);
+        const stars = records.levelStars?.[lvl.id] || (isLvlDone ? 1 : 0);
+        const isCurrent = idx === session.levelIndex;
+        const isAnchor = lvl.anchor != null;
+        const isDual = lvl.parallelTracks != null;
+        const isBoss = lvl.difficulty >= 4;
+
+        return `
+          <div class="tm-tile-card ${isCurrent ? "is-active" : ""} ${isLvlDone ? "is-completed" : ""}" data-map-level-idx="${idx}" tabindex="0">
+            <div class="tm-tile-number">
+              Màn ${idx + 1}
+              ${isAnchor ? "🔒" : ""}
+              ${isDual ? "⚡" : ""}
+              ${isBoss ? "👑" : ""}
+            </div>
+            <div class="tm-tile-icon">${lvl.icon || "📋"}</div>
+            <div class="tm-tile-title" title="${esc(lvl.title)}">${esc(lvl.title)}</div>
+            <div class="tm-tile-stars">
+              ${isLvlDone ? "⭐".repeat(stars) : "<span style='color:#94a3b8; font-size:0.7rem'>Chưa chơi</span>"}
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      gridContainer.querySelectorAll("[data-map-level-idx]").forEach(tile => {
+        tile.onclick = () => {
+          const idx = parseInt(tile.dataset.mapLevelIdx, 10);
+          if (!isNaN(idx)) {
+            session.setLevel(idx);
+            renderTaskMasterView({ state, appRoot, saveLocal, levelIndex: session.levelIndex });
+          }
+        };
+      });
+    }
+
+    if (openMapBtn && mapModal) {
+      openMapBtn.onclick = () => {
+        mapModal.style.display = "flex";
+        populateMapGrid(currentCat);
+      };
+    }
+
+    if (closeMapBtn && mapModal) {
+      closeMapBtn.onclick = () => {
+        mapModal.style.display = "none";
+      };
+    }
+
+    if (mapModal) {
+      mapModal.onclick = (e) => {
+        if (e.target === mapModal) {
+          mapModal.style.display = "none";
+        }
+      };
+
+      const catTabs = mapModal.querySelectorAll(".tm-cat-tab");
+      catTabs.forEach(tab => {
+        tab.onclick = () => {
+          catTabs.forEach(t => t.classList.remove("is-active"));
+          tab.classList.add("is-active");
+          populateMapGrid(tab.dataset.catId);
+        };
+      });
     }
 
     const modalNextBtn = document.getElementById("btnNextLevelModal");
