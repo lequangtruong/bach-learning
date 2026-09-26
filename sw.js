@@ -2,7 +2,7 @@
 // Chỉ cache tài nguyên tĩnh same-origin thuộc danh mục cho phép.
 // TUYỆT ĐỐI KHÔNG cache API (/api/*), Authorization header, Google APIs, token hoặc DB riêng tư.
 
-const CACHE_NAME = "bach-learning-v30";
+const CACHE_NAME = "bach-learning-v41";
 const STATIC_ASSETS = [
   "./",
   "index.html",
@@ -11,6 +11,7 @@ const STATIC_ASSETS = [
   "styles/components.css",
   "styles/lessons.css",
   "styles/responsive.css",
+  "styles/games.css",
   "public-config.js",
   "app.js",
   "js/core.js",
@@ -18,7 +19,50 @@ const STATIC_ASSETS = [
   "js/drive-sync.js",
   "js/study-timer.js",
   "js/touch-numpad.js",
+  "js/keyboard-adapt.js",
   "js/render-views.js",
+  "js/render-games.js",
+  "js/render-balance-scale.js",
+  "js/render-make-24.js",
+  "js/speed-math.js",
+  "js/speed-math-generators.js",
+  "js/spot-the-bug.js",
+  "js/spot-the-bug-cases.js",
+  "js/bar-model-studio.js",
+  "js/bar-model-challenges.js",
+  "js/balance-scale.js",
+  "js/balance-scale-challenges-part1.js",
+  "js/balance-scale-challenges-part2.js",
+  "js/balance-scale-challenges-part3.js",
+  "js/balance-scale-challenges.js",
+  "js/balance-scale-dual-challenges.js",
+  "js/balance-scale-detective.js",
+  "js/make-24.js",
+  "js/make-24-bank-part1.js",
+  "js/make-24-bank-part2.js",
+  "js/make-24-bank.js",
+  "js/spatial-3d.js",
+  "js/spatial-3d-challenges-part1.js",
+  "js/spatial-3d-challenges-part2.js",
+  "js/spatial-3d-challenges.js",
+  "js/render-spatial-3d.js",
+  "js/logic-grid.js",
+  "js/logic-grid-cases-part1.js",
+  "js/logic-grid-cases-part2.js",
+  "js/logic-grid-cases.js",
+  "js/render-logic-grid.js",
+  "js/rush-hour.js",
+  "js/rush-hour-boards-part1.js",
+  "js/rush-hour-boards-part2.js",
+  "js/rush-hour-boards.js",
+  "js/render-rush-hour.js",
+  "js/chimp-memory.js",
+  "js/render-chimp-memory.js",
+  "js/adaptive-engine.js",
+  "js/badge-system.js",
+  "js/tangram-puzzles.js",
+  "js/tangram.js",
+  "js/render-tangram.js",
   "js/voice-input.js",
   "js/ai-client.js",
   "data/curriculum-factory.js",
@@ -90,6 +134,12 @@ if (typeof self !== "undefined") self.addEventListener("activate", event => {
       );
     }).then(() => self.clients.claim())
   );
+});
+
+if (typeof self !== "undefined") self.addEventListener("message", event => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
 });
 
 if (typeof self !== "undefined") self.addEventListener("fetch", event => {

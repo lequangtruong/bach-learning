@@ -3,6 +3,17 @@ import assert from "node:assert/strict";
 import { generateSpeedMathProblem, SpeedMathSession } from "../js/speed-math.js";
 import { BarModelStudioState, BAR_MODEL_CHALLENGES, BAR_MODEL_LEVELS } from "../js/bar-model-studio.js";
 import { SpotTheBugSession, BUG_CASES, BUG_TOPICS } from "../js/spot-the-bug.js";
+import { 
+  BalanceScaleSession, 
+  BALANCE_SCALE_CHALLENGES, 
+  BALANCE_SCALE_LEVELS,
+  DualScaleSession,
+  DUAL_SCALE_CHALLENGES,
+  DetectiveScaleSession,
+  DETECTIVE_PUZZLES
+} from "../js/balance-scale.js";
+import { Make24Session, MAKE_24_BANK, evaluateArithmeticTokens } from "../js/make-24.js";
+import { renderGamesHub, renderBalanceScaleView, renderMake24View } from "../js/render-games.js";
 import { createEmptyDatabase, validateDatabasePayload } from "../data/data-core.js";
 
 test("games: generateSpeedMathProblem produces valid problems across levels", () => {
@@ -770,6 +781,861 @@ test("games: daily UI integration: Chặng 2 and Chặng 3 render daily tasks, d
   assert.ok(appHtml.includes("Vụ án 2 / 2"));
   assert.ok(appHtml.includes("Vụ 2 (Thử thách)"));
 });
+
+test("games: modular file separation works cleanly and preserves all exports", async () => {
+  const barChallengesMod = await import("../js/bar-model-challenges.js");
+  const barStudioMod = await import("../js/bar-model-studio.js");
+  assert.equal(barChallengesMod.BAR_MODEL_CHALLENGES.length, 120);
+  assert.equal(barChallengesMod.BAR_MODEL_LEVELS.length, 9);
+  assert.equal(barStudioMod.BAR_MODEL_CHALLENGES, barChallengesMod.BAR_MODEL_CHALLENGES);
+  assert.equal(barStudioMod.BAR_MODEL_LEVELS, barChallengesMod.BAR_MODEL_LEVELS);
+  assert.equal(typeof barStudioMod.BarModelStudioState, "function");
+  assert.equal(typeof barStudioMod.getNextSmartChallengeIndex, "function");
+
+  const bugCasesMod = await import("../js/spot-the-bug-cases.js");
+  const bugMod = await import("../js/spot-the-bug.js");
+  assert.equal(bugCasesMod.BUG_CASES.length, 120);
+  assert.equal(bugCasesMod.BUG_TOPICS.length, 12);
+  assert.equal(bugMod.BUG_CASES, bugCasesMod.BUG_CASES);
+  assert.equal(bugMod.BUG_TOPICS, bugCasesMod.BUG_TOPICS);
+  assert.equal(typeof bugMod.SpotTheBugSession, "function");
+
+  const mathGenMod = await import("../js/speed-math-generators.js");
+  const speedMathMod = await import("../js/speed-math.js");
+  assert.equal(typeof mathGenMod.generateOlympicUnitProblem, "function");
+  assert.equal(typeof mathGenMod.generateMultiDivComposite, "function");
+  assert.equal(typeof speedMathMod.generateSpeedMathProblem, "function");
+  assert.equal(typeof speedMathMod.SpeedMathSession, "function");
+  assert.ok(speedMathMod.SPEED_MATH_GROUPS);
+});
+
+test("games: speed-math tracks response time, grants velocity bonus, and computes adaptive difficulty boost", async () => {
+  const { SpeedMathSession } = await import("../js/speed-math.js");
+
+  let lastEndResult = null;
+  const session = new SpeedMathSession({
+    onEnd: (stats) => {
+      lastEndResult = stats;
+    }
+  });
+
+  session.start();
+  assert.equal(session.isRunning, true);
+  assert.equal(session.streak, 0);
+
+  // Giả lập câu 1: giải trong 1.5s (Thần tốc <= 2.5s)
+  session.problemStartTime = Date.now() - 1500;
+  const ans1 = session.currentProblem.answer;
+  const r1 = session.submitAnswer(String(ans1));
+  assert.equal(r1.isCorrect, true);
+  assert.equal(r1.wasFast, true);
+  assert.equal(session.correctCount, 1);
+  assert.equal(session.fastSolveCount, 1);
+  assert.equal(session.streak, 1); // Streak đầu tiên tăng 1
+
+  // Giả lập câu 2: giải trong 1.2s (Thần tốc <= 2.5s, streak >= 1 -> tăng +2)
+  session.problemStartTime = Date.now() - 1200;
+  const ans2 = session.currentProblem.answer;
+  const r2 = session.submitAnswer(String(ans2));
+  assert.equal(r2.isCorrect, true);
+  assert.equal(r2.wasFast, true);
+  assert.equal(session.streak, 3); // 1 + 2 = 3
+
+  // Thêm các câu thần tốc để đạt velocity tier
+  for (let i = 0; i < 4; i++) {
+    session.problemStartTime = Date.now() - 1800;
+    session.submitAnswer(String(session.currentProblem.answer));
+  }
+  assert.equal(session.correctCount, 6);
+  assert.equal(session.fastSolveCount, 6);
+
+  session.stop();
+  assert.ok(lastEndResult);
+  assert.equal(lastEndResult.velocityTier, "lightning");
+  assert.equal(lastEndResult.difficultyBoost, 6);
+  assert.ok(lastEndResult.avgResponseTime <= 2.8);
+
+  // Ván tiếp theo: khởi động với initialStreak từ difficultyBoost
+  const nextSession = new SpeedMathSession({ initialStreak: lastEndResult.difficultyBoost });
+  assert.equal(nextSession.initialStreak, 6);
+  nextSession.start();
+  assert.equal(nextSession.streak, 6);
+  // Khi streak >= 6, các dạng bài được sinh ra thuộc nhóm nâng cao / Olympic
+  assert.ok(nextSession.currentProblem);
+  nextSession.stop();
+});
+
+test("games: anti-repetition prevents rapid topic and group reuse across games", async () => {
+  const { pickDiverseType, SPEED_MATH_GROUPS } = await import("../js/speed-math.js");
+  const types = Object.keys(SPEED_MATH_GROUPS);
+
+  // 1. Kiểm tra pickDiverseType loại bỏ dạng đã xuất hiện trong 5 câu gần nhất
+  const recentTypes = ["basic_add", "basic_sub", "basic_mul", "basic_div", "mul_11"];
+  const picked = pickDiverseType(types, recentTypes, ["A", "A", "B", "B", "B"]);
+  assert.ok(!recentTypes.includes(picked));
+
+  // 2. Bar Model Studio: getNextSmartChallengeIndex nhảy sang cấp độ khác
+  const { getNextSmartChallengeIndex, BAR_MODEL_CHALLENGES } = await import("../js/bar-model-studio.js");
+  const currentIdx = 0; // Cấp độ 1: Tổng - Hiệu
+  const currentLevel = BAR_MODEL_CHALLENGES[currentIdx].level;
+  const smartIdx = getNextSmartChallengeIndex(currentIdx, [0]);
+  const smartLevel = BAR_MODEL_CHALLENGES[smartIdx].level;
+  assert.notEqual(smartLevel, currentLevel);
+
+  // 3. Spot The Bug: nextInterleavedCase đổi sang chuyên đề khác
+  const { SpotTheBugSession } = await import("../js/spot-the-bug.js");
+  const bugSession = new SpotTheBugSession(0, { interleaved: true });
+  const c1 = bugSession.getCurrentCase();
+  const c2 = bugSession.nextInterleavedCase();
+  assert.notEqual(c1.topic, c2.topic);
+});
+
+test("games: speed-math strategy hints do not reveal the final answer directly", async () => {
+  const { generateSpeedMathProblem } = await import("../js/speed-math.js");
+
+  // Kiểm tra 150 câu bài ngẫu nhiên từ streak 0 đến 15
+  for (let s = 0; s <= 15; s++) {
+    for (let sample = 0; sample < 10; sample++) {
+      const p = generateSpeedMathProblem(s);
+      if (p.strategy) {
+        // Gợi ý không được kết thúc bằng "= <answer>" hoặc chứa "= <answer>"
+        const forbiddenDirectAnswer = `= ${p.answer}`;
+        assert.ok(
+          !p.strategy.endsWith(forbiddenDirectAnswer),
+          `Spoiler found in strategy: "${p.strategy}" contains direct answer "= ${p.answer}" for problem "${p.prompt}"`
+        );
+      }
+    }
+  }
+});
+
+test("games: comprehensive UI button interaction audit across all three games", async () => {
+  const { renderSpeedMathArena, renderBarModelStudioView, renderSpotTheBugView } = await import("../js/render-games.js");
+  const { BAR_MODEL_CHALLENGES } = await import("../js/bar-model-challenges.js");
+  const { BUG_CASES } = await import("../js/spot-the-bug-cases.js");
+
+  // Factory tạo mock DOM Element hỗ trợ gắn listener và trigger click/change/input
+  function createMockEl(tagName = "div", props = {}) {
+    const listeners = {};
+    const el = {
+      tagName,
+      value: props.value || "",
+      textContent: props.textContent || "",
+      innerHTML: "",
+      hidden: props.hidden !== undefined ? props.hidden : false,
+      style: { display: props.display || "block" },
+      dataset: props.dataset || {},
+      classList: {
+        classes: new Set(props.classes || []),
+        add(c) { this.classes.add(c); },
+        remove(c) { this.classes.delete(c); },
+        contains(c) { return this.classes.has(c); }
+      },
+      addEventListener(evt, fn) {
+        listeners[evt] = listeners[evt] || [];
+        listeners[evt].push(fn);
+      },
+      focus() {},
+      click() {
+        if (listeners["click"]) {
+          listeners["click"].forEach(fn => fn({ preventDefault() {}, target: el }));
+        }
+      },
+      trigger(evt, payload = {}) {
+        if (listeners[evt]) {
+          listeners[evt].forEach(fn => fn({ preventDefault() {}, target: el, ...payload }));
+        }
+      }
+    };
+    return el;
+  }
+
+  // --- 1. TEST TẤT CẢ CÁC NÚT TRÒ SPEED MATH ---
+  {
+    const elements = {
+      "#speedMathTimer": createMockEl("span", { textContent: "90s" }),
+      "#speedMathTimerFill": createMockEl("div"),
+      "#speedMathScore": createMockEl("span", { textContent: "0 đ" }),
+      "#speedMathStreak": createMockEl("span", { textContent: "Streak: 0" }),
+      "#speedMathQuitBtn": createMockEl("button"),
+      "#mathProblemText": createMockEl("div", { textContent: "" }),
+      "#mathFeedbackBadge": createMockEl("div", { display: "none" }),
+      "#mathStrategyHint": createMockEl("div", { display: "none" }),
+      "#speedMathInput": createMockEl("input", { value: "" }),
+      "#speedMathSubmitBtn": createMockEl("button"),
+      "#speedMathToggleHintBtn": createMockEl("button", { textContent: "💡 Cần gợi ý mẹo?" }),
+      "#gameEndArea": createMockEl("div", { hidden: true }),
+      "#gamePlayArea": createMockEl("div", { hidden: false })
+    };
+
+    const savedDoc = global.document;
+    global.document = {
+      querySelector: (sel) => elements[sel] || null,
+      querySelectorAll: (sel) => []
+    };
+
+    let appHtml = "";
+    const mockAppRoot = {
+      set innerHTML(val) { appHtml = val; },
+      get innerHTML() { return appHtml; }
+    };
+
+    renderSpeedMathArena({ state: { db: { gameRecords: {} } }, appRoot: mockAppRoot });
+
+    // a. Test nút Gợi ý mẹo (#speedMathToggleHintBtn)
+    assert.equal(elements["#mathStrategyHint"].style.display, "none");
+    elements["#speedMathToggleHintBtn"].click();
+    assert.equal(elements["#mathStrategyHint"].style.display, "block");
+    assert.ok(elements["#mathStrategyHint"].textContent.includes("💡 Mẹo tính"));
+    assert.equal(elements["#speedMathToggleHintBtn"].textContent, "🙈 Ẩn gợi ý");
+    // Click lần 2 để ẩn lại
+    elements["#speedMathToggleHintBtn"].click();
+    assert.equal(elements["#mathStrategyHint"].style.display, "none");
+    assert.equal(elements["#speedMathToggleHintBtn"].textContent, "💡 Cần gợi ý mẹo?");
+
+    // b. Test nút Gửi đáp án (#speedMathSubmitBtn)
+    const initialProb = elements["#mathProblemText"].textContent;
+    assert.ok(initialProb.length > 0);
+    elements["#speedMathInput"].value = "999999"; // Nhập sai để test
+    elements["#speedMathSubmitBtn"].click();
+    assert.equal(elements["#mathFeedbackBadge"].style.display, "inline-block");
+    assert.ok(elements["#mathFeedbackBadge"].innerHTML.includes("Chưa chính xác"));
+
+    // c. Test nút Dừng chơi (#speedMathQuitBtn)
+    elements["#speedMathQuitBtn"].click();
+    assert.equal(elements["#gamePlayArea"].hidden, true);
+    assert.equal(elements["#gameEndArea"].hidden, false);
+
+    // d. Test nút Chơi lại (#replayBtn) xuất hiện ở màn hình kết thúc
+    const replayBtn = createMockEl("button");
+    elements["#replayBtn"] = replayBtn;
+    let replayed = false;
+    replayBtn.addEventListener("click", () => { replayed = true; });
+    replayBtn.click();
+    assert.equal(replayed, true);
+
+    global.document = savedDoc;
+  }
+
+  // --- 2. TEST TẤT CẢ CÁC NÚT TRÒ BAR MODEL STUDIO ---
+  {
+    let renderedIndex = null;
+    let appHtml = "";
+    const mockAppRoot = {
+      set innerHTML(val) { appHtml = val; },
+      get innerHTML() { return appHtml; }
+    };
+
+    const elements = {
+      "#barChallengeSelect": createMockEl("select", { value: "0" }),
+      "#prevBarBtn": createMockEl("button"),
+      "#nextBarBtn": createMockEl("button"),
+      "#resetBarBtn": createMockEl("button"),
+      "#nextSmartBarBtn": createMockEl("button"),
+      "#barSvgStage": createMockEl("div"),
+      "#b1Minus": createMockEl("button"),
+      "#b1Plus": createMockEl("button"),
+      "#b2Minus": createMockEl("button"),
+      "#b2Plus": createMockEl("button"),
+      "#diffToggle": createMockEl("input"),
+      "#diffInput": createMockEl("input", { value: "" }),
+      "#totalInput": createMockEl("input", { value: "" }),
+      "#barFeedbackBox": createMockEl("div", { hidden: true }),
+      "#barHintBtn": createMockEl("button"),
+      "#barCheckBtn": createMockEl("button")
+    };
+
+    const savedDoc = global.document;
+    global.document = {
+      querySelector: (sel) => elements[sel] || null,
+      querySelectorAll: (sel) => []
+    };
+
+    renderBarModelStudioView({
+      state: { db: { gameRecords: { barModel: { completedChallenges: [] } } } },
+      appRoot: mockAppRoot,
+      challengeIndex: 1
+    });
+
+    // a. Test nút Xem gợi ý (#barHintBtn)
+    elements["#barHintBtn"].click();
+    assert.equal(elements["#barFeedbackBox"].hidden, false);
+    assert.ok(elements["#barFeedbackBox"].innerHTML.includes("💡 Gợi ý dựng hình"));
+
+    // b. Test nút Đổi số phần (#b1Plus, #b1Minus, #b2Plus, #b2Minus)
+    elements["#b1Plus"].click();
+    elements["#b2Plus"].click();
+
+    // c. Test nút Toggle Hiệu (#diffToggle)
+    elements["#diffToggle"].trigger("change", { target: { checked: true } });
+
+    // d. Test nút Kiểm tra mô hình (#barCheckBtn)
+    elements["#barCheckBtn"].click();
+    assert.equal(elements["#barFeedbackBox"].hidden, false);
+
+    // e. Test nút Làm lại (#resetBarBtn)
+    assert.ok(elements["#resetBarBtn"]);
+    elements["#resetBarBtn"].click();
+
+    // f. Test nút Bài khác dạng (#nextSmartBarBtn)
+    assert.ok(elements["#nextSmartBarBtn"]);
+    elements["#nextSmartBarBtn"].click();
+
+    // g. Test nút Bài trước & Bài sau (#prevBarBtn, #nextBarBtn)
+    assert.ok(elements["#prevBarBtn"]);
+    assert.ok(elements["#nextBarBtn"]);
+    elements["#prevBarBtn"].click();
+    elements["#nextBarBtn"].click();
+
+    global.document = savedDoc;
+  }
+
+  // --- 3. TEST TẤT CẢ CÁC NÚT TRÒ SPOT THE BUG ---
+  {
+    let appHtml = "";
+    const mockAppRoot = {
+      set innerHTML(val) { appHtml = val; },
+      get innerHTML() { return appHtml; }
+    };
+
+    const stepElements = [
+      createMockEl("div", { dataset: { step: 1 } }),
+      createMockEl("div", { dataset: { step: 2 } }),
+      createMockEl("div", { dataset: { step: 3 } })
+    ];
+
+    const elements = {
+      "#bugCaseSelect": createMockEl("select", { value: "0" }),
+      "#prevBugBtn": createMockEl("button"),
+      "#nextBugBtn": createMockEl("button"),
+      "#nextInterleavedBugBtn": createMockEl("button"),
+      "#bugFeedbackArea": createMockEl("div", { hidden: true })
+    };
+
+    const savedDoc = global.document;
+    global.document = {
+      querySelector: (sel) => elements[sel] || null,
+      querySelectorAll: (sel) => {
+        if (sel === "[data-step]") return stepElements;
+        return [];
+      }
+    };
+
+    renderSpotTheBugView({
+      state: { db: { gameRecords: { spotTheBug: { solvedCases: [] } } } },
+      appRoot: mockAppRoot,
+      caseIndex: 0
+    });
+
+    // a. Test nút Bài trước / Bài sau (#prevBugBtn, #nextBugBtn)
+    assert.ok(elements["#prevBugBtn"]);
+    assert.ok(elements["#nextBugBtn"]);
+    elements["#nextBugBtn"].click();
+    elements["#prevBugBtn"].click();
+
+    // b. Test nút Đổi chuyên đề (#nextInterleavedBugBtn)
+    assert.ok(elements["#nextInterleavedBugBtn"]);
+    elements["#nextInterleavedBugBtn"].click();
+
+    // c. Test các bước chọn lỗi ([data-step])
+    elements["#bugCaseSelect"].trigger("change", { target: { value: "0" } });
+    const activeCase = BUG_CASES[0];
+    const bugStepNum = activeCase.steps.find(s => s.isBug)?.num || 1;
+    const bugEl = stepElements.find(el => Number(el.dataset.step) === bugStepNum);
+    bugEl.click();
+    assert.equal(elements["#bugFeedbackArea"].hidden, false);
+    assert.ok(elements["#bugFeedbackArea"].innerHTML.includes("Cách giải chuẩn xác"));
+
+    global.document = savedDoc;
+  }
+});
+
+test("games: BALANCE_SCALE_CHALLENGES 100 challenges satisfy data integrity and mathematical balance", () => {
+  assert.equal(BALANCE_SCALE_CHALLENGES.length, 100, "Must have exactly 100 balance scale challenges");
+  assert.equal(BALANCE_SCALE_LEVELS.length, 10, "Must have 10 levels");
+
+  const sumWeights = arr => (arr || []).reduce((acc, w) => acc + w, 0);
+
+  BALANCE_SCALE_CHALLENGES.forEach((ch, idx) => {
+    assert.equal(ch.index, idx, `Challenge index mismatch for ${ch.id}`);
+    assert.ok(ch.id && typeof ch.id === "string");
+    assert.ok(ch.title && typeof ch.title === "string");
+    assert.ok(ch.problem && typeof ch.problem === "string");
+    assert.ok(ch.hint && typeof ch.hint === "string");
+    assert.ok(ch.solution && typeof ch.solution === "string");
+    assert.ok([1, 2, 3, 4, 5].includes(ch.difficulty), `Difficulty must be 1..5 for ${ch.id}`);
+    assert.ok(Number.isInteger(ch.targetX) && ch.targetX > 0, `targetX must be positive integer for ${ch.id}`);
+
+    // Verify mathematical equation: Left Pan weight == Right Pan weight when X = targetX
+    const leftWeight = ch.left.xCount * ch.targetX + sumWeights(ch.left.weights);
+    const rightWeight = ch.right.xCount * ch.targetX + sumWeights(ch.right.weights);
+    assert.equal(
+      leftWeight,
+      rightWeight,
+      `Scale must be perfectly balanced when X=${ch.targetX} for challenge ${ch.id} (${leftWeight} vs ${rightWeight})`
+    );
+  });
+});
+
+test("games: BalanceScaleSession handles answer validation, tilt angle and SVG rendering", () => {
+  const session = new BalanceScaleSession(0);
+  const ch = session.getCurrentChallenge();
+  assert.equal(session.currentIndex, 0);
+
+  // 1. Empty / non-numeric input
+  const resEmpty = session.checkAnswer("");
+  assert.equal(resEmpty.isCorrect, false);
+
+  // 2. Wrong answer (too small -> left lighter, right heavier -> tilt > 0)
+  const resSmall = session.checkAnswer(ch.targetX - 5);
+  assert.equal(resSmall.isCorrect, false);
+  assert.notEqual(resSmall.tiltAngle, 0);
+
+  // 3. Correct answer
+  const resCorrect = session.checkAnswer(ch.targetX);
+  assert.equal(resCorrect.isCorrect, true);
+  assert.equal(resCorrect.tiltAngle, 0);
+  assert.ok(session.solvedIds.has(ch.id));
+
+  // 4. SVG markup generation
+  const svg = session.renderSvgMarkup();
+  assert.ok(typeof svg === "string" && svg.includes("<svg") && svg.includes("</svg>"));
+  assert.ok(svg.includes("balance-scale-svg"));
+
+  // 5. Navigation
+  session.nextChallenge();
+  assert.equal(session.currentIndex, 1);
+  session.prevChallenge();
+  assert.equal(session.currentIndex, 0);
+});
+
+test("games: MAKE_24_BANK 120 challenges and evaluateArithmeticTokens parser", () => {
+  assert.equal(MAKE_24_BANK.length, 80, "Must have exactly 80 Make 24 challenges");
+
+  MAKE_24_BANK.forEach((item, idx) => {
+    assert.equal(item.index, idx);
+    assert.ok(item.id && typeof item.id === "string");
+    assert.equal(item.cards.length, 4, "Must have exactly 4 cards");
+    item.cards.forEach(c => assert.ok(Number.isInteger(c) && c > 0, "Cards must be positive integers"));
+    assert.ok(item.sampleSolution && typeof item.sampleSolution === "string");
+    assert.ok(item.hint && typeof item.hint === "string");
+    assert.ok([1, 2, 3, 4, 5].includes(item.difficulty));
+    if (item.target !== undefined) {
+      assert.ok(Number.isInteger(item.target) && item.target > 0, `Target must be positive integer for ${item.id}`);
+    }
+  });
+
+  // Test arithmetic expression parser (RPN / Shunting-Yard)
+  // Standard arithmetic
+  const r1 = evaluateArithmeticTokens(["(", "3", "×", "8", ")", "×", "(", "1", ":", "1", ")"]);
+  assert.equal(r1.ok, true);
+  assert.equal(r1.value, 24);
+
+  // Operator precedence: 4 + 5 * 4 = 24
+  const r2 = evaluateArithmeticTokens(["4", "+", "5", "×", "4"]);
+  assert.equal(r2.ok, true);
+  assert.equal(r2.value, 24);
+
+  // Division by zero
+  const rDivZero = evaluateArithmeticTokens(["24", ":", "0"]);
+  assert.equal(rDivZero.ok, false);
+  assert.ok(rDivZero.error.includes("chia cho số 0"));
+
+  // Mismatched parentheses
+  const rBadParen = evaluateArithmeticTokens(["(", "3", "×", "8"]);
+  assert.equal(rBadParen.ok, false);
+});
+
+test("games: Make24Session enforces 4-card rule and tracks state", () => {
+  const session = new Make24Session(0); // cards: [3, 8, 1, 1]
+  assert.equal(session.currentIndex, 0);
+
+  // Try checking solution without 4 cards
+  session.pushCard(0); // 3
+  session.pushOperator("×");
+  session.pushCard(1); // 8
+  const resIncomplete = session.checkSolution();
+  assert.equal(resIncomplete.isSuccess, false);
+  assert.ok(resIncomplete.message.includes("cả 4 thẻ số"));
+
+  // Clear expression
+  session.clearExpression();
+  assert.equal(session.usedCardIndices.size, 0);
+  assert.equal(session.tokens.length, 0);
+
+  // Build full valid 24 expression: ( 3 × 8 ) × ( 1 : 1 )
+  session.pushOperator("(");
+  session.pushCard(0); // 3
+  session.pushOperator("×");
+  session.pushCard(1); // 8
+  session.pushOperator(")");
+  session.pushOperator("×");
+  session.pushOperator("(");
+  session.pushCard(2); // 1
+  session.pushOperator(":");
+  session.pushCard(3); // 1
+  session.pushOperator(")");
+
+  const resSolved = session.checkSolution();
+  assert.equal(resSolved.isSuccess, true);
+  assert.equal(session.isSolved, true);
+  assert.ok(session.solvedIds.has(session.getCurrentChallenge().id));
+});
+
+test("games: renderGamesHub renders all 5 games with respective routes and badges", () => {
+  const mockRoot = { innerHTML: "" };
+  renderGamesHub({
+    state: {
+      db: {
+        gameRecords: {
+          speedMath: { highScore: 120, bestStreak: 5 },
+          barModel: { stars: 3, completedChallenges: ["bar-1"] },
+          spotTheBug: { stars: 2, solvedCount: 2 },
+          balanceScale: { stars: 4, completedChallenges: ["scale-1"] },
+          make24: { stars: 5, solvedCount: 5, completedChallenges: ["make24-1"] }
+        }
+      }
+    },
+    appRoot: mockRoot
+  });
+
+  const html = mockRoot.innerHTML;
+  // Verify hero mentions all 5 games
+  assert.ok(html.includes("5 thử thách toán học"));
+  assert.ok(html.includes("Đấu tính nhẩm 90 giây"));
+  assert.ok(html.includes("Mini Bar Model Studio"));
+  assert.ok(html.includes("Thám Tử Bắt Lỗi Sai"));
+  assert.ok(html.includes("Cân Bằng Bí Mật"));
+  assert.ok(html.includes("Đấu Trường 24"));
+
+  // Verify routes for all 5 games
+  assert.ok(html.includes('href="#games/speed-math"'));
+  assert.ok(html.includes('href="#games/bar-model"'));
+  assert.ok(html.includes('href="#games/spot-the-bug"'));
+  assert.ok(html.includes('href="#games/balance-scale"'));
+  assert.ok(html.includes('href="#games/make-24"'));
+
+  // Verify badges
+  assert.ok(html.includes("badge-speed"));
+  assert.ok(html.includes("badge-bar"));
+  assert.ok(html.includes("badge-bug"));
+  assert.ok(html.includes("badge-balance"));
+  assert.ok(html.includes("badge-24"));
+});
+
+test("games: renderBalanceScaleView and renderMake24View UI button interaction audit", async () => {
+  const createMockEl = (tag, props = {}) => ({
+    tagName: tag.toUpperCase(),
+    dataset: {},
+    style: {},
+    classList: {
+      _classes: new Set(),
+      add(c) { this._classes.add(c); },
+      remove(c) { this._classes.delete(c); },
+      toggle(c, force) { if (force !== undefined) { force ? this.add(c) : this.remove(c); } else { this._classes.has(c) ? this.remove(c) : this.add(c); } },
+      contains(c) { return this._classes.has(c); }
+    },
+    innerHTML: "",
+    value: "",
+    _listeners: {},
+    addEventListener(ev, fn) {
+      if (!this._listeners[ev]) this._listeners[ev] = [];
+      this._listeners[ev].push(fn);
+    },
+    click() {
+      (this._listeners["click"] || []).forEach(fn => fn({ preventDefault: () => {} }));
+    },
+    trigger(ev, data = {}) {
+      (this._listeners[ev] || []).forEach(fn => fn({ preventDefault: () => {}, ...data }));
+    },
+    ...props
+  });
+
+  const savedDoc = global.document;
+
+  // 1. Audit Balance Scale UI
+  {
+    const elements = {
+      "#scaleChallengeSelect": createMockEl("select", { value: "0" }),
+      "#scaleInput": createMockEl("input", { value: "35" }),
+      "#scaleSubmitBtn": createMockEl("button"),
+      "#scaleToggleHintBtn": createMockEl("button"),
+      "#scaleHintArea": createMockEl("div", { style: { display: "none" } }),
+      "#scaleFeedbackArea": createMockEl("div", { style: { display: "none" } }),
+      "#balanceSvgStage": createMockEl("div"),
+      "#prevScaleBtn": createMockEl("button"),
+      "#nextScaleBtn": createMockEl("button"),
+      "#randomScaleBtn": createMockEl("button")
+    };
+
+    global.document = {
+      querySelector: (sel) => elements[sel] || null,
+      querySelectorAll: () => []
+    };
+
+    const mockRoot = createMockEl("div");
+    let saved = false;
+    renderBalanceScaleView({
+      state: { db: { gameRecords: { balanceScale: { stars: 0, completedChallenges: [] } } } },
+      appRoot: mockRoot,
+      saveLocal: async () => { saved = true; },
+      challengeIndex: 0,
+      params: new URLSearchParams("mode=single")
+    });
+
+    // Check hint toggle
+    elements["#scaleToggleHintBtn"].click();
+    assert.equal(elements["#scaleHintArea"].style.display, "block");
+
+    // Check submit
+    await elements["#scaleSubmitBtn"].click();
+    assert.equal(elements["#scaleFeedbackArea"].style.display, "block");
+    assert.ok(elements["#scaleFeedbackArea"].innerHTML.includes("CHÍNH XÁC"));
+
+    // Check nav buttons
+    elements["#nextScaleBtn"].click();
+    elements["#prevScaleBtn"].click();
+    elements["#randomScaleBtn"].click();
+  }
+
+  // 2. Audit Make 24 UI
+  {
+    const cardElements = [
+      createMockEl("button", { dataset: { cardIdx: 0 } }),
+      createMockEl("button", { dataset: { cardIdx: 1 } }),
+      createMockEl("button", { dataset: { cardIdx: 2 } }),
+      createMockEl("button", { dataset: { cardIdx: 3 } })
+    ];
+    const opElements = [
+      createMockEl("button", { dataset: { op: "+" } }),
+      createMockEl("button", { dataset: { op: "×" } })
+    ];
+
+    const elements = {
+      "#make24Select": createMockEl("select", { value: "0" }),
+      "#make24ExprDisplay": createMockEl("div"),
+      "#make24SubmitBtn": createMockEl("button"),
+      "#make24ToggleHintBtn": createMockEl("button"),
+      "#make24HintArea": createMockEl("div", { style: { display: "none" } }),
+      "#make24FeedbackArea": createMockEl("div", { style: { display: "none" } }),
+      '[data-action="backspace"]': createMockEl("button"),
+      '[data-action="clear"]': createMockEl("button"),
+      "#prev24Btn": createMockEl("button"),
+      "#next24Btn": createMockEl("button"),
+      "#random24Btn": createMockEl("button")
+    };
+
+    global.document = {
+      querySelector: (sel) => elements[sel] || null,
+      querySelectorAll: (sel) => {
+        if (sel === "[data-card-idx]") return cardElements;
+        if (sel === "[data-op]") return opElements;
+        return [];
+      }
+    };
+
+    const mockRoot = createMockEl("div");
+    let saved = false;
+    renderMake24View({
+      state: { db: { gameRecords: { make24: { stars: 0, solvedCount: 0, completedChallenges: [] } } } },
+      appRoot: mockRoot,
+      saveLocal: async () => { saved = true; },
+      challengeIndex: 0
+    });
+
+    // Toggle hint
+    elements["#make24ToggleHintBtn"].click();
+    assert.equal(elements["#make24HintArea"].style.display, "block");
+
+    // Click card and operator
+    cardElements[0].click();
+    opElements[1].click(); // ×
+    elements['[data-action="backspace"]'].click();
+    elements['[data-action="clear"]'].click();
+
+    // Nav
+    elements["#next24Btn"].click();
+    elements["#prev24Btn"].click();
+    elements["#random24Btn"].click();
+  }
+
+  global.document = savedDoc;
+});
+
+test("games: DUAL_SCALE_CHALLENGES 32 challenges satisfy balance on both Scale A and Scale B", () => {
+  assert.equal(DUAL_SCALE_CHALLENGES.length, 32, "Must have exactly 32 dual scale challenges");
+
+  const sumW = arr => (arr || []).reduce((a, b) => a + b, 0);
+
+  DUAL_SCALE_CHALLENGES.forEach((ch, idx) => {
+    assert.equal(ch.index, idx, `Index mismatch for ${ch.id}`);
+    assert.ok(ch.title && typeof ch.title === "string");
+    assert.ok(ch.problem && typeof ch.problem === "string");
+    assert.ok(ch.hint && typeof ch.hint === "string");
+    assert.ok(ch.solution && typeof ch.solution === "string");
+    assert.ok(Number.isInteger(ch.targetX) && ch.targetX > 0, `targetX must be positive integer for ${ch.id}`);
+    assert.ok(Number.isInteger(ch.targetY) && ch.targetY > 0, `targetY must be positive integer for ${ch.id}`);
+
+    // Verify Scale A balances with targetX, targetY
+    const leftA = (ch.scaleA.left.xCount || 0) * ch.targetX + (ch.scaleA.left.yCount || 0) * ch.targetY + sumW(ch.scaleA.left.weights);
+    const rightA = (ch.scaleA.right.xCount || 0) * ch.targetX + (ch.scaleA.right.yCount || 0) * ch.targetY + sumW(ch.scaleA.right.weights);
+    assert.equal(leftA, rightA, `Scale A must balance for ${ch.id} (${leftA} vs ${rightA})`);
+
+    // Verify Scale B balances with targetX, targetY
+    const leftB = (ch.scaleB.left.xCount || 0) * ch.targetX + (ch.scaleB.left.yCount || 0) * ch.targetY + sumW(ch.scaleB.left.weights);
+    const rightB = (ch.scaleB.right.xCount || 0) * ch.targetX + (ch.scaleB.right.yCount || 0) * ch.targetY + sumW(ch.scaleB.right.weights);
+    assert.equal(leftB, rightB, `Scale B must balance for ${ch.id} (${leftB} vs ${rightB})`);
+
+    // Verify Scale C if provided
+    if (ch.scaleC && ch.scaleC.targetWeight) {
+      const targetC = (ch.scaleC.left.xCount || 0) * ch.targetX + (ch.scaleC.left.yCount || 0) * ch.targetY + sumW(ch.scaleC.left.weights);
+      assert.equal(targetC, ch.scaleC.targetWeight, `Scale C targetWeight mismatch for ${ch.id}`);
+    }
+  });
+});
+
+test("games: DualScaleSession validates dual answers and generates dual SVG markup", () => {
+  const session = new DualScaleSession(0);
+  const ch = session.getCurrentChallenge();
+  assert.equal(session.currentIndex, 0);
+
+  // 1. Missing input
+  const resEmpty = session.checkDualAnswer("", "");
+  assert.equal(resEmpty.isCorrect, false);
+
+  // 2. Wrong answer (wrong X, correct Y)
+  const resWrongX = session.checkDualAnswer(ch.targetX + 5, ch.targetY);
+  assert.equal(resWrongX.isCorrect, false);
+
+  // 3. Correct answer for both X and Y
+  const resCorrect = session.checkDualAnswer(ch.targetX, ch.targetY);
+  assert.equal(resCorrect.isCorrect, true);
+  assert.equal(resCorrect.tiltA, 0);
+  assert.equal(resCorrect.tiltB, 0);
+  assert.ok(session.solvedIds.has(ch.id));
+
+  // 4. SVG markup
+  const svg = session.renderDualSvgMarkup();
+  assert.ok(typeof svg === "string" && svg.includes("<svg") && svg.includes("CÂN A") && svg.includes("CÂN B"));
+
+  // 5. Navigation
+  session.nextChallenge();
+  assert.equal(session.currentIndex, 1);
+  session.prevChallenge();
+  assert.equal(session.currentIndex, 0);
+});
+
+test("games: DETECTIVE_PUZZLES and DetectiveScaleSession logic and weighing", () => {
+  assert.equal(DETECTIVE_PUZZLES.length, 24, "Must have 24 detective puzzles across 4 levels");
+
+  DETECTIVE_PUZZLES.forEach((p, idx) => {
+    assert.equal(p.index, idx);
+    assert.ok(p.ballCount >= 8);
+    assert.ok(p.fakeBallIndex >= 1 && p.fakeBallIndex <= p.ballCount);
+    assert.ok(["lighter", "heavier"].includes(p.fakeType));
+    assert.ok(p.maxWeighsAllowed >= 2);
+  });
+
+  const session = new DetectiveScaleSession(0); // 9 balls, fakeBallIndex: 5, lighter
+  assert.equal(session.currentIndex, 0);
+
+  // 1. Placing balls: (1, 2, 3) on left, (4, 5, 6) on right
+  session.toggleBallOnLeft(1);
+  session.toggleBallOnLeft(2);
+  session.toggleBallOnLeft(3);
+
+  session.toggleBallOnRight(4);
+  session.toggleBallOnRight(5);
+  session.toggleBallOnRight(6);
+
+  assert.equal(session.leftPan.length, 3);
+  assert.equal(session.rightPan.length, 3);
+
+  // 2. Weigh: ball 5 is on the right and is lighter -> left should be heavier (tilt < 0)
+  const resWeigh1 = session.weigh();
+  assert.equal(resWeigh1.ok, true);
+  assert.equal(resWeigh1.logEntry.outcome, "left_heavier");
+  assert.equal(session.weighCount, 1);
+
+  // 3. Clear pans and weigh next group: ball 4 vs ball 5
+  session.clearPans();
+  assert.equal(session.leftPan.length, 0);
+  assert.equal(session.rightPan.length, 0);
+
+  session.toggleBallOnLeft(4);
+  session.toggleBallOnRight(5);
+
+  const resWeigh2 = session.weigh();
+  assert.equal(resWeigh2.ok, true);
+  assert.equal(resWeigh2.logEntry.outcome, "left_heavier"); // 4 is standard (10), 5 is lighter (7) -> left heavier
+  assert.equal(session.weighCount, 2);
+
+  // 4. Submit guess: wrong guess first (e.g. ball 4)
+  const resGuessWrong = session.submitGuess(4);
+  assert.equal(resGuessWrong.isCorrect, false);
+
+  // 5. Submit correct guess (ball 5)
+  const resGuessCorrect = session.submitGuess(5);
+  assert.equal(resGuessCorrect.isCorrect, true);
+  assert.equal(resGuessCorrect.isWithinQuota, true);
+  assert.equal(session.isSolved, true);
+
+  // 6. SVG markup
+  const svg = session.renderSvgMarkup();
+  assert.ok(typeof svg === "string" && svg.includes("<svg") && svg.includes("circle"));
+});
+
+test("games: MAKE_24_BANK 80 challenges including fraction division Master and dynamic target puzzles", () => {
+  assert.equal(MAKE_24_BANK.length, 80, "Must have exactly 80 Make 24 challenges");
+
+  // Check legend master puzzle: [3, 3, 8, 8] at index 31
+  const p32 = MAKE_24_BANK[31];
+  assert.deepEqual(p32.cards, [3, 3, 8, 8]);
+  const res83 = evaluateArithmeticTokens(["8", ":", "(", "3", "−", "8", ":", "3", ")"]);
+  assert.equal(res83.ok, true);
+  assert.ok(Math.abs(res83.value - 24) < 1e-6);
+
+  // Check fraction puzzle: [1, 5, 5, 5] -> (5 - 1/5) * 5 = 24 at index 32
+  const p33 = MAKE_24_BANK[32];
+  assert.deepEqual(p33.cards, [1, 5, 5, 5]);
+  const res51 = evaluateArithmeticTokens(["(", "5", "−", "1", ":", "5", ")", "×", "5"]);
+  assert.equal(res51.ok, true);
+  assert.ok(Math.abs(res51.value - 24) < 1e-6);
+
+  // Check fraction puzzle: [3, 3, 7, 7] -> (3 + 3/7) * 7 = 24
+  const res37 = evaluateArithmeticTokens(["(", "3", "+", "3", ":", "7", ")", "×", "7"]);
+  assert.equal(res37.ok, true);
+  assert.ok(Math.abs(res37.value - 24) < 1e-6);
+
+  // Check dynamic target 36 puzzle: [4, 9, 2, 2] -> target 36 at index 40
+  const p41 = MAKE_24_BANK[40];
+  assert.equal(p41.target, 36);
+  const session36 = new Make24Session(40);
+  assert.equal(session36.getTarget(), 36);
+  session36.pushCard(0); // 4
+  session36.pushOperator("×");
+  session36.pushCard(1); // 9
+  session36.pushOperator("+");
+  session36.pushOperator("(");
+  session36.pushCard(2); // 2
+  session36.pushOperator("−");
+  session36.pushCard(3); // 2
+  session36.pushOperator(")");
+  const res36 = session36.checkSolution();
+  assert.equal(res36.isSuccess, true);
+  assert.equal(res36.result, 36);
+
+  // Check dynamic target 100 puzzle: [3, 3, 10, 1] -> ((3*3)+1)*10 = 100 at index 79
+  const p80 = MAKE_24_BANK[79];
+  assert.equal(p80.target, 100);
+  const session100 = new Make24Session(79);
+  assert.equal(session100.getTarget(), 100);
+});
+
+
+
+
+
 
 
 

@@ -38,6 +38,10 @@ import {
   initTouchNumpadListener
 } from "./js/touch-numpad.js";
 
+import {
+  initKeyboardAdaptation
+} from "./js/keyboard-adapt.js";
+
 import { storage } from "./js/storage.js";
 import { driveSync, renderGoogleTutorButton } from "./js/drive-sync.js";
 import { lessonTimerManager, setTimerCallbacks } from "./js/study-timer.js";
@@ -48,6 +52,13 @@ import {
   renderSpeedMathArena,
   renderBarModelStudioView,
   renderSpotTheBugView,
+  renderBalanceScaleView,
+  renderMake24View,
+  renderSpatial3DView,
+  renderLogicGridView,
+  renderRushHourView,
+  renderChimpMemoryView,
+  renderTangramView,
   cleanupActiveGames
 } from "./js/render-games.js";
 
@@ -509,6 +520,13 @@ export function render() {
   else if (route === "games/speed-math") renderSpeedMathArena({ state, appRoot: app, saveLocal });
   else if (route === "games/bar-model") renderBarModelStudioView({ state, appRoot: app, saveLocal, params });
   else if (route === "games/spot-the-bug") renderSpotTheBugView({ state, appRoot: app, saveLocal, params });
+  else if (route === "games/balance-scale") renderBalanceScaleView({ state, appRoot: app, saveLocal, params });
+  else if (route === "games/make-24") renderMake24View({ state, appRoot: app, saveLocal, params });
+  else if (route === "games/spatial-3d") renderSpatial3DView({ state, appRoot: app, saveLocal, params });
+  else if (route === "games/logic-grid") renderLogicGridView({ state, appRoot: app, saveLocal, params });
+  else if (route === "games/rush-hour") renderRushHourView({ state, appRoot: app, saveLocal, params });
+  else if (route === "games/chimp-memory") renderChimpMemoryView({ state, appRoot: app, saveLocal, params });
+  else if (route === "games/tangram") renderTangramView({ state, appRoot: app, saveLocal, params });
   else if (route.startsWith("games")) renderGamesHub({ state, appRoot: app });
   else renderHome();
   const activeNav = route.startsWith("games") ? "games" : route;
@@ -998,6 +1016,26 @@ document.addEventListener("input", e => {
 });
 
 document.querySelector("#printBtn")?.addEventListener("click", () => window.print());
+
+document.querySelector("#refreshAppBtn")?.addEventListener("click", async () => {
+  const btn = document.querySelector("#refreshAppBtn");
+  if (btn) {
+    btn.style.transition = "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)";
+    btn.style.transform = "rotate(360deg)";
+  }
+  // Nếu có Service Worker, chủ động kích hoạt cập nhật ngay
+  if ("serviceWorker" in navigator) {
+    try {
+      const reg = await navigator.serviceWorker.getRegistration();
+      if (reg) await reg.update();
+    } catch {
+      // Bỏ qua lỗi nếu offline
+    }
+  }
+  setTimeout(() => {
+    window.location.reload();
+  }, 250);
+});
 window.addEventListener("hashchange", render);
 
 // Online/Offline detection để cập nhật sync status
@@ -1012,14 +1050,77 @@ window.addEventListener("offline", () => {
   render();
 });
 
-// Đăng ký Service Worker (chỉ cache static, tuyệt đối không cache API/token)
+// Lắng nghe tín hiệu Live-Reload từ server (khi dev hoặc chạy LAN/ngrok)
+function initLiveReload() {
+  if (typeof EventSource === "undefined") return;
+  try {
+    const es = new EventSource("/api/live-reload");
+    es.onmessage = (event) => {
+      if (event.data === "reload") {
+        console.log("⚡ [LiveReload] Phát hiện mã nguồn máy chủ thay đổi. Đang tự động làm mới...");
+        window.location.reload();
+      }
+    };
+  } catch {
+    // Bỏ qua nếu môi trường hoặc proxy không hỗ trợ SSE
+  }
+}
+
+// Đăng ký Service Worker và tự động refresh khi có bản cập nhật mới (PWA/WebApp)
 function registerServiceWorker() {
   if ("serviceWorker" in navigator) {
-    const register = () => {
-      navigator.serviceWorker.register("./sw.js", { type: "module" })
-        .then(() => {})
-        .catch(err => console.warn("Không đăng ký được Service Worker:", err));
+    let refreshing = false;
+
+    // Khi Service Worker mới kích hoạt và tiếp quản client (clients.claim())
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (!refreshing) {
+        refreshing = true;
+        console.log("⚡ [ServiceWorker] Phiên bản mới đã kích hoạt. Đang tự động tải lại WebApp...");
+        window.location.reload();
+      }
+    });
+
+    const register = async () => {
+      try {
+        const reg = await navigator.serviceWorker.register("./sw.js", { type: "module" });
+
+        // Tự động kiểm tra bản cập nhật mới ngay khi mở trang
+        reg.update().catch(() => {});
+
+        // Định kỳ kiểm tra cập nhật mỗi 60 giây khi đang có mạng
+        setInterval(() => {
+          if (navigator.onLine) {
+            reg.update().catch(() => {});
+          }
+        }, 60000);
+
+        // Kiểm tra cập nhật khi người dùng quay lại tab hoặc mở lại PWA từ Home Screen
+        document.addEventListener("visibilitychange", () => {
+          if (document.visibilityState === "visible" && navigator.onLine) {
+            reg.update().catch(() => {});
+          }
+        });
+
+        // Nếu có bản cập nhật đang chờ kích hoạt
+        if (reg.waiting) {
+          reg.waiting.postMessage({ type: "SKIP_WAITING" });
+        }
+
+        reg.addEventListener("updatefound", () => {
+          const newWorker = reg.installing;
+          if (newWorker) {
+            newWorker.addEventListener("statechange", () => {
+              if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+                newWorker.postMessage({ type: "SKIP_WAITING" });
+              }
+            });
+          }
+        });
+      } catch (err) {
+        console.warn("Không đăng ký được Service Worker:", err);
+      }
     };
+
     if (document.readyState === "complete") register();
     else window.addEventListener("load", register, { once: true });
   }
@@ -1054,9 +1155,13 @@ async function init() {
   if (typeof initTouchNumpadListener === "function") {
     initTouchNumpadListener();
   }
+  if (typeof initKeyboardAdaptation === "function") {
+    initKeyboardAdaptation();
+  }
 
   render();
   registerServiceWorker();
+  initLiveReload();
   syncWithLanServer().catch(() => {});
 }
 

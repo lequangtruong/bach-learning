@@ -1,7 +1,9 @@
 import { createServer } from "node:http";
 import { readFile, writeFile, rename } from "node:fs/promises";
+import { watch } from "node:fs";
 import { extname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
+import { networkInterfaces } from "node:os";
 
 // Tự động nạp cấu hình từ .env nếu có (Node.js 20+)
 try { process.loadEnvFile(); } catch {}
@@ -43,8 +45,81 @@ const MIME_TYPES = {
   ".png": "image/png"
 };
 
+// Quản lý kết nối SSE Live-Reload tự động refresh khi mã nguồn thay đổi
+const liveReloadClients = new Set();
+
+function handleLiveReload(req, res) {
+  res.writeHead(200, {
+    "Content-Type": "text/event-stream; charset=utf-8",
+    "Cache-Control": "no-cache, no-transform",
+    "Connection": "keep-alive",
+    "Access-Control-Allow-Origin": "*"
+  });
+  res.write("retry: 2000\n\n");
+  res.write("data: connected\n\n");
+
+  liveReloadClients.add(res);
+
+  req.on("close", () => {
+    liveReloadClients.delete(res);
+  });
+}
+
+export function broadcastReload() {
+  if (liveReloadClients.size === 0) return;
+  for (const client of liveReloadClients) {
+    try {
+      client.write("data: reload\n\n");
+    } catch {
+      liveReloadClients.delete(client);
+    }
+  }
+}
+
+// Watch các file frontend chính để tự động kích hoạt refresh
+let debounceTimer = null;
+function triggerReloadDebounced(filename) {
+  if (debounceTimer) clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => {
+    const fn = String(filename || "");
+    if (
+      fn.includes("db-lan") ||
+      fn.includes(".git") ||
+      fn.includes(".tmp") ||
+      fn.endsWith(".log") ||
+      fn.startsWith(".")
+    ) {
+      return;
+    }
+    broadcastReload();
+  }, 200);
+}
+
+export function startLiveReloadWatcher() {
+  try {
+    const watchDirs = [root, join(root, "js"), join(root, "styles"), join(root, "data")];
+    for (const dir of watchDirs) {
+      const w = watch(dir, { recursive: false }, (_eventType, filename) => {
+        triggerReloadDebounced(filename);
+      });
+      if (w && typeof w.unref === "function") {
+        w.unref();
+      }
+    }
+  } catch {
+    // Bỏ qua nếu watcher không được hệ điều hành cấp quyền
+  }
+}
+
 async function handleApi(req, res) {
-  const urlPath = (req.url || "").split("?")[0];
+  let urlPath = (req.url || "").split("?")[0];
+  if (urlPath.startsWith("/bach-learning/api/")) {
+    urlPath = urlPath.replace(/^\/bach-learning/, "");
+  }
+  if (req.method === "GET" && urlPath === "/api/live-reload") {
+    handleLiveReload(req, res);
+    return true;
+  }
   if (req.method === "GET" && urlPath === "/api/ping") {
     res.statusCode = 200;
     res.setHeader("Content-Type", "application/json; charset=utf-8");
@@ -140,6 +215,14 @@ const server = createServer(async (req, res) => {
     res.end("400 Bad Request: Đường dẫn URL không hợp lệ.");
     return;
   }
+
+  // Tự động strip prefix /bach-learning hoặc /bach-learning/
+  if (requested === "/bach-learning" || requested === "/bach-learning/") {
+    requested = "/";
+  } else if (requested.startsWith("/bach-learning/")) {
+    requested = requested.slice("/bach-learning".length);
+  }
+
   const relative = requested === "/" ? "index.html" : requested.replace(/^\/+/, "");
   const normalizedRelative = normalize(relative);
 
@@ -190,7 +273,32 @@ const server = createServer(async (req, res) => {
 
 // Chỉ listen khi chạy trực tiếp qua node server.mjs
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  server.listen(port, host, () => console.log(`Bách Learning Lab: http://${host}:${port}`));
+  server.listen(port, host, () => {
+    startLiveReloadWatcher();
+    console.log(`\n🚀 Bách Learning Lab đang chạy:`);
+    console.log(`   - Local: http://localhost:${port}`);
+    if (host === "0.0.0.0") {
+      const interfaces = networkInterfaces();
+      const addresses = [];
+      for (const name of Object.keys(interfaces)) {
+        for (const iface of interfaces[name] || []) {
+          if (iface.family === "IPv4" && !iface.internal) {
+            addresses.push(iface.address);
+          }
+        }
+      }
+      if (addresses.length > 0) {
+        addresses.forEach((ip) => {
+          console.log(`   - LAN:   http://${ip}:${port}`);
+        });
+      } else {
+        console.log(`   - LAN:   http://${host}:${port}`);
+      }
+    } else {
+      console.log(`   - LAN:   http://${host}:${port}`);
+    }
+    console.log(`\n   Nhấn Ctrl+C để dừng máy chủ.\n`);
+  });
 }
 
 export default server;

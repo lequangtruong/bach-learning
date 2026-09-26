@@ -2,8 +2,8 @@
    Responsive: iPad Safari (834px/1024px), Mobile & Print Adaptations
    ========================================================================== */
 
-/* iPad & Tablet Landscape / Portrait (max-width: 1024px) */
-@media (max-width: 1024px) {
+/* Tablet Portrait (max-width: 1024px and orientation: portrait) */
+@media (max-width: 1024px) and (orientation: portrait) {
   .hero {
     grid-template-columns: 1fr;
     gap: 28px;
@@ -14,6 +14,257 @@
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+}
+
+/* ==========================================================================
+   iPad Air M1 (11-inch: 1180px x 820px) & Tablet Landscape Optimizations
+   Tối ưu hóa đặc biệt khi Bách xoay ngang màn hình iPad
+   ========================================================================== */
+@media (min-width: 821px) and (orientation: landscape), (min-width: 1025px) {
+  /* Layout khung chính gọn gàng */
+  .page {
+    padding: 24px 4vw 80px;
+  }
+  
+  /* Hero trang chủ: 2 cột cân xứng, chiều cao vừa vặn 1 màn hình */
+  .hero {
+    grid-template-columns: 1.22fr 0.78fr;
+    gap: 28px;
+    margin-bottom: 24px;
+    align-items: stretch;
+  }
+  .hero h1 {
+    font-size: clamp(2.1rem, 3.4vw, 3.8rem);
+    line-height: 1.1;
+    margin: 8px 0 16px;
+  }
+  .hero p {
+    font-size: 0.96rem;
+    line-height: 1.6;
+  }
+  .hero-note {
+    padding: 22px;
+    min-height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .hero-note h3 {
+    margin: 14px 0 8px;
+    font-size: 1.3rem;
+  }
+
+  /* Thẻ bài học hôm nay gọn gàng */
+  .today-lesson-entry.today-home-launcher {
+    margin-bottom: 20px;
+    padding: 14px 20px;
+  }
+
+  /* 4 Thống kê tiến độ thẳng hàng ngang */
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  /* Sảnh trò chơi: 3 cột thoáng đãng */
+  .games-hub-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 18px !important;
+  }
+
+  /* Bố cục 2 cột chia đôi cho toàn bộ các trò chơi (Trái: Hình ảnh/Bàn cờ - Phải: Thao tác/Đáp án) */
+  .game-split-container,
+  .balance-landscape-split,
+  .make24-split,
+  .spatial-split,
+  .logic-grid-split,
+  .rush-hour-split,
+  .speedmath-split {
+    display: grid !important;
+    grid-template-columns: minmax(360px, 1.15fr) minmax(320px, 0.85fr) !important;
+    gap: 24px !important;
+    align-items: start !important;
+    margin-top: 12px !important;
+  }
+
+  /* Giới hạn khung game mở rộng để tận dụng chiều ngang 1180px */
+  .bug-stage,
+  .make24-arena,
+  .spatial-arena-wrapper,
+  .logic-grid-arena-wrapper,
+  .rush-hour-arena-wrapper,
+  .speed-math-arena {
+    max-width: 1100px !important;
+    margin: 0 auto !important;
+  }
+
+  /* Kích thước bàn cờ & SVG vừa vặn không bị cuộn */
+  .balance-scale-svg,
+  .balance-scale-stage {
+    max-height: 480px;
+  }
+
+  .make24-cards-row {
+    margin: 12px 0 16px !important;
+  }
+  .make24-card-btn {
+    width: 72px !important;
+    height: 98px !important;
+    font-size: 2rem !important;
+  }
+  .make24-expr-display {
+    min-height: 50px !important;
+    font-size: 1.45rem !important;
+    margin-bottom: 14px !important;
+  }
+}
+
+/* ==========================================================================
+   Virtual Keyboard Avoidance (Bảo vệ giao diện khi bàn phím ảo iOS hiện lên)
+   Không để bàn phím che khuất đề bài, hình vẽ, ô gõ hoặc nút nộp bài
+   ========================================================================== */
+body.keyboard-open {
+  /* Tạo khoảng trống đệm phía dưới để cuộn phần tử lên trên bàn phím */
+  padding-bottom: min(52vh, 420px) !important;
+}
+
+/* Tự động ẩn thanh điều hướng dưới đáy khi đang gõ chữ/số */
+body.keyboard-open .bottom-nav {
+  transform: translate(-50%, 180%) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease !important;
+}
+
+/* Điểm nhấn nổi bật ô đang nhập liệu */
+.input-focused-highlight,
+input:focus,
+textarea:focus {
+  border-color: var(--coral) !important;
+  box-shadow: 0 0 0 3px rgba(236, 114, 95, 0.28) !important;
+  outline: none !important;
+}
+
+/* ==========================================================================
+   Big Touch Numpad Drawer (Bàn phím số lớn chuyên biệt cho iPad)
+   ========================================================================== */
+.touch-numpad-drawer {
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1.5px solid var(--line);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.2);
+  border-radius: 24px;
+  padding: 16px;
+  z-index: 9999;
+  user-select: none;
+  animation: numpadFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes numpadFadeIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Trên iPad nằm ngang: Dock gọn gàng bên góc phải dưới, không che đề bài bên trái */
+@media (min-width: 821px) and (orientation: landscape), (min-width: 1025px) {
+  .touch-numpad-drawer {
+    position: fixed !important;
+    right: 28px !important;
+    bottom: 24px !important;
+    width: 290px !important;
+  }
+}
+
+/* Trên thiết bị nhỏ / màn dọc: Nổi ở đáy giữa màn hình */
+@media (max-width: 820px), (orientation: portrait) {
+  .touch-numpad-drawer {
+    position: fixed !important;
+    left: 50% !important;
+    bottom: 20px !important;
+    transform: translateX(-50%) !important;
+    width: calc(100% - 32px) !important;
+    max-width: 360px !important;
+  }
+}
+
+.touch-numpad-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 0 4px;
+}
+
+.touch-numpad-title {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+}
+
+.touch-numpad-close {
+  background: #f1f5f9;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.touch-numpad-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.numpad-key {
+  height: 52px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: var(--ink);
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: "DM Mono", monospace;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  transition: transform 0.08s, background 0.1s;
+}
+
+.numpad-key:active {
+  transform: scale(0.94);
+  background: #f1f5f9;
+}
+
+.numpad-key-del {
+  background: #fef2f2;
+  color: #dc2626;
+  border-color: #fecaca;
+  font-size: 1.3rem;
+}
+
+.numpad-key-clear {
+  background: #f8fafc;
+  color: #64748b;
+  font-size: 1.15rem;
+}
+
+.numpad-key-confirm {
+  background: #16a34a;
+  color: #ffffff;
+  border-color: #15803d;
+  font-size: 1.4rem;
 }
 
 /* iPad Portrait & Small Tablets (max-width: 834px) */

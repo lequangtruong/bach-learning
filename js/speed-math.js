@@ -1,576 +1,118 @@
 // js/speed-math.js - Mini-game "Đấu tính nhẩm 90 giây" (Speed Math Sprint)
-// Rèn luyện phản xạ tính nhẩm có chiến lược cho Bách trên iPad
+// Điều phối phiên đấu nhẩm, tính toán tốc độ phản xạ & tự động tăng độ khó
 
-// --- Helper hàm random số nguyên trong đoạn [min, max] ---
+import {
+  generateMultiAdd3,
+  generateMultiAdd4,
+  generateMultiSub,
+  generateMultiMul3,
+  generateMultiMulGolden,
+  generateMultiMul4Golden,
+  generateDistributive3Term,
+  generateMultiDivComposite,
+  generateMassProblem,
+  generateAreaProblem,
+  generateTimeProblem,
+  generateLengthProblem,
+  generateOlympic5Operands,
+  generateOlympicDistributive,
+  generateOlympicBracket,
+  generateOlympicUnitProblem
+} from "./speed-math-generators.js";
+
 const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
-// --- 1. NHIỀU SỐ: CỘNG NHẨM THUẬN TIỆN (3 - 4 SỐ HẠNG) ---
-function generateMultiAdd3(rand) {
-  const pairSums = [100, 200, 300, 400, 500];
-  const pairSum = pairSums[rand(0, pairSums.length - 1)];
-  const lastDigit = rand(1, 9);
-  const a = rand(1, Math.floor(pairSum / 10) - 2) * 10 + lastDigit;
-  const c = pairSum - a;
-  const b = rand(15, 250);
-  const order = rand(1, 3);
-  let prompt, answer, strategy;
-  if (order === 1) {
-    prompt = `${a} + ${b} + ${c}`;
-    answer = pairSum + b;
-    strategy = `Nhóm thuận tiện: (${a} + ${c}) + ${b} = ${pairSum} + ${b} = ${answer}`;
-  } else if (order === 2) {
-    prompt = `${b} + ${a} + ${c}`;
-    answer = pairSum + b;
-    strategy = `Nhóm thuận tiện: ${b} + (${a} + ${c}) = ${b} + ${pairSum} = ${answer}`;
-  } else {
-    prompt = `${a} + ${c} + ${b}`;
-    answer = pairSum + b;
-    strategy = `Cộng số tròn trước: (${a} + ${c}) + ${b} = ${pairSum} + ${b} = ${answer}`;
+export const SPEED_MATH_GROUPS = {
+  // Nhóm A: Cộng / Trừ bù tròn & nhiều số hạng
+  add_round: "A",
+  sub_round: "A",
+  multi_add_3: "A",
+  multi_sub_sum: "A",
+  multi_add_4: "A",
+  multi_sub_mixed: "A",
+
+  // Nhóm B: Nhân / Chia chiến thuật & Cặp số vàng
+  basic_mul: "B",
+  basic_div: "B",
+  round_ten_mul: "B",
+  round_ten_div: "B",
+  mul_11: "B",
+  mul_5: "B",
+  div_by_5: "B",
+  div_by_25: "B",
+  mul_double: "B",
+  mul_round_hundred: "B",
+  div_round_hundred: "B",
+  multi_mul_3: "B",
+  multi_mul_3_golden: "B",
+  gold_pair_25: "B",
+  gold_pair_125: "B",
+  mul_near_hundred: "B",
+  multi_mul_4_golden: "B",
+  multi_div_composite: "B",
+
+  // Nhóm C: Biểu thức / Phân phối / Ngoặc
+  bracket_add_mul: "C",
+  bracket_sub_div: "C",
+  bracket_mul_level2: "C",
+  bracket_div_level2: "C",
+  distributive_property: "C",
+  bracket_complex_div: "C",
+  bracket_composite: "C",
+  distributive_3term: "C",
+  master_curated: "C",
+  olympic_5_operands: "C",
+  olympic_distributive: "C",
+  olympic_bracket: "C",
+
+  // Nhóm D: Đại lượng đo lường
+  unit_mass_l1: "D",
+  unit_time_l1: "D",
+  unit_length_l1: "D",
+  unit_mass_l2: "D",
+  unit_area_l2: "D",
+  unit_time_l2: "D",
+  unit_compound_l3: "D",
+  unit_area_l3: "D",
+  olympic_units: "D"
+};
+
+export function pickDiverseType(types, recentTypes = [], recentGroups = []) {
+  if (!types || types.length === 0) return null;
+  const lastTypes = recentTypes.slice(-5);
+  const lastGroups = recentGroups.slice(-6);
+
+  // Đếm tần suất xuất hiện của nhóm trong 6 câu gần nhất
+  const groupCount = {};
+  for (const g of lastGroups) {
+    groupCount[g] = (groupCount[g] || 0) + 1;
   }
-  return { prompt, answer, strategy };
+
+  // Lọc dạng bài:
+  // 1. Không trùng dạng bài cụ thể trong 5 câu gần nhất
+  // 2. Nhóm lớn không xuất hiện quá 2 lần trong 6 câu gần nhất
+  let candidates = types.filter(t => {
+    if (lastTypes.includes(t)) return false;
+    const grp = SPEED_MATH_GROUPS[t] || "B";
+    if ((groupCount[grp] || 0) >= 2) return false;
+    return true;
+  });
+
+  // Nới lỏng ràng buộc nếu danh sách ứng viên bị lọc hết
+  if (candidates.length === 0) {
+    candidates = types.filter(t => !lastTypes.slice(-2).includes(t));
+  }
+  if (candidates.length === 0) {
+    candidates = types;
+  }
+
+  return candidates[rand(0, candidates.length - 1)];
 }
 
-function generateMultiAdd4(rand) {
-  const s1 = rand(1, 4) * 100;
-  const s2 = rand(1, 4) * 100;
-  const a = rand(12, s1 - 12);
-  const c = s1 - a;
-  const b = rand(12, s2 - 12);
-  const d = s2 - b;
-  const prompt = `${a} + ${b} + ${c} + ${d}`;
-  const answer = s1 + s2;
-  const strategy = `Nhóm 2 cặp tròn: (${a} + ${c}) + (${b} + ${d}) = ${s1} + ${s2} = ${answer}`;
-  return { prompt, answer, strategy };
-}
+export function generateSpeedMathProblem(streak = 0, options = {}) {
+  const recentTypes = Array.isArray(options?.recentTypes) ? options.recentTypes : [];
+  const recentGroups = Array.isArray(options?.recentGroups) ? options.recentGroups : [];
 
-function generateMultiSub(rand) {
-  const sumBC = rand(2, 6) * 100;
-  const b = rand(25, sumBC - 25);
-  const c = sumBC - b;
-  const a = rand(sumBC + 50, sumBC + 500);
-  const mode = rand(1, 2);
-  if (mode === 1) {
-    const prompt = `${a} − ${b} − ${c}`;
-    const answer = a - sumBC;
-    const strategy = `Trừ một tổng: ${a} − (${b} + ${c}) = ${a} − ${sumBC} = ${answer}`;
-    return { prompt, answer, strategy };
-  } else {
-    const prompt = `${a} − (${b} + ${c})`;
-    const answer = a - sumBC;
-    const strategy = `Tính ngoặc trước: ${a} − ${sumBC} = ${answer}`;
-    return { prompt, answer, strategy };
-  }
-}
-
-// --- 2. NHIỀU SỐ: NHÂN NHIỀU THỪA SỐ (CẶP SỐ VÀNG 3 - 4 THỪA SỐ) ---
-function generateMultiMul3(rand, maxA = 9) {
-  const a = rand(3, maxA);
-  const prompt = `2 × ${a} × 5`;
-  const answer = 10 * a;
-  const strategy = `Nhóm cặp số vàng: (2 × 5) × ${a} = 10 × ${a} = ${answer}`;
-  return { prompt, answer, strategy };
-}
-
-function generateMultiMulGolden(rand) {
-  const mode = rand(1, 3);
-  if (mode === 1) {
-    const a = rand(11, 48);
-    return {
-      prompt: `4 × ${a} × 25`,
-      answer: 100 * a,
-      strategy: `Nhóm cặp số vàng: (4 × 25) × ${a} = 100 × ${a} = ${100 * a}`
-    };
-  }
-  if (mode === 2) {
-    const a = rand(12, 48);
-    return {
-      prompt: `5 × ${a} × 20`,
-      answer: 100 * a,
-      strategy: `Nhóm (5 × 20) × ${a} = 100 × ${a} = ${100 * a}`
-    };
-  }
-  const a = rand(14, 48);
-  return {
-    prompt: `2 × ${a} × 50`,
-    answer: 100 * a,
-    strategy: `Nhóm (2 × 50) × ${a} = 100 × ${a} = ${100 * a}`
-  };
-}
-
-function generateMultiMul4Golden(rand) {
-  const mode = rand(1, 3);
-  if (mode === 1) {
-    const a = rand(6, 24);
-    return {
-      prompt: `4 × ${a} × 25 × 2`,
-      answer: 100 * (a * 2),
-      strategy: `Nhóm (4 × 25) × (${a} × 2) = 100 × ${a * 2} = ${100 * (a * 2)}`
-    };
-  }
-  if (mode === 2) {
-    const a = rand(3, 14);
-    return {
-      prompt: `8 × ${a} × 125 × 2`,
-      answer: 1000 * (a * 2),
-      strategy: `Nhóm (8 × 125) × (${a} × 2) = 1.000 × ${a * 2} = ${1000 * (a * 2)}`
-    };
-  }
-  const a = rand(3, 16);
-  return {
-    prompt: `25 × ${a} × 4 × 5`,
-    answer: 100 * (a * 5),
-    strategy: `Nhóm (25 × 4) × (${a} × 5) = 100 × ${a * 5} = ${100 * (a * 5)}`
-  };
-}
-
-// --- 3. NHIỀU SỐ: PHÂN PHỐI VÀ CHIA PHỨC HỢP (3 - 4 SỐ HẠNG) ---
-function generateDistributive3Term(rand) {
-  const a = rand(12, 85);
-  const b = rand(15, 75);
-  const c = 99 - b;
-  const prompt = `${a} × ${b} + ${a} × ${c} + ${a}`;
-  const answer = a * 100;
-  const strategy = `Rút ${a} chung: ${a} × (${b} + ${c} + 1) = ${a} × 100 = ${answer}`;
-  return { prompt, answer, strategy };
-}
-
-function generateMultiDivComposite(rand) {
-  const mode = rand(1, 3);
-  if (mode === 1) {
-    const c = [4, 6, 8, 9, 12][rand(0, 4)];
-    const q = rand(2, 6);
-    const a = c * q;
-    const b = [25, 50, 125, 20][rand(0, 3)];
-    return {
-      prompt: `(${a} × ${b}) : ${c}`,
-      answer: q * b,
-      strategy: `Chia trước nhân sau: (${a} : ${c}) × ${b} = ${q} × ${b} = ${q * b}`
-    };
-  }
-  if (mode === 2) {
-    const b = [25, 20, 10, 5][rand(0, 3)];
-    const c = b === 25 ? 4 : (b === 20 ? 5 : (b === 10 ? 10 : 10));
-    const inner = b * c;
-    const q = rand(12, 85);
-    const a = q * inner;
-    return {
-      prompt: `${a} : (${b} × ${c})`,
-      answer: q,
-      strategy: `Tính trong ngoặc trước: ${a} : ${inner} = ${q}`
-    };
-  }
-  const a = rand(2, 8) * 10;
-  return {
-    prompt: `(${a} × 25) : (5 × 5)`,
-    answer: a,
-    strategy: `(5 × 5) = 25: (${a} × 25) : 25 = ${a}`
-  };
-}
-
-// --- 4. NHIỀU ĐẠI LƯỢNG: ĐỔI VÀ TÍNH TOÁN ĐƠN VỊ ĐO LƯỜNG LỚP 4 ---
-function generateMassProblem(rand, level = 1) {
-  if (level === 1) {
-    const mode = rand(1, 4);
-    if (mode === 1) {
-      const a = rand(1, 6);
-      const b = rand(1, 8) * 10;
-      const c = 100 - b;
-      return {
-        prompt: `${a} tạ ${b} kg + ${c} kg = ? kg`,
-        answer: a * 100 + 100,
-        strategy: `Đổi ${a} tạ = ${a * 100} kg. Ta có: ${a * 100} + ${b} + ${c} = ${a * 100 + 100} kg`
-      };
-    }
-    if (mode === 2) {
-      const sub = rand(1, 8) * 100;
-      return {
-        prompt: `1 tấn − ${sub} kg = ? kg`,
-        answer: 1000 - sub,
-        strategy: `1 tấn = 1.000 kg. Lấy 1.000 − ${sub} = ${1000 - sub} kg`
-      };
-    }
-    if (mode === 3) {
-      const a = rand(2, 8);
-      const b = rand(1, 9);
-      return {
-        prompt: `${a} yến ${b} kg = ? kg`,
-        answer: a * 10 + b,
-        strategy: `1 yến = 10 kg. Ta có: ${a * 10} + ${b} = ${a * 10 + b} kg`
-      };
-    }
-    const a = rand(2, 8);
-    return {
-      prompt: `${a} tạ = ? yến`,
-      answer: a * 10,
-      strategy: `1 tạ = 10 yến. Ta có: ${a} × 10 = ${a * 10} yến`
-    };
-  }
-
-  // Level 2+
-  const mode = rand(1, 4);
-  if (mode === 1) {
-    const a = rand(2, 8);
-    const b = rand(1, 9);
-    return {
-      prompt: `${a} tấn ${b} tạ = ? tạ`,
-      answer: a * 10 + b,
-      strategy: `1 tấn = 10 tạ. Ta có: ${a * 10} + ${b} = ${a * 10 + b} tạ`
-    };
-  }
-  if (mode === 2) {
-    const a = rand(1, 4);
-    const sub = [150, 250, 350, 450, 550, 750][rand(0, 5)];
-    return {
-      prompt: `${a} tấn − ${sub} kg = ? kg`,
-      answer: a * 1000 - sub,
-      strategy: `${a} tấn = ${a * 1000} kg. Ta có: ${a * 1000} − ${sub} = ${a * 1000 - sub} kg`
-    };
-  }
-  if (mode === 3) {
-    const halfs = [{ p: "1/2 tạ", kg: 50 }, { p: "1/4 tạ", kg: 25 }, { p: "1/2 tấn", kg: 500 }, { p: "1/4 tấn", kg: 250 }];
-    const h = halfs[rand(0, halfs.length - 1)];
-    const extra = rand(1, 9) * 10;
-    return {
-      prompt: `${h.p} + ${extra} kg = ? kg`,
-      answer: h.kg + extra,
-      strategy: `${h.p} = ${h.kg} kg. Lấy ${h.kg} + ${extra} = ${h.kg + extra} kg`
-    };
-  }
-  const q = rand(1, 4) * 100 + rand(1, 9) * 10;
-  const d = [2, 5][rand(0, 1)];
-  const total = q * d;
-  const ta = Math.floor(total / 100);
-  const kg = total % 100;
-  const promptStr = kg === 0 ? `${ta} tạ : ${d} = ? kg` : `(${ta} tạ ${kg} kg) : ${d} = ? kg`;
-  return {
-    prompt: promptStr,
-    answer: q,
-    strategy: `Đổi về kg: ${total} kg : ${d} = ${q} kg`
-  };
-}
-
-function generateAreaProblem(rand, level = 2) {
-  if (level <= 2) {
-    const mode = rand(1, 5);
-    if (mode === 1) {
-      const a = rand(2, 8);
-      const b = rand(11, 89);
-      return {
-        prompt: `${a} m² ${b} dm² = ? dm²`,
-        answer: a * 100 + b,
-        strategy: `1 m² = 100 dm². Lấy ${a} × 100 + ${b} = ${a * 100 + b} dm²`
-      };
-    }
-    if (mode === 2) {
-      const a = rand(3, 8);
-      const sub = rand(1, 4) * 50;
-      return {
-        prompt: `${a} m² − ${sub} dm² = ? dm²`,
-        answer: a * 100 - sub,
-        strategy: `${a} m² = ${a * 100} dm². Lấy ${a * 100} − ${sub} = ${a * 100 - sub} dm²`
-      };
-    }
-    if (mode === 3) {
-      const a = rand(2, 9);
-      const b = rand(5, 85);
-      return {
-        prompt: `${a} dm² ${b} cm² = ? cm²`,
-        answer: a * 100 + b,
-        strategy: `1 dm² = 100 cm². Lấy ${a} × 100 + ${b} = ${a * 100 + b} cm²`
-      };
-    }
-    if (mode === 4) {
-      const fractions = [
-        { p: "1/2 m²", val: 50, u: "dm²", exp: "100 : 2 = 50" },
-        { p: "1/4 m²", val: 25, u: "dm²", exp: "100 : 4 = 25" },
-        { p: "1/2 dm²", val: 50, u: "cm²", exp: "100 : 2 = 50" },
-        { p: "1/4 dm²", val: 25, u: "cm²", exp: "100 : 4 = 25" }
-      ];
-      const f = fractions[rand(0, fractions.length - 1)];
-      return {
-        prompt: `${f.p} = ? ${f.u}`,
-        answer: f.val,
-        strategy: `${f.p} = ${f.exp} ${f.u}`
-      };
-    }
-    const a = rand(2, 6);
-    const bHundreds = rand(2, 5);
-    return {
-      prompt: `${a} m² + ${bHundreds * 100} dm² = ? m²`,
-      answer: a + bHundreds,
-      strategy: `${bHundreds * 100} dm² = ${bHundreds} m². Lấy ${a} + ${bHundreds} = ${a + bHundreds} m²`
-    };
-  }
-
-  // Level 3+
-  const mode = rand(1, 4);
-  if (mode === 1) {
-    const a = rand(1, 5);
-    const c = rand(1, 4);
-    const b = rand(15, 85);
-    const d = 100 - b;
-    return {
-      prompt: `${a} m² ${b} dm² + ${c} m² ${d} dm² = ? m²`,
-      answer: a + c + 1,
-      strategy: `Nhóm dm²: ${b} + ${d} = 100 dm² = 1 m². Tổng = ${a} + ${c} + 1 = ${a + c + 1} m²`
-    };
-  }
-  if (mode === 2) {
-    const a = rand(2, 7);
-    const b = rand(15, 85);
-    const c = 100 - b;
-    return {
-      prompt: `${a} dm² ${b} cm² + ${c} cm² = ? dm²`,
-      answer: a + 1,
-      strategy: `${b} + ${c} = 100 cm² = 1 dm². Lấy ${a} + 1 = ${a + 1} dm²`
-    };
-  }
-  if (mode === 3) {
-    const b1 = rand(15, 45);
-    const b2 = rand(15, 45);
-    const sumB = b1 + b2;
-    return {
-      prompt: `1 m² − (${b1} dm² + ${b2} dm²) = ? dm²`,
-      answer: 100 - sumB,
-      strategy: `1 m² = 100 dm². Lấy 100 − ${sumB} = ${100 - sumB} dm²`
-    };
-  }
-  const factor = rand(4, 9);
-  const q = rand(4, 9) * 10;
-  const totalDm2 = factor * q;
-  const m2 = Math.floor(totalDm2 / 100);
-  const dm2 = totalDm2 % 100;
-  const promptStr = dm2 === 0 ? `${m2} m² : ${factor} = ? dm²` : `(${m2} m² ${dm2} dm²) : ${factor} = ? dm²`;
-  return {
-    prompt: promptStr,
-    answer: q,
-    strategy: `Đổi về dm²: ${totalDm2} dm² : ${factor} = ${q} dm²`
-  };
-}
-
-function generateTimeProblem(rand, level = 1) {
-  if (level === 1) {
-    const mode = rand(1, 4);
-    if (mode === 1) {
-      const h = rand(1, 3);
-      const m = rand(1, 5) * 10;
-      return {
-        prompt: `${h} giờ ${m} phút = ? phút`,
-        answer: h * 60 + m,
-        strategy: `${h} giờ = ${h * 60} phút. Lấy ${h * 60} + ${m} = ${h * 60 + m} phút`
-      };
-    }
-    if (mode === 2) {
-      const m = rand(1, 3);
-      const s = rand(1, 5) * 10;
-      return {
-        prompt: `${m} phút ${s} giây = ? giây`,
-        answer: m * 60 + s,
-        strategy: `${m} phút = ${m * 60} giây. Lấy ${m * 60} + ${s} = ${m * 60 + s} giây`
-      };
-    }
-    if (mode === 3) {
-      const fractions = [
-        { p: "1/2 ngày", val: 12, u: "giờ", exp: "24 : 2 = 12" },
-        { p: "1/3 ngày", val: 8, u: "giờ", exp: "24 : 3 = 8" },
-        { p: "1/4 ngày", val: 6, u: "giờ", exp: "24 : 4 = 6" },
-        { p: "1/2 giờ", val: 30, u: "phút", exp: "60 : 2 = 30" },
-        { p: "1/4 giờ", val: 15, u: "phút", exp: "60 : 4 = 15" }
-      ];
-      const f = fractions[rand(0, fractions.length - 1)];
-      return {
-        prompt: `${f.p} = ? ${f.u}`,
-        answer: f.val,
-        strategy: `${f.p} = ${f.exp} ${f.u}`
-      };
-    }
-    const c = rand(2, 5);
-    return {
-      prompt: `${c} thế kỷ = ? năm`,
-      answer: c * 100,
-      strategy: `1 thế kỷ = 100 năm. Lấy ${c} × 100 = ${c * 100} năm`
-    };
-  }
-
-  // Level 2+
-  const mode = rand(1, 4);
-  if (mode === 1) {
-    const fractions = [
-      { p: "1/4 thế kỷ", val: 25, exp: "100 : 4 = 25" },
-      { p: "1/5 thế kỷ", val: 20, exp: "100 : 5 = 20" },
-      { p: "1/2 thế kỷ", val: 50, exp: "100 : 2 = 50" }
-    ];
-    const f = fractions[rand(0, fractions.length - 1)];
-    const extraYears = rand(1, 9);
-    return {
-      prompt: `${f.p} + ${extraYears} năm = ? năm`,
-      answer: f.val + extraYears,
-      strategy: `${f.p} = ${f.val} năm. Lấy ${f.val} + ${extraYears} = ${f.val + extraYears} năm`
-    };
-  }
-  if (mode === 2) {
-    const h = rand(1, 4);
-    const m1 = rand(2, 5) * 10;
-    const m2 = 60 - m1;
-    return {
-      prompt: `${h} giờ ${m1} phút + ${m2} phút = ? giờ`,
-      answer: h + 1,
-      strategy: `${m1} + ${m2} = 60 phút = 1 giờ. Lấy ${h} + 1 = ${h + 1} giờ`
-    };
-  }
-  if (mode === 3) {
-    const m = rand(2, 6);
-    const totalSec = m * 60;
-    return {
-      prompt: `${totalSec} giây = ? phút`,
-      answer: m,
-      strategy: `Lấy ${totalSec} : 60 = ${m} phút`
-    };
-  }
-  const h = rand(4, 16);
-  return {
-    prompt: `1 ngày − ${h} giờ = ? giờ`,
-    answer: 24 - h,
-    strategy: `1 ngày = 24 giờ. Lấy 24 − ${h} = ${24 - h} giờ`
-  };
-}
-
-function generateLengthProblem(rand, level = 1) {
-  if (level === 1) {
-    const mode = rand(1, 3);
-    if (mode === 1) {
-      const km = rand(1, 4);
-      const m = rand(1, 9) * 100;
-      return {
-        prompt: `${km} km ${m} m = ? m`,
-        answer: km * 1000 + m,
-        strategy: `${km} km = ${km * 1000} m. Lấy ${km * 1000} + ${m} = ${km * 1000 + m} m`
-      };
-    }
-    if (mode === 2) {
-      const m = rand(2, 8);
-      const dm = rand(1, 9);
-      return {
-        prompt: `${m} m ${dm} dm = ? dm`,
-        answer: m * 10 + dm,
-        strategy: `1 m = 10 dm. Lấy ${m * 10} + ${dm} = ${m * 10 + dm} dm`
-      };
-    }
-    const f = [{ p: "1/2 km", val: 500 }, { p: "1/4 km", val: 250 }][rand(0, 1)];
-    return {
-      prompt: `${f.p} = ? m`,
-      answer: f.val,
-      strategy: `${f.p} = ${f.val} m`
-    };
-  }
-
-  // Level 2+
-  const km = rand(2, 5);
-  const m = rand(1, 4) * 200;
-  return {
-    prompt: `${km} km − ${m} m = ? m`,
-    answer: km * 1000 - m,
-    strategy: `${km} km = ${km * 1000} m. Lấy ${km * 1000} − ${m} = ${km * 1000 - m} m`
-  };
-}
-
-// --- 5. SIÊU THẦN TỐC OLYMPIC (LEVEL 4 - 4 ĐẾN 5 SỐ HẠNG & ĐẠI LƯỢNG NÂNG CAO) ---
-function generateOlympic5Operands(rand) {
-  const a = rand(2, 9);
-  return {
-    prompt: `8 × ${a} × 125 × 5 × 2`,
-    answer: 10000 * a,
-    strategy: `Nhóm (8 × 125) × (5 × 2) × ${a} = 1.000 × 10 × ${a} = ${10000 * a}`
-  };
-}
-
-function generateOlympicDistributive(rand) {
-  const a = rand(15, 75);
-  const b = rand(12, 45);
-  const c = rand(12, 35);
-  const d = 99 - b - c;
-  return {
-    prompt: `${a} × ${b} + ${a} × ${c} + ${a} × ${d} + ${a}`,
-    answer: a * 100,
-    strategy: `Rút ${a} chung: ${a} × (${b} + ${c} + ${d} + 1) = ${a} × 100 = ${a * 100}`
-  };
-}
-
-function generateOlympicBracket(rand) {
-  const mode = rand(1, 3);
-  if (mode === 1) {
-    const multK = rand(2, 8);
-    return {
-      prompt: `(125 × 8) × (25 × ${multK * 4})`,
-      answer: 1000 * (100 * multK),
-      strategy: `1.000 × (${multK} × 100) = ${1000 * (100 * multK)}`
-    };
-  }
-  if (mode === 2) {
-    const a = rand(2, 6);
-    return {
-      prompt: `(25 × ${a * 36} × 4) : 9`,
-      answer: 100 * (a * 4),
-      strategy: `Nhóm (25 × 4) × (${a * 36} : 9) = 100 × ${a * 4} = ${100 * (a * 4)}`
-    };
-  }
-  const a = rand(2, 8);
-  return {
-    prompt: `(125 × ${a * 72}) : 9`,
-    answer: 1000 * a,
-    strategy: `Nhóm 125 × (${a * 72} : 9) = 125 × (${a} × 8) = 1.000 × ${a} = ${1000 * a}`
-  };
-}
-
-function generateOlympicUnitProblem(rand) {
-  const mode = rand(1, 4);
-  if (mode === 1) {
-    const t1 = rand(2, 5);
-    const ta1 = rand(1, 9);
-    const t2 = rand(1, 4);
-    const ta2 = 10 - ta1;
-    return {
-      prompt: `${t1} tấn ${ta1} tạ + ${t2} tấn ${ta2} tạ = ? tấn`,
-      answer: t1 + t2 + 1,
-      strategy: `${ta1} tạ + ${ta2} tạ = 10 tạ = 1 tấn. Tổng = ${t1} + ${t2} + 1 = ${t1 + t2 + 1} tấn`
-    };
-  }
-  if (mode === 2) {
-    const m2 = rand(8, 15);
-    const sub1 = rand(15, 35) * 10;
-    const sub2 = rand(15, 25) * 10;
-    const totalSub = sub1 + sub2;
-    return {
-      prompt: `${m2} m² − ${sub1} dm² − ${sub2} dm² = ? dm²`,
-      answer: m2 * 100 - totalSub,
-      strategy: `${m2} m² = ${m2 * 100} dm². Trừ tổng: ${m2 * 100} − (${sub1} + ${sub2}) = ${m2 * 100 - totalSub} dm²`
-    };
-  }
-  if (mode === 3) {
-    const h1 = rand(5, 8);
-    const h2 = rand(1, 3);
-    const m = [20, 30, 40][rand(0, 2)];
-    return {
-      prompt: `${h1} giờ − (${h2} giờ ${m} phút) = ? phút`,
-      answer: (h1 - h2) * 60 - m,
-      strategy: `Đổi: ${h1 * 60} phút − (${h2 * 60 + m} phút) = ${(h1 - h2) * 60 - m} phút`
-    };
-  }
-  const tan = rand(1, 4);
-  const kg = [0, 200, 400, 500, 600, 800][rand(0, 5)];
-  const totalKg = tan * 1000 + kg;
-  const validDivisors = [2, 4, 5, 8, 10].filter(d => totalKg % d === 0);
-  const d = validDivisors[rand(0, validDivisors.length - 1)];
-  const q = totalKg / d;
-  const promptStr = kg === 0 ? `${tan} tấn : ${d} = ? kg` : `(${tan} tấn ${kg} kg) : ${d} = ? kg`;
-  return {
-    prompt: promptStr,
-    answer: q,
-    strategy: `Đổi về kg: ${totalKg} kg : ${d} = ${q} kg`
-  };
-}
-
-export function generateSpeedMathProblem(streak = 0) {
   // Tăng dần độ khó theo streak:
   // Streak 0-2: Cấp 1 (Cộng trừ bù tròn, Bảng cửu chương, Nhóm 3 số tròn chục/trăm, Đại lượng đo cơ bản)
   // Streak 3-5: Cấp 2 (Nhân nhẩm 11/5/25, Cặp số vàng, Nhóm 4 số, Đại lượng diện tích m²/dm² và khối lượng tấn/tạ)
@@ -585,25 +127,26 @@ export function generateSpeedMathProblem(streak = 0) {
       "multi_add_3", "multi_sub_sum", "multi_mul_3",
       "unit_mass_l1", "unit_time_l1", "unit_length_l1"
     ];
-    const type = types[rand(0, types.length - 1)];
+    const type = pickDiverseType(types, recentTypes, recentGroups) || types[rand(0, types.length - 1)];
+    const group = SPEED_MATH_GROUPS[type] || "B";
 
     if (type === "multi_add_3") {
-      return { ...generateMultiAdd3(rand), level: 1 };
+      return { ...generateMultiAdd3(rand), level: 1, type, group };
     }
     if (type === "multi_sub_sum") {
-      return { ...generateMultiSub(rand), level: 1 };
+      return { ...generateMultiSub(rand), level: 1, type, group };
     }
     if (type === "multi_mul_3") {
-      return { ...generateMultiMul3(rand, 9), level: 1 };
+      return { ...generateMultiMul3(rand, 9), level: 1, type, group };
     }
     if (type === "unit_mass_l1") {
-      return { ...generateMassProblem(rand, 1), level: 1 };
+      return { ...generateMassProblem(rand, 1), level: 1, type, group };
     }
     if (type === "unit_time_l1") {
-      return { ...generateTimeProblem(rand, 1), level: 1 };
+      return { ...generateTimeProblem(rand, 1), level: 1, type, group };
     }
     if (type === "unit_length_l1") {
-      return { ...generateLengthProblem(rand, 1), level: 1 };
+      return { ...generateLengthProblem(rand, 1), level: 1, type, group };
     }
 
     if (type === "add_round") {
@@ -616,7 +159,9 @@ export function generateSpeedMathProblem(streak = 0) {
         prompt: `${base} + ${add}`,
         answer: base + add,
         strategy: `Lấy ${rounded} + ${add} − ${comp}`,
-        level: 1
+        level: 1,
+        type,
+        group
       };
     }
     if (type === "sub_round") {
@@ -629,7 +174,9 @@ export function generateSpeedMathProblem(streak = 0) {
         prompt: `${base} − ${sub}`,
         answer: base - sub,
         strategy: `Lấy ${base} − ${rounded} + ${comp}`,
-        level: 1
+        level: 1,
+        type,
+        group
       };
     }
     if (type === "basic_mul") {
@@ -639,7 +186,9 @@ export function generateSpeedMathProblem(streak = 0) {
         prompt: `${a} × ${b}`,
         answer: a * b,
         strategy: "Bảng nhân cửu chương",
-        level: 1
+        level: 1,
+        type,
+        group
       };
     }
     if (type === "basic_div") {
@@ -650,7 +199,9 @@ export function generateSpeedMathProblem(streak = 0) {
         prompt: `${dividend} : ${divisor}`,
         answer: quotient,
         strategy: "Bảng chia cửu chương",
-        level: 1
+        level: 1,
+        type,
+        group
       };
     }
     if (type === "round_ten_mul") {
@@ -660,7 +211,9 @@ export function generateSpeedMathProblem(streak = 0) {
         prompt: `${a} × ${b}`,
         answer: a * b,
         strategy: `Nhân ${a / 10} × ${b} rồi thêm chữ số 0`,
-        level: 1
+        level: 1,
+        type,
+        group
       };
     }
     if (type === "round_ten_div") {
@@ -671,7 +224,9 @@ export function generateSpeedMathProblem(streak = 0) {
         prompt: `${dividend} : ${divisor}`,
         answer: quotient,
         strategy: `Lấy ${dividend / 10} : ${divisor} rồi thêm số 0`,
-        level: 1
+        level: 1,
+        type,
+        group
       };
     }
     if (type === "bracket_add_mul") {
@@ -684,7 +239,9 @@ export function generateSpeedMathProblem(streak = 0) {
         prompt: `(${a} + ${b}) × ${c}`,
         answer: sum * c,
         strategy: `Tính trong ngoặc trước: ${sum} × ${c}`,
-        level: 1
+        level: 1,
+        type,
+        group
       };
     }
     // bracket_sub_div: (a - b) : c
@@ -698,7 +255,9 @@ export function generateSpeedMathProblem(streak = 0) {
       prompt: `(${a} − ${b}) : ${c}`,
       answer: diff / c,
       strategy: `Tính trong ngoặc trước: ${diff} : ${c}`,
-      level: 1
+      level: 1,
+      type,
+      group
     };
   }
 
@@ -710,25 +269,26 @@ export function generateSpeedMathProblem(streak = 0) {
       "multi_add_4", "multi_mul_3_golden", "multi_sub_mixed",
       "unit_mass_l2", "unit_area_l2", "unit_time_l2"
     ];
-    const type = types[rand(0, types.length - 1)];
+    const type = pickDiverseType(types, recentTypes, recentGroups) || types[rand(0, types.length - 1)];
+    const group = SPEED_MATH_GROUPS[type] || "B";
 
     if (type === "multi_add_4") {
-      return { ...generateMultiAdd4(rand), level: 2 };
+      return { ...generateMultiAdd4(rand), level: 2, type, group };
     }
     if (type === "multi_mul_3_golden") {
-      return { ...generateMultiMulGolden(rand), level: 2 };
+      return { ...generateMultiMulGolden(rand), level: 2, type, group };
     }
     if (type === "multi_sub_mixed") {
-      return { ...generateMultiSub(rand), level: 2 };
+      return { ...generateMultiSub(rand), level: 2, type, group };
     }
     if (type === "unit_mass_l2") {
-      return { ...generateMassProblem(rand, 2), level: 2 };
+      return { ...generateMassProblem(rand, 2), level: 2, type, group };
     }
     if (type === "unit_area_l2") {
-      return { ...generateAreaProblem(rand, 2), level: 2 };
+      return { ...generateAreaProblem(rand, 2), level: 2, type, group };
     }
     if (type === "unit_time_l2") {
-      return { ...generateTimeProblem(rand, 2), level: 2 };
+      return { ...generateTimeProblem(rand, 2), level: 2, type, group };
     }
 
     if (type === "mul_11") {
@@ -737,7 +297,9 @@ export function generateSpeedMathProblem(streak = 0) {
         prompt: `${num} × 11`,
         answer: num * 11,
         strategy: `Tách ${num}: chèn tổng 2 chữ số vào giữa`,
-        level: 2
+        level: 2,
+        type,
+        group
       };
     }
     if (type === "mul_5") {
@@ -747,7 +309,9 @@ export function generateSpeedMathProblem(streak = 0) {
         prompt: `${num} × 5`,
         answer: num * 5,
         strategy: `Nhân đôi chia đôi: (${num} : 2) × 10 = ${half} × 10`,
-        level: 2
+        level: 2,
+        type,
+        group
       };
     }
     if (type === "div_by_5") {
@@ -757,7 +321,9 @@ export function generateSpeedMathProblem(streak = 0) {
         prompt: `${dividend} : 5`,
         answer: quotient,
         strategy: `Nhân đôi rồi chia 10: (${dividend} × 2) : 10`,
-        level: 2
+        level: 2,
+        type,
+        group
       };
     }
     if (type === "div_by_25") {
@@ -766,8 +332,10 @@ export function generateSpeedMathProblem(streak = 0) {
       return {
         prompt: `${dividend} : 25`,
         answer: hundreds * 4,
-        strategy: `Mỗi 100 có bốn số 25: ${hundreds} × 4 = ${hundreds * 4}`,
-        level: 2
+        strategy: `Mỗi 100 có bốn số 25: lấy ${hundreds} × 4`,
+        level: 2,
+        type,
+        group
       };
     }
     if (type === "mul_double") {
@@ -780,7 +348,9 @@ export function generateSpeedMathProblem(streak = 0) {
         prompt: `${p[0]} × ${p[1]}`,
         answer: p[0] * p[1],
         strategy: "Gấp đôi thừa số này và chia đôi thừa số kia",
-        level: 2
+        level: 2,
+        type,
+        group
       };
     }
     if (type === "mul_round_hundred") {
@@ -790,7 +360,9 @@ export function generateSpeedMathProblem(streak = 0) {
         prompt: `${a} × ${b}`,
         answer: a * b,
         strategy: `Lấy ${a / 10} × ${b / 10} rồi thêm 2 số 0`,
-        level: 2
+        level: 2,
+        type,
+        group
       };
     }
     if (type === "div_round_hundred") {
@@ -801,7 +373,9 @@ export function generateSpeedMathProblem(streak = 0) {
         prompt: `${dividend} : ${divisor}`,
         answer: quotient,
         strategy: `Cùng bớt một chữ số 0: ${dividend / 10} : ${divisor / 10}`,
-        level: 2
+        level: 2,
+        type,
+        group
       };
     }
     if (type === "bracket_mul_level2") {
@@ -813,8 +387,10 @@ export function generateSpeedMathProblem(streak = 0) {
       return {
         prompt: `(${a} + ${b}) × ${c}`,
         answer: sum * c,
-        strategy: `Cộng trong ngoặc: ${sum} × ${c}`,
-        level: 2
+        strategy: `Cộng trong ngoặc trước: ${sum} × ${c}`,
+        level: 2,
+        type,
+        group
       };
     }
     // bracket_div_level2: (a + b) : c
@@ -828,7 +404,9 @@ export function generateSpeedMathProblem(streak = 0) {
       prompt: `(${a} + ${b}) : ${c}`,
       answer: sumVal / c,
       strategy: `Cộng trong ngoặc: ${sumVal} : ${c}`,
-      level: 2
+      level: 2,
+      type,
+      group
     };
   }
 
@@ -840,22 +418,23 @@ export function generateSpeedMathProblem(streak = 0) {
       "distributive_3term", "multi_mul_4_golden", "multi_div_composite",
       "unit_compound_l3", "unit_area_l3"
     ];
-    const type = types[rand(0, types.length - 1)];
+    const type = pickDiverseType(types, recentTypes, recentGroups) || types[rand(0, types.length - 1)];
+    const group = SPEED_MATH_GROUPS[type] || "B";
 
     if (type === "distributive_3term") {
-      return { ...generateDistributive3Term(rand), level: 3 };
+      return { ...generateDistributive3Term(rand), level: 3, type, group };
     }
     if (type === "multi_mul_4_golden") {
-      return { ...generateMultiMul4Golden(rand), level: 3 };
+      return { ...generateMultiMul4Golden(rand), level: 3, type, group };
     }
     if (type === "multi_div_composite") {
-      return { ...generateMultiDivComposite(rand), level: 3 };
+      return { ...generateMultiDivComposite(rand), level: 3, type, group };
     }
     if (type === "unit_compound_l3") {
-      return { ...generateMassProblem(rand, 3), level: 3 };
+      return { ...generateMassProblem(rand, 3), level: 3, type, group };
     }
     if (type === "unit_area_l3") {
-      return { ...generateAreaProblem(rand, 3), level: 3 };
+      return { ...generateAreaProblem(rand, 3), level: 3, type, group };
     }
 
     if (type === "gold_pair_25") {
@@ -865,7 +444,9 @@ export function generateSpeedMathProblem(streak = 0) {
         prompt: `25 × ${m}`,
         answer: 25 * m,
         strategy: `Cặp số vàng: 25 × 4 × ${multK} = 100 × ${multK}`,
-        level: 3
+        level: 3,
+        type,
+        group
       };
     }
     if (type === "gold_pair_125") {
@@ -875,7 +456,9 @@ export function generateSpeedMathProblem(streak = 0) {
         prompt: `125 × ${m}`,
         answer: 125 * m,
         strategy: `Cặp số vàng: 125 × 8 × ${multK} = 1.000 × ${multK}`,
-        level: 3
+        level: 3,
+        type,
+        group
       };
     }
     if (type === "mul_near_hundred") {
@@ -886,7 +469,9 @@ export function generateSpeedMathProblem(streak = 0) {
           prompt: `${a} × 9`,
           answer: a * 9,
           strategy: `Bù trừ: ${a} × 10 − ${a}`,
-          level: 3
+          level: 3,
+          type,
+          group
         };
       }
       if (mode === 2) {
@@ -895,7 +480,9 @@ export function generateSpeedMathProblem(streak = 0) {
           prompt: `${a} × 19`,
           answer: a * 19,
           strategy: `Bù trừ: ${a} × 20 − ${a}`,
-          level: 3
+          level: 3,
+          type,
+          group
         };
       }
       if (mode === 3) {
@@ -904,7 +491,9 @@ export function generateSpeedMathProblem(streak = 0) {
           prompt: `${a} × 99`,
           answer: a * 99,
           strategy: `Bù trừ: ${a} × 100 − ${a}`,
-          level: 3
+          level: 3,
+          type,
+          group
         };
       }
       const a = rand(12, 45);
@@ -912,7 +501,9 @@ export function generateSpeedMathProblem(streak = 0) {
         prompt: `${a} × 101`,
         answer: a * 101,
         strategy: `Phân phối: ${a} × 100 + ${a}`,
-        level: 3
+        level: 3,
+        type,
+        group
       };
     }
     if (type === "distributive_property") {
@@ -925,7 +516,9 @@ export function generateSpeedMathProblem(streak = 0) {
           prompt: `(${a} × ${b}) + (${a} × ${c})`,
           answer: a * 10,
           strategy: `Đặt ${a} làm thừa số chung: ${a} × (${b} + ${c}) = ${a} × 10`,
-          level: 3
+          level: 3,
+          type,
+          group
         };
       } else {
         const c = rand(2, 9);
@@ -934,7 +527,9 @@ export function generateSpeedMathProblem(streak = 0) {
           prompt: `(${a} × ${b}) − (${a} × ${c})`,
           answer: a * 10,
           strategy: `Đặt ${a} làm thừa số chung: ${a} × (${b} − ${c}) = ${a} × 10`,
-          level: 3
+          level: 3,
+          type,
+          group
         };
       }
     }
@@ -947,76 +542,86 @@ export function generateSpeedMathProblem(streak = 0) {
       return {
         prompt: `${dividend} : (${b} × ${c})`,
         answer: quotient,
-        strategy: `Lấy ${dividend} : ${inner} = ${quotient}`,
-        level: 3
+        strategy: `Lấy ${dividend} chia cho tích trong ngoặc: ${dividend} : ${inner}`,
+        level: 3,
+        type,
+        group
       };
     }
     // bracket_composite: biểu thức kết hợp
     const compositeList = [
-      { prompt: "(125 + 75) × (12 : 3)", answer: 800, strategy: "200 × 4 = 800" },
-      { prompt: "(800 − 300) : (25 × 2)", answer: 10, strategy: "500 : 50 = 10" },
-      { prompt: "(99 + 1) × (45 − 25)", answer: 2000, strategy: "100 × 20 = 2.000" },
-      { prompt: "(140 + 260) : (20 × 2)", answer: 10, strategy: "400 : 40 = 10" },
-      { prompt: "6 × (120 − 70)", answer: 300, strategy: "6 × 50 = 300" },
-      { prompt: "(250 + 150) × (30 : 6)", answer: 2000, strategy: "400 × 5 = 2.000" },
-      { prompt: "(900 − 400) : (10 × 5)", answer: 10, strategy: "500 : 50 = 10" },
-      { prompt: "(15 × 4) × (120 : 60)", answer: 120, strategy: "60 × 2 = 120" }
+      { prompt: "(125 + 75) × (12 : 3)", answer: 800, strategy: "Tính từng ngoặc: 200 × 4" },
+      { prompt: "(800 − 300) : (25 × 2)", answer: 10, strategy: "Tính từng ngoặc: 500 : 50" },
+      { prompt: "(99 + 1) × (45 − 25)", answer: 2000, strategy: "Tính từng ngoặc: 100 × 20" },
+      { prompt: "(140 + 260) : (20 × 2)", answer: 10, strategy: "Tính từng ngoặc: 400 : 40" },
+      { prompt: "6 × (120 − 70)", answer: 300, strategy: "Tính trong ngoặc trước: 6 × 50" },
+      { prompt: "(250 + 150) × (30 : 6)", answer: 2000, strategy: "Tính từng ngoặc: 400 × 5" },
+      { prompt: "(900 − 400) : (10 × 5)", answer: 10, strategy: "Tính từng ngoặc: 500 : 50" },
+      { prompt: "(15 × 4) × (120 : 60)", answer: 120, strategy: "Tính từng ngoặc: 60 × 2" }
     ];
     const item = compositeList[rand(0, compositeList.length - 1)];
-    return { ...item, level: 3 };
+    return { ...item, level: 3, type, group };
   }
 
   // Level 4: streak 10+ (Siêu Thần Tốc Olympic)
   const masterList = [
-    { prompt: "(125 × 8) × (25 × 4)", answer: 100000, strategy: "1.000 × 100 = 100.000" },
-    { prompt: "(1.200 − 400) : (15 + 25)", answer: 20, strategy: "800 : 40 = 20" },
-    { prompt: "(88 + 12) × (75 − 25)", answer: 5000, strategy: "100 × 50 = 5.000" },
-    { prompt: "(2.500 − 500) : (100 : 2)", answer: 40, strategy: "2.000 : 50 = 40" },
-    { prompt: "(640 : 8) × (150 : 30)", answer: 400, strategy: "80 × 5 = 400" },
-    { prompt: "(36 × 25) : 9", answer: 100, strategy: "(36 : 9) × 25 = 4 × 25 = 100" },
-    { prompt: "(450 × 4) : 90", answer: 20, strategy: "(450 : 90) × 4 = 5 × 4 = 20" },
-    { prompt: "(250 + 750) : (125 : 5)", answer: 40, strategy: "1.000 : 25 = 40" },
-    { prompt: "(16 × 25) × (15 − 10)", answer: 2000, strategy: "400 × 5 = 2.000" },
-    { prompt: "(125 × 4) × (25 × 2)", answer: 25000, strategy: "500 × 50 = 25.000" },
-    { prompt: "(4.800 : 60) × (35 − 15)", answer: 1600, strategy: "80 × 20 = 1.600" },
-    { prompt: "(75 × 12) − (75 × 2)", answer: 750, strategy: "75 × (12 − 2) = 75 × 10 = 750" },
-    { prompt: "(18 × 25) : 2", answer: 225, strategy: "(18 : 2) × 25 = 9 × 25 = 225" },
-    { prompt: "(3.600 : 40) × (25 × 4)", answer: 9000, strategy: "90 × 100 = 9.000" },
-    { prompt: "(150 + 350) × (48 : 12)", answer: 2000, strategy: "500 × 4 = 2.000" },
-    { prompt: "(24 × 50) : 12", answer: 100, strategy: "(24 : 12) × 50 = 2 × 50 = 100" },
-    { prompt: "45 × 68 + 45 × 31 + 45", answer: 4500, strategy: "45 × (68 + 31 + 1) = 45 × 100 = 4.500" },
-    { prompt: "38 × 125 − 38 × 24 − 38", answer: 3800, strategy: "38 × (125 − 24 − 1) = 38 × 100 = 3.800" },
-    { prompt: "(125 × 72) : 9", answer: 1000, strategy: "125 × (72 : 9) = 125 × 8 = 1.000" },
-    { prompt: "1/4 thế kỷ + 1/2 thế kỷ = ? năm", answer: 75, strategy: "25 + 50 = 75 năm" },
-    { prompt: "3 tấn 5 tạ + 2 tấn 5 tạ = ? tấn", answer: 6, strategy: "3 tấn + 2 tấn + 10 tạ = 6 tấn" }
+    { prompt: "(125 × 8) × (25 × 4)", answer: 100000, strategy: "Nhóm: (125 × 8 = 1.000) × (25 × 4 = 100)" },
+    { prompt: "(1200 − 400) : (15 + 25)", answer: 20, strategy: "Tính từng ngoặc: 800 : 40" },
+    { prompt: "(88 + 12) × (75 − 25)", answer: 5000, strategy: "Tính từng ngoặc: 100 × 50" },
+    { prompt: "(2500 − 500) : (100 : 2)", answer: 40, strategy: "Tính từng ngoặc: 2000 : 50" },
+    { prompt: "(640 : 8) × (150 : 30)", answer: 400, strategy: "Tính từng ngoặc: 80 × 5" },
+    { prompt: "(36 × 25) : 9", answer: 100, strategy: "Chia trước nhân sau: (36 : 9) × 25 = 4 × 25" },
+    { prompt: "(450 × 4) : 90", answer: 20, strategy: "Giao hoán: (450 : 90) × 4 = 5 × 4" },
+    { prompt: "(250 + 750) : (125 : 5)", answer: 40, strategy: "Tính từng ngoặc: 1000 : 25" },
+    { prompt: "(16 × 25) × (15 − 10)", answer: 2000, strategy: "Tính từng ngoặc: 400 × 5" },
+    { prompt: "(125 × 4) × (25 × 2)", answer: 25000, strategy: "Nhóm: 500 × 50" },
+    { prompt: "(4800 : 60) × (35 − 15)", answer: 1600, strategy: "Tính từng ngoặc: 80 × 20" },
+    { prompt: "(75 × 12) − (75 × 2)", answer: 750, strategy: "Rút 75 chung: 75 × (12 − 2) = 75 × 10" },
+    { prompt: "(18 × 25) : 2", answer: 225, strategy: "Chia trước nhân sau: (18 : 2) × 25 = 9 × 25" },
+    { prompt: "(3600 : 40) × (25 × 4)", answer: 9000, strategy: "Tính từng ngoặc: 90 × 100" },
+    { prompt: "(150 + 350) × (48 : 12)", answer: 2000, strategy: "Tính từng ngoặc: 500 × 4" },
+    { prompt: "(24 × 50) : 12", answer: 100, strategy: "Chia trước nhân sau: (24 : 12) × 50 = 2 × 50" },
+    { prompt: "45 × 68 + 45 × 31 + 45", answer: 4500, strategy: "Rút 45 chung: 45 × (68 + 31 + 1) = 45 × 100" },
+    { prompt: "38 × 125 − 38 × 24 − 38", answer: 3800, strategy: "Rút 38 chung: 38 × (125 − 24 − 1) = 38 × 100" },
+    { prompt: "(125 × 72) : 9", answer: 1000, strategy: "Nhóm: 125 × (72 : 9) = 125 × 8" },
+    { prompt: "1/4 thế kỷ + 1/2 thế kỷ = ? năm", answer: 75, strategy: "Đổi về năm: 25 + 50 năm" },
+    { prompt: "3 tấn 5 tạ + 2 tấn 5 tạ = ? tấn", answer: 6, strategy: "Nhóm: 3 tấn + 2 tấn + (5 tạ + 5 tạ)" }
   ];
 
   const level4Types = [
     "master_curated", "olympic_5_operands", "olympic_distributive",
     "olympic_bracket", "olympic_units"
   ];
-  const l4Type = level4Types[rand(0, level4Types.length - 1)];
-  if (l4Type === "olympic_5_operands") return { ...generateOlympic5Operands(rand), level: 4 };
-  if (l4Type === "olympic_distributive") return { ...generateOlympicDistributive(rand), level: 4 };
-  if (l4Type === "olympic_bracket") return { ...generateOlympicBracket(rand), level: 4 };
-  if (l4Type === "olympic_units") return { ...generateOlympicUnitProblem(rand), level: 4 };
+  const l4Type = pickDiverseType(level4Types, recentTypes, recentGroups) || level4Types[rand(0, level4Types.length - 1)];
+  const l4Group = SPEED_MATH_GROUPS[l4Type] || "C";
+
+  if (l4Type === "olympic_5_operands") return { ...generateOlympic5Operands(rand), level: 4, type: l4Type, group: l4Group };
+  if (l4Type === "olympic_distributive") return { ...generateOlympicDistributive(rand), level: 4, type: l4Type, group: l4Group };
+  if (l4Type === "olympic_bracket") return { ...generateOlympicBracket(rand), level: 4, type: l4Type, group: l4Group };
+  if (l4Type === "olympic_units") return { ...generateOlympicUnitProblem(rand), level: 4, type: l4Type, group: l4Group };
 
   const item = masterList[rand(0, masterList.length - 1)];
-  return { ...item, level: 4 };
+  return { ...item, level: 4, type: "master_curated", group: "C" };
 }
 
 export class SpeedMathSession {
-  constructor({ onTick, onEnd, onScoreChange } = {}) {
+  constructor({ onTick, onEnd, onScoreChange, initialStreak = 0 } = {}) {
     this.duration = 90;
     this.remaining = 90;
     this.timer = null;
     this.isRunning = false;
     this.score = 0;
-    this.streak = 0;
-    this.bestStreak = 0;
+    this.initialStreak = Math.max(0, Number(initialStreak) || 0);
+    this.streak = this.initialStreak;
+    this.bestStreak = this.streak;
     this.correctCount = 0;
     this.wrongCount = 0;
     this.currentProblem = null;
+    this.recentTypes = [];
+    this.recentGroups = [];
+    this.responseTimes = [];
+    this.fastSolveCount = 0;
+    this.problemStartTime = null;
     this.onTick = onTick || (() => {});
     this.onEnd = onEnd || (() => {});
     this.onScoreChange = onScoreChange || (() => {});
@@ -1025,6 +630,8 @@ export class SpeedMathSession {
   start() {
     this.reset();
     this.isRunning = true;
+    this.streak = this.initialStreak;
+    this.bestStreak = this.streak;
     this.endTime = Date.now() + this.duration * 1000;
     this.nextProblem();
     this.timer = setInterval(() => {
@@ -1038,6 +645,9 @@ export class SpeedMathSession {
         this.stop();
       }
     }, 200);
+    if (typeof this.timer?.unref === "function") {
+      this.timer.unref();
+    }
     this.onTick({ remaining: this.remaining, duration: this.duration });
   }
 
@@ -1048,11 +658,35 @@ export class SpeedMathSession {
       this.timer = null;
     }
     this.isRunning = false;
+
+    // Tính toán tốc độ làm bài của Bách
+    const avgResponseTime = this.responseTimes.length > 0
+      ? Number((this.responseTimes.reduce((acc, t) => acc + t, 0) / this.responseTimes.length).toFixed(1))
+      : 0;
+
+    let velocityTier = "normal";
+    let difficultyBoost = 0;
+
+    // Phân cấp tốc độ:
+    // Thần tốc: trung bình <= 2.8s/câu & làm đúng từ 6 câu trở lên -> Tăng độ khó lên Cấp 3 (streak boost +6)
+    // Nhanh: trung bình <= 4.2s/câu & làm đúng từ 4 câu trở lên -> Tăng độ khó lên Cấp 2 (streak boost +3)
+    if (this.correctCount >= 6 && avgResponseTime > 0 && avgResponseTime <= 2.8) {
+      velocityTier = "lightning";
+      difficultyBoost = 6;
+    } else if (this.correctCount >= 4 && avgResponseTime > 0 && avgResponseTime <= 4.2) {
+      velocityTier = "fast";
+      difficultyBoost = 3;
+    }
+
     this.onEnd({
       score: this.score,
       correctCount: this.correctCount,
       wrongCount: this.wrongCount,
-      bestStreak: this.bestStreak
+      bestStreak: this.bestStreak,
+      avgResponseTime,
+      fastSolveCount: this.fastSolveCount,
+      velocityTier,
+      difficultyBoost
     });
   }
 
@@ -1066,21 +700,57 @@ export class SpeedMathSession {
     this.correctCount = 0;
     this.wrongCount = 0;
     this.currentProblem = null;
+    this.recentTypes = [];
+    this.recentGroups = [];
+    this.responseTimes = [];
+    this.fastSolveCount = 0;
+    this.problemStartTime = null;
     this.isRunning = false;
   }
 
   nextProblem() {
-    this.currentProblem = generateSpeedMathProblem(this.streak);
+    this.currentProblem = generateSpeedMathProblem(this.streak, {
+      recentTypes: this.recentTypes,
+      recentGroups: this.recentGroups
+    });
+
+    if (this.currentProblem) {
+      if (this.currentProblem.type) this.recentTypes.push(this.currentProblem.type);
+      if (this.currentProblem.group) this.recentGroups.push(this.currentProblem.group);
+      if (this.recentTypes.length > 10) this.recentTypes.shift();
+      if (this.recentGroups.length > 10) this.recentGroups.shift();
+    }
+
+    this.problemStartTime = Date.now();
     return this.currentProblem;
   }
 
   submitAnswer(inputVal) {
     if (!this.isRunning || !this.currentProblem) return null;
-    const num = Number(String(inputVal).trim());
+
+    const now = Date.now();
+    const responseTime = this.problemStartTime ? Math.max(0.1, Number(((now - this.problemStartTime) / 1000).toFixed(1))) : 3.0;
+
+    let raw = String(inputVal).trim().replace(/\s+/g, "");
+    // Xử lý dấu chấm hoặc phẩy ngăn cách hàng nghìn (ví dụ 1.200 hay 1,200)
+    if (/^\d{1,3}(\.\d{3})+$/.test(raw)) {
+      raw = raw.replace(/\./g, "");
+    } else if (/^\d{1,3}(,\d{3})+$/.test(raw)) {
+      raw = raw.replace(/,/g, "");
+    }
+    const num = Number(raw);
     const isCorrect = !Number.isNaN(num) && num === this.currentProblem.answer;
 
+    const wasFast = isCorrect && responseTime <= 2.5;
+
     if (isCorrect) {
-      this.streak += 1;
+      this.responseTimes.push(responseTime);
+      if (wasFast) this.fastSolveCount += 1;
+
+      // Cơ chế tự động đẩy độ khó theo tốc độ (Velocity-Adaptive):
+      // Nếu Bách làm đúng thần tốc (< 2.5s) và streak >= 1, cộng thêm 1 streak nữa để nhanh chóng nhảy cấp!
+      const streakIncrement = (wasFast && this.streak >= 1) ? 2 : 1;
+      this.streak += streakIncrement;
       if (this.streak > this.bestStreak) this.bestStreak = this.streak;
       this.correctCount += 1;
 
@@ -1098,22 +768,28 @@ export class SpeedMathSession {
         points,
         score: this.score,
         streak: this.streak,
-        problem: this.currentProblem
+        problem: this.currentProblem,
+        responseTime,
+        wasFast
       });
     } else {
-      this.streak = 0;
+      // Soft streak reset: chỉ lùi 3 streak thay vì về 0 hẳn
+      this.streak = Math.max(0, this.streak - 3);
       this.wrongCount += 1;
       this.onScoreChange({
         isCorrect: false,
         points: 0,
         score: this.score,
-        streak: 0,
+        streak: this.streak,
         problem: this.currentProblem,
-        expected: this.currentProblem.answer
+        expected: this.currentProblem.answer,
+        responseTime,
+        wasFast: false
       });
     }
 
     const next = this.nextProblem();
-    return { isCorrect, nextProblem: next };
+    return { isCorrect, nextProblem: next, responseTime, wasFast };
   }
 }
+

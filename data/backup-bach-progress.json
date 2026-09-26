@@ -1,0 +1,87 @@
+{
+  "version": 2,
+  "updatedAt": "2026-09-17T13:13:18.778Z",
+  "hasLocalEdits": true,
+  "progress": {},
+  "notes": {},
+  "lessonResponses": {},
+  "lessonTimers": {
+    "w1-math-2": {
+      "status": "idle",
+      "remainingSeconds": 1500,
+      "durationSeconds": 1500,
+      "lastStartedAt": null,
+      "updatedAt": "2026-09-16T10:34:45.762Z"
+    },
+    "w1-vietnamese-3": {
+      "status": "idle",
+      "remainingSeconds": 1500,
+      "durationSeconds": 1500,
+      "lastStartedAt": null,
+      "updatedAt": "2026-09-16T10:45:22.716Z"
+    }
+  },
+  "adaptive": {
+    "math": {
+      "level": 0,
+      "extraCount": 0,
+      "reason": "",
+      "lastDay": 0
+    },
+    "vietnamese": {
+      "level": 0,
+      "extraCount": 0,
+      "reason": "",
+      "lastDay": 0
+    }
+  },
+  "weeklySummaries": {},
+  "chatHistory": [],
+  "learningProfile": {
+    "method": "Gợi ý từng bước",
+    "pace": "ổn định",
+    "focus": "",
+    "targetWeekId": null,
+    "reason": "",
+    "needsReview": [],
+    "updatedAt": null
+  },
+  "syncMeta": {
+    "fileId": null,
+    "lastSyncedAt": "2026-09-17T13:03:36.820Z",
+    "driver": "indexeddb"
+  },
+  "gameRecords": {
+    "speedMath": {
+      "highScore": 5190,
+      "lastScore": 320,
+      "gamesPlayed": 9,
+      "bestStreak": 29
+    },
+    "barModel": {
+      "stars": 5,
+      "completedChallenges": [
+        "challenge-3",
+        "challenge-6",
+        "challenge-23",
+        "challenge-1",
+        "challenge-33"
+      ]
+    },
+    "spotTheBug": {
+      "stars": 9,
+      "solvedCount": 9,
+      "solvedBugs": [
+        "bug-2",
+        "bug-3",
+        "bug-4",
+        "bug-12",
+        "bug-52",
+        "bug-22",
+        "bug-71",
+        "bug-72",
+        "bug-73"
+      ]
+    }
+  }
+}

@@ -1,7 +1,33 @@
-// js/render-games.js - Giao diện và điều khiển Bộ 3 Trò Chơi Sư Phạm cho Bách
+// js/render-games.js - Giao diện và điều khiển Bộ Trò Chơi Sư Phạm cho Bách
 import { SpeedMathSession } from "./speed-math.js";
-import { BarModelStudioState, BAR_MODEL_CHALLENGES, BAR_MODEL_LEVELS } from "./bar-model-studio.js";
+import { BarModelStudioState, BAR_MODEL_CHALLENGES, BAR_MODEL_LEVELS, getNextSmartChallengeIndex } from "./bar-model-studio.js";
 import { SpotTheBugSession, BUG_CASES, BUG_TOPICS } from "./spot-the-bug.js";
+import { renderBalanceScaleView } from "./render-balance-scale.js";
+import { renderMake24View } from "./render-make-24.js";
+import { renderSpatial3DView } from "./render-spatial-3d.js";
+import { renderLogicGridView } from "./render-logic-grid.js";
+import { renderRushHourView } from "./render-rush-hour.js";
+import { renderChimpMemoryView } from "./render-chimp-memory.js";
+import { renderTangramView } from "./render-tangram.js";
+import { CHC_PILLARS, calculateChcPillars, getSmartDailyRecommendation, getAdaptiveProfile, recordGameOutcome } from "./adaptive-engine.js";
+import { getBadgesStatus, checkAndAwardBadges, showBadgeCelebration } from "./badge-system.js";
+
+export { 
+  renderBalanceScaleView, 
+  renderMake24View,
+  renderSpatial3DView,
+  renderLogicGridView,
+  renderRushHourView,
+  renderChimpMemoryView,
+  renderTangramView,
+  calculateChcPillars,
+  getSmartDailyRecommendation,
+  getAdaptiveProfile,
+  recordGameOutcome,
+  getBadgesStatus,
+  checkAndAwardBadges,
+  showBadgeCelebration
+};
 
 let activeSpeedMathSession = null;
 let activeBarModelState = null;
@@ -111,33 +137,145 @@ export function renderGamesHub({ state, appRoot } = {}) {
   const speed = records.speedMath || { highScore: 0, gamesPlayed: 0, bestStreak: 0 };
   const bar = records.barModel || { stars: 0, completedChallenges: [] };
   const bug = records.spotTheBug || { stars: 0, solvedCount: 0, solvedBugs: [] };
+  const balance = records.balanceScale || { stars: 0, completedChallenges: [] };
+  const make24 = records.make24 || { stars: 0, solvedCount: 0, completedChallenges: [] };
+  const spatial3D = records.spatial3D || { stars: 0, completedChallenges: [] };
+  const logicGrid = records.logicGrid || { stars: 0, completedCases: [] };
+  const rushHour = records.rushHour || { stars: 0, completedBoards: [] };
+  const chimp = records.chimpMemory || { highScore: 0, maxLevel: 1 };
+  const tangram = records.tangram || { stars: 0, completedPuzzles: [] };
+
+  // 1. Phân tích 5 Trụ cột Trí tuệ CHC và Năng lực IQ
+  const chcAnalysis = calculateChcPillars(records);
+  const smartRec = getSmartDailyRecommendation(records);
+  const badgesList = getBadgesStatus(records);
+  const unlockedBadgesCount = badgesList.filter(b => b.isUnlocked).length;
+
+  // Render các trụ cột CHC
+  let pillarsHtml = "";
+  const pillarOrder = ["fluid", "spatial", "speed", "memory", "math"];
+  for (const pKey of pillarOrder) {
+    const meta = CHC_PILLARS[pKey];
+    const data = chcAnalysis.pillars[pKey];
+    pillarsHtml += `
+      <div class="chc-pillar-card" style="background:${meta.bg}; border-color:${meta.border}">
+        <div class="chc-pillar-top">
+          <span style="font-size:1.4rem">${meta.icon}</span>
+          <span style="font-size:0.75rem; font-weight:800; color:${meta.color}">${meta.code}</span>
+        </div>
+        <div>
+          <div style="font-size:0.88rem; font-weight:800; color:#1e293b">${meta.name}</div>
+          <div class="chc-pillar-bar-bg">
+            <div class="chc-pillar-bar-fill" style="width:${data.score}%; background:${meta.color}"></div>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.78rem">
+            <span style="font-weight:700; color:${data.level.color}">${data.level.badge} ${data.level.title}</span>
+            <strong style="color:#1e293b">${data.score}/100</strong>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Render danh sách huy chương
+  let badgesHtml = "";
+  for (const b of badgesList) {
+    const lockClass = b.isUnlocked ? "unlocked" : "locked";
+    badgesHtml += `
+      <div class="badge-cabinet-item ${lockClass}" title="${esc(b.description)}">
+        <div class="badge-icon-wrap">${b.icon}</div>
+        <div class="badge-item-title">${esc(b.title)}</div>
+        <span class="badge-item-rank rank-${b.rank.toLowerCase()}">${b.rank}</span>
+        <div style="font-size:0.7rem; color:var(--muted); font-weight:600">
+          ${b.isUnlocked ? "✅ Đã đạt" : `${b.currentProgress}%`}
+        </div>
+      </div>
+    `;
+  }
 
   appRoot.innerHTML = `
     <section class="hero" id="games">
       <div>
-        <div class="eyebrow">KHU TRÒ CHƠI SƯ PHẠM · BÁCH LAB</div>
-        <h1>Vừa chơi, vừa nghĩ,<br><em>vững vàng phản xạ.</em></h1>
-        <p>Ba thử thách toán học được thiết kế riêng: đấu nhẩm tốc độ 90s, dựng sơ đồ Singapore Bar Model và thám tử truy tìm bẫy sai.</p>
+        <div class="eyebrow">CỬU CUNG TRÍ TUỆ &amp; THẬP TOÀN OLYMPIC · BÁCH LEARNING LAB</div>
+        <h1>Vừa chơi, vừa nghĩ,<br><em>vững vàng phản xạ &amp; IQ.</em></h1>
+        <p>5 thử thách toán học được thiết kế riêng (đấu nhẩm 90s, Bar Model, bắt lỗi sai, cân bằng và Make 24) cùng 5 trò khai phóng Não bộ IQ (Không gian 3D, Lưới Logic, Kẹt xe chiến thuật, Trí nhớ siêu phàm &amp; Tangram Singapore GEP).</p>
       </div>
       <div class="hero-note">
-        <div class="eyebrow">THÀNH TÍCH CỦA BÁCH</div>
-        <h3 style="margin-top:8px">⚡ Kỷ lục 90s: ${speed.highScore} điểm</h3>
-        <p>★ ${bar.stars} sao Bar Model · 🕵️ ${bug.solvedCount} vụ án đã phá</p>
-        <button type="button" class="text-button" style="color:#ffb09f" onclick="location.hash='#games/speed-math'">Đấu nhẩm ngay →</button>
+        <div class="eyebrow">BẢNG VÀNG THÀNH TÍCH</div>
+        <h3 style="margin-top:6px">⚡ 90s: ${speed.highScore} đ · 🧠 Chimp: ${chimp.highScore} đ</h3>
+        <p>★ ${bar.stars || (bar.completedChallenges?.length || 0)} sao Bar Model · 🕵️ ${bug.solvedCount || 0} vụ án lỗi sai</p>
+        <p style="margin-top:2px">⚖️ ${balance.completedChallenges?.length || 0} bài Cân Bằng · 🎯 ${make24.solvedCount || make24.completedChallenges?.length || 0} bài Make 24</p>
+        <p style="margin-top:2px; font-weight:700; color:#c7d2fe">🧊 ${spatial3D.stars || 0} sao Khối 3D · 📐 ${tangram.stars || 0} sao Tangram · 🚗 ${rushHour.stars || 0} sao Kẹt Xe</p>
       </div>
     </section>
+
+    <!-- BẢNG PHÂN TÍCH TĂNG TRƯỞNG TRÍ TUỆ (CHC COGNITIVE PILLARS DASHBOARD) -->
+    <div class="chc-dashboard">
+      <div class="chc-header-row">
+        <div>
+          <div class="eyebrow" style="color:var(--primary); font-weight:800">MÔ HÌNH NHẬN THỨC CATTELL-HORN-CARROLL (CHC)</div>
+          <h2 style="margin:4px 0; font-size:1.35rem; font-weight:900">5 Trụ Cột Trí Tuệ &amp; Chỉ Số Năng Lực Của Bách</h2>
+          <p style="margin:0; font-size:0.88rem; color:var(--muted)">Đánh giá toàn diện dựa trên thành tích 10 bộ trò chơi tư duy.</p>
+        </div>
+        <div class="chc-iq-badge">
+          <span>🧠</span>
+          <div>
+            <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; opacity:0.85">Năng lực tổng hợp</div>
+            <div class="chc-iq-number">Chỉ số ${chcAnalysis.estimatedIqIndex} <span style="font-size:0.85rem; font-weight:600; color:#ffffff">(Điểm: ${chcAnalysis.averageScore}/100)</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chc-pillars-grid">
+        ${pillarsHtml}
+      </div>
+
+      <!-- Banner Gợi ý Thông Minh theo Vygotsky ZPD -->
+      <div class="smart-rec-banner">
+        <div class="smart-rec-content">
+          <span class="smart-rec-icon">${smartRec.icon}</span>
+          <div>
+            <div class="eyebrow" style="color:#166534; font-weight:800">🎯 GỢI Ý THỬ THÁCH HÔM NAY CHO BÁCH (ZONE OF PROXIMAL DEVELOPMENT)</div>
+            <h4 style="margin:2px 0 4px; font-size:1.1rem; color:#14532d">${smartRec.title} · ${smartRec.gameName}</h4>
+            <p style="margin:0; font-size:0.86rem; color:#166534">${smartRec.reason}</p>
+          </div>
+        </div>
+        <a href="${smartRec.route}" class="primary-button" style="padding:12px 24px; font-size:0.95rem; background:#16a34a; white-space:nowrap">
+          Vào thử thách ngay →
+        </a>
+      </div>
+
+      <!-- Tủ Huy Chương Vinh Quang -->
+      <div style="margin-top:24px; border-top:1px solid #e2e8f0; pt:16px">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px">
+          <h3 style="margin:0; font-size:1.05rem; font-weight:800; color:var(--text)">
+            🏆 Tủ Huy Chương &amp; Cột Mốc Vinh Quang (${unlockedBadgesCount} / ${badgesList.length} Đã Mở Khóa)
+          </h3>
+          <span style="font-size:0.82rem; font-weight:700; color:var(--primary)">Chuẩn Olympic &amp; Mensa</span>
+        </div>
+        <div class="badge-cabinet-grid">
+          ${badgesHtml}
+        </div>
+      </div>
+    </div>
+
+    <!-- PHẦN 1: TOÁN HỌC & KỸ NĂNG TÍNH TOÁN -->
+    <div style="margin:28px 0 12px; display:flex; align-items:center; gap:8px">
+      <span style="font-size:22px">📐</span>
+      <h2 style="margin:0; font-size:18px; font-weight:800; color:var(--text)">I. Toán Học &amp; Kỹ Năng Tính Toán (5 Trò)</h2>
+    </div>
 
     <div class="games-hub-grid">
       <!-- Game 1: Đấu tính nhẩm 90s -->
       <div class="game-card">
         <div>
-          <span class="game-card-badge badge-speed">⚡ TỐC ĐỘ & PHẢN XẠ</span>
+          <span class="game-card-badge badge-speed">⚡ TỐC ĐỘ &amp; PHẢN XẠ</span>
           <h3>Đấu tính nhẩm 90 giây</h3>
           <p>90 giây tập trung cao độ giải chuỗi liên hoàn các phép tính bù số tròn, nhân 11, gấp đôi thừa số. Hỗ trợ bàn phím số lớn iPad và âm thanh phản xạ 0ms.</p>
         </div>
         <div>
           <div class="game-card-footer">
-            <div class="game-stat">Kỷ lục: <strong>${speed.highScore} đ</strong> (Streak: ${speed.bestStreak})</div>
+            <div class="game-stat">Kỷ lục: <strong>${speed.highScore} đ</strong> (Streak: ${speed.bestStreak || 0})</div>
             <a href="#games/speed-math" class="primary-button" style="padding:10px 20px; font-size:0.95rem">Bắt đầu →</a>
           </div>
         </div>
@@ -172,6 +310,119 @@ export function renderGamesHub({ state, appRoot } = {}) {
           </div>
         </div>
       </div>
+
+      <!-- Game 4: Cân Bằng Bí Mật -->
+      <div class="game-card">
+        <div>
+          <span class="game-card-badge badge-balance">⚖️ TƯ DUY ĐẠI SỐ</span>
+          <h3>Cân Bằng Bí Mật (Hệ 2 Cân)</h3>
+          <p>Tìm giá trị túi bí mật X và Y để đĩa cân thăng bằng hoàn hảo. Tích hợp chế độ Cân bóng giả Olympic và triệt tiêu 2 vế cân Singapore.</p>
+        </div>
+        <div>
+          <div class="game-card-footer">
+            <div class="game-stat">Đã giải: <strong>${balance.completedChallenges?.length || 0}</strong> thử thách</div>
+            <a href="#games/balance-scale" class="primary-button" style="padding:10px 20px; font-size:0.95rem; background:#7c3aed">Lên cân ngay →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Game 5: Đấu Trường 24 & Số Mục Tiêu -->
+      <div class="game-card">
+        <div>
+          <span class="game-card-badge badge-24">🎯 CẤU TRÚC BIỂU THỨC</span>
+          <h3>Đấu Trường 24 &amp; Số Mục Tiêu</h3>
+          <p>Thử thách kết hợp 4 thẻ số bằng các phép tính +, −, ×, : và dấu ngoặc ( ) để tạo ra các số mục tiêu phong phú: 24, 36, 40, 48, 50, 60, 72, 100.</p>
+        </div>
+        <div>
+          <div class="game-card-footer">
+            <div class="game-stat">Đã giải: <strong>${make24.solvedCount || make24.completedChallenges?.length || 0}</strong> bộ số</div>
+            <a href="#games/make-24" class="primary-button" style="padding:10px 20px; font-size:0.95rem; background:#d97706">Vào đấu trường →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHẦN 2: NÃO BỘ & PHÁT TRIỂN TRÍ TUỆ IQ (5 TRÒ) -->
+    <div style="margin:36px 0 12px; display:flex; align-items:center; gap:8px">
+      <span style="font-size:22px">🧠</span>
+      <h2 style="margin:0; font-size:18px; font-weight:800; color:var(--text)">II. Não Bộ &amp; Phát Triển Trí Tuệ IQ (4 Trò)</h2>
+    </div>
+
+    <div class="games-hub-grid">
+      <!-- Game 6: Thám Tử Khối 3D -->
+      <div class="game-card">
+        <div>
+          <span class="game-card-badge" style="background:#e0e7ff; color:#3730a3">🧊 TƯ DUY KHÔNG GIAN 3D</span>
+          <h3>Thám Tử Khối 3D &amp; Gấp Hộp</h3>
+          <p>Tưởng tượng mô hình không gian 3 chiều, đếm các khối lập phương bị che khuất ở mặt sau, nhận diện hình chiếu Top/Front/Side và gấp hộp giấy chuẩn Singapore GEP.</p>
+        </div>
+        <div>
+          <div class="game-card-footer">
+            <div class="game-stat">Đã đạt: <strong>${spatial3D.stars || 0}</strong> sao</div>
+            <a href="#games/spatial-3d" class="primary-button" style="padding:10px 20px; font-size:0.95rem; background:#4f46e5">Xoay khối 3D →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Game 7: Bảng Lưới Thám Tử -->
+      <div class="game-card">
+        <div>
+          <span class="game-card-badge" style="background:#fef3c7; color:#92400e">🕵️ SUY LUẬN LOẠI TRỪ</span>
+          <h3>Bảng Lưới Thám Tử (Logic Grid)</h3>
+          <p>Phương pháp suy luận đa chiều kinh điển của Einstein. Đọc kỹ manh mối, tích chọn ✅ và loại trừ ❌ trên bảng ma trận để tìm ra sự thật vụ án.</p>
+        </div>
+        <div>
+          <div class="game-card-footer">
+            <div class="game-stat">Đã phá: <strong>${logicGrid.completedCases?.length || 0}</strong> vụ án</div>
+            <a href="#games/logic-grid" class="primary-button" style="padding:10px 20px; font-size:0.95rem; background:#f59e0b">Phá án ngay →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Game 8: Kẹt Xe Thông Minh -->
+      <div class="game-card">
+        <div>
+          <span class="game-card-badge" style="background:#fee2e2; color:#991b1b">🚗 LẬP KẾ HOẠCH CHIẾN LƯỢC</span>
+          <h3>Kẹt Xe Thông Minh (Rush Hour)</h3>
+          <p>Trò chơi nổi tiếng Mensa Select Mỹ. Rèn luyện tư duy thuật toán và lập kế hoạch nhìn trước 3–5 bước bằng cách trượt các xe để dọn đường cho Xe Đỏ thoát ra.</p>
+        </div>
+        <div>
+          <div class="game-card-footer">
+            <div class="game-stat">Đã vượt: <strong>${rushHour.completedBoards?.length || 0}</strong> thế cờ</div>
+            <a href="#games/rush-hour" class="primary-button" style="padding:10px 20px; font-size:0.95rem; background:#ef4444">Giải cứu xe đỏ →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Game 9: Não Siêu Nhớ -->
+      <div class="game-card">
+        <div>
+          <span class="game-card-badge" style="background:#e0f2fe; color:#0369a1">⚡ WORKING MEMORY</span>
+          <h3>Não Siêu Nhớ (Kyoto Recall)</h3>
+          <p>Thí nghiệm trí nhớ ngắn hạn đỉnh cao của Viện Đại học Kyoto. Nhớ vị trí các bong bóng số trong 1.5 giây chớp nhoáng rồi chạm lại theo thứ tự từ nhỏ đến lớn!</p>
+        </div>
+        <div>
+          <div class="game-card-footer">
+            <div class="game-stat">Điểm cao: <strong>${chimp.highScore || 0}</strong> đ (Cấp ${chimp.maxLevel || 1})</div>
+            <a href="#games/chimp-memory" class="primary-button" style="padding:10px 20px; font-size:0.95rem; background:#0284c7">Thử thách trí nhớ →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Game 10: Xếp Hình Trí Uẩn Tangram -->
+      <div class="game-card">
+        <div>
+          <span class="game-card-badge" style="background:#ecfdf5; color:#065f46">📐 TƯ DUY HÌNH HỌC GEP</span>
+          <h3>Xếp Hình Trí Uẩn Tangram</h3>
+          <p>Bộ 7 mảnh ghép trí tuệ kinh điển chuẩn Singapore GEP. Xoay và ghép 7 hình khối thành các hình bóng silhouette sống động rèn luyện tư duy phân rã hình học.</p>
+        </div>
+        <div>
+          <div class="game-card-footer">
+            <div class="game-stat">Đã ghép: <strong>${tangram.completedPuzzles?.length || 0}</strong> hình (${tangram.stars || 0} sao)</div>
+            <a href="#games/tangram" class="primary-button" style="padding:10px 20px; font-size:0.95rem; background:#059669">Ghép hình ngay →</a>
+          </div>
+        </div>
+      </div>
     </div>
   `;
 }
@@ -181,6 +432,9 @@ export function renderSpeedMathArena({ state, appRoot, saveLocal } = {}) {
   if (activeSpeedMathSession) {
     activeSpeedMathSession.stop();
   }
+
+  const savedSpeedMath = state?.db?.gameRecords?.speedMath || {};
+  const initialStreak = Number(savedSpeedMath.difficultyBoost) || 0;
 
   appRoot.innerHTML = `
     <div style="margin-bottom:20px; display:flex; gap:12px; align-items:center">
@@ -197,7 +451,8 @@ export function renderSpeedMathArena({ state, appRoot, saveLocal } = {}) {
         </div>
         <div class="score-display">
           <span class="score-number" id="speedMathScore">0 đ</span>
-          <span class="streak-badge" id="speedMathStreak">Streak: 0</span>
+          <span class="streak-badge" id="speedMathStreak">Streak: ${initialStreak}</span>
+          ${initialStreak >= 3 ? `<span class="streak-badge" style="background:#fef08a; color:#854d0e; border:1px solid #facc15">⚡ Tốc độ: Cấp ${initialStreak >= 6 ? "3 (Olympic)" : "2"}</span>` : ""}
         </div>
         <button type="button" class="text-button" id="speedMathQuitBtn" style="font-size:0.85rem; color:var(--muted); padding:4px 8px" title="Dừng chơi giữa chừng">✕ Dừng chơi</button>
       </div>
@@ -206,16 +461,32 @@ export function renderSpeedMathArena({ state, appRoot, saveLocal } = {}) {
         <div class="timer-progress-fill" id="speedMathTimerFill" style="width: 100%"></div>
       </div>
 
+      <!-- Starting Level Selector -->
+      <div style="display:flex; justify-content:center; align-items:center; gap:6px; margin:10px 0 14px; flex-wrap:wrap">
+        <span style="font-size:0.8rem; font-weight:700; color:var(--muted)">Chọn cấp độ xuất phát:</span>
+        <button type="button" class="small-button sm-lvl-btn" data-streak="0" style="font-size:0.78rem; padding:3px 8px">Cấp 1</button>
+        <button type="button" class="small-button sm-lvl-btn" data-streak="3" style="font-size:0.78rem; padding:3px 8px">Cấp 2</button>
+        <button type="button" class="small-button sm-lvl-btn" data-streak="6" style="font-size:0.78rem; padding:3px 8px">Cấp 3</button>
+        <button type="button" class="small-button sm-lvl-btn" data-streak="10" style="font-size:0.82rem; padding:4px 12px; background:#fef2f2; color:#dc2626; border:1.5px solid #f87171; font-weight:800">
+          🔥 Cấp 4: Olympic Hack Não
+        </button>
+      </div>
+
       <div id="gamePlayArea">
         <div class="math-problem-box">
-          <div class="math-problem-text" id="mathProblemText">199 + 25</div>
-          <div class="math-strategy-hint" id="mathStrategyHint">Gợi ý: Làm tròn số lớn rồi trừ phần bù</div>
+          <div class="math-problem-text" id="mathProblemText">---</div>
+          <div id="mathFeedbackBadge" class="math-feedback-badge" style="display:none"></div>
+          <div class="math-strategy-hint" id="mathStrategyHint" style="display:none"></div>
         </div>
 
         <form id="speedMathForm" onsubmit="return false;" class="answer-input-row">
           <input type="text" inputmode="numeric" pattern="[0-9]*" id="speedMathInput" placeholder="?" autocomplete="off" autofocus />
           <button type="button" class="primary-button" id="speedMathSubmitBtn" style="padding:0 24px; font-size:1.2rem; font-weight:800">Gửi</button>
         </form>
+
+        <div style="display:flex; justify-content:center; align-items:center; gap:16px; margin-top:8px">
+          <button type="button" class="text-button" id="speedMathToggleHintBtn" style="font-size:0.86rem; color:var(--muted)">💡 Cần gợi ý mẹo?</button>
+        </div>
 
         <div style="margin-top:12px; font-size:0.88rem; color:var(--muted)">
           💡 Nhập số qua bàn phím hoặc chạm ô để mở <strong>Bàn phím số lớn iPad</strong>.
@@ -234,32 +505,57 @@ export function renderSpeedMathArena({ state, appRoot, saveLocal } = {}) {
   const streakEl = document.querySelector("#speedMathStreak");
   const problemEl = document.querySelector("#mathProblemText");
   const hintEl = document.querySelector("#mathStrategyHint");
+  const feedbackEl = document.querySelector("#mathFeedbackBadge");
+  const toggleHintBtn = document.querySelector("#speedMathToggleHintBtn");
   const inputEl = document.querySelector("#speedMathInput");
   const submitBtn = document.querySelector("#speedMathSubmitBtn");
   const playArea = document.querySelector("#gamePlayArea");
   const endArea = document.querySelector("#gameEndArea");
 
   const session = new SpeedMathSession({
+    initialStreak,
     onTick: ({ remaining, duration }) => {
       if (timerEl) timerEl.textContent = `${remaining}s`;
       if (fillEl) fillEl.style.width = `${(remaining / duration) * 100}%`;
     },
-    onScoreChange: ({ isCorrect, score, streak, problem }) => {
+    onScoreChange: ({ isCorrect, points, score, streak, problem, expected, responseTime, wasFast }) => {
       if (scoreEl) scoreEl.textContent = `${score} đ`;
       if (streakEl) streakEl.textContent = `Streak: ${streak} ${streak >= 3 ? "🔥" : ""}`;
+      
+      if (feedbackEl) {
+        feedbackEl.style.display = "inline-block";
+        if (isCorrect) {
+          feedbackEl.className = "math-feedback-badge correct" + (wasFast ? " fast" : "");
+          feedbackEl.innerHTML = wasFast 
+            ? `⚡ ${responseTime}s (Thần tốc!) +${points} đ` 
+            : `✓ Đúng rồi! (${responseTime}s) +${points} đ`;
+          if (hintEl) {
+            hintEl.style.display = "none";
+            hintEl.textContent = "";
+          }
+        } else {
+          feedbackEl.className = "math-feedback-badge wrong";
+          feedbackEl.innerHTML = `✗ Chưa chính xác (Đáp án: <strong>${expected}</strong>)`;
+          if (hintEl && problem?.strategy) {
+            hintEl.style.display = "block";
+            hintEl.textContent = `💡 Mẹo tính: ${problem.strategy}`;
+          }
+        }
+      }
+
       if (inputEl) {
         inputEl.value = "";
         inputEl.focus();
       }
     },
-    onEnd: async ({ score, correctCount, wrongCount, bestStreak }) => {
+    onEnd: async ({ score, correctCount, wrongCount, bestStreak, avgResponseTime, fastSolveCount, velocityTier, difficultyBoost: nextBoost }) => {
       if (playArea) playArea.hidden = true;
       if (endArea) {
         endArea.hidden = false;
         const prevHighScore = state?.db?.gameRecords?.speedMath?.highScore || 0;
         const isNewRecord = score > prevHighScore;
 
-        // Lưu dữ liệu vào state
+        // Lưu dữ liệu tốc độ và thành tích vào state
         if (!state.db.gameRecords) state.db.gameRecords = {};
         if (!state.db.gameRecords.speedMath) state.db.gameRecords.speedMath = {};
         const sm = state.db.gameRecords.speedMath;
@@ -267,10 +563,25 @@ export function renderSpeedMathArena({ state, appRoot, saveLocal } = {}) {
         sm.gamesPlayed = (sm.gamesPlayed || 0) + 1;
         sm.bestStreak = Math.max(sm.bestStreak || 0, bestStreak);
         if (isNewRecord) sm.highScore = score;
+        sm.avgResponseTime = avgResponseTime;
+        sm.fastSolveCount = (sm.fastSolveCount || 0) + (fastSolveCount || 0);
+        sm.velocityTier = velocityTier;
+        sm.difficultyBoost = nextBoost; // Lưu để tự động tăng độ khó cho các ván tiếp theo!
+
+        // Adaptive Engine: ghi nhận kết quả và tự điều chỉnh ZPD
+        recordGameOutcome(state, "speedMath", { success: score > 0, difficulty: nextBoost >= 10 ? 5 : (nextBoost >= 6 ? 4 : (nextBoost >= 3 ? 3 : 2)), score });
+        const newBadges = checkAndAwardBadges(state);
+        for (const b of newBadges) showBadgeCelebration(b);
 
         if (typeof saveLocal === "function") {
           await saveLocal(true);
         }
+
+        const tierLabels = {
+          lightning: "⚡ Siêu thần tốc (< 2.8s) · Tự động tăng độ khó lên Cấp 3!",
+          fast: "🚀 Nhanh và bén (< 4.2s) · Tự động tăng độ khó lên Cấp 2!",
+          normal: "🎯 Đang rèn luyện phản xạ tính nhẩm"
+        };
 
         endArea.innerHTML = `
           <div class="game-results-card">
@@ -278,19 +589,27 @@ export function renderSpeedMathArena({ state, appRoot, saveLocal } = {}) {
             <h2 class="game-results-title">${isNewRecord ? "KỶ LỤC MỚI CỦA BÁCH!" : "HOÀN THÀNH VÒNG ĐẤU 90S!"}</h2>
             <p style="color:var(--muted)">Bách đã duy trì sự tập trung rất tốt trong suốt 90 giây.</p>
 
-            <div class="results-stats-grid">
+            <div class="results-stats-grid" style="grid-template-columns:repeat(4, 1fr); margin-top:20px">
               <div class="results-stat-box">
                 <small>TỔNG ĐIỂM</small>
                 <span style="color:var(--coral)">${score}</span>
               </div>
               <div class="results-stat-box">
-                <small>CÂU ĐÚNG / SAI</small>
+                <small>ĐÚNG / SAI</small>
                 <span>${correctCount} / ${wrongCount}</span>
               </div>
               <div class="results-stat-box">
-                <small>STREAK DÀI NHẤT</small>
-                <span>${bestStreak} 🔥</span>
+                <small>TỐC ĐỘ TB</small>
+                <span style="color:#0284c7">${avgResponseTime > 0 ? avgResponseTime + "s/câu" : "—"}</span>
               </div>
+              <div class="results-stat-box">
+                <small>CÂU THẦN TỐC ⚡</small>
+                <span style="color:#ea580c">${fastSolveCount || 0}</span>
+              </div>
+            </div>
+
+            <div style="margin-top:16px; padding:10px 16px; background:#f0f9ff; border:1px solid #bae6fd; border-radius:12px; font-size:0.92rem; color:#0369a1; font-weight:700">
+              ${tierLabels[velocityTier] || tierLabels.normal}
             </div>
 
             <div style="display:flex; gap:12px; justify-content:center; margin-top:28px">
@@ -310,11 +629,26 @@ export function renderSpeedMathArena({ state, appRoot, saveLocal } = {}) {
   activeSpeedMathSession = session;
   session.start();
 
-  // Hiển thị đề bài đầu tiên
+  // Hiển thị đề bài đầu tiên - KHÔNG lộ gợi ý trước khi làm
   if (session.currentProblem) {
     problemEl.textContent = session.currentProblem.prompt;
-    hintEl.textContent = `Gợi ý: ${session.currentProblem.strategy}`;
+    if (hintEl) {
+      hintEl.textContent = "";
+      hintEl.style.display = "none";
+    }
   }
+
+  toggleHintBtn?.addEventListener("click", () => {
+    if (!hintEl || !session.currentProblem) return;
+    if (hintEl.style.display === "none") {
+      hintEl.style.display = "block";
+      hintEl.textContent = `💡 Mẹo tính: ${session.currentProblem.strategy}`;
+      toggleHintBtn.textContent = "🙈 Ẩn gợi ý";
+    } else {
+      hintEl.style.display = "none";
+      toggleHintBtn.textContent = "💡 Cần gợi ý mẹo?";
+    }
+  });
 
   const handleAnswerSubmit = () => {
     const val = inputEl?.value.trim();
@@ -322,9 +656,29 @@ export function renderSpeedMathArena({ state, appRoot, saveLocal } = {}) {
     const res = session.submitAnswer(val);
     if (res && res.nextProblem) {
       problemEl.textContent = res.nextProblem.prompt;
-      hintEl.textContent = `Gợi ý: ${res.nextProblem.strategy}`;
+      if (res.isCorrect && hintEl) {
+        hintEl.style.display = "none";
+        hintEl.textContent = "";
+      }
+      if (toggleHintBtn) toggleHintBtn.textContent = "💡 Cần gợi ý mẹo?";
     }
   };
+
+  document.querySelectorAll(".sm-lvl-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const s = Number(btn.dataset.streak);
+      session.streak = s;
+      if (streakEl) streakEl.textContent = `Streak: ${s} ${s >= 3 ? "🔥" : ""}`;
+      const nextP = session.nextProblem();
+      if (problemEl && nextP) {
+        problemEl.textContent = nextP.prompt;
+      }
+      if (inputEl) {
+        inputEl.value = "";
+        inputEl.focus();
+      }
+    });
+  });
 
   submitBtn?.addEventListener("click", handleAnswerSubmit);
   document.querySelector("#speedMathQuitBtn")?.addEventListener("click", () => {
@@ -336,7 +690,7 @@ export function renderSpeedMathArena({ state, appRoot, saveLocal } = {}) {
       handleAnswerSubmit();
     }
   });
-  inputEl?.focus();
+  inputEl?.focus?.();
 }
 
 // 2. Màn chơi Mini Bar Model Studio (< 15KB Pure SVG)
@@ -526,9 +880,11 @@ export function renderBarModelStudioView({ state, appRoot, saveLocal, challengeI
         </div>
 
         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:24px; flex-wrap:wrap; gap:10px">
-          <div style="display:flex; gap:8px">
+          <div style="display:flex; gap:8px; flex-wrap:wrap">
             <button type="button" class="small-button" id="prevBarBtn" ${studio.challengeIndex === 0 ? "disabled" : ""}>← Bài trước</button>
             <button type="button" class="small-button" id="nextBarBtn" ${studio.challengeIndex === BAR_MODEL_CHALLENGES.length - 1 ? "disabled" : ""}>Bài sau →</button>
+            <button type="button" class="small-button" id="resetBarBtn" title="Đặt lại mô hình về trạng thái ban đầu">🔄 Làm lại</button>
+            <button type="button" class="small-button" id="nextSmartBarBtn" style="color:#0284c7; font-weight:700" title="Chuyển sang dạng toán khác để không bị lặp">Bài khác dạng 🔀</button>
           </div>
           <div style="display:flex; gap:12px; align-items:center">
             <button type="button" class="text-button" id="barHintBtn" style="color:#0369a1">💡 Xem gợi ý</button>
@@ -558,6 +914,20 @@ export function renderBarModelStudioView({ state, appRoot, saveLocal, challengeI
     if (studio.challengeIndex < BAR_MODEL_CHALLENGES.length - 1) {
       renderBarModelStudioView({ state, appRoot, saveLocal, challengeIndex: studio.challengeIndex + 1, params });
     }
+  });
+
+  document.querySelector("#resetBarBtn")?.addEventListener("click", () => {
+    studio.resetCurrentChallenge();
+    renderBarModelStudioView({ state, appRoot, saveLocal, challengeIndex: studio.challengeIndex, params });
+  });
+
+  document.querySelector("#nextSmartBarBtn")?.addEventListener("click", () => {
+    const solved = state?.db?.gameRecords?.barModel?.completedChallenges?.map(id => {
+      const idx = BAR_MODEL_CHALLENGES.findIndex(c => c.id === id);
+      return idx;
+    }).filter(i => i >= 0) || [];
+    const smartIdx = getNextSmartChallengeIndex(studio.challengeIndex, solved);
+    renderBarModelStudioView({ state, appRoot, saveLocal, challengeIndex: smartIdx, params });
   });
 
   const bindPartInput = (inputEl, barKey) => {
@@ -665,8 +1035,9 @@ export function renderBarModelStudioView({ state, appRoot, saveLocal, challengeI
           `;
         } else if (studio.challengeIndex < BAR_MODEL_CHALLENGES.length - 1) {
           nextActionHtml = `
-            <div style="margin-top:12px">
+            <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap">
               <button type="button" class="primary-button" id="solveNextBarBtn" style="padding:8px 18px; font-size:0.9rem">Thử thách tiếp theo →</button>
+              <button type="button" class="small-button" id="solveSmartBarBtn" style="padding:8px 16px; font-size:0.9rem; color:#0284c7; font-weight:700">Thử thách khác dạng 🔀</button>
             </div>
           `;
         }
@@ -678,13 +1049,26 @@ export function renderBarModelStudioView({ state, appRoot, saveLocal, challengeI
         document.querySelector("#solveNextBarBtn")?.addEventListener("click", () => {
           renderBarModelStudioView({ state, appRoot, saveLocal, challengeIndex: studio.challengeIndex + 1, params });
         });
+        document.querySelector("#solveSmartBarBtn")?.addEventListener("click", () => {
+          const solved = state?.db?.gameRecords?.barModel?.completedChallenges?.map(id => {
+            const idx = BAR_MODEL_CHALLENGES.findIndex(c => c.id === id);
+            return idx;
+          }).filter(i => i >= 0) || [];
+          const smartIdx = getNextSmartChallengeIndex(studio.challengeIndex, solved);
+          renderBarModelStudioView({ state, appRoot, saveLocal, challengeIndex: smartIdx, params });
+        });
         // Cập nhật kỷ lục
         if (!state.db.gameRecords) state.db.gameRecords = {};
         if (!state.db.gameRecords.barModel) state.db.gameRecords.barModel = { stars: 0, completedChallenges: [] };
         const bm = state.db.gameRecords.barModel;
+        if (!Array.isArray(bm.completedChallenges)) bm.completedChallenges = [];
         if (!bm.completedChallenges.includes(ch.id)) {
           bm.completedChallenges.push(ch.id);
           bm.stars = (bm.stars || 0) + 1;
+          // Adaptive Engine: ghi nhận kết quả Bar Model
+          recordGameOutcome(state, "barModel", { success: true, difficulty: ch.difficulty || 2 });
+          const newBadges = checkAndAwardBadges(state);
+          for (const b of newBadges) showBadgeCelebration(b);
           if (typeof saveLocal === "function") await saveLocal(true);
         }
       } else {
@@ -779,6 +1163,15 @@ export function renderSpotTheBugView({ state, appRoot, saveLocal, caseIndex, par
             </div>
           </div>
 
+          <!-- Subtle Traps Topic Shortcuts -->
+          <div style="display:flex; gap:6px; margin:10px 0 14px; flex-wrap:wrap">
+            <span style="font-size:0.82rem; font-weight:700; color:var(--muted); align-self:center">Chọn bẫy tinh vi:</span>
+            <button type="button" class="small-button bug-filter-btn" data-case-idx="80" style="font-size:0.78rem; padding:3px 8px">📐 Chu vi &amp; Diện tích</button>
+            <button type="button" class="small-button bug-filter-btn" data-case-idx="60" style="font-size:0.78rem; padding:3px 8px">⚖️ Tổng–Hiệu kinh điển</button>
+            <button type="button" class="small-button bug-filter-btn" data-case-idx="70" style="font-size:0.78rem; padding:3px 8px">📊 Tổng–Tỉ &amp; Hiệu–Tỉ</button>
+            <button type="button" class="small-button bug-filter-btn" data-case-idx="110" style="font-size:0.8rem; padding:3px 10px; background:#fdf2f8; color:#db2777; border:1.5px solid #f472b6; font-weight:800">🔥 Trồng cây &amp; Thời gian</button>
+          </div>
+
           <h3 style="font-size:1.3rem; margin:0 0 16px; color:var(--ink)">${c.problem}</h3>
           <p style="color:var(--muted); font-size:0.95rem; margin:0">
             Dưới đây là lời giải chi tiết của một bạn học sinh lớp 4. Trong các bước lập luận này có <strong>1 bước bị cài bẫy sai</strong>. Thám tử Bách hãy quan sát kỹ và chạm vào đúng bước sai nhé:
@@ -795,9 +1188,12 @@ export function renderSpotTheBugView({ state, appRoot, saveLocal, caseIndex, par
 
           <div id="bugFeedbackArea" hidden></div>
 
-          <div style="display:flex; justify-content:space-between; margin-top:24px; border-top:1px solid var(--line); padding-top:18px">
-            <button type="button" class="small-button" id="prevBugBtn">← Bài trước</button>
-            <button type="button" class="small-button" id="nextBugBtn">Bài tiếp theo →</button>
+          <div style="display:flex; justify-content:space-between; margin-top:24px; border-top:1px solid var(--line); padding-top:18px; flex-wrap:wrap; gap:8px">
+            <div style="display:flex; gap:8px">
+              <button type="button" class="small-button" id="prevBugBtn">← Bài trước</button>
+              <button type="button" class="small-button" id="nextBugBtn">Bài tiếp theo →</button>
+            </div>
+            <button type="button" class="small-button" id="nextInterleavedBugBtn" style="color:#db2777; font-weight:700" title="Chuyển sang chuyên đề toán khác để chống lặp lại">Đổi chuyên đề 🔀</button>
           </div>
         </div>
       </div>
@@ -806,6 +1202,13 @@ export function renderSpotTheBugView({ state, appRoot, saveLocal, caseIndex, par
     if (typeof document === "undefined") {
       return;
     }
+
+    document.querySelectorAll(".bug-filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        session.currentIndex = Number(btn.dataset.caseIdx);
+        renderCurrentProblem();
+      });
+    });
 
     document.querySelector("#bugCaseSelect")?.addEventListener("change", e => {
       session.currentIndex = Number(e.target.value);
@@ -819,6 +1222,11 @@ export function renderSpotTheBugView({ state, appRoot, saveLocal, caseIndex, par
 
     document.querySelector("#nextBugBtn")?.addEventListener("click", () => {
       session.nextCase();
+      renderCurrentProblem();
+    });
+
+    document.querySelector("#nextInterleavedBugBtn")?.addEventListener("click", () => {
+      session.nextInterleavedCase();
       renderCurrentProblem();
     });
 
@@ -860,8 +1268,9 @@ export function renderSpotTheBugView({ state, appRoot, saveLocal, caseIndex, par
               `;
             } else {
               nextActionHtml = `
-                <div style="margin-top:12px">
+                <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap">
                   <button type="button" class="primary-button" id="solveNextBugBtn" style="padding:8px 18px; font-size:0.9rem">Vụ án tiếp theo →</button>
+                  <button type="button" class="small-button" id="solveInterleavedBugBtn" style="padding:8px 16px; font-size:0.9rem; color:#db2777; font-weight:700">Đổi chuyên đề khác 🔀</button>
                 </div>
               `;
             }
@@ -876,15 +1285,24 @@ export function renderSpotTheBugView({ state, appRoot, saveLocal, caseIndex, par
               session.nextCase();
               renderCurrentProblem();
             });
+            document.querySelector("#solveInterleavedBugBtn")?.addEventListener("click", () => {
+              session.nextInterleavedCase();
+              renderCurrentProblem();
+            });
 
             // Lưu tiến độ thám tử
             if (!state.db.gameRecords) state.db.gameRecords = {};
             if (!state.db.gameRecords.spotTheBug) state.db.gameRecords.spotTheBug = { stars: 0, solvedCount: 0, solvedBugs: [] };
             const stb = state.db.gameRecords.spotTheBug;
+            if (!Array.isArray(stb.solvedBugs)) stb.solvedBugs = [];
             if (!stb.solvedBugs.includes(c.id)) {
               stb.solvedBugs.push(c.id);
               stb.solvedCount = stb.solvedBugs.length;
               stb.stars = (stb.stars || 0) + 1;
+              // Adaptive Engine: ghi nhận kết quả Spot The Bug
+              recordGameOutcome(state, "spotTheBug", { success: true, difficulty: c.difficulty || 2 });
+              const newBadges = checkAndAwardBadges(state);
+              for (const b of newBadges) showBadgeCelebration(b);
               if (typeof saveLocal === "function") await saveLocal(true);
             }
           } else {
