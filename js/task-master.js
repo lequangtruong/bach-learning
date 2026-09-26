@@ -21,6 +21,9 @@ export class TaskMasterSession {
     this.onWin = onWin;
     this.onStateChange = onStateChange;
     this.attemptsCount = 0;
+    this.moveCount = 0;
+    this.hintCount = 0;
+    this.startTime = Date.now();
     this.isSolved = false;
     this.isSimulating = false;
     this.simulationStep = -1;
@@ -40,6 +43,9 @@ export class TaskMasterSession {
     this.simulationStep = -1;
     this.simulationResult = null;
     this.attemptsCount = 0;
+    this.moveCount = 0;
+    this.hintCount = 0;
+    this.startTime = Date.now();
 
     const level = this.currentLevel;
     const all = [...(level.tasks || []), ...(level.distractors || [])];
@@ -97,7 +103,9 @@ export class TaskMasterSession {
     if (this.isSimulating || this.isSolved) return;
     if (fromIndex < 0 || fromIndex >= this.timeline.length) return;
     if (toIndex < 0 || toIndex >= this.timeline.length) return;
+    if (fromIndex === toIndex) return;
 
+    this.moveCount++;
     const [moved] = this.timeline.splice(fromIndex, 1);
     this.timeline.splice(toIndex, 0, moved);
     this.simulationResult = null;
@@ -107,14 +115,18 @@ export class TaskMasterSession {
   clearTimeline() {
     if (this.isSimulating || this.isSolved) return;
     this.timeline = [];
+    this.moveCount = 0;
+    this.hintCount = 0;
     this.simulationResult = null;
     this.notifyChange();
   }
 
   /**
-   * Tự động xếp mẫu 1 bước tiếp theo nếu trẻ bị bí (Gợi ý phân tích)
+   * Tự động phân tích và đưa ra gợi ý chiến thuật gián tiếp (phạt 1 sao khi dùng)
    */
   getHint() {
+    this.hintCount++;
+    this.notifyChange();
     const level = this.currentLevel;
     const placedSet = new Set(this.timeline);
 
@@ -127,7 +139,9 @@ export class TaskMasterSession {
           return {
             taskId: task.id,
             taskText: task.text,
-            hint: task.hint || "Bước này có thể thực hiện được ngay bây giờ!"
+            taskIcon: task.icon,
+            hint: task.hint || "Bước này có thể thực hiện được ngay bây giờ!",
+            indirectClue: `Tìm bước có biểu tượng ${task.icon || "✨"}: ${task.hint || "Bước này đã hội tụ đủ điều kiện để thực hiện!"}`
           };
         }
       }
@@ -211,15 +225,41 @@ export class TaskMasterSession {
       };
     }
 
-    // Tính điểm sao dựa trên số lần thử
+    // Tính điểm sao dựa trên số lần thử, số lần đổi chỗ (moveCount), và số gợi ý (hintCount)
     let stars = 3;
     if (this.attemptsCount === 2) stars = 2;
     else if (this.attemptsCount >= 3) stars = 1;
+
+    // Phạt đổi chỗ quá nhiều (thử - sai bừa bãi không tính trước): >3 lần trừ 1 sao, >6 lần tối đa 1 sao
+    if (this.moveCount > 6) {
+      stars = Math.min(stars, 1);
+    } else if (this.moveCount > 3) {
+      stars = Math.min(stars, 2);
+    }
+
+    // Phạt dùng gợi ý (mỗi lần xem gợi ý trừ 1 sao)
+    if (this.hintCount > 0) {
+      stars = Math.max(1, stars - this.hintCount);
+    }
+
+    // Soft timer cho chặng 3 & 4 (Engineering & Mission, level >= 41 hoặc difficulty >= 3)
+    const elapsedSeconds = Math.floor((Date.now() - (this.startTime || Date.now())) / 1000);
+    const targetTime = level.targetTime || (level.difficulty >= 4 ? 120 : (level.difficulty >= 3 ? 90 : 0));
+    let timeExceeded = false;
+    if (targetTime > 0 && elapsedSeconds > targetTime) {
+      stars = Math.max(1, stars - 1);
+      timeExceeded = true;
+    }
 
     return {
       status: "success",
       success: true,
       stars,
+      moveCount: this.moveCount,
+      hintCount: this.hintCount,
+      elapsedSeconds,
+      targetTime,
+      timeExceeded,
       message: "Tuyệt vời! Con đã tư duy thấu đáo từng bước và hoàn thành kế hoạch xuất sắc!",
       levelId: level.id
     };
@@ -262,6 +302,8 @@ export class TaskMasterSession {
           levelIndex: this.levelIndex,
           stars: validation.stars,
           attempts: this.attemptsCount,
+          moves: this.moveCount,
+          hints: this.hintCount,
           timeline: [...this.timeline]
         });
       }

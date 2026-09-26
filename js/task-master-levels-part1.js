@@ -20,7 +20,8 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t4", text: "Đi giày & khoác ba lô đi học", icon: "👟", requires: ["t3"], hint: "Bước cuối cùng khi đã mặc trang phục chỉnh tề." }
     ],
     distractors: [
-      { id: "d1", text: "Bật TV xem hoạt hình 30 phút", icon: "📺", failReason: "Xem TV buổi sáng sẽ làm con bị muộn học ngay lập tức!" }
+      { id: "d1", text: "Bật TV xem hoạt hình 30 phút", icon: "📺", failReason: "Xem TV buổi sáng sẽ làm con bị muộn học ngay lập tức!" },
+      { id: "d2", text: "Nằm lướt điện thoại chơi game trên giường", icon: "🎮", failReason: "Nằm chơi điện thoại sẽ khiến con mê mẩn và trễ học ngay lập tức!" }
     ],
     lesson: "Lập kế hoạch trước giúp buổi sáng không bị cuống cuồng tìm đồ đạc."
   },
@@ -40,6 +41,10 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t4", text: "Xả sạch toàn bộ bọt dưới vòi nước chảy", icon: "🚿", requires: ["t3"], hint: "Rửa trôi hết vi khuẩn và bọt xà phòng." },
       { id: "t5", text: "Lau khô tay bằng khăn sạch hoặc khăn giấy", icon: "🧖", requires: ["t4"], hint: "Lau khô để tay không bị ẩm ướt." }
     ],
+    distractors: [
+      { id: "d1", text: "Quệt hai bàn tay dính bọt xà phòng vào vạt áo", icon: "👕", failReason: "Quệt vào quần áo làm bẩn áo và vi khuẩn lại dính ngược trở lại tay!" },
+      { id: "d2", text: "Rửa tay bằng nước bùn đục trong chậu cây cảnh", icon: "🪴", failReason: "Nước bùn chứa đầy vi trùng gây bệnh, không thể dùng để làm sạch tay được!" }
+    ],
     lesson: "Làm đúng từng bước giúp tiêu diệt 99% vi khuẩn gây bệnh đường ruột."
   },
   {
@@ -54,12 +59,13 @@ export const TASK_MASTER_LEVELS_PART1 = [
     tasks: [
       { id: "t1", text: "Lấy cốc sạch & thìa từ giá bát", icon: "🥛", hint: "Cần có cốc trước khi cho đồ uống vào." },
       { id: "t2", text: "Múc 3 muỗng bột ngũ cốc vào cốc", icon: "🥣", requires: ["t1"], hint: "Cho ngũ cốc vào đáy cốc trước." },
-      { id: "t3", text: "Rót nước ấm khoảng 50 độ C vào cốc", icon: "🫖", requires: ["t2"], hint: "Nước ấm giúp ngũ cốc tan đều không vón cục." },
-      { id: "t4", text: "Dùng thìa khuấy đều cho tan mịn", icon: "🥄", requires: ["t3"], hint: "Khuấy tan bột rồi mới thưởng thức." },
+      { id: "t3", text: "Rót nước ấm khoảng 50 độ C vào cốc", icon: "🫖", requires: ["t1"], hint: "Nước ấm giúp ngũ cốc tan đều không vón cục." },
+      { id: "t4", text: "Dùng thìa khuấy đều cho tan mịn", icon: "🥄", requires: ["t2", "t3"], hint: "Khuấy tan bột rồi mới thưởng thức." },
       { id: "t5", text: "Rót thêm sữa tươi vào thưởng thức", icon: "🍶", requires: ["t4"], hint: "Thêm sữa tươi giúp ly ngũ cốc thơm béo tuyệt vời." }
     ],
     distractors: [
-      { id: "d1", text: "Đổ nước sôi sùng sục 100 độ C", icon: "🔥", failReason: "Nước sôi 100 độ C sẽ làm hỏng dưỡng chất và gây bỏng lưỡi!" }
+      { id: "d1", text: "Đổ nước sôi sùng sục 100 độ C", icon: "🔥", failReason: "Nước sôi 100 độ C sẽ làm hỏng dưỡng chất và gây bỏng lưỡi!" },
+      { id: "d2", text: "Nuốt chửng bột sống khi chưa pha nước", icon: "🤢", failReason: "Ăn bột sống chưa pha sẽ làm nghẹn họng rất nguy hiểm!" }
     ],
     lesson: "Tuần tự chuẩn bị nguyên liệu rồi đến dung môi giúp bột tan hoàn toàn."
   },
@@ -79,6 +85,10 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t4", text: "Kiểm tra hộp bút: đủ bút mực, bút chì, tẩy, thước", icon: "✏️", requires: ["t1"], hint: "Đồ dùng học tập luôn cần chuẩn bị sẵn sàng." },
       { id: "t5", text: "Đóng khóa ba lô & để ngay ngắn ở góc bàn", icon: "🎒", requires: ["t3", "t4"], hint: "Xong xuôi thì kéo khóa và đặt ở vị trí dễ lấy." }
     ],
+    distractors: [
+      { id: "d1", text: "Nhét thêm 5 cuốn truyện tranh dày cộm vào ba lô", icon: "📕", failReason: "Mang truyện tranh đi học sẽ làm nặng cặp sách và dễ bị mất tập trung trên lớp!" },
+      { id: "d2", text: "Để quên toàn bộ hộp bút ở nhà cho nhẹ cặp", icon: "🗑️", failReason: "Không mang hộp bút thì đến lớp con sẽ không có đồ dùng để viết bài!" }
+    ],
     lesson: "Xem thời khóa biểu trước giúp cặp sách nhẹ nhàng, không mang thừa sách."
   },
   {
@@ -94,8 +104,12 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t1", text: "Trải phẳng chiếc áo lên mặt bàn phẳng", icon: "🛏️", hint: "Mặt phẳng giúp gấp các nếp áo thẳng thớm." },
       { id: "t2", text: "Vuốt thẳng hai tay áo và thân áo", icon: "🖐️", requires: ["t1"], hint: "Làm phẳng nếp nhăn trước khi gập." },
       { id: "t3", text: "Gập cạnh bên trái và tay áo trái vào trong", icon: "👈", requires: ["t2"], hint: "Gập 1/3 thân áo phía bên trái vào giữa." },
-      { id: "t4", text: "Gập cạnh bên phải và tay áo phải vào trong", icon: "👉", requires: ["t3"], hint: "Gập tiếp 1/3 thân áo phía bên phải cho cân xứng." },
-      { id: "t5", text: "Gập gấu áo từ dưới lên mép cổ áo", icon: "⬆️", requires: ["t4"], hint: "Gấp đôi chiều dài lại thành hình chữ nhật gọn gàng." }
+      { id: "t4", text: "Gập cạnh bên phải và tay áo phải vào trong", icon: "👉", requires: ["t2"], hint: "Gập tiếp 1/3 thân áo phía bên phải cho cân xứng." },
+      { id: "t5", text: "Gập gấu áo từ dưới lên mép cổ áo", icon: "⬆️", requires: ["t3", "t4"], hint: "Gấp đôi chiều dài lại thành hình chữ nhật gọn gàng." }
+    ],
+    distractors: [
+      { id: "d1", text: "Vo tròn chiếc áo nhét vội vào tủ", icon: "🗑️", failReason: "Vo tròn nhét tủ sẽ làm áo nhăn nhúm, mai đi học trông rất lôi thôi!" },
+      { id: "d2", text: "Dùng kéo cắt bớt gấu áo cho vừa ngăn tủ", icon: "✂️", failReason: "Cắt áo sẽ làm hỏng hoàn toàn bộ đồng phục đi học của con!" }
     ],
     lesson: "Gấp quần áo có trình tự đối xứng giúp tủ đồ luôn ngăn nắp như khách sạn."
   },
@@ -117,7 +131,8 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t6", text: "Đặt chậu cây ở nơi có ánh sáng mặt trời nhẹ", icon: "☀️", requires: ["t5"], hint: "Ánh sáng giúp mầm cây quang hợp phát triển." }
     ],
     distractors: [
-      { id: "d1", text: "Tưới ngập chậu bằng nước ấm sôi", icon: "♨️", failReason: "Nước sôi sẽ làm chín luộc hạt giống, cây không thể mọc được!" }
+      { id: "d1", text: "Tưới ngập chậu bằng nước ấm sôi", icon: "♨️", failReason: "Nước sôi sẽ làm chín luộc hạt giống, cây không thể mọc được!" },
+      { id: "d2", text: "Bới hạt giống lên xem nảy mầm chưa mỗi 10 phút", icon: "⛏️", failReason: "Đào hạt liên tục sẽ làm đứt gãy mầm non non nớt vừa mới nhú!" }
     ],
     lesson: "Mầm sống cần đất, nước, ánh sáng đúng thứ tự để vươn mình khỏe khoắn."
   },
@@ -138,6 +153,10 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t5", text: "Dùng khăn ẩm lau sạch bụi trên mặt bàn", icon: "🧽", requires: ["t3", "t4"], hint: "Mặt bàn đã trống trải thì mới lau sạch bụi." },
       { id: "t6", text: "Đặt đèn bàn và hộp bút vào góc gọn gàng", icon: "💡", requires: ["t5"], hint: "Bàn sạch bóng thì đặt đèn học về vị trí chuẩn." }
     ],
+    distractors: [
+      { id: "d1", text: "Gạt tất cả sách vở bừa bãi giấu xuống gầm giường", icon: "🛏️", failReason: "Gạt xuống gầm giường chỉ là giấu rác chứ không phải dọn dẹp khoa học!" },
+      { id: "d2", text: "Dùng bút dạ vẽ hình rồng rắn lên mặt bàn học", icon: "🖍️", failReason: "Vẽ bậy làm bẩn mặt bàn và rất khó tẩy rửa sạch sẽ!" }
+    ],
     lesson: "Dọn từ rác lớn đến lau bụi mịn: bàn học sạch giúp tập trung gấp đôi."
   },
   {
@@ -157,6 +176,10 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t5", text: "Tráng lại 2 lần dưới vòi nước sạch kin kít", icon: "🚰", requires: ["t4"], hint: "Xả sạch hết bọt xà phòng bám trên bát." },
       { id: "t6", text: "Úp bát đĩa lên giá thoáng cho ráo nước", icon: "🪜", requires: ["t5"], hint: "Úp nghiêng để bát đĩa khô ráo tự nhiên." }
     ],
+    distractors: [
+      { id: "d1", text: "Đổ nước rửa chén đặc chưa pha ra khắp sàn nhà", icon: "🛝", failReason: "Nước rửa chén trơn trượt sẽ khiến mọi người trong nhà bị trượt ngã nguy hiểm!" },
+      { id: "d2", text: "Dùng bùi nhùi sắt cạo mạnh làm trầy xước đĩa sứ", icon: "💥", failReason: "Chà cọ bùi nhùi kim loại làm hỏng lớp men bóng của bát đĩa!" }
+    ],
     lesson: "Rửa từ đồ ít dầu đến nhiều dầu mỡ giúp miếng bọt biển không bị nhớt."
   },
   {
@@ -175,6 +198,10 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t4", text: "Xếp đồ nhẹ hơn (quần áo thay, đồ ăn nhẹ) ở giữa", icon: "🥪", requires: ["t3"], hint: "Lớp giữa bảo vệ đồ ăn không bị dập nát." },
       { id: "t5", text: "Để bình nước và khăn ướt ở hai túi lưới bên hông", icon: "🥤", requires: ["t2"], hint: "Để chỗ dễ rút ra lấy ngay khi đi bộ khát nước." },
       { id: "t6", text: "Để hộp cứu thương và mũ nón ở ngăn trên cùng", icon: "🩹", requires: ["t4"], hint: "Ngăn trên cùng để lấy đồ khẩn cấp trong 3 giây." }
+    ],
+    distractors: [
+      { id: "d1", text: "Nhét tạ sắt 5kg lên ngăn trên cùng của ba lô", icon: "🏋️", failReason: "Vật quá nặng ở trên đỉnh làm lệch trọng tâm và gây gù vẹo cột sống!" },
+      { id: "d2", text: "Bỏ bánh kem không đậy hộp dưới đáy ba lô", icon: "🎂", failReason: "Đồ nặng bên trên sẽ đè bẹp dúm bánh kem và làm bẩn toàn bộ ba lô!" }
     ],
     lesson: "Nguyên tắc ba lô: Nặng ở dưới, nhẹ ở trên, khẩn cấp ở ngăn ngoài."
   },
@@ -196,7 +223,8 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t6", text: "Nhét giấy báo vào mũi giày & phơi nơi thoáng gió", icon: "🌬️", requires: ["t5"], hint: "Giấy báo hút ẩm và giữ form giày không bị bẹp." }
     ],
     distractors: [
-      { id: "d1", text: "Phơi giày trực tiếp dưới nắng hè gay gắt 40 độ", icon: "☀️", failReason: "Nắng gắt sẽ làm co quắp cao su và nứt hỏng da giày!" }
+      { id: "d1", text: "Phơi giày trực tiếp dưới nắng hè gay gắt 40 độ", icon: "☀️", failReason: "Nắng gắt sẽ làm co quắp cao su và nứt hỏng da giày!" },
+      { id: "d2", text: "Bỏ giày ướt sũng vào lò vi sóng quay 5 phút", icon: "📻", failReason: "Lò vi sóng sẽ làm nổ bung đế giày và gây chập cháy nguy hiểm!" }
     ],
     lesson: "Nhét giấy báo hút ẩm giúp giày khô nhanh gấp 2 lần và giữ nguyên dáng."
   },
@@ -217,6 +245,10 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t5", text: "Lau khô toàn thân và mặc quần áo ngủ ấm áp", icon: "🧖", requires: ["t1", "t4"], hint: "Lau thật khô người rồi mới mặc đồ." },
       { id: "t6", text: "Sấy khô tóc hoàn toàn trước khi đi ngủ", icon: "💨", requires: ["t5"], hint: "Để tóc ướt đi ngủ dễ bị cảm lạnh và đau đầu." }
     ],
+    distractors: [
+      { id: "d1", text: "Vừa tắm vừa cắm sạc điện thoại trong phòng ẩm ướt", icon: "📱", failReason: "Dùng thiết bị đang sạc trong phòng tắm ướt cực kỳ dễ bị rò rỉ điện giật!" },
+      { id: "d2", text: "Để nguyên đầu tóc ướt sũng lên giường đi ngủ ngay", icon: "🛌", failReason: "Tóc ướt đi ngủ dễ bị cảm lạnh, đau đầu và nấm da đầu!" }
+    ],
     lesson: "Luôn tắt bình nóng lạnh trước khi tắm là bài học an toàn số 1."
   },
   {
@@ -236,7 +268,8 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t5", text: "Dán băng gạc cá nhân bảo vệ vết thương khỏi bụi bẩn", icon: "🩹", requires: ["t4"], hint: "Bảo vệ miệng vết thương để da nhanh lành." }
     ],
     distractors: [
-      { id: "d1", text: "Rắc thuốc lào hoặc tro bếp lên vết thương", icon: "🚬", failReason: "Tro bếp chứa hàng triệu vi khuẩn uốn ván cực kỳ nguy hiểm!" }
+      { id: "d1", text: "Rắc thuốc lào hoặc tro bếp lên vết thương", icon: "🚬", failReason: "Tro bếp chứa hàng triệu vi khuẩn uốn ván cực kỳ nguy hiểm!" },
+      { id: "d2", text: "Dội cồn 90 độ nguyên chất lên vết thương hở", icon: "🔥", failReason: "Cồn 90 độ dội thẳng vào vết rách làm chết mô tế bào và đau rát dữ dội!" }
     ],
     lesson: "Nước sạch và sát khuẩn chuẩn y tế là chìa khóa giúp vết thương mau lành."
   },
@@ -255,6 +288,10 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t3", text: "Cho gừng vào cốc và rót 150ml nước sôi để hãm 5 phút", icon: "🫖", requires: ["t2"], hint: "Nước sôi chiết xuất vị cay ấm của gừng." },
       { id: "t4", text: "Chờ nước ấm bớt khoảng 50 độ C rồi thêm 2 thìa mật ong", icon: "🍯", requires: ["t3"], hint: "Mật ong cho vào nước quá sôi sẽ mất vitamin." },
       { id: "t5", text: "Vắt nửa quả chanh và khuấy đều thưởng thức", icon: "🍋", requires: ["t4"], hint: "Chanh cho vào sau cùng để giữ nguyên vitamin C." }
+    ],
+    distractors: [
+      { id: "d1", text: "Vắt nước chanh vào nước đang sôi sùng sục 100 độ C", icon: "♨️", failReason: "Nước sôi sùng sục sẽ làm chanh bị đắng nghét và phá hủy toàn bộ vitamin C!" },
+      { id: "d2", text: "Cho thêm 1 thìa ớt bột cay xè vào cốc nước chanh", icon: "🌶️", failReason: "Ớt cay nồng sẽ làm bỏng rát cổ họng đang bị viêm ho của con!" }
     ],
     lesson: "Mật ong và chanh chỉ cho vào khi nước đã ấm để giữ trọn vẹn dưỡng chất."
   },
@@ -275,6 +312,10 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t5", text: "Lau thật khô ráo toàn bộ cánh và lồng quạt", icon: "🧖", requires: ["t4"], hint: "Phải khô 100% trước khi lắp vào động cơ điện." },
       { id: "t6", text: "Lắp ráp lại đúng thứ tự, siết ốc chặt rồi cắm điện chạy thử", icon: "🔧", requires: ["t5"], hint: "Lắp đúng khớp và kiểm tra quạt quay êm ái." }
     ],
+    distractors: [
+      { id: "d1", text: "Dùng vòi nước xịt thẳng vào mô tơ quạt đang cắm điện", icon: "⚡", failReason: "Nước vào mô tơ đang cắm điện sẽ gây chập cháy nổ điện cực kỳ nguy hiểm!" },
+      { id: "d2", text: "Chọc que sắt vào cánh quạt khi đang quay tít", icon: "🥢", failReason: "Chọc que vào cánh quạt đang quay làm gãy cánh và bắn mảnh vụn vào người!" }
+    ],
     lesson: "Rút phích điện trước tiên — an toàn lao động là trên hết!"
   },
   {
@@ -294,7 +335,8 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t5", text: "Tưới đều quanh gốc rau từ từ cho nước ngấm sâu", icon: "🌱", requires: ["t3", "t4"], hint: "Tưới vào gốc chứ không xịt mạnh làm dập lá non." }
     ],
     distractors: [
-      { id: "d1", text: "Tưới nước lúc 12h trưa nắng gắt 39 độ C", icon: "☀️", failReason: "Nắng trưa làm nước bốc hơi nóng làm luộc chín rễ rau!" }
+      { id: "d1", text: "Tưới nước lúc 12h trưa nắng gắt 39 độ C", icon: "☀️", failReason: "Nắng trưa làm nước bốc hơi nóng làm luộc chín rễ rau!" },
+      { id: "d2", text: "Tưới luống rau bằng nước xà phòng giặt đồ đậm đặc", icon: "🧼", failReason: "Hóa chất tẩy rửa trong xà phòng sẽ làm chết rễ cây rau non ngay lập tức!" }
     ],
     lesson: "Nhổ cỏ trước, tưới sau — cây rau hấp thụ trọn vẹn từng giọt nước mát."
   },
@@ -314,6 +356,10 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t4", text: "Đong đúng khẩu phần hạt thức ăn vào bát", icon: "🥩", requires: ["t2"], hint: "Cho ăn đúng định lượng, không cho ăn quá no." },
       { id: "t5", text: "Gọi bé mèo lại và nhẹ nhàng vuốt ve khen ngợi", icon: "🐾", requires: ["t3", "t4"], hint: "Gắn kết tình cảm và quan sát mèo ăn ngon miệng." }
     ],
+    distractors: [
+      { id: "d1", text: "Cho mèo cưng ăn kẹo sô-cô-la ngọt lịm", icon: "🍫", failReason: "Sô-cô-la chứa chất theobromine cực độc với loài mèo và có thể gây tử vong!" },
+      { id: "d2", text: "Nắm đuôi bé mèo nhấc bổng lên cao", icon: "😿", failReason: "Kéo đuôi làm tổn thương cột sống mèo và khiến mèo sợ hãi cào cắn!" }
+    ],
     lesson: "Vệ sinh khay trước, đồ ăn sau: môi trường sạch tạo nên thú cưng khỏe mạnh."
   },
   {
@@ -332,6 +378,10 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t4", text: "Gọt sẵn 2 bút chì, kiểm tra bút mực và thước kẻ", icon: "✏️", requires: ["t1"], hint: "Dụng cụ chuẩn bị sẵn sàng, không mất công tìm khi đang làm bài." },
       { id: "t5", text: "Đặt một chai nước lọc và đồng hồ bấm giờ lên bàn", icon: "⏱️", requires: ["t1"], hint: "Nước uống tiếp nước cho não, đồng hồ đo nhịp làm bài 25 phút." },
       { id: "t6", text: "Ngồi ngay ngắn, bật đèn học đủ sáng và bắt đầu phiên học", icon: "💡", requires: ["t3", "t4", "t5"], hint: "Tư thế ngồi chuẩn lưng thẳng, ánh sáng bảo vệ mắt." }
+    ],
+    distractors: [
+      { id: "d1", text: "Bật TV xem hoạt hình ầm ĩ ngay trước bàn học", icon: "📺", failReason: "Màn hình TV sẽ làm con mất tập trung hoàn toàn, không thể ghi nhớ kiến thức!" },
+      { id: "d2", text: "Uống liền 3 lon nước tăng lực để thức trắng đêm", icon: "🥤", failReason: "Nước tăng lực làm tim đập nhanh, hại dạ dày và khiến sáng mai con kiệt sức khi thi!" }
     ],
     lesson: "Môi trường học tập không xao nhãng giúp ghi nhớ kiến thức sâu gấp 3 lần."
   },
@@ -353,7 +403,8 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t6", text: "Chờ cồn bay hơi khô hoàn toàn rồi mới cắm lại máy tính", icon: "✨", requires: ["t5"], hint: "Bảo đảm bàn phím khô ráo 100% trước khi cấp điện." }
     ],
     distractors: [
-      { id: "d1", text: "Đổ nước rửa chén trực tiếp lên mặt bàn phím", icon: "🌊", failReason: "Nước chảy vào bo mạch sẽ làm chập cháy bàn phím vĩnh viễn!" }
+      { id: "d1", text: "Đổ nước rửa chén trực tiếp lên mặt bàn phím", icon: "🌊", failReason: "Nước chảy vào bo mạch sẽ làm chập cháy bàn phím vĩnh viễn!" },
+      { id: "d2", text: "Nhúng cả bàn phím máy tính vào chậu nước xà phòng", icon: "🛁", failReason: "Ngâm nước sẽ làm chập cháy và hỏng hoàn toàn bảng mạch điện tử của bàn phím!" }
     ],
     lesson: "Thiết bị điện tử kỵ nước — luôn ngắt điện và dùng khăn ẩm vắt khô."
   },
@@ -373,6 +424,10 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t4", text: "Xếp bông gòn, băng gạc, cồn đỏ và nhiệt kế vào ngăn trên", icon: "🩹", requires: ["t1"], hint: "Dụng cụ sơ cứu phải ở chỗ dễ thấy nhất." },
       { id: "t5", text: "Dán nhãn tên thuốc và hạn sử dụng rõ ràng bên ngoài hộp", icon: "✍️", requires: ["t3"], hint: "Ghi rõ công dụng: thuốc hạ sốt, thuốc đau bụng..." },
       { id: "t6", text: "Khóa tủ thuốc và treo ở vị trí cao ngoài tầm với trẻ nhỏ", icon: "🔒", requires: ["t4", "t5"], hint: "Treo cao trên 1.5m để các em nhỏ không với tới." }
+    ],
+    distractors: [
+      { id: "d1", text: "Cất thuốc quá hạn sử dụng 3 năm vào tủ thuốc", icon: "☠️", failReason: "Thuốc quá hạn sử dụng đã bị biến chất độc, uống vào sẽ gây ngộ độc cấp tính!" },
+      { id: "d2", text: "Trộn lẫn kẹo socola ngọt ngào vào lọ thuốc con nhộng", icon: "🍬", failReason: "Trộn kẹo vào thuốc khiến trẻ nhỏ dễ ăn nhầm thuốc độc rất nguy hiểm!" }
     ],
     lesson: "Tủ thuốc gia đình luôn phân loại rõ ràng và treo ở nơi an toàn."
   },
@@ -394,7 +449,8 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t6", text: "Thoát ra nơi an toàn và gọi ngay 114 báo địa chỉ chính xác", icon: "📞", requires: ["t5"], hint: "Báo lực lượng cứu hỏa chuyên nghiệp ứng cứu." }
     ],
     distractors: [
-      { id: "d1", text: "Chạy vào thang máy bấm nút xuống tầng 1", icon: "🛗", failReason: "Hỏa hoạn làm mất điện, thang máy sẽ biến thành lò bẫy khói chết người!" }
+      { id: "d1", text: "Chạy vào thang máy bấm nút xuống tầng 1", icon: "🛗", failReason: "Hỏa hoạn làm mất điện, thang máy sẽ biến thành lò bẫy khói chết người!" },
+      { id: "d2", text: "Chạy thẳng vào thang máy khi chuông báo cháy reo vang", icon: "🛗", failReason: "Thang máy sẽ mất điện và biến thành lồng khói độc chết người khi có hỏa hoạn!" }
     ],
     lesson: "Cúi thấp người, bịt khăn ướt và đi thang bộ — 3 quy tắc vàng thoát hiểm."
   },
@@ -419,6 +475,10 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t5", text: "Rạch đôi ổ bánh mì, xếp rau mùi và dưa chuột vào", icon: "🥖", hint: "Chuẩn bị phần vỏ bánh mì và rau tươi giòn." },
       { id: "t6", text: "Gắp trứng, xúc xích kẹp vào bánh mì và rưới tương cà", icon: "🥪", requires: ["t4", "t5"], hint: "Kết hợp toàn bộ nguyên liệu lại thành món bánh mì kẹp hoàn chỉnh." }
     ],
+    distractors: [
+      { id: "d1", text: "Đổ một bát nước lạnh vào chảo mỡ đang sôi sùng sục", icon: "💥", failReason: "Nước đổ vào mỡ sôi sẽ làm dầu bắn tung tóe gây bỏng nặng mặt và tay!" },
+      { id: "d2", text: "Cắt bánh mì bằng tay không không dùng thớt", icon: "🩸", failReason: "Cầm bánh mì trên tay rồi cắt rất dễ bị dao cứa vào lòng bàn tay!" }
+    ],
     lesson: "Bật bếp -> Dầu nóng -> Đập trứng: thứ tự vàng của món chiên rán."
   },
   {
@@ -439,7 +499,8 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t6", text: "Đưa khay vào lò nướng 12 phút đến khi phô mai chảy vàng", icon: "🍕", requires: ["t1", "t5"], hint: "Lò đã đủ nóng và bánh đã sẵn sàng để nướng." }
     ],
     distractors: [
-      { id: "d1", text: "Rưới tương ớt cay xè lên bánh trước khi nướng", icon: "🌶️", failReason: "Tương ớt nướng nhiệt độ cao sẽ bị khét đắng mất vị phô mai!" }
+      { id: "d1", text: "Rưới tương ớt cay xè lên bánh trước khi nướng", icon: "🌶️", failReason: "Tương ớt nướng nhiệt độ cao sẽ bị khét đắng mất vị phô mai!" },
+      { id: "d2", text: "Bật lò nướng nhiệt độ tối đa 500 độ C trong 1 tiếng", icon: "🔥", failReason: "Nhiệt độ quá cao và nướng quá lâu sẽ biến chiếc pizza thành tảng than đen xì!" }
     ],
     lesson: "Bật nóng lò trước giúp đế pizza giòn rụm chứ không bị ỉu dai."
   },
@@ -460,6 +521,10 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t5", text: "Cho đầy đá viên mát lạnh vào ly nước trà", icon: "🧊", requires: ["t4"], hint: "Đá viên làm lạnh sâu thức uống sảng khoái." },
       { id: "t6", text: "Gắp các miếng đào ngâm giòn lên trên miệng ly", icon: "🍑", requires: ["t5"], hint: "Đào nổi trên mặt đá trông bắt mắt và giữ độ giòn." }
     ],
+    distractors: [
+      { id: "d1", text: "Cho đá lạnh đầy cốc trước khi hãm trà nóng", icon: "🧊", failReason: "Nước đá lạnh sẽ làm trà không thể chiết xuất hương vị thơm ngon được!" },
+      { id: "d2", text: "Thả cả quả cam nguyên vỏ chưa rửa vào cốc", icon: "🍊", failReason: "Vỏ cam chưa rửa có thể còn dính bụi bẩn và thuốc bảo vệ thực vật!" }
+    ],
     lesson: "Hòa tan đường khi trà còn ấm, cho đá và hoa quả vào sau cùng."
   },
   {
@@ -478,6 +543,10 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t4", text: "Cho một bát đá bi nhỏ vào cối xay lên trên cùng", icon: "🧊", requires: ["t3"], hint: "Đá ở trên sẽ bị lưỡi dao cuốn xuống xay mịn." },
       { id: "t5", text: "Đậy chặt nắp cối, bật máy xay tốc độ cao trong 45 giây", icon: "🔄", requires: ["t4"], hint: "Đậy nắp an toàn trước khi bấm nút xay." },
       { id: "t6", text: "Rót sinh tố sánh mịn ra ly và cắm ống hút thưởng thức", icon: "🥤", requires: ["t5"], hint: "Thành phẩm vàng ươm, béo ngậy thơm nức mũi." }
+    ],
+    distractors: [
+      { id: "d1", text: "Bật máy xay sinh tố khi chưa đậy nắp cối", icon: "🌪️", failReason: "Không đậy nắp sẽ khiến xoài và cốt dừa bắn tung tóe lên trần nhà và quần áo!" },
+      { id: "d2", text: "Bỏ cả hột xoài cứng như đá vào cối xay", icon: "🥭", failReason: "Hột xoài quá cứng sẽ làm mẻ dao xay và gãy mô tơ máy xay sinh tố!" }
     ],
     lesson: "Chất lỏng ở dưới, đá ở trên giúp máy xay không bị nghẽn lưỡi dao."
   },
@@ -498,6 +567,10 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t5", text: "Chuẩn bị sẵn một tô nước đá lạnh ngắt bên cạnh", icon: "🧊", requires: ["t3"], hint: "Tô nước đá sẵn sàng sốc nhiệt ngừng nấu." },
       { id: "t6", text: "Hết 6 phút vớt ngay trứng thả vào tô nước đá 5 phút rồi bóc vỏ", icon: "🥚", requires: ["t4", "t5"], hint: "Sốc nhiệt nước đá làm vỏ róc lột ra cực kỳ dễ dàng." }
     ],
+    distractors: [
+      { id: "d1", text: "Bỏ trứng nguyên vỏ vào lò vi sóng quay 3 phút", icon: "📻", failReason: "Áp suất trong vỏ trứng tăng cao sẽ làm nổ tung phá hỏng lò vi sóng!" },
+      { id: "d2", text: "Thả trứng mạnh từ trên cao rơi tự do xuống nồi rỗng", icon: "🥚", failReason: "Thả mạnh làm vỡ nát vỏ trứng trước khi kịp nấu chín!" }
+    ],
     lesson: "Canh đồng hồ chính xác và sốc nước đá là bí mật của trứng lòng đào."
   },
   {
@@ -516,6 +589,10 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t4", text: "Trần bánh phở qua nồi nước sôi rồi trút vào bát tô", icon: "🍜", hint: "Bánh phở nóng hổi nằm ở đáy bát." },
       { id: "t5", text: "Xếp các lát thịt bò tái và rau thơm phủ lên mặt bánh phở", icon: "🥣", requires: ["t2", "t3", "t4"], hint: "Bày biện đẹp mắt trước khi chan nước dùng." },
       { id: "t6", text: "Múc nước dùng sôi sùng sục chan đều làm chín tái thịt bò", icon: "🍲", requires: ["t1", "t5"], hint: "Nước sôi trực tiếp làm thịt bò chín hồng mềm ngọt lịm." }
+    ],
+    distractors: [
+      { id: "d1", text: "Dội nước dùng nguội ngắt lên bát thịt bò tái", icon: "🥶", failReason: "Nước dùng nguội không thể làm chín tái thịt bò, ăn thịt sống sẽ bị đau bụng!" },
+      { id: "d2", text: "Ăn miếng thịt bò đã ôi thiu bốc mùi lạ", icon: "🤢", failReason: "Thịt ôi thiu chứa đầy độc tố vi khuẩn Salmonella gây ngộ độc tiêu hóa cấp!" }
     ],
     lesson: "Nước dùng phải sôi 100 độ C chan lên thịt bò tươi mới tái mềm ngọt."
   },
@@ -536,6 +613,10 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t5", text: "Nặn bột thành từng viên tròn dẹt xếp lên khay nướng", icon: "🍪", requires: ["t4"], hint: "Xếp cách nhau 3 cm để khi nướng bánh nở không dính vào nhau." },
       { id: "t6", text: "Bật lò nướng 175 độ C nướng trong 15 phút đến khi vàng ươm", icon: "♨️", requires: ["t5"], hint: "Nướng chín vàng đều hai mặt thơm ngào ngạt." }
     ],
+    distractors: [
+      { id: "d1", text: "Cho nhầm nửa bát muối biển thay vì đường cát", icon: "🧂", failReason: "Bánh quy mặn chát đắng nghét không một ai có thể ăn nổi!" },
+      { id: "d2", text: "Mở cửa lò nướng liên tục mỗi 30 giây để ngó bánh", icon: "👀", failReason: "Mở lò liên tục làm thất thoát nhiệt khiến bánh quy bị xẹp lép không nở giòn!" }
+    ],
     lesson: "Rây bột mịn và cách đều khoảng cách trên khay để bánh nở tròn đẹp."
   },
   {
@@ -554,6 +635,10 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t4", text: "Trải bánh đa nem ra đĩa, thoa chút nước dấm cho giòn vỏ", icon: "🫓", hint: "Bí quyết phết chút nước giấm loãng giúp vỏ nem giòn lâu." },
       { id: "t5", text: "Múc nhân vào giữa rồi cuốn chặt hai đầu thành chiếc nem tròn", icon: "🌯", requires: ["t3", "t4"], hint: "Cuốn đều tay, không quá chặt kẻo vỡ khi rán." },
       { id: "t6", text: "Rán ngập dầu 2 lần lửa: lửa 1 chín tới, lửa 2 giòn tan", icon: "🔥", requires: ["t5"], hint: "Rán 2 lần lửa là bí quyết gia truyền nem giòn suốt 2 tiếng!" }
+    ],
+    distractors: [
+      { id: "d1", text: "Thả nem ướt sũng nước vào chảo dầu đang sôi", icon: "💥", failReason: "Nước trên nem gặp dầu sôi sẽ bắn bỏng khắp mặt và bếp nấu!" },
+      { id: "d2", text: "Dùng màng bọc nilon để gói nem đem rán", icon: "🛍️", failReason: "Nilon gặp dầu sôi sẽ tan chảy chất nhựa độc hại ngấm vào thức ăn!" }
     ],
     lesson: "Bí quyết nem giòn: Thoa dấm loãng lên vỏ và rán nem 2 lần lửa."
   },
@@ -574,6 +659,10 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t5", text: "Cắm que kem gỗ vào giữa từng ô khuôn", icon: "🥢", requires: ["t4"], hint: "Cắm thẳng trục để khi rút kem ra dễ dàng." },
       { id: "t6", text: "Để vào ngăn đông tủ lạnh ít nhất 6 tiếng cho đông cứng", icon: "❄️", requires: ["t5"], hint: "Đông cứng hoàn toàn là có que kem mát lạnh ngon tuyệt!" }
     ],
+    distractors: [
+      { id: "d1", text: "Cho cả vỏ xanh xơ đắng của quả dưa hấu vào xay", icon: "🍉", failReason: "Vỏ xanh dai và đắng nghét sẽ làm hỏng vị ngọt thanh mát của kem que dưa hấu!" },
+      { id: "d2", text: "Bỏ que kem đang đông vào nồi nước sôi đun ấm", icon: "♨️", failReason: "Nước nóng sẽ làm kem tan chảy thành nước đường trong chớp mắt!" }
+    ],
     lesson: "Nước đóng băng sẽ nở thể tích — nhớ chừa 10% miệng khuôn nhé!"
   },
   {
@@ -592,6 +681,10 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t4", text: "Dàn đều một lớp cơm mỏng phủ 2/3 bề mặt lá rong biển", icon: "🥢", requires: ["t1", "t3"], hint: "Dàn đều tay chừa 1/3 mép trên để dán dính mép cuộn." },
       { id: "t5", text: "Xếp các dải nhân cà rốt, xúc xích, dưa chuột vào giữa", icon: "🥕", requires: ["t2", "t4"], hint: "Nhân nằm gọn gàng ngay chính giữa phần cơm." },
       { id: "t6", text: "Dùng mành tre cuộn chặt tay rồi cắt thành từng khoanh tròn", icon: "🍱", requires: ["t5"], hint: "Thoa dầu ăn vào lưỡi dao cắt ngọt lịm không dính cơm." }
+    ],
+    distractors: [
+      { id: "d1", text: "Rải cơm nóng hổi 100 độ C trực tiếp lên rong biển", icon: "💨", failReason: "Cơm quá nóng sẽ làm co rúm, dai nhách và rách toạc lá rong biển khô!" },
+      { id: "d2", text: "Dùng dao cùn răng cưa dập nát cuộn kimbap", icon: "🔪", failReason: "Dao cùn sẽ đè nát bét cuộn kimbap và nhân bên trong rơi vãi tung tóe!" }
     ],
     lesson: "Mặt nhám rong biển quay lên trong, thoa dầu mè vào dao cắt sắc lẹm."
   },
@@ -612,6 +705,10 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t5", text: "Khuấy đều sữa đặc và sữa tươi không đường vào nước cốt trà", icon: "🥛", requires: ["t4"], hint: "Tạo nên vị trà sữa béo ngậy thanh mát." },
       { id: "t6", text: "Múc trân châu đường đen vào đáy ly, thêm đá rồi rót trà sữa", icon: "🧋", requires: ["t3", "t5"], hint: "Tạo vệt đường đen hổ phách chảy quanh thành ly tuyệt đẹp." }
     ],
+    distractors: [
+      { id: "d1", text: "Nuốt chửng một lúc 30 viên trân châu mà không nhai", icon: "🫁", failReason: "Trân châu dai dẻo nuốt vội dễ làm tắc đường thở và hóc nghẹn nguy hiểm!" },
+      { id: "d2", text: "Đun sôi trân châu bằng dầu ăn thay vì nước sôi", icon: "🍳", failReason: "Trân châu chiên dầu ăn sẽ bị khô cứng như đá và cháy khét đen xì!" }
+    ],
     lesson: "Ủ trân châu sau khi luộc giúp hạt mềm dẻo không bị cứng nhân giữa."
   },
   {
@@ -630,6 +727,10 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t4", text: "Thịt băm ướp chút hạt nêm xào chín thơm với hành củ", icon: "🥩", hint: "Xào thơm thịt trước giúp thịt không bị tanh." },
       { id: "t5", text: "Thái cà rốt thành hạt lựu nhỏ li ti", icon: "🥕", hint: "Hạt lựu nhỏ giúp cà rốt chín mềm hòa vào cháo." },
       { id: "t6", text: "Trút thịt xào và cà rốt vào nồi cháo khuấy đều 10 phút", icon: "🥣", requires: ["t3", "t4", "t5"], hint: "Các nguyên liệu hòa quyện, nêm lại gia vị vừa miệng." }
+    ],
+    distractors: [
+      { id: "d1", text: "Thả tảng thịt sống to đùng chưa băm vào nồi cháo chín", icon: "🥩", failReason: "Thịt chưa băm không thể hòa quyện và bên trong tảng thịt sẽ bị sống đỏ!" },
+      { id: "d2", text: "Khuấy cháo bằng chiếc thìa gỉ sét bám cặn bẩn", icon: "🥄", failReason: "Rỉ sét và vi khuẩn từ thìa bẩn sẽ làm nhiễm độc toàn bộ nồi cháo!" }
     ],
     lesson: "Ninh cháo lửa nhỏ hé vung — canh lửa cẩn thận không để trào bếp."
   },
@@ -650,6 +751,10 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t5", text: "Cho tất cả vào âu lớn, thêm xúc xích và sốt Mayonnaise", icon: "🥣", requires: ["t1", "t4"], hint: "Sốt Mayonnaise béo ngậy kết dính các hạt salad." },
       { id: "t6", text: "Dùng thìa gỗ trộn thật nhẹ tay rồi để ngăn mát 30 phút", icon: "🥗", requires: ["t5"], hint: "Trộn nhẹ tay tránh làm nát khoai tây chín mềm." }
     ],
+    distractors: [
+      { id: "d1", text: "Dùng củ khoai tây đã mọc mầm xanh để luộc ăn", icon: "🥔", failReason: "Mầm khoai tây chứa chất độc thần kinh solanine cực kỳ nguy hiểm cho tính mạng!" },
+      { id: "d2", text: "Trộn salad bằng nước rửa chén cho sạch dầu", icon: "🧪", failReason: "Nước rửa chén là hóa chất công nghiệp, nuốt phải sẽ bị ngộ độc phải đi cấp cứu!" }
+    ],
     lesson: "Rau củ luộc xong sốc nước đá giữ màu tươi, để ráo trước khi trộn sốt."
   },
   {
@@ -668,6 +773,10 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t4", text: "Xếp xen kẽ từng lớp hoa quả nhiều màu sắc lên trên đá", icon: "🌈", requires: ["t2", "t3"], hint: "Tạo các dải màu đỏ, vàng, xanh bắt mắt." },
       { id: "t5", text: "Đổ một hộp sữa chua có đường phủ kín mặt hoa quả", icon: "🍶", requires: ["t4"], hint: "Sữa chua sánh ngậy chảy len qua từng miếng quả." },
       { id: "t6", text: "Rưới một thìa sữa đặc và rắc dừa khô giòn rụm lên trên", icon: "🥥", requires: ["t5"], hint: "Dừa khô giòn rụm tạo điểm nhấn hương vị khó quên." }
+    ],
+    distractors: [
+      { id: "d1", text: "Đun sôi hộp sữa chua tiệt trùng trên ngọn lửa to", icon: "🔥", failReason: "Nhiệt độ cao sẽ tiêu diệt sạch toàn bộ lợi khuẩn probiotic quý giá trong sữa chua!" },
+      { id: "d2", text: "Thêm tương ớt siêu cay vào bát sữa chua hoa quả", icon: "🌶️", failReason: "Vị cay gắt của ớt kết hợp sữa chua sẽ làm đau bụng quằn quại!" }
     ],
     lesson: "Xếp lớp màu sắc xen kẽ tạo nên món ăn hấp dẫn thị giác."
   },
@@ -689,7 +798,8 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t6", text: "Đổ bơ tan chảy và bột phô mai vào xóc đều thưởng thức", icon: "🍿", requires: ["t5"], hint: "Bơ và phô mai bám đều vào từng hạt bắp nổ giòn tan." }
     ],
     distractors: [
-      { id: "d1", text: "Mở toang nắp nồi khi bắp đang nổ rào rào", icon: "💥", failReason: "Hạt bắp nóng rực bắn vào mặt và mắt cực kỳ nguy hiểm!" }
+      { id: "d1", text: "Mở toang nắp nồi khi bắp đang nổ rào rào", icon: "💥", failReason: "Hạt bắp nóng rực bắn vào mặt và mắt cực kỳ nguy hiểm!" },
+      { id: "d2", text: "Bật lửa to hết cỡ rang ngô mà không đậy vung nồi", icon: "🍿", failReason: "Hạt bắp nổ sẽ bắn tứ tung ra khắp phòng và có thể bắn trúng mắt gây bỏng!" }
     ],
     lesson: "Lắc nồi liên tục và lắng nghe nhịp nổ để tắt bếp đúng thời điểm vàng."
   },
@@ -710,6 +820,10 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t5", text: "Đổ nước vào nồi đun sôi bùng và hớt sạch bọt", icon: "🫕", requires: ["t4"], hint: "Hớt bọt giúp nước canh trong veo ngọt lành." },
       { id: "t6", text: "Thả rau ngót vào nấu sôi 3 phút rồi tắt bếp nêm gia vị", icon: "🍲", requires: ["t2", "t5"], hint: "Rau ngót vừa chín tới giữ nguyên màu xanh biếc." }
     ],
+    distractors: [
+      { id: "d1", text: "Không vò nát lá rau ngót trước khi cho vào nấu", icon: "🥬", failReason: "Rau ngót không vò sẽ bị cứng dai và nước canh không có vị ngọt đậm đà!" },
+      { id: "d2", text: "Đổ cả rổ đất cát dính ở rễ rau vào nồi canh", icon: "🪴", failReason: "Đất cát làm bát canh đầy sạn bẩn và vi khuẩn đường ruột!" }
+    ],
     lesson: "Vò nhẹ lá rau ngót trước khi nấu giúp canh ngọt đậm và rau mềm ngon."
   },
   {
@@ -728,6 +842,10 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t4", text: "Thoa dầu ăn mỏng lên chảo chữ nhật và làm nóng nhẹ", icon: "🫒", hint: "Chảo chữ nhật giúp định hình cuộn trứng vuông vắn." },
       { id: "t5", text: "Rót một lớp trứng mỏng, khi se mặt thì cuộn tròn về một phía", icon: "🔄", requires: ["t3", "t4"], hint: "Cuộn lớp trứng đầu tiên làm lõi bên trong." },
       { id: "t6", text: "Rót tiếp lớp trứng thứ 2 lách dưới cuộn cũ rồi cuộn tiếp nhiều lớp", icon: "🍱", requires: ["t5"], hint: "Tráng và cuộn 3-4 lớp tạo thành khối trứng vàng óng dày dặn." }
+    ],
+    distractors: [
+      { id: "d1", text: "Dùng tay không cuộn trứng trên mặt chảo gang đỏ rực", icon: "🖐️", failReason: "Chảo gang cực kỳ nóng sẽ làm bỏng phồng rộp da tay của con ngay lập tức!" },
+      { id: "d2", text: "Bật lửa cực đại rán cháy đen thui lớp trứng đầu tiên", icon: "🍳", failReason: "Trứng rán cháy khét sẽ bị đắng nghét và mất đi độ mềm xốp đặc trưng!" }
     ],
     lesson: "Lọc trứng qua rây và tráng từng lớp mỏng tạo nên cuộn trứng nhiều tầng."
   },
@@ -748,6 +866,10 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t5", text: "Trút đậu đen đã rang vào nồi nước sôi đun nhỏ lửa 10 phút", icon: "🫖", requires: ["t3", "t4"], hint: "Chất dinh dưỡng trong đậu đen thôi ra nước đỏ thẫm." },
       { id: "t6", text: "Tắt bếp ủ 15 phút rồi chắt nước vào bình uống cả ngày", icon: "🍶", requires: ["t5"], hint: "Nước đậu đen rang thơm ngậy vị thảo mộc thiên nhiên." }
     ],
+    distractors: [
+      { id: "d1", text: "Uống cả bát đậu đen sống sượng chưa nấu chín", icon: "🫘", failReason: "Đậu đen sống khó tiêu hóa và sẽ làm con bị chướng bụng đầy hơi dữ dội!" },
+      { id: "d2", text: "Rang đậu đen cháy khét thành tro đen sì", icon: "💨", failReason: "Đậu rang quá cháy sẽ tạo ra các chất gây ung thư có hại cho sức khỏe!" }
+    ],
     lesson: "Rang đậu trước khi nấu giúp nước thơm ngát và không bị đầy bụng."
   },
   {
@@ -766,6 +888,10 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t4", text: "Đặt túi zip nhỏ chứa sữa xoài vào giữa túi đá muối", icon: "📦", requires: ["t2", "t3"], hint: "Túi kem được bao bọc 360 độ bởi lớp đá siêu lạnh." },
       { id: "t5", text: "Đeo găng tay vải và lắc mạnh túi liên tục trong 5 phút", icon: "🧤", requires: ["t4"], hint: "Đeo găng tay kẻo bị bỏng lạnh khi lắc đá âm 10 độ!" },
       { id: "t6", text: "Lấy túi nhỏ ra lau sạch muối bên ngoài và múc kem dẻo thưởng thức", icon: "🍨", requires: ["t5"], hint: "Sữa lỏng đã đông đặc thành kem tươi dẻo mịn kỳ diệu!" }
+    ],
+    distractors: [
+      { id: "d1", text: "Đổ nhầm nửa bát muối ăn vào trong hỗn hợp kem xoài", icon: "🧂", failReason: "Muối mặn chát sẽ làm hỏng hoàn toàn vị béo ngọt thanh mát của kem xoài!" },
+      { id: "d2", text: "Dùng túi zip bị rách thủng để nước muối đá chảy vào kem", icon: "💧", failReason: "Nước muối đá lạnh sẽ tràn vào làm kem bị mặn đắng không thể ăn được!" }
     ],
     lesson: "Hiện tượng nhiệt động học: Muối làm đá tan ở nhiệt độ âm giúp đông kem thần tốc."
   },
@@ -787,7 +913,8 @@ export const TASK_MASTER_LEVELS_PART1 = [
       { id: "t6", text: "Dập tắt hoàn toàn than bằng nước và dọn sạch tro tàn sau tiệc", icon: "🧯", requires: ["t5"], hint: "Ngăn ngừa triệt để nguy cơ tàn lửa bùng phát gây hỏa hoạn." }
     ],
     distractors: [
-      { id: "d1", text: "Kê bếp than hoa nướng ngay trong phòng ngủ kín", icon: "🚪", failReason: "Đốt than trong phòng kín sinh khí CO cực độc gây tử vong trong 10 phút!" }
+      { id: "d1", text: "Kê bếp than hoa nướng ngay trong phòng ngủ kín", icon: "🚪", failReason: "Đốt than trong phòng kín sinh khí CO cực độc gây tử vong trong 10 phút!" },
+      { id: "d2", text: "Tưới trực tiếp chai cồn hoặc xăng vào đống than đang cháy đỏ", icon: "⛽", failReason: "Hơi xăng cồn bắt lửa bùng cháy dữ dội như quả cầu lửa gây bỏng nghiêm trọng!" }
     ],
     lesson: "Than hoa phải bén lửa hồng không khói và luôn dập tắt tro tàn sau tiệc."
   }

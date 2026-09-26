@@ -146,20 +146,33 @@ export function renderTaskMasterView({ state, appRoot, saveLocal, levelIndex = 0
     area.innerHTML = `
       <!-- 1. DÒNG THỜI GIAN KẾ HOẠCH (TIMELINE) -->
       <div class="tm-section-block">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px">
-          <div style="display:flex; align-items:center; gap:8px">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px">
+          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap">
             <span style="font-size:1.3rem">⏱️</span>
             <h3 style="margin:0; font-size:1.15rem; font-weight:800">Dòng Kế Hoạch (Thứ tự các bước thực hiện)</h3>
             <span style="font-size:0.82rem; font-weight:800; color:var(--primary); background:#e0f2fe; padding:2px 8px; border-radius:10px">
               ${session.timeline.length} / ${level.tasks.length} bước
             </span>
+            <span style="font-size:0.8rem; font-weight:700; color:${session.moveCount > 3 ? '#b91c1c' : '#475569'}; background:${session.moveCount > 3 ? '#fee2e2' : '#f1f5f9'}; padding:2px 8px; border-radius:10px" title="Đổi chỗ quá 3 lần sẽ bị trừ 1 sao để rèn luyện thói quen suy nghĩ trước khi làm">
+              🔄 Đổi chỗ: ${session.moveCount}/3
+            </span>
+            ${session.hintCount > 0 ? `
+              <span style="font-size:0.8rem; font-weight:700; color:#b45309; background:#fef3c7; padding:2px 8px; border-radius:10px" title="Mỗi lần xem gợi ý trừ 1 sao">
+                💡 Gợi ý: ${session.hintCount} (-${session.hintCount}⭐)
+              </span>
+            ` : ""}
+            ${session.levelIndex >= 40 ? `
+              <span style="font-size:0.8rem; font-weight:700; color:#0369a1; background:#e0f2fe; padding:2px 8px; border-radius:10px" title="Thời gian tiêu chuẩn cho nhiệm vụ kỹ thuật">
+                ⏳ Chuẩn: ${level.targetTime || (level.difficulty >= 4 ? 120 : 90)}s
+              </span>
+            ` : ""}
           </div>
           <div style="display:flex; gap:8px">
             <button id="btnClearTimeline" class="ghost-button" style="padding:6px 12px; font-size:0.85rem; color:#dc2626" ${session.timeline.length === 0 || session.isSimulating ? "disabled" : ""}>
               🗑️ Xóa hết
             </button>
             <button id="btnHintTask" class="ghost-button" style="padding:6px 12px; font-size:0.85rem; color:#d97706" ${session.isSolved || session.isSimulating ? "disabled" : ""}>
-              💡 Gợi ý bước
+              💡 Gợi ý (-1⭐)
             </button>
           </div>
         </div>
@@ -232,12 +245,22 @@ export function renderTaskMasterView({ state, appRoot, saveLocal, levelIndex = 0
           <div class="tm-success-alert animate-pop-in" style="margin-top:14px; background:#ecfdf5; border:2px solid #a7f3d0; border-radius:12px; padding:16px; text-align:center">
             <div style="font-size:2.4rem">${"⭐".repeat(simResult.stars)}</div>
             <h3 style="margin:6px 0 4px; color:#065f46; font-size:1.3rem">KẾ HOẠCH HOÀN TOÀN CHÍNH XÁC!</h3>
-            <p style="margin:0 0 12px; color:#047857; font-size:0.92rem">
-              ${session.attemptsCount === 1 
-                ? "Thần kỳ! Bách đã suy nghĩ thấu đáo và giải đúng ngay trong lần đầu tiên! Đạt trọn vẹn 3 Sao!" 
-                : "Rất tốt! Con đã tự phát hiện lỗi và sửa lại quy trình thành công mỹ mãn!"}
+            <p style="margin:0 0 8px; color:#047857; font-size:0.92rem">
+              ${simResult.stars === 3
+                ? "Thần kỳ! Bách đã suy nghĩ thấu đáo và giải đúng chuẩn xác! Đạt trọn vẹn 3 Sao!" 
+                : "Rất tốt! Con đã hoàn thành kế hoạch thành công!"}
             </p>
-            <div style="display:flex; justify-content:center; gap:12px">
+            <div style="display:inline-flex; gap:10px; font-size:0.85rem; font-weight:700; color:#065f46; background:#d1fae5; padding:6px 14px; border-radius:20px; margin-bottom:12px; flex-wrap:wrap; justify-content:center">
+              <span>🔄 Đổi chỗ: ${simResult.moveCount || 0} lần</span>
+              <span>•</span>
+              <span>💡 Gợi ý: ${simResult.hintCount || 0} lần</span>
+              <span>•</span>
+              <span>⏱️ Thời gian: ${simResult.elapsedSeconds || 0}s</span>
+            </div>
+            ${simResult.moveCount > 3 ? `<div style="font-size:0.83rem; color:#b45309; margin-bottom:8px">⚠️ Con đổi chỗ ${simResult.moveCount} lần nên bị trừ bớt sao. Lần sau hãy tính toán trước nhé!</div>` : ""}
+            ${simResult.hintCount > 0 ? `<div style="font-size:0.83rem; color:#b45309; margin-bottom:8px">⚠️ Đã dùng ${simResult.hintCount} lần gợi ý (-${simResult.hintCount}⭐).</div>` : ""}
+            ${simResult.timeExceeded ? `<div style="font-size:0.83rem; color:#b45309; margin-bottom:8px">⚠️ Thời gian hơi lâu so với mức chuẩn (${simResult.targetTime}s).</div>` : ""}
+            <div style="display:flex; justify-content:center; gap:12px; margin-top:8px">
               ${session.levelIndex < TASK_MASTER_LEVELS.length - 1 ? `
                 <button id="btnNextLevelModal" class="primary-button" style="padding:10px 24px; font-size:1rem; background:#059669">
                   Tiếp tục Màn ${session.levelIndex + 2} →
@@ -359,7 +382,7 @@ export function renderTaskMasterView({ state, appRoot, saveLocal, levelIndex = 0
       hintBtn.onclick = () => {
         const hint = session.getHint();
         if (hint) {
-          alert(`💡 GỢI Ý CHO BÁCH:\nBước tiếp theo nên làm: “${hint.taskText}”.\nLý do: ${hint.hint}`);
+          alert(`💡 GỢI Ý CHIẾN THUẬT (Mỗi lần dùng gợi ý sẽ trừ 1 ⭐):\n${hint.indirectClue || hint.hint}\n\n👉 Chú ý: Đừng đoán mò, hãy quan sát kỹ điều kiện tiên quyết của từng thẻ!`);
         } else {
           alert("💡 Con đã xếp đủ hoặc các bước còn lại đang bị xung đột điều kiện, hãy kiểm tra lại nhé!");
         }

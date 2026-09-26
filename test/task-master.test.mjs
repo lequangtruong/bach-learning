@@ -420,3 +420,102 @@ test("task-master: renderGamesHub renders Task Master card and statistics", () =
   assert.ok(mockRoot.innerHTML.includes("4</strong>/80 màn"), "Hub should show 4/80 completed levels");
   assert.ok(mockRoot.innerHTML.includes("12 sao"), "Hub should show 12 earned stars");
 });
+
+// -------------------------------------------------------------
+// 7. KIỂM THỬ 5 CẢI TIẾN SƯ PHẠM (PEDAGOGY IMPROVEMENTS AUDIT)
+// -------------------------------------------------------------
+test("task-master: 5 pedagogy improvements (branching, distractors, move penalties, hint penalties, timer)", () => {
+  // 1. Phân nhánh song song (Parallel Branching) ở Màn 3 & Màn 5
+  // Màn 3: t2 (bột ngũ cốc) và t3 (nước ấm) đều chỉ yêu cầu t1.
+  // Cả hai thứ tự [t1, t2, t3, t4, t5] và [t1, t3, t2, t4, t5] đều phải hợp lệ!
+  const s3_a = new TaskMasterSession({ levelIndex: 2 }); // Level 3
+  ["t1", "t2", "t3", "t4", "t5"].forEach(id => s3_a.addTaskToTimeline(id));
+  assert.equal(s3_a.validateTimeline().success, true, "Level 3 branch A (powder first) must succeed");
+
+  const s3_b = new TaskMasterSession({ levelIndex: 2 });
+  ["t1", "t3", "t2", "t4", "t5"].forEach(id => s3_b.addTaskToTimeline(id));
+  assert.equal(s3_b.validateTimeline().success, true, "Level 3 branch B (water first) must succeed");
+
+  // Màn 5: t3 (gập tay áo trái) và t4 (gập tay áo phải) đều chỉ yêu cầu t2.
+  // Cả hai thứ tự [t1, t2, t3, t4, t5] và [t1, t2, t4, t3, t5] đều phải hợp lệ!
+  const s5_a = new TaskMasterSession({ levelIndex: 4 }); // Level 5
+  ["t1", "t2", "t3", "t4", "t5"].forEach(id => s5_a.addTaskToTimeline(id));
+  assert.equal(s5_a.validateTimeline().success, true, "Level 5 branch A (left first) must succeed");
+
+  const s5_b = new TaskMasterSession({ levelIndex: 4 });
+  ["t1", "t2", "t4", "t3", "t5"].forEach(id => s5_b.addTaskToTimeline(id));
+  assert.equal(s5_b.validateTimeline().success, true, "Level 5 branch B (right first) must succeed");
+
+  // 2. Toàn bộ 80 màn chơi đều có đúng 2 distractors với thông điệp failReason sâu sắc
+  for (const lvl of TASK_MASTER_LEVELS) {
+    assert.ok(Array.isArray(lvl.distractors), `Level ${lvl.id} must have distractors array`);
+    assert.equal(lvl.distractors.length, 2, `Level ${lvl.id} must have exactly 2 distractors`);
+    for (const d of lvl.distractors) {
+      assert.ok(d.id === "d1" || d.id === "d2", `Distractor id should be d1 or d2, got ${d.id} in ${lvl.id}`);
+      assert.ok(d.failReason.length >= 10, `Distractor in ${lvl.id} missing detailed failReason`);
+    }
+  }
+
+  // 3. Phạt đổi chỗ quá nhiều lần (Move rearrangement penalty)
+  const sessionMoves = new TaskMasterSession({ levelIndex: 0 });
+  ["t1", "t2", "t3", "t4"].forEach(id => sessionMoves.addTaskToTimeline(id));
+  assert.equal(sessionMoves.moveCount, 0);
+
+  // Thực hiện 4 lần đổi chỗ (>3 lần đổi -> tối đa 2 sao)
+  sessionMoves.moveTask(0, 1);
+  sessionMoves.moveTask(1, 0);
+  sessionMoves.moveTask(2, 3);
+  sessionMoves.moveTask(3, 2);
+  assert.equal(sessionMoves.moveCount, 4);
+
+  const resMovePenalty = sessionMoves.validateTimeline();
+  assert.equal(resMovePenalty.success, true);
+  assert.equal(resMovePenalty.stars, 2, "More than 3 moves should reduce stars to 2");
+
+  // Đổi thêm 3 lần nữa (tổng 7 lần > 6 -> tối đa 1 sao)
+  sessionMoves.moveTask(0, 1);
+  sessionMoves.moveTask(1, 0);
+  sessionMoves.moveTask(2, 3);
+  sessionMoves.moveTask(3, 2);
+  assert.equal(sessionMoves.moveCount, 8);
+  const resHeavyMove = sessionMoves.validateTimeline();
+  assert.equal(resHeavyMove.stars, 1, "More than 6 moves should reduce stars to 1");
+
+  // 4. Dùng gợi ý bị trừ sao (Hint penalty)
+  const sessionHint = new TaskMasterSession({ levelIndex: 0 });
+  assert.equal(sessionHint.hintCount, 0);
+
+  // Gọi gợi ý 1 lần khi bắt đầu màn chơi
+  const hintRes = sessionHint.getHint();
+  assert.ok(hintRes, "Hint should be available on unplaced tasks");
+  assert.ok(hintRes.indirectClue, "Hint should provide indirect reasoning clue");
+  assert.equal(sessionHint.hintCount, 1);
+
+  // Xếp đủ các bước hoàn chỉnh
+  ["t1", "t2", "t3", "t4"].forEach(id => sessionHint.addTaskToTimeline(id));
+
+  const resHintPenalty = sessionHint.validateTimeline();
+  assert.equal(resHintPenalty.success, true);
+  assert.equal(resHintPenalty.stars, 2, "Using 1 hint should reduce stars by 1");
+
+  // Dùng thêm 3 gợi ý nữa -> min 1 sao
+  sessionHint.getHint();
+  sessionHint.getHint();
+  sessionHint.getHint();
+  assert.equal(sessionHint.hintCount, 4);
+  const resManyHints = sessionHint.validateTimeline();
+  assert.equal(resManyHints.stars, 1, "Multiple hints should not reduce stars below 1");
+
+  // 5. Soft timer cho các màn độ khó cao / Chặng kỹ thuật
+  const sessionTimer = new TaskMasterSession({ levelIndex: 40 }); // Level 41 (Chương 3 Engineering)
+  const l41 = sessionTimer.currentLevel;
+  l41.tasks.forEach(t => sessionTimer.addTaskToTimeline(t.id));
+  
+  // Giả lập thời gian chạy vượt quá chuẩn (>90s)
+  sessionTimer.startTime = Date.now() - 150000; // 150 giây trước
+  const resTimer = sessionTimer.validateTimeline();
+  assert.equal(resTimer.success, true);
+  assert.equal(resTimer.timeExceeded, true, "Should flag time exceeded for long duration");
+  assert.ok(resTimer.stars <= 2, "Time exceeded should reduce 1 star");
+});
+

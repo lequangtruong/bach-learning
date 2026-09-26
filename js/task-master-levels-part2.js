@@ -21,6 +21,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t5", text: "Kết nối pin sạc Li-po với mạch điều khiển và động cơ", icon: "🔋", requires: ["t3", "t4"], hint: "Cung cấp nguồn điện cho mạch và động cơ hoạt động." },
       { id: "t6", text: "Đậy vỏ khí động học xe đua và bật tay cầm điều khiển chạy thử", icon: "🏎️", requires: ["t5"], hint: "Bọc vỏ bảo vệ và kiểm tra khả năng bẻ lái mượt mà." }
     ],
+    distractors: [
+      { id: "d1", text: "Gắn pin ngược cực dương âm làm cháy nổ vi mạch điều khiển", icon: "🔋", failReason: "Đấu ngược cực pin làm chập IC điều khiển từ xa của xe đua!" },
+      { id: "d2", text: "Lắp bánh xe méo mó không siết ốc chặt", icon: "⚙️", failReason: "Bánh xe lỏng lẻo sẽ văng ra ngoài ngay khi xe tăng tốc độ cao!" }
+    ],
     lesson: "Lắp khung gầm -> Cơ khí truyền động -> Bo mạch điện tử -> Nguồn pin: quy tắc lắp ráp robot."
   },
   {
@@ -41,7 +45,8 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t6", text: "Lắp săm lại vào lốp, nhét mép lốp vào vành rồi bơm căng bánh", icon: "🚲", requires: ["t5"], hint: "Kiểm tra lốp căng tròn, xe bon bon lăn bánh trở lại." }
     ],
     distractors: [
-      { id: "d1", text: "Dán miếng vá khi mặt săm còn ướt sũng nước", icon: "🌊", failReason: "Nước ngăn keo bám dính, miếng vá sẽ bong ra ngay khi bơm hơi!" }
+      { id: "d1", text: "Dán miếng vá khi mặt săm còn ướt sũng nước", icon: "🌊", failReason: "Nước ngăn keo bám dính, miếng vá sẽ bong ra ngay khi bơm hơi!" },
+      { id: "d2", text: "Bơm căng săm xe đạp đến 100 psi khi chưa lắp vào lốp", icon: "💨", failReason: "Săm xe không có lốp bảo vệ sẽ bị phồng to như quả bóng và nổ tung!" }
     ],
     lesson: "Chà nhám và lau khô là 2 bước quyết định miếng vá dính vĩnh viễn."
   },
@@ -62,6 +67,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t5", text: "Cố định bo mạch vào thùng máy và cắm dây nguồn điện PSU", icon: "🔌", requires: ["t3", "t4"], hint: "Cấp nguồn điện sạch cho toàn bộ linh kiện máy." },
       { id: "t6", text: "Cắm màn hình, bàn phím và bấm nút nguồn khởi động BIOS", icon: "🖥️", requires: ["t5"], hint: "Màn hình sáng bừng dòng chữ khởi động thành công!" }
     ],
+    distractors: [
+      { id: "d1", text: "Lắp quạt tản nhiệt CPU mà quên không bôi keo tản nhiệt", icon: "🔥", failReason: "Không có keo tản nhiệt, CPU sẽ nhanh chóng bị quá nhiệt 100 độ C và tự ngắt!" },
+      { id: "d2", text: "Dùng búa gõ mạnh thanh RAM vào khe cắm ngược chiều", icon: "🔨", failReason: "Cắm ngược RAM làm gãy các chân tiếp xúc vàng và nứt bo mạch chủ!" }
+    ],
     lesson: "Bôi keo tản nhiệt trước khi gắn quạt bảo vệ chip CPU sống còn."
   },
   {
@@ -80,6 +89,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t4", text: "Lắp ráp chân đế 3 chân vững chãi chống rung lắc", icon: "📐", hint: "Kính thiên văn phóng đại lớn rất nhạy cảm với rung động." },
       { id: "t5", text: "Gắn thân ống kính thiên văn lên chân đế cân bằng", icon: "🔭", requires: ["t2", "t3", "t4"], hint: "Cố định thân ống kính lên trục xoay 360 độ." },
       { id: "t6", text: "Hướng lên Mặt Trăng và xoay ống trượt điều chỉnh độ nét", icon: "🌕", requires: ["t5"], hint: "Miệng núi lửa và biển dung nham Mặt Trăng hiện rõ mồn một!" }
+    ],
+    distractors: [
+      { id: "d1", text: "Dùng giấy ráp thô chà xát làm sạch thấu kính quang học", icon: "🧻", failReason: "Giấy ráp sẽ làm xước mờ thấu kính, hình ảnh nhìn qua kính sẽ bị nhòe nhoẹt!" },
+      { id: "d2", text: "Nhìn thẳng trực tiếp vào Mặt Trời qua kính thiên văn", icon: "☀️", failReason: "Ánh sáng hội tụ sẽ đốt cháy võng mạc mắt và gây mù lòa vĩnh viễn!" }
     ],
     lesson: "Sơn đen lòng ống kính và chân đế chống rung là chìa khóa quang học thiên văn."
   },
@@ -100,6 +113,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t5", text: "Kết nối vi điều khiển Arduino xử lý lệnh: va chạm -> lùi lại -> rẽ 90 độ", icon: "🧠", requires: ["t2", "t3"], hint: "Bộ não thuật toán điều hướng thông minh cho robot." },
       { id: "t6", text: "Lắp hộp pin sạc, bật công tắc thả robot chạy lau sàn sạch bóng", icon: "🤖", requires: ["t4", "t5"], hint: "Robot cần mẫn tự động làm việc khắp các ngóc ngách." }
     ],
+    distractors: [
+      { id: "d1", text: "Đổ đầy nước vào hộp chứa pin và động cơ điện", icon: "⚡", failReason: "Nước tràn vào bo mạch điện sẽ làm đoản mạch chập cháy linh kiện robot!" },
+      { id: "d2", text: "Tháo bỏ toàn bộ cảm biến khoảng cách chống va chạm", icon: "🚫", failReason: "Mất cảm biến, robot sẽ lao thẳng xuống bậc cầu thang và vỡ vụn!" }
+    ],
     lesson: "Cảm biến truyền tín hiệu -> Vi điều khiển xử lý -> Động cơ hành động: chu trình robot."
   },
   {
@@ -119,6 +136,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t5", text: "Lắp tấm pin mặt trời trên mái hướng về phía Nam nhận nắng nhiều nhất", icon: "☀️", hint: "Góc nghiêng hứng trọn vẹn quang năng mặt trời." },
       { id: "t6", text: "Nối dây điện từ tấm pin mặt trời qua bộ rơ-le hẹn giờ vào máy bơm", icon: "⚡", requires: ["t2", "t5"], hint: "Trời nắng -> Pin phát điện -> Bơm tự chạy tưới mát rượi." }
     ],
+    distractors: [
+      { id: "d1", text: "Lắp tấm pin mặt trời úp mặt xuống nền đất tối om", icon: "🌑", failReason: "Tấm pin bị che khuất trong bóng tối sẽ không thể tạo ra dòng điện để bơm nước!" },
+      { id: "d2", text: "Cắm trực tiếp máy bơm công suất lớn vào pin không qua bộ điều áp", icon: "🔌", failReason: "Điện áp không ổn định sẽ làm cháy động cơ máy bơm nước!" }
+    ],
     lesson: "Năng lượng tái tạo xanh: Dùng ánh nắng nuôi cây, tuần hoàn tự nhiên bền vững."
   },
   {
@@ -137,6 +158,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t4", text: "Dựng cột buồm gỗ thẳng đứng vuông góc với thân thuyền", icon: "🎋", requires: ["t1"], hint: "Cột buồm chịu lực gió đẩy toàn bộ con thuyền." },
       { id: "t5", text: "Cắt vải dù chống thấm hình tam giác căng vào cột buồm và dây néo", icon: "⛵", requires: ["t4"], hint: "Cánh buồm cong đón gió tạo lực nâng đẩy thuyền tiến tới." },
       { id: "t6", text: "Gắn bánh lái điều hướng ở đuôi thuyền và thả xuống hồ lướt sóng", icon: "🌊", requires: ["t2", "t3", "t5"], hint: "Con thuyền kiêu hãnh giương buồm rẽ sóng nước long lanh." }
+    ],
+    distractors: [
+      { id: "d1", text: "Đục 5 lỗ to dưới đáy thuyền để nước chảy qua cho mát", icon: "🕳️", failReason: "Đáy thuyền thủng lỗ sẽ làm nước tràn vào và chìm nghỉm ngay lập tức!" },
+      { id: "d2", text: "Lắp cánh buồm bằng tôn sắt nặng trịch 10kg", icon: "⚓", failReason: "Buồm quá nặng làm lật úp thuyền và thuyền không thể đón gió di chuyển!" }
     ],
     lesson: "Quả nặng đối trọng dưới đáy là bí quyết tàu thuyền không bao giờ chìm lật."
   },
@@ -158,7 +183,8 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t6", text: "Lắp cầu thang gỗ cố định có tay vịn chắc chắn dẫn lên nhà", icon: "🪜", requires: ["t3"], hint: "Lối đi an toàn lên xuống ngôi nhà trên mây kỳ diệu." }
     ],
     distractors: [
-      { id: "d1", text: "Đóng đinh sắt bừa bãi vào cành cây mục gãy", icon: "🪓", failReason: "Cành mục sẽ gãy sập ngay khi có người bước lên, cực kỳ nguy hiểm!" }
+      { id: "d1", text: "Đóng đinh sắt bừa bãi vào cành cây mục gãy", icon: "🪓", failReason: "Cành mục sẽ gãy sập ngay khi có người bước lên, cực kỳ nguy hiểm!" },
+      { id: "d2", text: "Đóng đinh khung nhà vào một cành cây khô mục ruỗng", icon: "🍂", failReason: "Cành cây mục không thể chịu lực và sẽ gãy đổ làm sập toàn bộ ngôi nhà gỗ!" }
     ],
     lesson: "An toàn kết cấu: Khung dầm chịu lực và lan can bảo vệ là ưu tiên hàng đầu."
   },
@@ -179,6 +205,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t5", text: "Đổ một lớp sỏi nhỏ và đá cuội lên lớp trên cùng", icon: "🪨", requires: ["t4"], hint: "Lớp sỏi thô chặn rác lớn, lá cây và cặn thô đầu tiên." },
       { id: "t6", text: "Đổ nước đục vào phễu và hứng những giọt nước trong vắt ở đáy chai", icon: "💧", requires: ["t5"], hint: "Nước qua 4 tầng lọc trở nên trong veo không một hạt cặn!" }
     ],
+    distractors: [
+      { id: "d1", text: "Uống trực tiếp nước đục ngầu chưa qua đun sôi khử khuẩn", icon: "🦠", failReason: "Nước lọc thô mới chỉ giữ lại cặn bẩn, vẫn còn đầy vi khuẩn amip ăn não!" },
+      { id: "d2", text: "Đổ xà phòng thơm vào các tầng lọc cát sỏi", icon: "🫧", failReason: "Hóa chất xà phòng ngấm vào nước lọc sẽ làm nước bị độc hại không thể uống!" }
+    ],
     lesson: "Quy tắc lọc tự nhiên: Từ thô đến tinh (Sỏi -> Cát -> Than -> Bông)."
   },
   {
@@ -197,6 +227,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t4", text: "Cắt tấm kính lọc màu Xanh Lam trong suốt gắn vào mắt kính bên PHẢI", icon: "🔵", requires: ["t2"], hint: "Mắt phải luôn dùng màng lọc màu Xanh Lam để lọc hình ảnh riêng." },
       { id: "t5", text: "Dán cố định 2 tròng kính bằng băng keo hai mặt trong suốt", icon: "🩹", requires: ["t3", "t4"], hint: "Gắn phẳng phiu không để vết keo bẩn che tầm nhìn." },
       { id: "t6", text: "Đeo kính lên và mở video 3D Anaglyph chiêm ngưỡng hình ảnh bay ra khỏi màn hình", icon: "👓", requires: ["t5"], hint: "Bộ não kết hợp 2 ảnh màu đỏ-xanh thành không gian 3D nổi kỳ thú!" }
+    ],
+    distractors: [
+      { id: "d1", text: "Lắp cả hai mắt kính đều bằng giấy bóng kính màu đỏ giống nhau", icon: "🔴", failReason: "Cả hai mắt cùng màu thì não không thể phân tách hình ảnh tạo hiệu ứng 3D nổi!" },
+      { id: "d2", text: "Dùng băng dính đen bịt kín mít cả hai mắt kính", icon: "🕶️", failReason: "Bịt kín kính thì con chỉ thấy bóng tối đen kịt chứ không thấy phim đâu!" }
     ],
     lesson: "Mắt trái đỏ, mắt phải xanh — não bộ tự gộp 2 luồng ảnh thành chiều sâu 3D."
   },
@@ -217,6 +251,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t5", text: "Nối 2 thành cầu bằng các thanh dầm ngang đáy và giằng chéo đỉnh", icon: "🌉", requires: ["t4"], hint: "Khóa chặt thành khối hộp không gian 3 chiều vững như bàn thạch." },
       { id: "t6", text: "Chờ keo khô hoàn toàn 24 giờ rồi đặt quả tạ 50kg lên thử tải", icon: "🏋️", requires: ["t5"], hint: "Cây cầu gỗ chỉ nặng 200g nâng bổng quả tạ 50kg không hề cong vênh!" }
     ],
+    distractors: [
+      { id: "d1", text: "Gắn các thanh giàn cầu bằng đất nặn dẻo thay vì keo chuyên dụng", icon: "🧱", failReason: "Đất nặn mềm nhũn không thể chịu tải, cầu sẽ sập gãy ngay khi đặt tạ lên!" },
+      { id: "d2", text: "Bỏ qua cấu trúc tam giác, chỉ ghép các thanh vuông góc lỏng lẻo", icon: "📐", failReason: "Khung hình vuông không có thanh chéo chịu lực sẽ bị vặn xoắn và gãy sập!" }
+    ],
     lesson: "Kết cấu tam giác (Truss) phân tán lực nén và lực kéo — bí mật của mọi cây cầu lớn."
   },
   {
@@ -235,6 +273,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t4", text: "Treo giỏ chứa quả đối trọng nặng 5kg vào đầu ngắn của cần", icon: "🪨", requires: ["t3"], hint: "Quả nặng rơi xuống chuyển hóa thế năng thành động năng cực đại." },
       { id: "t5", text: "Gắn túi da đựng đạn và dây móc phóng ở đầu dài của cần", icon: "🪢", requires: ["t3"], hint: "Dây quăng tạo thêm một khớp vung phụ tăng gấp đôi tốc độ đạn." },
       { id: "t6", text: "Kéo cần phóng xuống gài chốt, đặt viên bóng tennis rồi giật chốt phóng", icon: "🚀", requires: ["t4", "t5"], hint: "Quả đối trọng rơi rầm xuống, bóng vút bay xa tít tắp 20 mét!" }
+    ],
+    distractors: [
+      { id: "d1", text: "Đứng ngay trước tầm vung của cần phóng khi bấm cò nhả", icon: "💥", failReason: "Cần văng lực cực mạnh đập trúng người sẽ gây chấn thương rất nặng!" },
+      { id: "d2", text: "Đặt đối trọng nhẹ hơn tảng đá cần phóng", icon: "🪨", failReason: "Đối trọng quá nhẹ thì đòn bẩy không thể nhấc nổi viên đá để phóng đi xa!" }
     ],
     lesson: "Đòn bẩy tỉ lệ 1:4 nhân vận tốc vung gậy lên 4 lần — cơ học đòn bẩy đỉnh cao."
   },
@@ -255,6 +297,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t5", text: "Nối hai đầu dây tự do cuối cùng vào đồng hồ đo vôn kế", icon: "📟", requires: ["t4"], hint: "Kim vôn kế nhảy vọt lên 3.5 Vôn chứng tỏ pin đã sẵn sàng." },
       { id: "t6", text: "Kẹp hai cực vào bóng đèn LED nhỏ ngắm nhìn đèn phát sáng rực rỡ", icon: "💡", requires: ["t5"], hint: "Dòng điện hóa học từ 4 quả chanh thắp sáng bóng đèn kỳ diệu!" }
     ],
+    distractors: [
+      { id: "d1", text: "Cắm 2 điện cực bằng cùng một chất liệu đồng vào quả chanh", icon: "🍋", failReason: "Hai cực cùng chất liệu sẽ không tạo ra hiệu điện thế để phát ra dòng điện!" },
+      { id: "d2", text: "Vắt kiệt nước quả chanh phơi khô ráo trước khi cắm điện cực", icon: "🏜️", failReason: "Chanh khô không còn dung dịch axit điện phân thì không thể sinh ra điện!" }
+    ],
     lesson: "Nối tiếp cực âm sang cực dương giúp nhân điện áp lên thắp sáng đèn LED."
   },
   {
@@ -273,6 +319,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t4", text: "Cắt một miếng nhựa cách điện mỏng kẹp vào giữa hai má kẹp", icon: "💳", requires: ["t3"], hint: "Miếng nhựa ngăn hai má bạc chạm nhau: còi lập tức im lặng." },
       { id: "t5", text: "Buộc một sợi chỉ mỏng nối miếng nhựa với cánh cửa sổ", icon: "🧵", requires: ["t4"], hint: "Khi cửa sổ mở ra, sợi chỉ sẽ giật phăng miếng nhựa ra ngoài!" },
       { id: "t6", text: "Dán kẹp gỗ cố định vào mép khung cửa và đóng thử cửa sổ", icon: "🚨", requires: ["t5"], hint: "Cửa vừa hé mở 2cm -> Chỉ giật miếng nhựa -> Còi hú còi báo động vang dội!" }
+    ],
+    distractors: [
+      { id: "d1", text: "Ngắt bỏ nguồn pin cấp cho chuông báo động để tiết kiệm điện", icon: "🔋", failReason: "Không có nguồn điện thì chuông không thể kêu khi cửa sổ bị mở!" },
+      { id: "d2", text: "Dán băng dính cố định công tắc từ luôn ở trạng thái đóng", icon: "🩹", failReason: "Công tắc bị dính chặt thì trộm mở cửa chuông cũng không hề reo!" }
     ],
     lesson: "Nguyên lý thường đóng / thường mở: Rút vật cách điện tạo thành mạch kín báo động."
   },
@@ -293,6 +343,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t5", text: "Gắn ngọn đèn LED siêu sáng lên đỉnh mô hình ngọn hải đăng", icon: "💡", requires: ["t4"], hint: "Ngọn đèn nhận điện năng chiếu sáng dẫn đường." },
       { id: "t6", text: "Bật quạt gió thổi vào cánh quạt và quan sát ngọn hải đăng bừng sáng", icon: "🌟", requires: ["t5"], hint: "Gió quay tít mù -> Động năng biến thành điện năng thắp sáng rực rỡ!" }
     ],
+    distractors: [
+      { id: "d1", text: "Cố định cứng ngắc trục quay của cánh quạt gió không cho xoay", icon: "🔒", failReason: "Cánh quạt không quay được thì máy phát không thể tạo ra dòng điện thắp sáng!" },
+      { id: "d2", text: "Nối dây điện ra bóng đèn trực tiếp vào vỏ nhựa của cột quạt", icon: "🔌", failReason: "Vỏ nhựa là chất cách điện hoàn toàn, dòng điện không thể truyền tới bóng đèn!" }
+    ],
     lesson: "Hiện tượng cảm ứng điện từ: Quay nam châm trong cuộn dây tạo ra dòng điện sạch."
   },
   {
@@ -311,6 +365,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t4", text: "Lắp chiếc gương phẳng thứ hai ở góc dưới nghiêng đối xứng 45 độ", icon: "🪞", requires: ["t3"], hint: "Góc 45 độ thứ hai bẻ tia sáng từ thẳng đứng thành ngang truyền vào mắt." },
       { id: "t5", text: "Dán kín mép ống bằng băng dính đen ngăn ánh sáng rò rỉ", icon: "⬛", requires: ["t4"], hint: "Hộp kín hoàn toàn cho hình ảnh phản chiếu trong vắt không bị mờ." },
       { id: "t6", text: "Nấp dưới mép bàn, giơ đầu kính lên cao và quan sát toàn cảnh căn phòng", icon: "👀", requires: ["t5"], hint: "Quan sát đối phương từ góc khuất bí mật như chỉ huy tàu ngầm!" }
+    ],
+    distractors: [
+      { id: "d1", text: "Lắp hai gương phẳng song song cùng hướng mặt phản chiếu về sau", icon: "🪞", failReason: "Gương lắp sai góc sẽ chỉ phản chiếu lòng ống tối om chứ không nhìn thấy bên ngoài!" },
+      { id: "d2", text: "Dán giấy decal mờ đục lên bề mặt của cả hai tấm gương", icon: "🌫️", failReason: "Gương bị mờ đục sẽ cản trở ánh sáng truyền qua, không quan sát được gì!" }
     ],
     lesson: "Định luật phản xạ ánh sáng: Hai gương phẳng nghiêng 45 độ bẻ cong đường truyền tia sáng."
   },
@@ -331,6 +389,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t5", text: "Quét một lớp keo dán gáy sách chuyên dụng và kẹp chặt 2 tiếng", icon: "🧴", requires: ["t4"], hint: "Keo dẻo giữ xương sống sách linh hoạt khi mở lật." },
       { id: "t6", text: "Dán bìa cứng bọc vải màu rực rỡ và dùng dao xén 3 cạnh thẳng tắp", icon: "📘", requires: ["t5"], hint: "Cuốn sách truyện tranh đẹp long lanh như vừa xuất xưởng nhà in!" }
     ],
+    distractors: [
+      { id: "d1", text: "Bôi keo dính vào mép ngoài của các trang sách thay vì gáy sách", icon: "📖", failReason: "Dán mép ngoài sẽ dính chặt các trang lại và không thể mở sách ra đọc!" },
+      { id: "d2", text: "Dập ghim lệch chéo đâm thủng phần chữ chính giữa trang truyện", icon: "📌", failReason: "Bấm ghim xuyên qua chữ làm rách nát trang giấy và che mất nội dung truyện!" }
+    ],
     lesson: "Khâu chỉ gáy sách trước khi dán keo — kỹ thuật đóng sách thủ công trường tồn trăm năm."
   },
   {
@@ -349,6 +411,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t4", text: "Dùng la bàn định hướng và xoay kim gnomon chỉ chính xác về hướng BẮC", icon: "🧭", requires: ["t3"], hint: "Hướng bắc từ trường quyết định đường đi chuẩn xác của bóng mặt trời." },
       { id: "t5", text: "Đặt đồng hồ lên bệ phẳng ngoài sân đón nắng suốt cả ngày", icon: "☀️", requires: ["t4"], hint: "Vị trí không bị bóng cây hay mái nhà che khuất." },
       { id: "t6", text: "Quan sát vệt bóng đổ của kim chạm vào số La Mã nào để đọc giờ hiện tại", icon: "⌚", requires: ["t5"], hint: "Bóng đổ chỉ đúng số XII lúc giữa trưa — kiệt tác thiên văn cổ đại!" }
+    ],
+    distractors: [
+      { id: "d1", text: "Đặt đồng hồ mặt trời trong phòng kín tối om dưới tầng hầm", icon: "🔦", failReason: "Không có ánh sáng mặt trời thì kim đồng hồ không thể tạo bóng để xem giờ!" },
+      { id: "d2", text: "Cắm kim chỉ giờ nghiêng ngả tự do thay đổi góc liên tục", icon: "📍", failReason: "Góc nghiêng gnomon không chuẩn theo vĩ độ sẽ khiến đồng hồ chỉ giờ sai bét!" }
     ],
     lesson: "Kim gnomon nghiêng bằng vĩ độ và chỉ hướng Bắc: Thiên văn học ứng dụng tuyệt mỹ."
   },
@@ -369,6 +435,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t5", text: "Mắc rơ-le nối tiếp với dây nguồn của máy bơm nước", icon: "🔄", requires: ["t4"], hint: "Khi có tín hiệu kích hoạt, rơ-le tự động ngắt điện máy bơm." },
       { id: "t6", text: "Bật máy bơm và quan sát: khi nước đầy chạm mép, bơm tự ngắt tức thì!", icon: "🛑", requires: ["t5"], hint: "Nước dừng ngay trước khi tràn mép bể 1 cm — tuyệt đối an toàn!" }
     ],
+    distractors: [
+      { id: "d1", text: "Nối dây cảm biến vào phao kim loại nặng chìm nghỉm đáy bồn", icon: "⚓", failReason: "Phao chìm không nổi lên theo mực nước thì công tắc không bao giờ ngắt điện!" },
+      { id: "d2", text: "Đấu nối trực tiếp 220V vào que đo ngâm trong nước bồn tắm", icon: "⚡", failReason: "Đưa điện cao thế vào nước sinh hoạt cực kỳ nguy hiểm, gây điện giật chết người!" }
+    ],
     lesson: "Cảm biến que đo mực nước kích hoạt rơ-le ngắt mạch: Tự động hóa công nghiệp cơ bản."
   },
   {
@@ -387,6 +457,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t4", text: "Đặt màng hành lên lam kính thủy tinh và nhỏ 1 giọt cồn đỏ nhuộm màu", icon: "🧪", requires: ["t3"], hint: "Nhuộm màu giúp nhân tế bào hiện lên rõ ràng dưới ánh sáng." },
       { id: "t5", text: "Gắn tấm nhôm giọt nước lên giá đỡ sát phía trên màng tế bào", icon: "🔬", requires: ["t2", "t4"], hint: "Khoảng cách tiêu cự cực ngắn khoảng 2-3 milimet." },
       { id: "t6", text: "Bật đèn pin rọi từ dưới lên và ghé sát mắt ngắm nhìn các tế bào thực vật", icon: "👀", requires: ["t5"], hint: "Từng vách tế bào hình tổ ong hiện ra sống động như kính hiển vi phòng thí nghiệm!" }
+    ],
+    distractors: [
+      { id: "d1", text: "Dùng giọt bùn đục ngầu làm thấu kính phóng đại", icon: "💧", failReason: "Nước bùn đục ngầu cản trở ánh sáng, không thể nhìn thấy tiêu bản mẫu vật!" },
+      { id: "d2", text: "Bật đèn flash cực mạnh chiếu thẳng vào mắt người quan sát", icon: "💡", failReason: "Ánh sáng chói lóa chiếu trực diện làm chói mắt và tổn thương thị lực!" }
     ],
     lesson: "Sức căng bề mặt của giọt nước uốn cong ánh sáng — nguyên lý kính hiển vi của Leeuwenhoek."
   },
@@ -412,7 +486,8 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t6", text: "Điểm hỏa động cơ chính, gầm vang sấm sét vút bay xé rách bầu khí quyển", icon: "🚀", requires: ["t5"], hint: "Cỗ tên lửa khổng lồ cưỡi trên cột lửa cam rực rỡ bay vào vũ trụ!" }
     ],
     distractors: [
-      { id: "d1", text: "Điểm hỏa động cơ khi tháp nạp nhiên liệu chưa rút ra", icon: "💥", failReason: "Tên lửa va chạm tháp phóng gây nổ tung toàn bộ bệ phóng!" }
+      { id: "d1", text: "Điểm hỏa động cơ khi tháp nạp nhiên liệu chưa rút ra", icon: "💥", failReason: "Tên lửa va chạm tháp phóng gây nổ tung toàn bộ bệ phóng!" },
+      { id: "d2", text: "Khai hỏa động cơ khi giàn phóng còn chưa mở khóa kẹp giữ", icon: "🚀", failReason: "Tên lửa bị kẹp chặt khai hỏa sẽ nổ tung ngay trên bệ phóng!" }
     ],
     lesson: "Quy trình kiểm soát an toàn hàng không vũ trụ: Zero lỗi sai, kiểm tra chéo 100%."
   },
@@ -433,6 +508,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t5", text: "Đóng cọc ghim 4 góc lều xuống đất theo góc nghiêng 45 độ", icon: "🔨", requires: ["t4"], hint: "Ghim cọc nghiêng 45 độ ngược hướng kéo để giữ chắc lều trước gió bão." },
       { id: "t6", text: "Phủ bạt chống mưa bên ngoài và kéo căng dây néo lều", icon: "🌧️", requires: ["t5"], hint: "Bạt che mưa không dính sát vào thân lều để hơi thở không đọng sương." }
     ],
+    distractors: [
+      { id: "d1", text: "Dựng lều ngay dưới lòng suối cạn khô vào mùa mưa lũ", icon: "🌊", failReason: "Lũ quét trên núi đổ về trong đêm sẽ cuốn phăng toàn bộ người và lều trại!" },
+      { id: "d2", text: "Đốt lửa trại to đùng sát vách bạt lều nilon", icon: "🔥", failReason: "Tàn lửa bén vào bạt lều nilon sẽ gây cháy lều nhanh như chớp!" }
+    ],
     lesson: "Chọn vị trí an toàn trước tiên, cắm cọc xiên 45 độ khóa chặt lều trước gió rừng."
   },
   {
@@ -451,6 +530,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t4", text: "Đặt bánh kem sinh nhật cắm sẵn nến và bày hoa quả lên bàn tiệc", icon: "🎂", requires: ["t3"], hint: "Chiếc bánh kem lung linh đặt ngay vị trí trang trọng giữa bàn." },
       { id: "t5", text: "Tắt hết đèn trong phòng, tất cả các bạn nấp sau bàn và giữ im lặng", icon: "🤫", requires: ["t4"], hint: "Chuẩn bị khoảnh khắc bất ngờ khi tiếng bước chân tới cửa." },
       { id: "t6", text: "Bạn mở cửa bước vào -> Bật đèn bừng sáng, nổ pháo giấy hát vang bài ca sinh nhật", icon: "🎊", requires: ["t2", "t5"], hint: "Tiếng cười reo hò vỡ òa trong niềm xúc động nghẹn ngào!" }
+    ],
+    distractors: [
+      { id: "d1", text: "Gọi điện thoại báo trước toàn bộ kịch bản bí mật cho nhân vật chính", icon: "📞", failReason: "Bật mí trước kịch bản làm mất hoàn toàn yếu tố bất ngờ của bữa tiệc!" },
+      { id: "d2", text: "Thắp 100 cây nến sát chùm bóng bay bơm khí hydro dễ cháy", icon: "🎈", failReason: "Khí hydro gặp lửa sẽ nổ bùng như bom khí cực kỳ nguy hiểm!" }
     ],
     lesson: "Lập kế hoạch đồng đội: Đánh lạc hướng, chuẩn bị chu đáo và bùng nổ đúng thời điểm."
   },
@@ -472,7 +555,8 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t6", text: "Bơi ngược lên mặt nước từ từ và dừng lại 3 phút ở độ sâu 5m xả khí nitơ", icon: "⬆️", requires: ["t5"], hint: "Điểm dừng an toàn giải áp bắt buộc ngăn ngừa bệnh bóng khí trong máu." }
     ],
     distractors: [
-      { id: "d1", text: "Bơi ngoi thẳng từ đáy sâu 30m lên mặt nước thật nhanh", icon: "🚀", failReason: "Ngoi lên quá nhanh làm khí nitơ sôi bọt trong máu gây liệt tủy tử vong!" }
+      { id: "d1", text: "Bơi ngoi thẳng từ đáy sâu 30m lên mặt nước thật nhanh", icon: "🚀", failReason: "Ngoi lên quá nhanh làm khí nitơ sôi bọt trong máu gây liệt tủy tử vong!" },
+      { id: "d2", text: "Một mình tự ý lặn xuống sâu không có thợ lặn bạn đồng hành", icon: "🦈", failReason: "Vi phạm nguyên tắc an toàn lặn: khi gặp sự cố dưới nước sâu sẽ không có ai cứu viện!" }
     ],
     lesson: "Quy tắc lặn biển sống còn: Cân bằng áp suất tai khi xuống, dừng xả khí khi lên."
   },
@@ -493,6 +577,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t5", text: "Nhẹ nhàng ôm chú cún run rẩy cho vào lồng và khoác chăn ấm", icon: "🐶", requires: ["t4"], hint: "Vuốt ve trấn an để con vật bớt hoảng sợ." },
       { id: "t6", text: "Đưa các con vật an toàn về trạm thú y dã chiến sấy ấm và cho ăn", icon: "🏥", requires: ["t5"], hint: "Ánh mắt biết ơn long lanh của chú cún sưởi ấm trái tim người cứu hộ." }
     ],
+    distractors: [
+      { id: "d1", text: "Lái ca-nô cứu hộ tốc độ tối đa đâm thẳng vào bãi cọc nhọn", icon: "🚤", failReason: "Cọc ngầm đâm thủng đáy ca-nô làm chìm phương tiện cứu hộ của đội!" },
+      { id: "d2", text: "Chạm tay trần vào cột điện đang ngập nước lũ", icon: "⚡", failReason: "Điện lưới bị rò rỉ trong nước lũ sẽ giật chết người ngay tức khắc!" }
+    ],
     lesson: "Mặc áo phao trước tiên, neo thuyền cố định rồi mới bế động vật lên xuồng."
   },
   {
@@ -511,6 +599,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t4", text: "Trực thăng múc nước từ hồ xả bom nước dập các tàn than bay qua đường băng", icon: "🚁", requires: ["t3"], hint: "Dập tắt các tàn tro bay theo gió vượt tuyến phòng thủ." },
       { id: "t5", text: "Đội lính cứu hỏa đeo bình dưỡng khí dùng vòi áp lực phun làm ướt sũng mép rừng", icon: "🚒", requires: ["t3"], hint: "Làm ướt đẫm thảm thực vật ngăn lửa bén." },
       { id: "t6", text: "Kiểm tra nhiệt kế hồng ngoại xác nhận nhiệt độ giảm dưới 40 độ C, khống chế hoàn toàn giặc lửa", icon: "✅", requires: ["t4", "t5"], hint: "Cứu sống hàng nghìn héc-ta rừng nguyên sinh xanh thắm!" }
+    ],
+    distractors: [
+      { id: "d1", text: "Chạy thẳng vào đầu ngọn lửa xuôi theo chiều gió bão", icon: "🔥", failReason: "Gió thổi ngọn lửa di chuyển nhanh hơn người chạy, con sẽ bị lửa bao vây nguy hiểm!" },
+      { id: "d2", text: "Dập đám cháy xăng dầu bằng cách dội nước lạnh vào", icon: "🛢️", failReason: "Dầu nhẹ hơn nước nổi lên trên bề mặt làm ngọn lửa lan rộng dữ dội hơn!" }
     ],
     lesson: "Chiến thuật dập lửa kinh điển: Tạo đường băng cản lửa triệt tiêu nguồn nhiên liệu."
   },
@@ -532,7 +624,8 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t6", text: "Ghi chép hoa văn cổ vào sổ tay và theo đường chỉ phát quang rút lui an toàn", icon: "💎", requires: ["t5"], hint: "Trở về với bản đồ khảo cổ học quý giá làm rạng danh lịch sử!" }
     ],
     distractors: [
-      { id: "d1", text: "Chạy nhảy bừa bãi giẫm lên các phiến đá hình rắn độc", icon: "🐍", failReason: "Bẫy ngầm sụp xuống rơi vào hầm chông cổ đại!" }
+      { id: "d1", text: "Chạy nhảy bừa bãi giẫm lên các phiến đá hình rắn độc", icon: "🐍", failReason: "Bẫy ngầm sụp xuống rơi vào hầm chông cổ đại!" },
+      { id: "d2", text: "Giật đứt sợi dây cước căng ngang cửa hầm mộ cổ", icon: "🕸️", failReason: "Bẫy cơ học kích hoạt làm sập tảng đá ngàn cân bịt kín lối thoát duy nhất!" }
     ],
     lesson: "Luôn chừa đường lui (cuộn dây chỉ) và đọc kỹ manh mối trước khi đặt bước chân."
   },
@@ -553,6 +646,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t5", text: "Phát loa điều phối các đoàn vận động viên vào sân thi đấu theo đúng khung giờ", icon: "📢", requires: ["t4"], hint: "Các trận đấu diễn ra nhịp nhàng, đúng tiến độ không ai phải chờ lâu." },
       { id: "t6", text: "Trao huy chương vàng, bạc, đồng trên bục vinh quang và bế mạc ngày hội", icon: "🥇", requires: ["t5"], hint: "Niềm hân hoan rạng rỡ trên từng gương mặt các bạn nhỏ!" }
     ],
+    distractors: [
+      { id: "d1", text: "Tổ chức chạy việt dã giữa trưa hè nắng nóng 42 độ C", icon: "☀️", failReason: "Vận động viên thi đấu dưới nắng gắt sẽ bị sốc nhiệt và ngất xỉu hàng loạt!" },
+      { id: "d2", text: "Không chuẩn bị trạm y tế và bình nước tiếp sức cho vận động viên", icon: "🏥", failReason: "Thiếu sơ cứu và nước uống khiến các vận động viên bị kiệt sức nguy kịch!" }
+    ],
     lesson: "Trạm y tế và an toàn sân bãi phải sẵn sàng 100% trước khi mở màn thi đấu."
   },
   {
@@ -571,6 +668,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t4", text: "Di chuyển đến tọa độ sông băng cổ đại khoan lấy mẫu lõi băng sâu 20 mét", icon: "🧊", requires: ["t3"], hint: "Lõi băng chứa bọt khí nguyên thủy từ thời tiền sử." },
       { id: "t5", text: "Bảo quản mẫu lõi băng vào thùng giữ nhiệt nitơ lỏng", icon: "🧪", requires: ["t4"], hint: "Giữ mẫu băng không bị tan chảy trước khi đưa về phòng thí nghiệm." },
       { id: "t6", text: "Trở về trạm nghiên cứu trước khi bão tuyết mù trời ập đến lúc hoàng hôn", icon: "🏠", requires: ["t5"], hint: "Bàn giao mẫu băng vô giá mở ra bí mật biến đổi khí hậu Trái Đất!" }
+    ],
+    distractors: [
+      { id: "d1", text: "Cởi bỏ găng tay ấm sờ tay trần vào thanh kim loại âm 40 độ C", icon: "❄️", failReason: "Nhiệt độ âm sâu làm da tay bị dính chặt vào kim loại và hoại tử bỏng lạnh!" },
+      { id: "d2", text: "Tiến lại gần trêu chọc một chú gấu Bắc Cực mẹ đang dẫn con", icon: "🐻", failReason: "Gấu Bắc Cực là loài săn mồi đỉnh cao hung dữ, con sẽ bị tấn công tử vong!" }
     ],
     lesson: "Chống rét nhiều lớp và luôn tôn trọng lịch trình thời tiết vùng cực khắc nghiệt."
   },
@@ -591,6 +692,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t5", text: "Thả dây cáp nylon nhẹ nhàng hạ 6 bánh xe robot chạm đất mềm mại", icon: "🤖", requires: ["t4"], hint: "Cơ cấu thả cáp tránh bụi đất thổi ngược làm kẹt camera robot." },
       { id: "t6", text: "Cắt đứt dây cáp, giàn tên lửa bay ra xa và robot gửi bức ảnh màu đầu tiên về Trái Đất", icon: "📸", requires: ["t5"], hint: "Cả trung tâm điều khiển NASA nhảy cẫng lên reo hò trong nước mắt vui sướng!" }
     ],
+    distractors: [
+      { id: "d1", text: "Mở dù hãm tốc độ khi tàu vũ trụ chưa đi vào tầng khí quyển", icon: "🪂", failReason: "Ngoài chân không không có không khí, bung dù không có tác dụng hãm tốc!" },
+      { id: "d2", text: "Ngắt liên lạc anten với Trái Đất trước khi tiếp đất", icon: "📡", failReason: "Mất tín hiệu điều khiển, robot sẽ lao tự do đâm nát mặt đất Sao Hỏa!" }
+    ],
     lesson: "Khiên nhiệt -> Dù siêu thanh -> Cần cẩu tên lửa -> Thả cáp: Tuyệt tác kỹ thuật hàng không."
   },
   {
@@ -609,6 +714,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t4", text: "Mở cửa khoang bước ra ngoài không gian, men theo tay vịn trạm ISS", icon: "🌌", requires: ["t3"], hint: "Trái Đất xanh ngắt khổng lồ lững lờ trôi dưới đôi chân phi hành gia!" },
       { id: "t5", text: "Dùng súng bắn vít không giật tháo tấm pin mặt trời cũ và lắp tấm pin mới", icon: "🔧", requires: ["t4"], hint: "Công cụ không giật giúp phi hành gia không bị lực đẩy quay tít trong không trọng lượng." },
       { id: "t6", text: "Cắm giắc truyền tải điện, báo về trung tâm trạm ISS đã nhận đủ 100% năng lượng", icon: "⚡", requires: ["t5"], hint: "Tấm pin mới mở bung như cánh bướm vàng thu nạp ánh sáng mặt trời." }
+    ],
+    distractors: [
+      { id: "d1", text: "Tháo dây an toàn bảo hiểm khi đang bước ra ngoài không gian", icon: "🧑‍🚀", failReason: "Mất dây neo, nhà du hành sẽ trôi dạt vô định vào không gian sâu thẳm!" },
+      { id: "d2", text: "Mở cửa khoang điều áp khi áp suất bên trong chưa cân bằng", icon: "🚪", failReason: "Chênh lệch áp suất làm nổ tung cửa khoang và hút toàn bộ đồ đạc ra ngoài!" }
     ],
     lesson: "Luôn khóa móc dây neo an toàn — không bao giờ thả tay trong môi trường không trọng lực."
   },
@@ -629,6 +738,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t5", text: "Tích trữ nước sạch, lương khô, sạc đầy pin sạc dự phòng và đèn pin", icon: "🔦", requires: ["t1"], hint: "Chuẩn bị cho tình huống mất điện và mất nước kéo dài 3 ngày." },
       { id: "t6", text: "Khóa chặt mọi cửa sổ, đưa gia đình vào phòng kiên cố nhất tránh bão", icon: "🛡️", requires: ["t2", "t3", "t4", "t5"], hint: "Yên tâm trong ngôi nhà đã được gia cố kiên cố đón bão đi qua." }
     ],
+    distractors: [
+      { id: "d1", text: "Ra bãi biển ngắm sóng thần khổng lồ khi bão đang đổ bộ", icon: "🌊", failReason: "Sóng bão và gió giật cấp 15 sẽ cuốn phăng người ra biển khơi mất tích!" },
+      { id: "d2", text: "Đứng trú mưa bão ngay dưới gốc cây cổ thụ to và cột điện cao thế", icon: "⚡", failReason: "Cây to dễ gãy đè và sét đánh trúng cột điện gây tử vong!" }
+    ],
     lesson: "Phương châm 4 tại chỗ: Chỉ huy, lực lượng, phương tiện, hậu cần tại chỗ."
   },
   {
@@ -648,6 +761,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t5", text: "Cảm biến quang học quét kiểm tra trọng lượng và loại bỏ viên móp méo", icon: "🔍", requires: ["t4"], hint: "Hệ thống kiểm soát chất lượng tự động loại sản phẩm lỗi." },
       { id: "t6", text: "Đóng hộp thiếc, in hạn sử dụng bằng tia laser và xếp vào thùng các-tông", icon: "📦", requires: ["t5"], hint: "Hàng nghìn hộp bánh kẹo thơm ngon sẵn sàng xuất khẩu toàn cầu!" }
     ],
+    distractors: [
+      { id: "d1", text: "Thò tay trần vào băng chuyền bánh răng đang vận hành quay tít", icon: "⚙️", failReason: "Bánh răng cuốn tay vào máy gây tai nạn lao động đặc biệt nghiêm trọng!" },
+      { id: "d2", text: "Đổ nước tẩy rửa sàn nhà vào bồn nấu kẹo mạch nha", icon: "🧪", failReason: "Hóa chất độc hại làm nhiễm độc toàn bộ mẻ kẹo của nhà máy!" }
+    ],
     lesson: "Dây chuyền tự động liên tục: Mỗi khâu hoàn hảo tạo nên sản phẩm hoàn hảo."
   },
   {
@@ -666,6 +783,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t4", text: "Xuất phát từ sáng sớm, duy trì nhịp thở sâu đều đặn và uống từng ngụm nước nhỏ", icon: "💧", requires: ["t2", "t3"], hint: "Không uống ừng ực làm xóc bụng, uống ngụm nhỏ giữ ẩm cổ họng." },
       { id: "t5", text: "Dừng chân nghỉ ngơi ở lán 2.800m ăn bữa tối nóng và ngủ đủ giấc", icon: "🏕️", requires: ["t4"], hint: "Nạp năng lượng và giữ ấm cơ thể chuẩn bị cho chặng bứt phá đỉnh." },
       { id: "t6", text: "Bứt phá lên đỉnh lúc bình minh, chạm tay vào cột mốc chóp inox 3.143m ngắm biển mây", icon: "🚩", requires: ["t5"], hint: "Cảm xúc tự hào tột cùng khi vượt qua giới hạn của chính bản thân mình!" }
+    ],
+    distractors: [
+      { id: "d1", text: "Tách đoàn đi một mình vào rừng trúc rậm rạp không la bàn", icon: "🌲", failReason: "Đi lạc trong rừng núi Hoàng Liên Sơn ban đêm rất dễ bị hạ thân nhiệt và tử vong!" },
+      { id: "d2", text: "Uống nước suối đục ngầu chưa đun sôi có bọ gậy sinh sống", icon: "💧", failReason: "Nước suối rừng chứa nhiều ký sinh trùng và đỉa vắt gây bệnh hiểm nghèo!" }
     ],
     lesson: "Rèn luyện thể lực từ sớm và đi từng bước bền bỉ: Không có ngọn núi nào không thể vượt qua."
   },
@@ -687,7 +808,8 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t6", text: "Hòa lưới điện quốc gia truyền tải hàng tỷ kilowatt giờ điện thắp sáng muôn nhà", icon: "💡", requires: ["t4", "t5"], hint: "Nguồn năng lượng khổng lồ không phát thải khí nhà kính bảo vệ Trái Đất!" }
     ],
     distractors: [
-      { id: "d1", text: "Rút thanh điều khiển khi bơm làm mát chưa hoạt động", icon: "💥", failReason: "Lõi lò phản ứng tan chảy vì nhiệt độ vượt 3.000 độ C gây thảm họa nổ!" }
+      { id: "d1", text: "Rút thanh điều khiển khi bơm làm mát chưa hoạt động", icon: "💥", failReason: "Lõi lò phản ứng tan chảy vì nhiệt độ vượt 3.000 độ C gây thảm họa nổ!" },
+      { id: "d2", text: "Vô hiệu hóa hệ thống làm mát khẩn cấp lõi lò phản ứng", icon: "☢️", failReason: "Mất hệ thống làm mát, nhiệt độ lõi tăng vọt làm nóng chảy lò phản ứng thảm họa!" }
     ],
     lesson: "Bơm làm mát chạy trước tiên — an toàn là tôn chỉ tối thượng của ngành năng lượng."
   },
@@ -708,6 +830,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t5", text: "Bọc thạch cao và vải bố tạo thành lớp áo giáp bảo vệ từng khúc xương", icon: "🩹", requires: ["t4"], hint: "Đóng kén thạch cao chịu va đập khi vận chuyển đường dài." },
       { id: "t6", text: "Cẩu cẩn thận lên xe tải chuyên dụng đưa về viện bảo tàng phục dựng hoàn chỉnh", icon: "🏛️", requires: ["t5"], hint: "Bộ xương khủng long bạo chúa khổng lồ sừng sững tái hiện trước công chúng!" }
     ],
+    distractors: [
+      { id: "d1", text: "Dùng búa tạ đập vỡ vụn tảng đá chứa hóa thạch 65 triệu năm", icon: "🔨", failReason: "Đập búa tạ làm nát vụn xương hóa thạch quý hiếm không thể phục dựng!" },
+      { id: "d2", text: "Quét sơn dầu màu đỏ lòe loẹt lên bề mặt xương hóa thạch", icon: "🎨", failReason: "Hóa chất sơn làm phá hủy cấu trúc mẫu vật khảo cổ học vô giá!" }
+    ],
     lesson: "Từ công cụ lớn chuyển sang chổi lông tỉ mỉ: Sự kiên trì nâng niu di sản triệu năm."
   },
   {
@@ -726,6 +852,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t4", text: "Siêu máy tính phân tích dữ liệu áp suất phao và mô phỏng hướng sóng thần", icon: "💻", requires: ["t2", "t3"], hint: "Tính toán chính xác: Sóng thần cao 10m sẽ ập vào bờ sau 25 phút!" },
       { id: "t5", text: "Kích hoạt còi báo động toàn thành phố ven biển và gửi tin nhắn khẩn cấp tới mọi điện thoại", icon: "🚨", requires: ["t4"], hint: "Hàng triệu người lập tức di tản lên vùng đất cao an toàn." },
       { id: "t6", text: "Khi đợt sóng thần ập vào bờ, toàn bộ người dân đã an toàn trên đỉnh đồi", icon: "🏔️", requires: ["t5"], hint: "Khoa học công nghệ và sự chuẩn bị kịp thời đã cứu sống hàng triệu sinh mạng!" }
+    ],
+    distractors: [
+      { id: "d1", text: "Tắt nguồn trạm cảm biến địa chấn ngầm dưới đáy đại dương", icon: "🔌", failReason: "Tắt cảm biến khiến hệ thống mù thông tin, không kịp phát báo động di tản!" },
+      { id: "d2", text: "Bỏ qua cảnh báo sóng cao 20 mét để tiếp tục tắm biển", icon: "🏊", failReason: "Sóng thần di chuyển với tốc độ máy bay sẽ san phẳng bờ biển trong vài phút!" }
     ],
     lesson: "Cảnh báo sớm từng giây là ranh giới giữa thảm họa và sự sống an toàn."
   },
@@ -746,6 +876,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t5", text: "Thiết lập hệ thống nhà kính thủy canh tuần hoàn tạo oxy và trồng trọt rau quả", icon: "🌱", requires: ["t2", "t4"], hint: "Tự cung tự cấp thực phẩm tươi ngon cho các nhà du hành." },
       { id: "t6", text: "Đón đoàn phi hành gia đầu tiên bước vào sinh sống và cắm cờ Trái Đất", icon: "👩‍🚀", requires: ["t5"], hint: "Loài người chính thức trở thành giống loài đa hành tinh vươn ra vũ trụ bao la!" }
     ],
+    distractors: [
+      { id: "d1", text: "Cởi bỏ mũ phi hành gia hít thở không khí tự do trên Mặt Trăng", icon: "🌑", failReason: "Mặt Trăng là môi trường chân không không có oxy, con sẽ ngất xỉu sau 10 giây!" },
+      { id: "d2", text: "Đục thủng màng chắn bức xạ mặt trời của khu nhà kính sinh thái", icon: "☀️", failReason: "Bức xạ vũ trụ và bão mặt trời sẽ hủy diệt toàn bộ cây trồng trong nhà kính!" }
+    ],
     lesson: "Nước -> Năng lượng -> Vỏ che bức xạ -> Lương thực: 4 trụ cột định cư vũ trụ."
   },
   {
@@ -764,6 +898,10 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t4", text: "Bắt đúng dòng gió xiết Jet Stream thổi từ Tây sang Đông với tốc độ 200 km/h", icon: "🌬️", requires: ["t3"], hint: "Cưỡi trên dòng sông gió tự nhiên di chuyển với tốc độ máy bay phản lực!" },
       { id: "t5", text: "Điều chỉnh độ cao bằng van xả khí Heli và thả bao cát dằn tải", icon: "⚖️", requires: ["t4"], hint: "Xả bớt khí để hạ độ cao, thả bớt cát để bay vọt lên đón luồng gió thuận." },
       { id: "t6", text: "Hạ cánh an toàn xuống đồng cỏ nước Pháp sau 48 giờ bay không ngừng nghỉ", icon: "🇫🇷", requires: ["t5"], hint: "Kỷ lục thế giới thám hiểm khí quyển được thiết lập vang dội!" }
+    ],
+    distractors: [
+      { id: "d1", text: "Cắt đứt toàn bộ túi cát dằn trọng tải khi đang bay trong bão", icon: "🎈", failReason: "Khinh khí cầu vọt lên quá cao vào tầng không khí loãng làm nổ tung quả cầu khí!" },
+      { id: "d2", text: "Bật quẹt lửa châm gần van xả khí heli và hydro", icon: "🔥", failReason: "Tia lửa bén vào luồng khí dễ gây nổ lớn thiêu rụi toàn bộ giỏ bay trên không!" }
     ],
     lesson: "Lợi dụng sức mạnh vĩ đại của tự nhiên (dòng gió Jet Stream) để đi xa vạn dặm."
   },
@@ -785,7 +923,8 @@ export const TASK_MASTER_LEVELS_PART2 = [
       { id: "t6", text: "Tự tin bước vào năm học lớp 4 với tư duy chiến lược gia nhí xuất sắc toàn diện!", icon: "👑", requires: ["t5"], hint: "Bách đã làm chủ năng lực suy nghĩ trước khi hành động — trở thành phiên bản vượt trội nhất!" }
     ],
     distractors: [
-      { id: "d1", text: "Làm qua loa đối phó cho xong việc để đi chơi điện tử", icon: "🎮", failReason: "Làm qua loa sẽ làm con mãi dậm chân tại chỗ và đánh mất tương lai tươi sáng!" }
+      { id: "d1", text: "Làm qua loa đối phó cho xong việc để đi chơi điện tử", icon: "🎮", failReason: "Làm qua loa sẽ làm con mãi dậm chân tại chỗ và đánh mất tương lai tươi sáng!" },
+      { id: "d2", text: "Hành động theo cảm tính bộc phát không cần tính toán bước tiếp theo", icon: "🌪️", failReason: "Chỉ huy bốc đồng không có chiến lược sẽ đẩy toàn bộ đội hình vào thảm bại!" }
     ],
     lesson: "Chiến lược gia xuất sắc: Luôn dừng lại suy nghĩ thấu đáo trước khi hành động!"
   }
