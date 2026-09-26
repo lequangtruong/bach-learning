@@ -33,10 +33,10 @@ export class SpotTheBugSession {
 
     const elapsed = Math.max(0.1, Number(((Date.now() - (this.solveStartTime || Date.now())) / 1000).toFixed(1)));
 
-    // Phân loại chính xác 3 trạng thái của từng bước theo nội dung toán học:
-    const isRootBug = Boolean(step.isBug || step.status === "root_bug");
-    const isValidStep = Boolean(!isRootBug && (step.isValid === true || step.status === "valid" || (stepNum < bugStepNum && !step.isConsequential)));
-    const isConsequential = Boolean(!isRootBug && !isValidStep && (step.isConsequential === true || step.status === "consequential" || (bugStepNum !== -1 && stepNum > bugStepNum)));
+    // Phân loại chính xác 3 trạng thái của từng bước theo dữ liệu gắn nhãn tường minh:
+    const isRootBug = Boolean(step.isBug);
+    const isValidStep = Boolean(!isRootBug && (step.isValid || (stepNum < bugStepNum && !step.isConsequential)));
+    const isConsequential = Boolean(!isRootBug && (step.isConsequential || (bugStepNum !== -1 && stepNum > bugStepNum && !step.isValid)));
 
     if (isRootBug) {
       this.solvedIds.add(currentCase.id);

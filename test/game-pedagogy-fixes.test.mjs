@@ -239,3 +239,45 @@ test("pedagogy-fixes: Logic Grid strictly enforces 1-to-1 uniqueness and rejects
   assert.equal(resCorrect.extraChecks, 0);
   assert.equal(resCorrect.hasMistake, false);
 });
+
+// --- 5. AUDIT TOÀN DIỆN: 100% CÁC BƯỚC TRONG 120 VỤ ÁN SPOT THE BUG ĐƯỢC GẮN NHÃN TƯỜNG MINH ---
+test("pedagogy-fixes: 100% of steps across all 120 cases in Spot The Bug are explicitly annotated without guessing", () => {
+  assert.equal(BUG_CASES.length, 120, "Must have exactly 120 bug cases");
+
+  let totalSteps = 0;
+  let rootBugCount = 0;
+  let validCount = 0;
+  let consequentialCount = 0;
+
+  BUG_CASES.forEach((c, cIdx) => {
+    let caseBugs = 0;
+    c.steps.forEach(s => {
+      totalSteps++;
+      assert.equal(typeof s.num, "number", `Case ${c.id} step num must be a number`);
+      assert.equal(typeof s.isBug, "boolean", `Case ${c.id} step ${s.num} isBug must be boolean`);
+      assert.equal(typeof s.isValid, "boolean", `Case ${c.id} step ${s.num} isValid must be boolean`);
+      assert.equal(typeof s.isConsequential, "boolean", `Case ${c.id} step ${s.num} isConsequential must be boolean`);
+
+      if (s.isBug) {
+        caseBugs++;
+        rootBugCount++;
+        assert.equal(s.isValid, false, `Root bug in ${c.id} step ${s.num} cannot be marked valid`);
+        assert.equal(s.isConsequential, false, `Root bug in ${c.id} step ${s.num} cannot be marked consequential`);
+      } else if (s.isValid) {
+        validCount++;
+        assert.equal(s.isConsequential, false, `Valid step in ${c.id} step ${s.num} cannot be marked consequential`);
+      } else if (s.isConsequential) {
+        consequentialCount++;
+        assert.equal(s.isValid, false, `Consequential step in ${c.id} step ${s.num} cannot be marked valid`);
+      } else {
+        assert.fail(`Case ${c.id} step ${s.num} is missing valid/consequential classification!`);
+      }
+    });
+
+    assert.equal(caseBugs, 1, `Case ${c.id} must have exactly 1 root bug`);
+  });
+
+  assert.equal(totalSteps, 384, "Total steps across all 120 cases must be 384");
+  assert.equal(rootBugCount, 120, "Exactly 120 root bug steps");
+  assert.equal(validCount + consequentialCount + rootBugCount, 384, "All 384 steps must be accounted for");
+});

@@ -93,7 +93,7 @@ test("adaptive: calculateChcPillars accurately scores 5 cognitive pillars", () =
   assert.ok(analysis.pillars.speed.score > 50, "Speed score should reflect 360 high score");
   assert.ok(analysis.pillars.memory.score > 50, "Memory score should reflect level 7 in Chimp memory");
   assert.ok(analysis.pillars.math.score > 40, "Math score should reflect Bar Model and Make 24 solves");
-  assert.ok(analysis.estimatedIqIndex >= 115, "Estimated IQ index should reflect strong all-round performance");
+  assert.ok(analysis.averageScore >= 50, "Average skill mastery score should reflect strong all-round performance");
 });
 
 test("adaptive: getSmartDailyRecommendation recommends the weakest pillar to balance growth", () => {

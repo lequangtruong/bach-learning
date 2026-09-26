@@ -64,25 +64,30 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Thực hiện lần lượt từ trái sang phải: 4 500 + 1 500 = 6 000",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Nhân tiếp với 4: 6 000 × 4 = 24 000",
         "isBug": false,
-        "isConsequential": true
+        "isConsequential": true,
+        "isValid": false
       },
       {
         "num": 3,
         "text": "Thực hiện phép chia: 3 200 : 8 = 400",
         "isBug": false,
-        "isValid": true
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 4,
         "text": "Lấy 24 000 − 400 = 23 600",
         "isBug": false,
-        "isConsequential": true
+        "isConsequential": true,
+        "isValid": false
       }
     ],
     "bugExplanation": "Bẫy thứ tự ưu tiên! Trong biểu thức có cả phép cộng, trừ, nhân, chia, bắt buộc phải thực hiện 'Nhân chia trước, Cộng trừ sau': 1 500 × 4 = 6 000 và 3 200 : 8 = 400 trước. Sau đó mới tính 4 500 + 6 000 − 400 = 10 100!",
@@ -99,17 +104,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Thực hiện phép cộng phía sau trước: 4 800 + 3 200 = 8 000",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Lấy số ban đầu trừ đi kết quả: 15 400 − 8 000 = 7 400",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 3,
         "text": "Kết luận giá trị biểu thức là 7 400",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Bẫy thứ tự phép tính cùng cấp! Biểu thức chỉ gồm phép cộng và phép trừ thì PHẢI THỰC HIỆN LẦN LƯỢT TỪ TRÁI SANG PHẢI: 15 400 − 4 800 = 10 600, sau đó 10 600 + 3 200 = 13 800!",
@@ -126,17 +137,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Thực hiện phép nhân phía sau trước: 60 × 5 = 300",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Lấy 36 000 chia cho 300: 36 000 : 300 = 120",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 3,
         "text": "Kết luận giá trị biểu thức là 120",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Phép nhân và phép chia có cùng mức độ ưu tiên! Khi biểu thức chỉ có nhân và chia, phải làm TỪ TRÁI SANG PHẢI: 36 000 : 60 = 600, sau đó lấy 600 × 5 = 3 000!",
@@ -153,22 +170,30 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Trong ngoặc, tính từ trái sang phải: 150 − 50 = 100",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Nhân tiếp với 2: 100 × 2 = 200",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 3,
         "text": "Lấy 12 000 chia cho kết quả trong ngoặc: 12 000 : 200 = 60",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 4,
         "text": "Cộng số ban đầu: 25 000 + 60 = 25 060",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Ngay cả TRONG DẤU NGOẶC ĐƠN vẫn phải tuân thủ nghiêm ngặt 'Nhân chia trước, Cộng trừ sau'! Trong ngoặc: 50 × 2 = 100 trước, rồi mới lấy 150 − 100 = 50. Sau đó 12 000 : 50 = 240, và 25 000 + 240 = 25 240!",
@@ -185,17 +210,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Tính trong ngoặc đơn: 24 : 8 = 3; 3 + 2 = 5",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Lấy 48 000 − 8 000 = 40 000 trước",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Lấy 40 000 nhân với 5: 40 000 × 5 = 200 000",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Sau khi tính trong ngoặc ra 5, biểu thức còn lại là 48 000 − 8 000 × 5. Phải thực hiện PHÉP NHÂN TRƯỚC: 8 000 × 5 = 40 000, sau đó 48 000 − 40 000 = 8 000!",
@@ -212,17 +243,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Tính trong ngoặc đơn: 35 000 + 15 000 = 50 000",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Nhân 25 với 4 trước: 25 × 4 = 100",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Lấy 50 000 chia cho 100: 50 000 : 100 = 500",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Sau khi tính ngoặc được 50 000, ta có phép tính 50 000 : 25 × 4. Đây là chuỗi phép chia và nhân cùng cấp nên PHẢI TÍNH TỪ TRÁI SANG PHẢI: 50 000 : 25 = 2 000, sau đó 2 000 × 4 = 8 000!",
@@ -239,17 +276,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Thực hiện cụm nhân chia: lấy 8 × 6 = 48",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Lấy 40 000 chia 48 thấy không chia hết",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 3,
         "text": "Thấy 40 000 không chia hết cho 48 nên không tìm được giá trị",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Ở cụm 40 000 : 8 × 6, phép chia và phép nhân cùng cấp ưu tiên nên phải tính từ trái sang phải: 40 000 : 8 = 5 000, rồi lấy 5 000 × 6 = 30 000. Biểu thức đúng: 120 000 − 30 000 + 15 000 = 105 000!",
@@ -266,17 +309,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Bỏ ngoặc đơn: 72 000 : 9 × 8",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Thực hiện từ trái sang phải: 72 000 : 9 = 8 000",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 3,
         "text": "Lấy 8 000 × 8 = 64 000",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Quy tắc chia một số cho một tích: a : (b × c) = a : b : c! Muốn chia cho (9 × 8), ta phải chia liên tiếp cho 9 rồi chia tiếp cho 8: 72 000 : 9 : 8 = 8 000 : 8 = 1 000!",
@@ -293,17 +342,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Bỏ ngoặc giữ nguyên phép trừ: 85 000 − 42 000 − 18 000",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Lấy 85 000 − 42 000 = 43 000",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 3,
         "text": "Lấy 43 000 − 18 000 = 25 000",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Quy tắc trừ một hiệu: a − (b − c) = a − b + c! Khi tính trong ngoặc: 42 000 − 18 000 = 24 000, sau đó 85 000 − 24 000 = 61 000. Bỏ ngoặc sai làm kết quả bị hụt mất 36 000 đơn vị!",
@@ -320,17 +375,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Thực hiện phép trừ trước: 96 000 − 36 000 = 60 000",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Lấy 60 000 chia cho 12: 60 000 : 12 = 5 000",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 3,
         "text": "Cộng thêm 4 000: 5 000 + 4 000 = 9 000",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Phải thực hiện phép chia trước! Tính 36 000 : 12 = 3 000 trước. Sau đó thực hiện cộng trừ từ trái sang phải: 96 000 − 3 000 + 4 000 = 97 000!",
@@ -347,22 +408,30 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Hàng đơn vị: 12 − 5 = 7, viết 7 nhớ 1. Hàng chục: 3 − 8 không được, 13 − 8 = 5, viết 5 nhớ 1",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Hàng trăm: 8 − 5 = 3, viết 3. Hàng nghìn: 15 − 8 = 7, viết 7 nhớ 1",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Hàng chục nghìn: 7 mượn 1 thành 17, lấy 17 − 9 = 8, viết 8 (quên trả nhớ 1 vào số trừ)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 4,
         "text": "Hàng trăm nghìn: 4 − 1 = 3 (quên bớt 1 đã mượn), viết 3. Ra 387 357",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Quên trả số nhớ khi trừ số có 6 chữ số! Ở hàng chục nghìn, số trừ 9 thêm 1 nhớ thành 10, lấy 17 − 10 = 7. Hàng trăm nghìn 4 bớt 1 còn 3, 3 − 1 = 2. Kết quả chuẩn xác là 277 357!",
@@ -379,17 +448,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Làm tròn 199 998 thành 200 000 (mượn thêm 2 đơn vị)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Lấy 200 000 + 45 670 = 245 670",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Vì đã mượn 2 nên ta cộng tiếp 2: 245 670 + 2 = 245 672",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "Mượn thì phải TRẢ (trừ đi), không được cộng thêm! Đã mượn 2 để làm tròn thành 200 000 thì sau khi cộng xong bắt buộc phải bớt 2: 245 670 − 2 = 245 668!",
@@ -406,22 +481,30 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Hàng đơn vị: 0 − 0 = 0. Hàng chục: 10 − 2 = 8, nhớ 1",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Hàng trăm: 0 nhớ 1 thành 1, lấy 10 − 9 = 1, nhớ 1",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Hàng nghìn: coi chữ số 0 nguyên vẹn là 10, lấy 10 − 5 = 5, viết 5",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 4,
         "text": "Hàng chục nghìn: lấy 9 − 4 = 5. Hàng trăm nghìn: lấy 9 − 3 = 6. Ra kết quả 655 180",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Khi trừ qua chuỗi số 0 liên tiếp, sau khi cho mượn thì các chữ số 0 ở hàng nghìn chỉ còn là 9! Hàng nghìn có số nhớ 1 thêm vào 5 là 6, lấy 9 − 6 = 3 (không phải 5)! Kết quả đúng là 654 180!",
@@ -438,22 +521,30 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Hàng đơn vị: 0 + 0 = 0. Hàng chục: 9 + 6 = 15, viết 5 nhớ 1",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Hàng trăm: 8 + 5 = 13, thêm 1 bằng 14, viết 4 nhớ 1. Hàng nghìn: 7 + 4 = 11, thêm 1 bằng 12, viết 2 nhớ 1",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Hàng chục nghìn: 6 + 8 = 14, viết 4 (quên cộng thêm 1 nhớ)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 4,
         "text": "Hàng trăm nghìn: 5 + 2 = 7, viết 7. Kết quả ra 742 450",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Quên số nhớ từ hàng nghìn sang hàng chục nghìn! 6 + 8 = 14, thêm 1 nhớ phải bằng 15, viết 5 nhớ 1. Hàng trăm nghìn 5 + 2 = 7 thêm 1 nhớ bằng 8. Kết quả đúng là 852 450!",
@@ -470,17 +561,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Làm tròn số trừ 199 000 thành 200 000 (trừ nhiều hơn 1 000 đơn vị)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Lấy 485 000 − 200 000 = 285 000",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Vì đã trừ số lớn hơn nên trừ tiếp 1 000: 285 000 − 1 000 = 284 000",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "Trừ quá tay thì phải CỘNG BÙ LẠI! Trừ 200 000 là đã trừ quá 1 000 đơn vị so với đề bài, nên phải cộng trả lại 1 000: 285 000 + 1 000 = 286 000!",
@@ -497,17 +594,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Đặt chữ số 3 của 32 514 thẳng cột với chữ số 8 của 850 430 (thẳng từ trái sang)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Trừ lần lượt từng cột từ phải sang trái",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 3,
         "text": "Nhận được kết quả hơn 500 000",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Bẫy đặt lệch cột giá trị theo hàng! 32 514 là số có 5 chữ số (hàng cao nhất là chục nghìn), còn 850 430 có 6 chữ số (hàng trăm nghìn). Bắt buộc phải đặt thẳng cột TỪ PHẢI SANG TRÁI (hàng đơn vị thẳng đơn vị). Đặt lệch cột biến 32 514 thành 325 140!",
@@ -524,17 +627,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Tách 399 990 = 400 000 − 10",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Lấy 400 000 + 254 600 = 654 600",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Lấy 654 600 + 10 = 654 610",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "399 990 là 400 000 BỚT 10. Khi lấy 400 000 cộng với 254 600 được 654 600 thì phải BỚT 10: 654 600 − 10 = 654 590!",
@@ -551,17 +660,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Làm tròn 498 000 thành 500 000",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Lấy 750 000 − 500 000 = 250 000",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Trừ tiếp phần bù: 250 000 − 2 000 = 248 000",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "Trừ 500 000 là đã trừ lố 2 000 đơn vị. Phải CỘNG TRẢ LẠI 2 000 đơn vị: 250 000 + 2 000 = 252 000!",
@@ -578,22 +693,30 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Ghép cặp tròn số: (125 400 + 74 600) + (384 500 + 115 500)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Tính nhẩm: 125 400 + 74 600 = 200 000",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Tính nhẩm: 384 500 + 115 500 = 490 000 (nhẩm quên nhớ 1 từ 500 + 500)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 4,
         "text": "Cộng lại: 200 000 + 490 000 = 690 000",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Quên số nhớ khi ghép cặp! 384 500 + 115 500: 500 + 500 = 1 000, 384 000 + 115 000 = 499 000, thêm 1 000 phải bằng 500 000 tròn! Tổng đúng là 200 000 + 500 000 = 700 000!",
@@ -610,22 +733,30 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "0 − 0 = 0; 15 − 9 = 6 nhớ 1. 0 thêm 1 bằng 1, 10 − 1 = 9 nhớ 1",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "8 thêm 1 bằng 9; 14 − 9 = 5 nhớ 1",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Hàng chục nghìn: lấy 7 − 0 = 7, viết 7",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 4,
         "text": "Hàng trăm nghìn: 6 − 2 = 4. Kết luận kết quả là 475 960",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Số bị trừ là 0, không được lấy số trừ 7 trừ đi 0! Phải mượn 1 trăm nghìn thành 10 chục nghìn, thêm 1 nhớ vào số trừ 7 thành 8, lấy 10 − 8 = 2. Hàng trăm nghìn 6 bớt 1 còn 5, 5 − 2 = 3. Đúng là 325 960!",
@@ -642,17 +773,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Tích riêng thứ nhất: 2 435 × 4 = 9 740",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Tích riêng thứ hai: 2 435 × 2 = 4 870, viết thẳng cột dưới 9 740",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Cộng thẳng hai tích riêng: 9 740 + 4 870 = 14 610",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Quên lùi 1 cột ở tích riêng thứ hai! Chữ số 2 là 2 chục (20). Do đó tích riêng thứ hai phải viết lùi sang bên trái 1 cột (tức 48 700). 9 740 + 48 700 = 58 440!",
@@ -669,17 +806,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Tích riêng thứ nhất: 1 425 × 3 = 4 275",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Tích riêng thứ hai: 1 425 × 2 = 2 850, viết lùi sang bên trái 1 cột so với tích 1",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Cộng hai tích riêng lại ra kết quả 32 775",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Bẫy nhân với số có chữ số 0 ở giữa! Chữ số 2 ở hàng trăm, nên tích riêng thứ hai là 2 trăm. Bắt buộc phải viết LÙI SANG BÊN TRÁI 2 CỘT (thẳng cột hàng trăm)! Đúng phải là 4 275 + 285 000 = 289 275!",
@@ -696,22 +839,30 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Viết chữ số hàng đơn vị là 5",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Cộng từng cặp: 5 + 7 = 12 viết 2 nhớ 1; 7 + 8 = 15 thêm 1 bằng 16 viết 6 nhớ 1",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "4 + 8 = 12 thêm 1 bằng 13, viết 3 nhưng quên cộng 1 nhớ vào chữ số đầu 4",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 4,
         "text": "Ghi kết quả là 43 625",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Quên cộng 1 nhớ vào chữ số đầu tiên! Chữ số đầu 4 phải thêm 1 nhớ từ 4 + 8 = 12 (+1 = 13) để thành 5! Kết quả chuẩn xác là 53 625!",
@@ -728,17 +879,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Tách 101 = 100 + 1",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Áp dụng tính chất phân phối: 485 × 100 + 1",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Tính 48 500 + 1 = 48 501",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Quên nhân thừa số 485 với 1! Tính chất phân phối phép nhân đối với phép cộng: a × (b + c) = a × b + a × c! Phải là 485 × 100 + 485 × 1 = 48 500 + 485 = 48 985!",
@@ -755,17 +912,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Tách 32 = 8 × 4",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Ghép cặp: (125 × 8) + (4 × 25)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Tính 1 000 + 100 = 1 100",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Phép nhân có tính chất kết hợp, giữa các cụm phải là DẤU NHÂN, không phải dấu cộng! Đúng phải là (125 × 8) × (4 × 25) = 1 000 × 100 = 100 000!",
@@ -782,17 +945,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Nhận thấy 245 là thừa số chung, đặt ra ngoài: 245 × (36 + 64)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Tính trong ngoặc: 36 + 64 = 100",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Thực hiện phép nhân: 245 × 100 = 2 450 (quên viết một chữ số 0)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "Nhân một số với 100 thì phải thêm HAI CHỮ SỐ 0 vào bên phải số đó! 245 × 100 = 24 500, không phải 2 450!",
@@ -809,17 +978,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Lấy 24 680 chia cho 2: 24 680 : 2 = 12 340",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Cộng thêm 10 vào kết quả: 12 340 + 10 = 12 350",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Kết luận kết quả là 12 350",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Quy tắc nhân một số với 5: Ta lấy số đó chia cho 2 rồi NHÂN VỚI 10 (thêm một chữ số 0 vào sau), KHÔNG PHẢI CỘNG 10! 12 340 × 10 = 123 400!",
@@ -836,22 +1011,30 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Tích riêng 1: 3 516 × 2 = 7 032",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Tích riêng 2: 4 × 6 = 24 viết 4 nhớ 2; 4 × 1 = 4 (quên cộng 2 nhớ) viết 4",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "4 × 5 = 20 viết 0 nhớ 2; 4 × 3 = 12 thêm 2 là 14. Ra tích 2 là 140 440",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 4,
         "text": "Cộng hai tích riêng: 7 032 + 140 440 = 147 472",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Quên cộng 2 nhớ từ hàng đơn vị sang hàng chục của tích riêng 2! 4 × 1 = 4, thêm 2 nhớ phải bằng 6! Tích riêng 2 chuẩn là 14 064 (lùi 1 cột thành 140 640). Tổng: 7 032 + 140 640 = 147 672!",
@@ -868,17 +1051,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Tách 48 = 6 × 8",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Nhân kết hợp: 6 × (8 × 125) = 6 × 1 000",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Lấy 6 + 1 000 = 1 006",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "Phải làm phép NHÂN, không được làm phép cộng! 6 × 1 000 = 6 000, không phải 1 006!",
@@ -895,17 +1084,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Tách 99 = 100 − 1",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Áp dụng phân phối: 350 × 100 − 99",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Tính: 35 000 − 99 = 34 901",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Áp dụng sai tính chất phân phối! a × (b − c) = a × b − a × c. Do đó phải là 350 × 100 − 350 × 1 = 35 000 − 350 = 34 650!",
@@ -922,17 +1117,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Lấy 35 chia 35 được 1, viết 1; 1 × 35 = 35; 35 − 35 = 0",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Hạ 2, vì 2 không chia được 35 nên hạ tiếp 8 được 28; vẫn không chia được nên hạ 0 được 280; 280 : 35 = 8",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Ghi thương là 18. Kết luận: 35 280 : 35 = 18",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Bẫy kinh điển quên chữ số 0 ở thương! Khi hạ 2 xuống mà 2 < 35, bắt buộc phải viết 0 vào thương (2 : 35 = 0 dư 2). Sau đó hạ 8 được 28 < 35 lại phải viết thêm 0 vào thương! Cuối cùng hạ 0 được 280 : 35 = 8. Thương đúng phải là 1 008 (thử lại: 1 008 × 35 = 35 280)!",
@@ -949,17 +1150,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "84 : 42 = 2, viết 2; 2 × 42 = 84; 84 − 84 = 0",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Hạ 1 không chia được cho 42, hạ tiếp 6 được 16; vẫn không chia được nên hạ tiếp 8 được 168; 168 : 42 = 4, viết 4",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Ghi thương là 24",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Mỗi lần hạ một chữ số xuống đều PHẢI TẠO RA MỘT CHỮ SỐ Ở THƯƠNG! Hạ 1 chia 42 được 0, viết 0 vào thương. Hạ 6 được 16 chia 42 được 0, viết 0 vào thương. Hạ 8 được 168 : 42 = 4. Thương đúng là 2 004!",
@@ -976,17 +1183,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "45 : 45 = 1 viết 1; hạ 8 chia 45 được 0 viết 0; hạ 9 được 89",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "89 : 45 ước lượng được 1, viết 1; 89 − 45 = 44; hạ 0 được 440",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Ước lượng 440 : 45 được 8; 8 × 45 = 360; 440 − 360 = 80. Kết luận thương 1018 dư 80",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "Quy tắc cốt lõi: SỐ DƯ LUÔN PHẢI NHỎ HƠN SỐ CHIA! Số dư 80 > số chia 45 chứng tỏ thương 8 chưa tối đa. Phải là thương 9: 9 × 45 = 405; 440 − 405 = 35. Phép chia đúng: 1 019 dư 35!",
@@ -1003,17 +1216,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Cùng gạch bỏ hai chữ số 0 tận cùng ở cả số bị chia và số chia: 285 : 4",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Thực hiện chia: 285 : 4 = 71 dư 1",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Kết luận phép chia ban đầu có thương là 71 và số dư là 1",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "Bẫy số dư khi rút gọn số 0! Khi gạch bỏ hai chữ số 0 (chia cho 100) thì thương không đổi nhưng SỐ DƯ PHẢI NHÂN LẠI VỚI 100! Số dư đúng là 1 × 100 = 100. (Thử lại: 71 × 400 + 100 = 28 400 + 100 = 28 500)!",
@@ -1030,22 +1249,30 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "125 : 25 = 5, viết 5; 5 × 25 = 125; 125 − 125 = 0",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Hạ 4, vì 4 < 25 nên hạ tiếp 5 được 45; 45 : 25 = 1 dư 20",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Hạ 0 được 200; 200 : 25 = 8, viết 8",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 4,
         "text": "Ghi thương là 518",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Hạ 4 chia 25 được 0, bắt buộc phải viết 0 vào thương trước khi hạ 5! Nếu thương là 518 thì 518 × 25 chỉ bằng 12 950 (thiếu hơn 110 000 đơn vị). Thương chuẩn phải là 5 018!",
@@ -1062,17 +1289,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Gạch bỏ cả 4 chữ số 0 ở 720 000 và 3 chữ số 0 ở 8 000",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Được phép tính 72 : 8 = 9",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 3,
         "text": "Kết luận thương là 9",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Chỉ được gạch bỏ CÙNG MỘT SỐ LƯỢNG CHỮ SỐ 0 ở cả hai số! Số chia 8 000 có 3 chữ số 0 thì chỉ được gạch đúng 3 chữ số 0 ở 720 000: 720 : 8 = 90!",
@@ -1089,17 +1322,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Nhận xét số dư 21 < 24 là hợp lệ",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Kiểm tra lại bằng cách lấy: 61 × 24 − 21",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Thấy ra 1 443 khác 1 485 nên kết luận phép chia sai",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Công thức kiểm tra phép chia có dư: Số bị chia = Thương × Số chia + SỐ DƯ! Phải làm PHÉP CỘNG số dư: 61 × 24 + 21 = 1 464 + 21 = 1 485! Phép chia ban đầu là hoàn toàn đúng!",
@@ -1116,22 +1355,30 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "6 : 6 = 1, viết 1",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Hạ 1 không chia được nên hạ tiếp 2 được 12; 12 : 6 = 2, viết 2",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Hạ 2 không chia được hạ tiếp 4 được 24; 24 : 6 = 4, viết 4",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 4,
         "text": "Ghi thương là 124",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Mỗi lần hạ một chữ số mà không đủ chia đều phải viết 0 vào thương! Hạ 1 chia 6 được 0; hạ 2 chia 6 được 0. Thương đúng phải là 10 204 (10 204 × 6 = 61 224)!",
@@ -1148,17 +1395,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "48 : 12 = 4, viết 4; 4 × 12 = 48; 48 − 48 = 0",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Hạ 3 chia 12 được 0, viết 0; hạ 6 được 36; 36 : 12 = 3, viết 3",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Chữ số 0 cuối cùng không chia được nên bỏ qua, ghi thương là 403",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "Chữ số 0 tận cùng ở hàng đơn vị hạ xuống chia 12 được 0, BẮT BUỘC PHẢI VIẾT 0 VÀO CUỐI THƯƠNG thành 4 030! Nếu là 403 thì 403 × 12 = 4 836 (sai lệch 10 lần)!",
@@ -1175,17 +1428,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Cùng bớt một chữ số 0: 345 : 5",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "345 : 5 = 69 dư 0",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Kết luận vì ban đầu có số 0 nên số dư là 10 quyển",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "345 chia hết cho 5 (dư 0) nên 3 450 chia hết cho 50! Số dư là 0 quyển, chia được đúng 69 thùng và không còn thừa quyển nào!",
@@ -1202,17 +1461,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Đặt thừa số x ra ngoài: x × (38 + 62) = 45 000",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Tính tổng trong ngoặc: x × 100 = 45 000",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Muốn tìm thừa số x, ta lấy: x = 45 000 × 100 = 4 500 000",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "x là THỪA SỐ CHƯA BIẾT! Muốn tìm thừa số chưa biết, ta lấy TÍCH CHIA CHO thừa số đã biết: x = 45 000 : 100 = 450! Làm phép nhân khiến kết quả tăng gấp vạn lần!",
@@ -1229,17 +1494,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Cụm (x − 3 450) đóng vai trò là số bị chia: x − 3 450 = 140 × 25",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Tính 140 × 25 = 3 500",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Tìm số bị trừ x: x = 3 500 − 3 450 = 50",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "x là SỐ BỊ TRỪ! Muốn tìm số bị trừ, ta phải lấy HIỆU CỘNG VỚI SỐ TRỪ: x = 3 500 + 3 450 = 6 950! Nếu x = 50 thì 50 − 3 450 không trừ được trong tập số tự nhiên!",
@@ -1256,17 +1527,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Coi cụm (x × 35) là số trừ: x × 35 = 18 500 − 2 400",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Tính hiệu: x × 35 = 16 100",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Tìm x: x = 16 100 × 35",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "x là thừa số chưa biết trong phép nhân x × 35 = 16 100. Phải lấy TÍCH CHIA CHO THỪA SỐ ĐÃ BIẾT: x = 16 100 : 35 = 460!",
@@ -1283,17 +1560,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Lấy 45 + 2 150 trước, biến đổi thành x : 2 195 = 3 200",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Tìm x = 3 200 × 2 195",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 3,
         "text": "Tính ra x = 7 024 000 (kết quả tăng vọt)",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Cụm (x : 45) là một số hạng chưa biết! Bắt buộc phải tìm cụm đó trước: x : 45 = 3 200 − 2 150 = 1 050. Sau đó tìm số bị chia x = 1 050 × 45 = 47 250!",
@@ -1310,17 +1593,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Đặt thừa số x ra ngoài: x × (125 + 25) = 45 000",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Tính trong ngoặc: x × 150 = 45 000",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 3,
         "text": "Tìm x = 45 000 : 150 = 300",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Đây là PHÉP TRỪ hai tích! Phải giữ nguyên dấu trừ trong ngoặc: x × (125 − 25) = 45 000. Tức là x × 100 = 45 000, do đó x = 45 000 : 100 = 450!",
@@ -1337,17 +1626,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Cụm (x × 6) là số chia: x × 6 = 14 400 : 40",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Tính 14 400 : 40 = 360",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Tìm x: x = 360 × 6 = 2 160",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "x × 6 = 360 thì x là thừa số chưa biết! Phải lấy 360 : 6 = 60, không phải nhân 6!",
@@ -1364,17 +1659,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Muốn tìm số bị chia x, ta lấy: x = 240 × 18 − 15",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Tính 240 × 18 = 4 320",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 3,
         "text": "Lấy 4 320 − 15 = 4 305",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Công thức tìm số bị chia trong phép chia có dư: Số bị chia = Thương × Số chia + SỐ DƯ! Bắt buộc phải CỘNG số dư: x = 240 × 18 + 15 = 4 320 + 15 = 4 335!",
@@ -1391,17 +1692,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Cụm (x + 5 200) là thừa số chưa biết: x + 5 200 = 144 000 : 12",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Tính: 144 000 : 12 = 12 000",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Tìm số hạng x: x = 12 000 + 5 200 = 17 200",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "x là số hạng chưa biết trong tổng x + 5 200 = 12 000! Muốn tìm số hạng chưa biết, ta lấy TỔNG TRỪ ĐI số hạng đã biết: x = 12 000 − 5 200 = 6 800!",
@@ -1418,17 +1725,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Đặt thừa số chung: x × (48 + 51) = 32 000",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Tính: x × 99 = 32 000",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 3,
         "text": "Thấy 32 000 không chia hết cho 99",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Bẫy quên hạng tử x = x × 1! Khi đặt x ra ngoài, trong ngoặc phải là (48 + 51 + 1) = 100! Phương trình đúng: x × 100 = 32 000 → x = 32 000 : 100 = 320!",
@@ -1445,17 +1758,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Cụm (72 000 : x) là số trừ: 72 000 : x = 85 000 − 82 600",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Tính hiệu: 72 000 : x = 2 400",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Tìm số chia x: x = 72 000 × 2 400",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "x là SỐ CHIA! Muốn tìm số chia, ta lấy số bị chia CHIA CHO THƯƠNG: x = 72 000 : 2 400 = 30!",
@@ -1472,17 +1791,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Tính tổng khối lượng 4 xe chở: 4 500 + 4 800 + 5 200 + 4 700 = 19 200 (kg)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Trung bình mỗi xe chở là: 19 200 : 3 = 6 400 (kg)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Đáp số: 6 400 kg",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Đội có 4 XE HÀNG thì phải CHIA CHO 4, không phải chia cho 3! Trung bình mỗi xe chở: 19 200 : 4 = 4 800 kg!",
@@ -1499,17 +1824,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Tính tổng số xe của cả đội: 3 + 2 = 5 (xe)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Lấy trung bình cộng số gạo của 1 xe lớn và 1 xe nhỏ: (3 500 + 2 000) : 2 = 2 750 (kg)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Kết luận trung bình mỗi xe chở 2 750 kg gạo",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Bẫy lấy trung bình cộng của hai đơn giá! Số xe lớn và xe nhỏ không bằng nhau (3 xe lớn và 2 xe nhỏ = 5 xe). Phải tính tổng số gạo: 3 × 3 500 + 2 × 2 000 = 10 500 + 4 000 = 14 500 kg. Sau đó chia cho tổng 5 xe: 14 500 : 5 = 2 900 kg!",
@@ -1526,17 +1857,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Tính trung bình cộng số bi của 3 bạn: (45 + 35 + 40) : 3 = 40 (viên)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Số bi của Bách là: 40 + 6 = 46 (viên)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Đáp số: 46 viên bi",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Đề bài cho Bách hơn TBC CỦA CẢ 4 BẠN, không phải hơn TBC của 3 bạn! Gọi TBC của cả 4 bạn là T. Ta có: 3 × T = Tổng 3 bạn + 6 = 120 + 6 = 126 → T = 126 : 3 = 42 viên. Số bi của Bách = 42 + 6 = 48 viên!",
@@ -1553,17 +1890,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Vì có 5 số lẻ liên tiếp nên số ở chính giữa (số thứ ba) chính là trung bình cộng: 2 025",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Hai số lẻ liên tiếp hơn kém nhau 1 đơn vị",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Số lớn nhất (số thứ năm) là: 2 025 + 2 = 2 027",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Hai số lẻ liên tiếp hơn kém nhau 2 ĐƠN VỊ, không phải 1 đơn vị! Từ số thứ 3 đến số thứ 5 cách nhau 2 khoảng cách = 2 × 2 = 4 đơn vị. Số lớn nhất là: 2 025 + 4 = 2 029!",
@@ -1580,17 +1923,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Tổng số cây lớp 4A và 4B: 180 + 220 = 400 (cây)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Trung bình cộng của cả 3 lớp là: (400 + 20) : 2 = 210 (cây)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Lớp 4C trồng được: 210 − 20 = 190 (cây)",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Lớp 4C ÍT HƠN trung bình cộng, tức là phần thiếu 20 cây phải trừ khỏi tổng của 4A và 4B! TBC cả 3 lớp = (400 − 20) : 2 = 190 cây. Số cây lớp 4C = 190 − 20 = 170 cây!",
@@ -1607,17 +1956,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Tổng số điểm của 4 bài kiểm tra đầu là: 9 × 4 = 36 (điểm)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Tổng số điểm của cả 5 bài kiểm tra cần đạt là: 46 điểm",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Điểm bài thứ năm cần đạt: 46 − 36 = 10 điểm (nhưng ghi nhầm thành 9 điểm)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "Bách cần đạt đúng 46 − 36 = 10 điểm tuyệt đối ở bài thứ năm để đạt trung bình 9.2 điểm!",
@@ -1634,17 +1989,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Tổng số tấn thóc ban đầu của 3 kho là: 45 × 3 = 135 (tấn)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Kho A giảm 5 tấn nên coi tổng số thóc của 3 kho giảm 5 tấn thành 130 tấn",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Trung bình mỗi kho giảm đi: 5 : 3 tấn",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Chuyển thóc từ kho A sang kho B là chuyển NỘI BỘ, TỔNG SỐ THÓC CỦA CẢ 3 KHO KHÔNG HỀ THAY ĐỔI! Do đó, số thóc trung bình cộng của 3 kho VẪN GIỮ NGUYÊN là 45 tấn!",
@@ -1661,17 +2022,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Coi 1 450 là tổng của hai số",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Số lớn là: (1 450 + 300) : 2 = 875",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 3,
         "text": "Đáp số: 875",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "1 450 mới chỉ là TRUNG BÌNH CỘNG! Muốn tìm TỔNG của hai số, ta phải nhân với 2: Tổng = 1 450 × 2 = 2 900. Sau đó số lớn = (2 900 + 300) : 2 = 1 600!",
@@ -1688,22 +2055,30 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Tính tổng sản phẩm 3 tổ đầu: 1 200 × 3 = 3 600 (sản phẩm)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Tính tổng sản phẩm 2 tổ sau: 1 450 × 2 = 2 900 (sản phẩm)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Tổng sản phẩm cả 5 tổ: 3 600 + 2 900 = 6 500 (sản phẩm)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 4,
         "text": "Trung bình mỗi tổ sản xuất: 6 500 : 2 = 3 250 (sản phẩm)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "Có TẤT CẢ 5 TỔ thì phải CHIA CHO 5! 6 500 : 5 = 1 300 sản phẩm/tổ, không thể chia cho 2 nhóm!",
@@ -1720,22 +2095,30 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Tổng số người gồm cô giáo và 30 học sinh là: 30 + 1 = 31 (người)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Tổng số tuổi của cô và cả lớp: 11 × 31 = 341 (tuổi)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Tổng số tuổi của 30 học sinh: 10 × 30 = 300 (tuổi)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 4,
         "text": "Tuổi cô giáo là: 341 − 300 = 31 (tuổi) (ghi nhầm phép tính thành 341 : 11 = 31)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "Tuổi của cô giáo bằng Tổng số tuổi của cô và trò TRỪ ĐI Tổng số tuổi của 30 học sinh: 341 − 300 = 41 tuổi! (341 − 300 = 41, không phải 31)!",
@@ -1752,17 +2135,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Áp dụng công thức tìm số bé: Số bé = (Tổng + Hiệu) : 2",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Tính: (145 + 25) : 2 = 170 : 2 = 85 (tấn)",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 3,
         "text": "Kết luận kho B có 85 tấn thóc",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Nhầm công thức Số lớn sang Số bé! Số bé = (TỔNG − HIỆU) : 2. Kho B = (145 − 25) : 2 = 120 : 2 = 60 tấn! 85 tấn là số thóc kho A (số lớn)!",
@@ -1779,17 +2168,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Tổng chiều dài và chiều rộng là: 360m",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Chiều rộng là: (360 − 40) : 2 = 160 (m)",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 3,
         "text": "Chiều dài là: 160 + 40 = 200 (m)",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Chu vi là (Dài + Rộng) × 2! TỔNG chiều dài và chiều rộng chỉ là NỬA CHU VI: 360 : 2 = 180m! Chiều rộng = (180 − 40) : 2 = 70m!",
@@ -1806,17 +2201,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Vì là hai số liên tiếp nên hiệu hai số là: 1 đơn vị",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Số lớn là: (2 454 + 1) : 2 (không chia hết cho 2)",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 3,
         "text": "Thấy (2 454 + 1) : 2 = 1 227.5 là số thập phân nên không tìm được",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Hai số CHẴN liên tiếp thì khoảng cách (hiệu) luôn luôn bằng 2 ĐƠN VỊ! Số lớn = (2 454 + 2) : 2 = 1 228 (số bé là 1 226)!",
@@ -1833,17 +2234,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Giữa hai số có 14 số chẵn nên hiệu giữa hai số là: 14 đơn vị",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Tính số lớn: (3 500 + 14) : 2 = 1 757",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 3,
         "text": "Đáp số: 1 757",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Giữa hai số chẵn có 14 số chẵn khác thì có 14 + 1 = 15 khoảng cách 2 đơn vị: Hiệu = 15 × 2 = 30 đơn vị! Số lớn = (3 500 + 30) : 2 = 1 765!",
@@ -1860,17 +2267,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "5 năm trước bố hơn con 28 tuổi, nên hiện nay bố hơn con: 28 + 5 = 33 (tuổi)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Tuổi bố hiện nay là: (50 + 33) : 2 (ra số thập phân)",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 3,
         "text": "Thấy ra 41.5 tuổi là số lẻ thập phân nên lúng túng",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "HIỆU SỐ TUỔI KHÔNG BAO GIỜ THAY ĐỔI THEO THỜI GIAN! Mỗi năm mỗi người đều tăng 1 tuổi, nên 5 năm trước bố hơn con 28 tuổi thì hiện nay bố VẪN HƠN CON ĐÚNG 28 TUỔI! Tuổi bố = (50 + 28) : 2 = 39 tuổi!",
@@ -1887,17 +2300,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Vì chuyển 15 lít thì bằng nhau nên ban đầu thùng 1 hơn thùng 2 đúng 15 lít",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Thùng 1 ban đầu có: (180 + 15) : 2 = 97.5 (lít)",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 3,
         "text": "Ghi kết quả thùng 1 có 97.5 lít và thùng 2 có 82.5 lít",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Khi chuyển 15 lít từ thùng 1 sang thùng 2 thì thùng 1 giảm 15 và thùng 2 tăng 15, độ chênh lệch bị co lại 15 × 2 = 30 lít! Vậy hiệu ban đầu giữa hai thùng là 15 × 2 = 30 lít! Thùng 1 ban đầu = (180 + 30) : 2 = 105 lít!",
@@ -1914,17 +2333,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Lấy kho B làm chuẩn: Kho A = B − 200, Kho C = B + 400",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Ba lần số thóc kho B là: 3 600 − 200 + 400 = 3 800 (tấn)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Số thóc kho B là: 3 800 : 3 (không chia hết)",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Kho A hụt 200 thì phải BÙ 200, kho C thừa 400 thì phải BỚT 400! Ba lần số thóc kho B là: 3 600 + 200 − 400 = 3 400 tấn. Hoặc tính kho B: (3 600 + 200 − 400) : 3 = 1 133... Ta kiểm tra lại: 3 600 + 200 − 400 = 3 400. Để chuẩn số nguyên: 3 600 + 200 − 500 = 3 300!",
@@ -1941,17 +2366,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Bớt số lớn đi 150 đơn vị thì bằng số bé, nên hiệu hai số là: 150 × 2 = 300",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Số bé là: (1 450 − 300) : 2 = 575",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 3,
         "text": "Đáp số: 575",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Bớt số lớn đi 150 mà bằng số bé nghĩa là SỐ LỚN HƠN SỐ BÉ ĐÚNG 150 ĐƠN VỊ (Hiệu = 150, không phải nhân đôi)! Số bé = (1 450 − 150) : 2 = 650!",
@@ -1968,17 +2399,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Lớp 4A thêm 30 quyển mới bằng 4B, nên lớp 4B nhiều hơn 4A là 30 quyển (4B là số lớn)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Số vở lớp 4B là: (450 − 30) : 2 = 210 (quyển)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Đáp số: 210 quyển",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Lớp 4B nhiều hơn nên là SỐ LỚN! Tìm số lớn phải lấy (TỔNG + HIỆU) : 2 = (450 + 30) : 2 = 240 quyển! 210 quyển là số vở lớp 4A!",
@@ -1995,22 +2432,30 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Tính nửa chu vi: lấy 140 : 2 = 70 (m)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Chiều dài là: (70 + 20) : 2 = 45 (m)",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 3,
         "text": "Chiều rộng là: 45 − 20 = 25 (m)",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 4,
         "text": "Diện tích: 45 × 25 = 1 125 (m²)",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Đề bài đã cho sẵn NỬA CHU VI LÀ 140m rồi, không được chia 2 nữa! Tổng dài và rộng chính là 140m! Chiều dài = (140 + 20) : 2 = 80m; Chiều rộng = 80 − 20 = 60m. Diện tích = 80 × 60 = 4 800 m²!",
@@ -2027,22 +2472,30 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Tổng số phần bằng nhau là: 3 + 5 = 8 (phần)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Giá trị của 1 phần là: 1 200 : 8 = 150 (con)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Số gà là: 150 × 5 = 750 (con)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 4,
         "text": "Đáp số: 750 con gà",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Nhầm số phần giữa gà và vịt! Tỉ số số gà bằng 3/5 số vịt nghĩa là GÀ CHIẾM 3 PHẦN, VỊT CHIẾM 5 PHẦN. Muốn tìm số gà phải nhân với 3: 150 × 3 = 450 con! 750 con là số vịt!",
@@ -2059,17 +2512,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Tổng số phần bằng nhau: 3 + 4 = 7 (phần)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Chiều rộng là: 280 : 7 × 3 = 120 (m)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Chiều dài là: 280 : 7 × 4 = 160 (m)",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Tổng chiều dài và chiều rộng chỉ là NỬA CHU VI: 280 : 2 = 140m! Phải lấy nửa chu vi chia cho 7 phần: Giá trị 1 phần = 140 : 7 = 20m. Chiều rộng = 20 × 3 = 60m, chiều dài = 20 × 4 = 80m. Diện tích = 60 × 80 = 4 800 m²!",
@@ -2086,17 +2545,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Tổng số phần bằng nhau: 3 + 7 = 10 (phần)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Giá trị 1 phần: 240 : 10 = 24 (tấn)",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 3,
         "text": "Kho thứ nhất: 24 × 7 = 168 (tấn)",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Đề bài cho 'KHO 1 NHIỀU HƠN KHO 2' (đây là HIỆU, không phải Tổng)! Bắt buộc phải tính HIỆU SỐ PHẦN BẰNG NHAU: 7 − 3 = 4 phần! Giá trị 1 phần = 240 : 4 = 60 tấn. Kho 1 = 60 × 7 = 420 tấn!",
@@ -2113,19 +2578,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Sau 3 năm nữa mẹ hơn con: 24 + 3 = 27 (tuổi)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Hiệu số phần: 3 − 1 = 2 (phần)",
         "isBug": false,
-        "isValid": true
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Tuổi con sau 3 năm: 27 : 2 (không chia hết)",
         "isBug": false,
-        "isConsequential": true
+        "isConsequential": true,
+        "isValid": false
       }
     ],
     "bugExplanation": "Hiệu số tuổi của hai mẹ con KHÔNG BAO GIỜ THAY ĐỔI THEO THỜI GIAN! Sau 3 năm nữa mẹ VẪN HƠN CON ĐÚNG 24 TUỔI! Hiệu số phần: 3 − 1 = 2 phần. Tuổi con sau 3 năm: 24 : 2 = 12 tuổi. Tuổi con hiện nay: 12 − 3 = 9 tuổi!",
@@ -2142,22 +2611,30 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Coi thùng 1 là 1 phần thì thùng 2 là 2 phần và thùng 3 là 3 phần",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Tổng số phần bằng nhau là: 1 + 2 + 3 = 6 (phần)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Số dầu thùng 3 là: 1 800 : 6 × 1 = 300 (lít)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 4,
         "text": "Đáp số: 300 lít",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Thùng 3 chiếm 3 phần! Lấy (1 800 : 6) × 1 = 300 lít là số dầu của THÙNG 1. Thùng 3 phải lấy: 300 × 3 = 900 lít!",
@@ -2174,22 +2651,30 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Nam có 3 phần, nữ có 4 phần",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Hiệu số phần: 4 − 3 = 1 (phần)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Thêm 4 nam thì bằng nữ, chứng tỏ 1 phần tương ứng với: 4 : 2 = 2 (bạn)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 4,
         "text": "Số bạn nữ là: 2 × 4 = 8 (bạn)",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Nữ hơn nam đúng 1 phần (4 − 3 = 1 phần). Thêm 4 bạn nam thì nam bằng nữ, nghĩa là 1 PHẦN CHÍNH LÀ 4 BẠN (không phải chia 2)! Số bạn nữ = 4 × 4 = 16 bạn!",
@@ -2206,22 +2691,30 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Số lớn bằng 4 lần số bé cộng 15",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Hiệu số phần là: 4 − 1 = 3 (phần)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "3 lần số bé là: 180 + 15 = 195",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 4,
         "text": "Số bé là: 195 : 3 = 65",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Số lớn = 4 phần + 15. Hiệu = (4 phần + 15) − 1 phần = 3 phần + 15 = 180. Do đó 3 phần bằng: 180 − 15 = 165 (phải LÀM PHÉP TRỪ số dư)! Số bé = 165 : 3 = 55!",
@@ -2238,17 +2731,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Tổng số dầu hai thùng không đổi là 250 lít",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Lúc sau thùng A có: 250 : (2 + 3) × 2 = 100 (lít)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Ban đầu thùng A có: 100 − 25 = 75 (lít)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "Thùng A đã CHUYỂN ĐI 25 lít thì mới còn lại 100 lít! Muốn tìm thùng A ban đầu, phải CỘNG TRẢ LẠI 25 lít: 100 + 25 = 125 lít!",
@@ -2265,17 +2764,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Tổng số phần: 3 + 5 = 8 (phần)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Giá trị 1 phần: 480 : 8 = 60 (quyển)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Số truyện tranh là: 60 × 5 = 300 (quyển)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "Truyện tranh bằng 3/5 SGK nên truyện tranh tương ứng 3 PHẦN. Tìm truyện tranh phải lấy: 60 × 3 = 180 quyển! 300 quyển là số SGK!",
@@ -2292,22 +2797,30 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Quy đồng số trâu không đổi: 2/5 số bò ban đầu = 2/4 số bò lúc sau",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Bò ban đầu là 5 phần, bò lúc sau là 4 phần",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "1 phần tương ứng 15 con bò",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 4,
         "text": "Số trâu là: 15 × 5 = 75 (con)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "Số trâu tương ứng 2 PHẦN! Số trâu là: 15 × 2 = 30 con! 75 con là số bò ban đầu!",
@@ -2324,17 +2837,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Nhận xét quan hệ: 1 m = 10 dm",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Do đó 72 m² = 72 × 10 = 720 dm²",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Đáp số: 720 dm²",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Hai đơn vị đo diện tích liền kề gấp kém nhau 100 LẦN, không phải 10 lần! 1 m² = 100 dm². Phải lấy 72 × 100 = 7 200 dm²!",
@@ -2351,17 +2870,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "15 m² = 1 500 dm²",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Viết ghép hai số: 15 m² 8 dm² = 158 dm²",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Đáp số: 158 dm²",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "1 500 dm² + 8 dm² = 1 508 dm²! Viết 158 dm² là bị mất hàng chục của phần đề-xi-mét vuông và bé hơn cả 15 m²!",
@@ -2378,17 +2903,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Xác định các kích thước: Đáy a = 36m, Chiều cao h = 18m, Cạnh bên b = 24m",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Áp dụng công thức: Diện tích = Đáy × Cạnh bên = 36 × 24 = 864 (m²)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Đáp số: 864 m²",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Diện tích hình bình hành = ĐÁY × CHIỀU CAO (cùng đơn vị đo), KHÔNG ĐƯỢC NHÂN VỚI CẠNH BÊN! Diện tích chuẩn = 36 × 18 = 648 m²!",
@@ -2405,17 +2936,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Xác định độ dài hai đường chéo: m = 40cm, n = 30cm",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Diện tích hình thoi = Tích độ dài hai đường chéo = 40 × 30 = 1 200 (cm²)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Đáp số: 1 200 cm²",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Quên chia 2 trong công thức hình thoi! Diện tích hình thoi = (m × n) : 2. Lấy (40 × 30) : 2 = 1 200 : 2 = 600 cm²!",
@@ -2432,22 +2969,30 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Diện tích căn phòng: 8 × 6 = 48 (m²)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Diện tích 1 viên gạch: 4 × 4 = 16 (dm²)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Số viên gạch cần mua: 48 : 16 = 3 (viên)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 4,
         "text": "Đáp số: 3 viên gạch",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Khác đơn vị đo: phòng đo bằng m², gạch đo bằng dm²! Căn phòng to mà chỉ lát 3 viên gạch là hoàn toàn phi thực tế! Phải đổi: 48 m² = 4 800 dm². Số gạch = 4 800 : 16 = 300 viên!",
@@ -2464,17 +3009,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Công thức diện tích hình vuông: S = a × a",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Vì cạnh a tăng gấp 3 lần nên diện tích tăng gấp 3 lần",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Kết luận diện tích tăng gấp 3 lần",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Diện tích = Cạnh × Cạnh! Khi cạnh tăng 3 lần thì diện tích mới = (a × 3) × (a × 3) = (a × a) × (3 × 3) = S × 9! Diện tích phải tăng gấp 9 LẦN!",
@@ -2491,17 +3042,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "4 tấn = 4 000 kg",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "5 tạ = 50 kg",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Cộng lại: 4 000 + 50 + 60 = 4 110 kg",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "1 tạ = 100 kg, không phải 50 kg! 5 tạ = 500 kg. Do đó 4 tấn 5 tạ 60 kg = 4 000 + 500 + 60 = 4 560 kg!",
@@ -2518,17 +3075,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Năm 2000 là năm cuối cùng của thế kỷ XX (20)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Năm 2001 cũng thuộc thế kỷ XX vì chỉ hơn 1 năm",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Kết luận cả hai năm đều thuộc thế kỷ XX",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Thế kỷ XX kết thúc vào ngày 31/12/2000. Từ ngày 01/01/2001 đã chính thức bước sang THẾ KỶ XXI (thế kỷ 21)! Năm 2000 thuộc thế kỷ 20, còn năm 2001 thuộc thế kỷ 21!",
@@ -2545,17 +3108,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "1 km = 1 000 m nên 1 km² = 1 000 000 m²",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "5 km² = 5 000 000 m²",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Ghép vào: 5 000 000 + 450 = 5 004 500 m²",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "5 000 000 + 450 = 5 000 450 m²! Viết 5 004 500 m² là bị dư một số 0 ở hàng nghìn!",
@@ -2572,17 +3141,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Chiều dài hình chữ nhật là: 360 : 12 = 30 (cm)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Chu vi hình chữ nhật là: 30 + 12 = 42 (cm)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Đáp số: 42 cm",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "30 + 12 = 42 cm mới chỉ là NỬA CHU VI! Chu vi hình chữ nhật = (Dài + Rộng) × 2 = (30 + 12) × 2 = 84 cm!",
@@ -2599,17 +3174,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Cộng các tử số với nhau: 5 + 7 = 12",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Cộng các mẫu số với nhau: 12 + 18 = 30",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Được phân số 12/30, rút gọn thành 2/5",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Sai lầm nghiêm trọng trong phép cộng phân số! TUYỆT ĐỐI KHÔNG ĐƯỢC CỘNG MẪU VỚI MẪU! Phải QUY ĐỒNG MẪU SỐ (mẫu số chung nhỏ nhất là 36): 5/12 = 15/36; 7/18 = 14/36. Tổng = 15/36 + 14/36 = 29/36!",
@@ -2626,17 +3207,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Lấy tử trừ tử: 7 − 5 = 2; lấy mẫu trừ mẫu: 12 − 8 = 4",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Được phân số 2/4 = 1/2",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 3,
         "text": "Kết luận: 1/2",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Không được lấy mẫu trừ cho mẫu! Phải quy đồng mẫu số chung là 24: 7/8 = 21/24; 5/12 = 10/24. Hiệu = (21 − 10)/24 = 11/24!",
@@ -2653,17 +3240,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Chia tử số cho 8: 72 : 8 = 9",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Chia mẫu số cho 9: 108 : 9 = 12",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Được phân số 9/12, rút gọn tiếp thành 3/4",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Khi rút gọn phân số, bắt buộc phải chia CẢ TỬ VÀ MẪU CHO CÙNG MỘT SỐ TỰ NHIÊN LỚN HƠN 1! Chia cả tử và mẫu cho 36: 72 : 36 = 2; 108 : 36 = 3 → Phân số tối giản là 2/3!",
@@ -2680,17 +3273,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Phần bù tới 1 của 2 023/2 024 là: 1 − 2 023/2 024 = 1/2 024",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Phần bù tới 1 của 2 024/2 025 là: 1 − 2 024/2 025 = 1/2 025",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Vì 1/2 024 > 1/2 025 nên kết luận 2 023/2 024 > 2 024/2 025",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "Phần bù CÀNG LỚN THÌ PHÂN SỐ CÀNG BÉ! Vì phần bù 1/2 024 lớn hơn 1/2 025, nên phân số 2 023/2 024 phải NHỎ HƠN 2 024/2 025!",
@@ -2707,17 +3306,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Nhân trực tiếp: tử số = 15 × 24 = 360, mẫu số = 16 × 25 = 400",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Rút gọn 360/400 bằng cách chia cho 40: 360 : 40 = 9; 400 : 40 = 10",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Nếu rút gọn chéo từ đầu: 15 và 25 chia 5 được 3 và 5; 24 và 16 chia 8 được 3 và 2. Tích = (3 × 3)/(2 × 5) = 8/10",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "3 × 3 = 9, không phải 8! Kết quả chuẩn phải là (3 × 3)/(2 × 5) = 9/10!",
@@ -2734,17 +3339,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Chuyển phép chia thành phép nhân với phân số đảo ngược",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Đảo ngược phân số thứ nhất thành 14/9 và giữ nguyên phân số thứ hai: 14/9 × 6/35",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Rút gọn chéo và nhân ra kết quả 4/15",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Chia phân số: Lấy PHÂN SỐ THỨ NHẤT nhân với PHÂN SỐ THỨ HAI ĐẢO NGƯỢC: 9/14 × 35/6 = (3 × 5)/(2 × 2) = 15/4! Không được đảo ngược phân số bị chia!",
@@ -2761,17 +3372,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Thực hiện phép trừ trước từ trái sang phải: 3 − 5/7 = 21/7 − 5/7 = 16/7",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Lấy 16/7 nhân với 14/15: (16 × 2)/15 = 32/15",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 3,
         "text": "Kết luận giá trị biểu thức là 32/15",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Trong biểu thức có phép trừ và phép nhân, phải thực hiện PHÉP NHÂN TRƯỚC: 5/7 × 14/15 = 2/3! Sau đó mới lấy 3 − 2/3 = 9/3 − 2/3 = 7/3!",
@@ -2788,17 +3405,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Chọn mẫu số chung là 3 × 4 × 6 = 72",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Hoặc chọn mẫu số chung nhỏ nhất là 12 (vì 12 chia hết cho cả 3, 4, 6)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Quy đồng với mẫu số 12: 2/3 = 8/12; 3/4 = 9/12; 5/6 = 15/12 (nhân tử số với 3 thay vì nhân với 2)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "Mẫu số 6 muốn thành 12 thì nhân với 2 (12 : 6 = 2)! Phải nhân cả tử và mẫu của 5/6 với 2: (5 × 2)/(6 × 2) = 10/12, không phải 15/12!",
@@ -2815,17 +3438,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Chuyển phép tính về dạng nhân phân số: 5/18 × 6/1",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Nhân cả tử số và mẫu số với 6: (5 × 6)/(18 × 6) = 30/108",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Rút gọn phân số 30/108 = 5/18 (thấy không đổi)",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Nhân phân số với một số tự nhiên: chỉ lấy TỬ SỐ NHÂN VỚI SỐ ĐÓ và giữ nguyên mẫu số (hoặc rút gọn mẫu với số tự nhiên): (5 × 6)/18 = 5/3! Nhân cả tử và mẫu là tạo phân số bằng nó!",
@@ -2842,17 +3471,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Quy ước viết số tự nhiên 4 dưới dạng phân số: 8/15 : 4/1",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Nhân số tự nhiên 4 vào tử số: (8 × 4)/15 = 32/15",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Kết luận kết quả là 32/15",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Chia phân số cho số tự nhiên: Lấy TỬ SỐ CHIA CHO SỐ ĐÓ (nếu tử chia hết) hoặc NHÂN SỐ ĐÓ VÀO MẪU SỐ: 8/15 : 4 = (8 : 4)/15 = 2/15! Nhân vào tử số là làm phép nhân gấp 4 lần!",
@@ -2869,17 +3504,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Buổi sáng bán được: 1 250 × 2/5 = 500 (kg)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Buổi chiều bán được: 1 250 × 3/4 = 937.5 (kg) (lấy phân số nhân với tổng ban đầu)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Cộng hai buổi ra số gạo lớn hơn 1 250 kg",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Bẫy kinh điển: 3/4 của SỐ GẠO CÒN LẠI, không phải của tổng số gạo ban đầu! Số gạo còn lại sau buổi sáng là: 1 250 − 500 = 750 kg. Buổi chiều bán: 750 × 3/4 = không chia hết... Ta sửa: 1 200 kg: sáng 2/5 là 480 kg, còn 720 kg; chiều 3/4 của 720 là 540 kg; còn lại 720 − 540 = 180 kg!",
@@ -2896,22 +3537,30 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Số học sinh giỏi là: 40 × 3/8 = 15 (học sinh)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Số học sinh còn lại sau khi trừ học sinh giỏi: 40 − 15 = 25 (học sinh)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Số học sinh khá là: 40 × 4/5 = 32 (học sinh) (nhân với cả lớp)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 4,
         "text": "Thấy 15 + 32 = 47 > 40 học sinh",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Học sinh khá chiếm 4/5 số học sinh CÒN LẠI (tức 25 bạn), không phải của cả lớp 40 bạn! Số học sinh khá: 25 × 4/5 = 20 học sinh. Số học sinh trung bình: 25 − 20 = 5 học sinh!",
@@ -2928,17 +3577,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Lấy số gạo trong kho trừ thẳng cho phân số: 1 500 − 1/3",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Tính ra 1 499 và 2/3 kg",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 3,
         "text": "Ghi đáp số: Trong kho còn lại 1 499 và 2/3 kg",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "1/3 là TỈ LỆ PHÂN SỐ, không phải 1/3 kg! Muốn tìm số gạo xuất bán, phải tính 1/3 của 1 500 kg: 1 500 × 1/3 = 500 kg! Số gạo còn lại là: 1 500 − 500 = 1 000 kg!",
@@ -2955,17 +3610,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Muốn tìm số sách thư viện, ta lấy: 750 × 3/5",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Tính: (750 : 5) × 3 = 450 (cuốn)",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 3,
         "text": "Kết luận thư viện có 450 cuốn sách",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "750 cuốn chỉ là 3 phần trong 5 phần! Cả thư viện phải nhiều hơn 750 cuốn. Muốn tìm một số khi biết giá trị phân số của nó, ta phải LẤY SỐ ĐÓ CHIA CHO PHÂN SỐ: 750 : 3/5 = (750 : 3) × 5 = 1 250 cuốn!",
@@ -2982,17 +3643,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Diện tích mảnh đất là: 80 × 50 = 4 000 (m²)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Phân số chỉ diện tích phần đất còn lại là: 1 − 2/5 = 3/5",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Diện tích phần đất còn lại là: 4 000 : 3 × 5 = 6 666 (m²)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "Muốn tìm 3/5 của 4 000 m², ta phải lấy 4 000 NHÂN VỚI 3/5: (4 000 : 5) × 3 = 2 400 m²! Chia 3 nhân 5 làm diện tích còn lại lớn hơn cả thửa đất ban đầu!",
@@ -3009,22 +3676,30 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Lần 1 cắt: 90 × 1/3 = 30 (m)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Số mét vải còn lại sau lần 1: 90 − 30 = 60 (m)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Lần 2 cắt: 90 × 2/3 = 60 (m)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 4,
         "text": "Kết luận cuộn vải hết sạch: 60 − 60 = 0 (m)",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Lần thứ hai cắt 2/3 của SỐ VẢI CÒN LẠI (tức 60m), không phải 90m! Lần 2 cắt: 60 × 2/3 = 40m. Sau hai lần cuộn vải còn: 60 − 40 = 20m!",
@@ -3041,17 +3716,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Bách góp: 120 000 × 1/3 = 40 000 (đồng)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Nam góp: 120 000 × 2/5 = 48 000 (đồng)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Minh góp số tiền là: 120 000 − 40 000 + 48 000 = 128 000 (đồng)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "Sai thứ tự dấu ngoặc khi trừ! Minh góp phần còn lại thì phải LẤY TỔNG TRỪ ĐI (BÁCH + NAM): 120 000 − (40 000 + 48 000) = 120 000 − 88 000 = 32 000 đồng!",
@@ -3068,17 +3749,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Trong 1 giờ vòi 1 chảy: 2 400 × 1/3 = 800 (lít)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Trong 1 giờ vòi 2 chảy: 2 400 × 1/4 = 600 (lít)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Cả hai vòi chảy trong 1 giờ: 800 − 600 = 200 (lít)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "Cả hai vòi CÙNG CHẢY vào bể thì phải làm PHÉP CỘNG: 800 + 600 = 1 400 lít nước! Làm phép trừ là một vòi chảy vào và một vòi tháo ra!",
@@ -3095,17 +3782,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Đổi: 3 tấn 6 tạ = 3 600 kg",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Số gạo đã bán là: 3 600 × 2/9 = 800 (kg)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Đáp số: Trong kho còn lại 800 kg gạo",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "800 kg là số gạo ĐÃ BÁN! Đề bài hỏi số gạo CÒN LẠI: 3 600 − 800 = 2 800 kg gạo!",
@@ -3122,17 +3815,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "16 bộ gấp 8 bộ số lần là: 16 : 8 = 2 (lần)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "May 16 bộ cần số mét vải là: 20 : 2 = 10 (m)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Đáp số: 10m vải",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "May nhiều bộ quần áo hơn thì số vải phải TĂNG LÊN (gấp 2 lần): 20 × 2 = 40 mét vải! Làm phép chia 2 khiến số vải bị giảm một nửa!",
@@ -3149,17 +3848,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Số khoảng cách trên một bên đường là: 1 200 : 15 = 80 (khoảng)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Vì hai đầu đều có cây nên số cây một bên là: 80 cây",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Số cây cả hai bên đường là: 80 × 2 = 160 (cây)",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Bẫy trồng cây ở cả hai đầu đường: Số cây = Số khoảng cách + 1! 80 khoảng cách thì có 80 + 1 = 81 cây ở một bên đường. Cả hai bên đường có: 81 × 2 = 162 cây!",
@@ -3176,17 +3881,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Chu vi bờ hồ là: (150 + 90) × 2 = 480 (m)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Số khoảng cách là: 480 : 6 = 80 (khoảng)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Vì trồng cây nên cộng thêm 1: 80 + 1 = 81 (cây)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "Đường KHÉP KÍN (vòng tròn, chu vi bờ hồ): SỐ CÂY BẰNG ĐÚNG SỐ KHOẢNG CÁCH (cây đầu tiên trùng với cây kết thúc, không cộng 1)! Số cây cần trồng là: 480 : 6 = 80 cây!",
@@ -3203,17 +3914,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Số ngày giảm đi số lần là: 8 : 4 = 2 (lần)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Vì số ngày giảm 2 lần nên số người cũng giảm 2 lần: 15 : 2 = 7.5 (người)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Ghi kết quả cần 7.5 người (hoặc làm tròn thành 8 người)",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Đây là bài toán TỈ LỆ NGHỊCH! Muốn rút ngắn thời gian làm việc (giảm 2 lần) thì PHẢI TĂNG SỐ NGƯỜI LÊN 2 LẦN: 15 × 2 = 30 người!",
@@ -3230,17 +3947,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Số đoạn gỗ cắt được: 12 : 2 = 6 (đoạn)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Cắt 6 đoạn cần 6 lần cưa",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Thời gian cưa: 6 × 6 = 36 phút; nghỉ: 6 × 3 = 18 phút. Tổng = 54 phút",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Nhát cưa cuối cùng chia đôi phần gỗ còn lại thành 2 đoạn cuối cùng! Do đó cưa 6 đoạn chỉ cần 6 − 1 = 5 LẦN CƯA! Và chỉ nghỉ giữa các lần cưa 5 − 1 = 4 lần. Tổng thời gian = 5 × 6 + 4 × 3 = 30 + 12 = 42 phút!",
@@ -3257,22 +3980,30 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Từ trang 1 đến trang 9 có: (9 − 1 + 1) × 1 = 9 (chữ số)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Từ trang 10 đến trang 99 có: (99 − 10 + 1) × 2 = 180 (chữ số)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Từ trang 100 đến trang 125 có: (125 − 100) × 3 = 75 (chữ số)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 4,
         "text": "Tổng số chữ số là: 9 + 180 + 75 = 264 chữ số",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Quên cộng 1 khi tính số số hạng! Từ 100 đến 125 có: (125 − 100 + 1) = 26 trang có 3 chữ số! Số chữ số là: 26 × 3 = 78 chữ số. Tổng số chữ số đúng: 9 + 180 + 78 = 267 chữ số!",
@@ -3289,17 +4020,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Đếm số tiếng chuông: từ tiếng 1 đến tiếng 5 có 5 tiếng chuông",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Thời gian cho mỗi tiếng chuông là: 12 : 5 = 2.4 (giây)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Thời gian cho 9 tiếng chuông: 2.4 × 9 = 21.6 (giây)",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Thời gian trôi qua là thời gian GIỮA CÁC KHOẢNG NGHỈ của tiếng chuông! Từ tiếng 1 đến tiếng 5 có 5 − 1 = 4 khoảng thời gian. 1 khoảng = 12 : 4 = 3 giây. Từ tiếng 1 đến tiếng 9 có 9 − 1 = 8 khoảng: 8 × 3 = 24 giây!",
@@ -3316,17 +4053,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Từ tầng 1 lên tầng 3 là 3 tầng lầu: 36 : 3 = 12 giây/tầng",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Từ tầng 1 lên tầng 6 là 6 tầng: 12 × 6 = 72 (giây)",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 3,
         "text": "Đáp số: 72 giây",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Ở tầng 1 thì chưa leo nhịp cầu thang nào! Từ tầng 1 lên tầng 3 chỉ leo 3 − 1 = 2 nhịp cầu thang. 1 nhịp mất: 36 : 2 = 18 giây. Từ tầng 1 lên tầng 6 leo 6 − 1 = 5 nhịp cầu thang: 5 × 18 = 90 giây!",
@@ -3343,22 +4086,30 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Đổi: 3 tấn 5 tạ = 35 tạ; 4 tấn 2 tạ = 42 tạ",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Tổng số tạ gạo: 4 × 35 + 3 × 42 = 140 + 126 = 266 (tạ)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Tổng số xe: 4 + 3 = 7 (xe)",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 4,
         "text": "Trung bình mỗi xe chở: 266 : 2 = 133 (tạ) (chia cho 2 loại xe)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       }
     ],
     "bugExplanation": "Đoàn có 7 XE thì phải CHIA CHO TỔNG 7 XE: 266 : 7 = 38 tạ gạo/xe! Không được chia cho 2 loại xe!",
@@ -3375,17 +4126,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Khi tàu đi qua cầu, mũi tàu vào cầu đến khi đuôi tàu ra khỏi cầu thì quãng đường tàu đi là: 450m (bằng chiều dài cây cầu)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Vận tốc của tàu là: 450 : 30 = 15 (m/giây)",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       },
       {
         "num": 3,
         "text": "Đáp số: 15 m/s",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Đoàn tàu đi qua cầu hoàn toàn thì QUÃNG ĐƯỜNG PHẢI BẰNG: CHIỀU DÀI CẦU + CHIỀU DÀI ĐOÀN TÀU = 450 + 150 = 600m! Vận tốc đúng = 600 : 30 = 20 m/giây!",
@@ -3402,17 +4159,23 @@ export const BUG_CASES = [
       {
         "num": 1,
         "text": "Lấy 1010 chia cho 100 được 10 dư 10",
-        "isBug": false
+        "isBug": false,
+        "isValid": true,
+        "isConsequential": false
       },
       {
         "num": 2,
         "text": "Vì được thương là 10 nên kết luận năm 1010 thuộc thế kỷ 10 (X)",
-        "isBug": true
+        "isBug": true,
+        "isValid": false,
+        "isConsequential": false
       },
       {
         "num": 3,
         "text": "Đáp số: Thế kỷ X",
-        "isBug": false
+        "isBug": false,
+        "isValid": false,
+        "isConsequential": true
       }
     ],
     "bugExplanation": "Năm 1010 có phần dư 10 năm, nghĩa là thế kỷ thứ 10 đã trôi qua và ĐÃ BƯỚC SANG THẾ KỶ THỨ 11 (XI)! Thế kỷ X kết thúc vào năm 1000. Năm 1010 thuộc Thế kỷ XI!",

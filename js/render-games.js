@@ -197,8 +197,8 @@ export function renderGamesHub({ state, appRoot } = {}) {
     <section class="hero" id="games">
       <div>
         <div class="eyebrow">CỬU CUNG TRÍ TUỆ &amp; THẬP TOÀN OLYMPIC · BÁCH LEARNING LAB</div>
-        <h1>Vừa chơi, vừa nghĩ,<br><em>vững vàng phản xạ &amp; IQ.</em></h1>
-        <p>5 thử thách toán học được thiết kế riêng (đấu nhẩm 90s, Bar Model, bắt lỗi sai, cân bằng và Make 24) cùng 5 trò khai phóng Não bộ IQ (Không gian 3D, Lưới Logic, Kẹt xe chiến thuật, Trí nhớ siêu phàm &amp; Tangram Singapore GEP).</p>
+        <h1>Vừa chơi, vừa nghĩ,<br><em>vững vàng phản xạ &amp; kỹ năng tư duy.</em></h1>
+        <p>5 thử thách toán học được thiết kế riêng (đấu nhẩm 90s, Bar Model, bắt lỗi sai, cân bằng và Make 24) cùng 5 trò rèn luyện tư duy không gian &amp; logic (Khối 3D, Lưới Logic, Kẹt xe chiến thuật, Trí nhớ chuỗi &amp; Tangram hình học).</p>
       </div>
       <div class="hero-note">
         <div class="eyebrow">BẢNG VÀNG THÀNH TÍCH</div>
@@ -209,19 +209,19 @@ export function renderGamesHub({ state, appRoot } = {}) {
       </div>
     </section>
 
-    <!-- BẢNG PHÂN TÍCH TĂNG TRƯỞNG TRÍ TUỆ (CHC COGNITIVE PILLARS DASHBOARD) -->
+    <!-- BẢNG THEO DÕI TIẾN BỘ 5 KỸ NĂNG TƯ DUY (SKILL MASTERY PROGRESS) -->
     <div class="chc-dashboard">
       <div class="chc-header-row">
         <div>
-          <div class="eyebrow" style="color:var(--primary); font-weight:800">MÔ HÌNH NHẬN THỨC CATTELL-HORN-CARROLL (CHC)</div>
-          <h2 style="margin:4px 0; font-size:1.35rem; font-weight:900">5 Trụ Cột Trí Tuệ &amp; Chỉ Số Năng Lực Của Bách</h2>
-          <p style="margin:0; font-size:0.88rem; color:var(--muted)">Đánh giá toàn diện dựa trên thành tích 10 bộ trò chơi tư duy.</p>
+          <div class="eyebrow" style="color:var(--primary); font-weight:800">THƯỚC ĐO TIẾN BỘ KỸ NĂNG HỌC TẬP</div>
+          <h2 style="margin:4px 0; font-size:1.35rem; font-weight:900">Bảng Tiến Độ Làm Chủ Kỹ Năng Của Bách</h2>
+          <p style="margin:0; font-size:0.88rem; color:var(--muted)">Đánh giá sự tiến bộ thực chất qua 10 hoạt động rèn luyện tư duy &amp; Toán học.</p>
         </div>
-        <div class="chc-iq-badge">
-          <span>🧠</span>
+        <div class="chc-iq-badge" style="background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%)">
+          <span>📈</span>
           <div>
-            <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; opacity:0.85">Năng lực tổng hợp</div>
-            <div class="chc-iq-number">Chỉ số ${chcAnalysis.estimatedIqIndex} <span style="font-size:0.85rem; font-weight:600; color:#ffffff">(Điểm: ${chcAnalysis.averageScore}/100)</span></div>
+            <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; opacity:0.85">Tiến độ tổng hợp</div>
+            <div class="chc-iq-number">${chcAnalysis.averageScore}/100 <span style="font-size:0.85rem; font-weight:600; color:#e0f2fe">(${chcAnalysis.level?.title || "Đang rèn luyện"})</span></div>
           </div>
         </div>
       </div>
@@ -235,7 +235,7 @@ export function renderGamesHub({ state, appRoot } = {}) {
         <div class="smart-rec-content">
           <span class="smart-rec-icon">${smartRec.icon}</span>
           <div>
-            <div class="eyebrow" style="color:#166534; font-weight:800">🎯 GỢI Ý THỬ THÁCH HÔM NAY CHO BÁCH (ZONE OF PROXIMAL DEVELOPMENT)</div>
+            <div class="eyebrow" style="color:#166534; font-weight:800">🎯 GỢI Ý THỬ THÁCH HÔM NAY CHO BÁCH (VÙNG PHÁT TRIỂN GẦN NHẤT)</div>
             <h4 style="margin:2px 0 4px; font-size:1.1rem; color:#14532d">${smartRec.title} · ${smartRec.gameName}</h4>
             <p style="margin:0; font-size:0.86rem; color:#166534">${smartRec.reason}</p>
           </div>

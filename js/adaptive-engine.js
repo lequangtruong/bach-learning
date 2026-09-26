@@ -4,60 +4,61 @@
 export const CHC_PILLARS = {
   fluid: {
     id: "fluid",
-    name: "Suy Luận Logic & Phản Xạ Mới",
-    code: "Gf",
-    icon: "🧠",
+    name: "Tư Duy Logic & Loại Trừ",
+    code: "Logic",
+    icon: "🧩",
     color: "#8b5cf6",
     bg: "#ede9fe",
     border: "#c4b5fd",
-    description: "Khả năng giải quyết vấn đề mới lạ, tìm quy luật và suy luận loại trừ.",
+    description: "Khả năng phân tích bài toán, tìm quy luật và suy luận loại trừ.",
     games: ["logicGrid", "balanceScale", "rushHour"]
   },
   spatial: {
     id: "spatial",
-    name: "Không Gian Thị Giác & Xoay Khối",
-    code: "Gv",
+    name: "Tư Duy Không Gian & Hình Học",
+    code: "Không gian",
     icon: "🧊",
     color: "#3b82f6",
     bg: "#eff6ff",
     border: "#93c5fd",
-    description: "Khả năng tưởng tượng hình chiếu, xoay vật thể 3D trong tâm trí và ghép hình học.",
+    description: "Khả năng tưởng tượng hình chiếu, xoay vật thể 3D và ghép hình học.",
     games: ["spatial3D", "rushHour", "tangram"]
   },
   speed: {
     id: "speed",
-    name: "Tốc Độ Xử Lý & Phản Xạ",
-    code: "Gs",
+    name: "Tốc Độ Tính Nhẩm & Phản Xạ",
+    code: "Tính nhẩm",
     icon: "⚡",
     color: "#ef4444",
     bg: "#fef2f2",
     border: "#fca5a5",
-    description: "Tốc độ xử lý thông tin dưới áp lực thời gian với độ chính xác tuyệt đối.",
+    description: "Khả năng tính toán nhanh nhẹn và áp dụng mẹo tính linh hoạt.",
     games: ["speedMath", "chimpMemory"]
   },
   memory: {
     id: "memory",
-    name: "Trí Nhớ Làm Việc (Working Memory)",
-    code: "Gwm",
-    icon: "💭",
+    name: "Ghi Nhớ & Tập Trung Chú Ý",
+    code: "Tập trung",
+    icon: "🎯",
     color: "#06b6d4",
     bg: "#ecfeff",
     border: "#a5f3fc",
-    description: "Lưu giữ và thao tác thông tin tạm thời trong não bộ để giải quyết bài toán phức tạp.",
+    description: "Khả năng ghi nhớ chuỗi thông tin và duy trì sự tập trung bền bỉ.",
     games: ["chimpMemory", "speedMath"]
   },
   math: {
     id: "math",
-    name: "Tư Duy Đại Số & Mô Hình Hóa",
-    code: "Gc",
+    name: "Mô Hình Hóa & Giải Toán Lớp 4",
+    code: "Toán học",
     icon: "📐",
     color: "#10b981",
     bg: "#ecfdf5",
     border: "#6ee7b7",
-    description: "Chuyển đổi bài toán lời văn thành sơ đồ đoạn thẳng, phương trình cân bằng và biểu thức.",
+    description: "Chuyển đổi bài toán lời văn thành sơ đồ đoạn thẳng, cân bằng và biểu thức.",
     games: ["barModel", "spotTheBug", "balanceScale", "make24"]
   }
 };
+export const SKILL_PILLARS = CHC_PILLARS;
 
 /**
  * Lấy hoặc khởi tạo hồ sơ tương thích của Bách
@@ -199,9 +200,9 @@ export function calculateChcPillars(records = {}) {
   const gcRaw = (barCount * 1.5) + (bugCount * 1.2) + (balanceCount * 1.2) + (make24Count * 1.5);
   const mathScore = Math.min(100, Math.round(gcRaw));
 
-  // Điểm IQ Tổng Hợp ước tính (Baseline 100, Olympic ceiling 150)
+  // Điểm tiến bộ kỹ năng trung bình (Thang điểm 100)
   const averagePillar = (fluidScore + spatialScore + speedScore + memoryScore + mathScore) / 5;
-  const estimatedIqIndex = Math.round(100 + (averagePillar * 0.45));
+  const masteryScore = Math.round(averagePillar);
 
   return {
     pillars: {
@@ -211,17 +212,18 @@ export function calculateChcPillars(records = {}) {
       memory: { score: memoryScore, level: getPillarLevel(memoryScore) },
       math: { score: mathScore, level: getPillarLevel(mathScore) }
     },
-    averageScore: Math.round(averagePillar),
-    estimatedIqIndex
+    averageScore: masteryScore,
+    masteryScore,
+    level: getPillarLevel(masteryScore)
   };
 }
 
 function getPillarLevel(score) {
-  if (score >= 80) return { title: "Olympic Thượng Thừa", badge: "👑", color: "#dc2626" };
-  if (score >= 60) return { title: "Xuất Sắc (GEP)", badge: "🌟", color: "#ea580c" };
-  if (score >= 40) return { title: "Nâng Cao", badge: "⭐", color: "#d97706" };
-  if (score >= 20) return { title: "Khá", badge: "🔷", color: "#0284c7" };
-  return { title: "Khởi Động", badge: "🌱", color: "#16a34a" };
+  if (score >= 80) return { title: "Thành Thạo Xuất Sắc", badge: "👑", color: "#16a34a" };
+  if (score >= 60) return { title: "Làm Chủ Vững Vàng", badge: "🌟", color: "#0284c7" };
+  if (score >= 40) return { title: "Tiến Bộ Rõ Rệt", badge: "⭐", color: "#d97706" };
+  if (score >= 20) return { title: "Đang Rèn Luyện", badge: "🔷", color: "#64748b" };
+  return { title: "Mới Khởi Động", badge: "🌱", color: "#94a3b8" };
 }
 
 /**
