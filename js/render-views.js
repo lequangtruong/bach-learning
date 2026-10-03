@@ -195,6 +195,29 @@ export function createRenderViews(dependencies = {}) {
     return `<div class="progress-track"><div class="progress-fill" style="width:${value}%"></div></div>`;
   }
 
+  // Trạng thái tick của từng buổi học: Bách tự tick (bach) và phụ huynh xác nhận (parent)
+  function lessonCheck(key) {
+    return state?.db?.lessonChecks?.[key] || {};
+  }
+
+  // Thống kê tiến độ 12 buổi (Toán + Tiếng Việt) của một tuần
+  function weekCheckStats(weekId, week) {
+    let total = 0, bach = 0, parent = 0, done = 0;
+    const rows = [["math", "Toán", week?.math], ["vietnamese", "Tiếng Việt", week?.vietnamese]].map(([subject, label, item]) => {
+      const days = (item?.dailyPlan || []).map((day, index) => {
+        const key = `${weekId}-${subject}-${index + 1}`;
+        const check = lessonCheck(key);
+        total += 1;
+        if (check.bach) bach += 1;
+        if (check.parent) parent += 1;
+        if (check.bach || check.parent) done += 1;
+        return { key, day: day.day, bach: Boolean(check.bach), parent: Boolean(check.parent) };
+      });
+      return { subject, label, days };
+    });
+    return { total, bach, parent, done, percent: total ? Math.round(done / total * 100) : 0, rows };
+  }
+
   function phaseChips() {
     const phases = curriculum?.phases || [];
     return phases.map(p => `
@@ -549,6 +572,7 @@ export function createRenderViews(dependencies = {}) {
   function weekCard(w) {
     const status = state?.db?.progress?.[w.id] || {};
     const open = state?.openWeek === w.id || state?.openWeek === "all";
+    const stats = weekCheckStats(w.id, w);
     return `
     <article class="week-card">
       <div class="week-main">
@@ -559,8 +583,19 @@ export function createRenderViews(dependencies = {}) {
         </button>
         <button class="check-button ${status.week ? "done" : ""}" data-done="${w.id}" title="Đánh dấu tuần hoàn thành">${status.week ? "✓" : ""}</button>
       </div>
+      ${stats.total ? `<div class="week-progress-line" data-week-progress="${w.id}">
+        <span>📚 Bách đã hiểu <b>${stats.bach}/${stats.total}</b> buổi · 👨‍👩‍👦 Phụ huynh xác nhận <b>${stats.parent}/${stats.total}</b>${status.parentOk ? " · ✅ Tuần đã chốt" : ""}</span>
+        ${progressBar(stats.percent)}
+      </div>` : ""}
       ${open ? `
         <div class="week-details">
+          <div class="detail-block parent-confirm-block" style="grid-column: 1 / -1;" data-parent-confirm="${w.id}">
+            <h4>Phụ huynh xác nhận Bách đã ổn · Tuần ${w.number}</h4>
+            ${stats.rows.map(row => `<div class="parent-confirm-row"><b>${row.label}</b>${row.days.map(d => `<button type="button" class="parent-ok-btn ${d.parent ? "done" : ""}" data-parent-ok="${d.key}" aria-pressed="${d.parent}" title="${d.bach ? "Bách đã tự tick hiểu bài" : "Bách chưa tự tick"}">${d.bach ? "🙋 " : ""}${escapeHtml(d.day)}${d.parent ? " ✓" : ""}</button>`).join("")}</div>`).join("")}
+            <div class="parent-confirm-actions">
+              <button type="button" class="small-button parent-week-ok-btn ${status.parentOk ? "done" : ""}" data-parent-week-ok="${w.id}" aria-pressed="${Boolean(status.parentOk)}">${status.parentOk ? "✅ Đã chốt hoàn thành tuần (bấm để bỏ)" : "✅ Xác nhận hoàn thành cả tuần"}</button>
+            </div>
+          </div>
           <div class="detail-block math-detail">
             <h4>Toán · mục tiêu tuần</h4>
             ${renderLessonPlan(w.math.lesson, "math")}
@@ -1027,6 +1062,9 @@ export function createRenderViews(dependencies = {}) {
         const savedQuality = state?.db?.lessonResponses?.[responseKey]?.quality || "";
         const isTooEasy = savedQuality === "too_easy";
         const isHard = savedQuality === "hard";
+        const lessonChecked = lessonCheck(responseKey);
+        const bachDone = Boolean(lessonChecked.bach);
+        const parentDone = Boolean(lessonChecked.parent);
 
         return `<details class="daily-plan-day" ${focusedDayIndex !== null || dayIndex === 0 || isParentPreview ? "open" : ""}>
         <summary class="daily-plan-day-head"><span class="daily-plan-day-label">${escapeHtml(day.day)}</span><b>${escapeHtml(day.title)}</b><span class="daily-plan-duration">${day.day === "Thứ 7" ? "50 phút" : "25 phút"}</span></summary>
@@ -1216,6 +1254,10 @@ export function createRenderViews(dependencies = {}) {
               <button class="small-button adaptive-confirm-btn" data-confirm-adaptive="${responseKey}" type="button">Xác nhận điều chỉnh</button>
             </div>
           </div>` : ""}
+          ${!isParentPreview ? `<div class="lesson-done-panel" style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; margin-top:14px; padding:12px 14px; border:1px solid #bbf7d0; border-radius:8px; background:#f0fdf4">
+            <button type="button" class="small-button bach-understood-btn ${bachDone ? "done" : ""}" data-bach-understood="${responseKey}" aria-pressed="${bachDone}">${bachDone ? "✅ Bách đã hiểu bài này" : "☐ Bách bấm khi đã hiểu bài"}</button>
+            <span class="lesson-done-parent">${parentDone ? "👨‍👩‍👦 Phụ huynh đã xác nhận ✓" : "Phụ huynh sẽ xác nhận ở mục Lộ trình"}</span>
+          </div>` : ""}
         </div>
       </details>`;
       }).join("")}
@@ -1224,6 +1266,8 @@ export function createRenderViews(dependencies = {}) {
   }
 
   return {
+    weekCheckStats,
+    lessonCheck,
     renderSvgVisual,
     progressBar,
     phaseChips,

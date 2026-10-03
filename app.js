@@ -568,6 +568,61 @@ document.addEventListener("click", async e => {
     return;
   }
 
+  // 2c. Bách tự tick "đã hiểu bài" cho từng buổi học
+  const bachUnderstood = e.target.closest("[data-bach-understood]");
+  if (bachUnderstood) {
+    const key = bachUnderstood.dataset.bachUnderstood;
+    if (!isValidLessonKey(key)) return;
+    if (!state.db.lessonChecks) state.db.lessonChecks = {};
+    const prev = state.db.lessonChecks[key] || {};
+    state.db.lessonChecks[key] = { ...prev, bach: !prev.bach, bachAt: new Date().toISOString() };
+    if (state.db.lessonChecks[key].bach) tutorAudio.playSuccessChime();
+    await saveLocal(true);
+    render();
+    requestAnimationFrame(() => document.querySelector(`[data-bach-understood="${key}"]`)?.focus());
+    return;
+  }
+
+  // 2d. Phụ huynh xác nhận Bách đã ổn cho từng buổi học
+  const parentOk = e.target.closest("[data-parent-ok]");
+  if (parentOk) {
+    const key = parentOk.dataset.parentOk;
+    if (!isValidLessonKey(key)) return;
+    if (!state.db.lessonChecks) state.db.lessonChecks = {};
+    const prev = state.db.lessonChecks[key] || {};
+    state.db.lessonChecks[key] = { ...prev, parent: !prev.parent, parentAt: new Date().toISOString() };
+    await saveLocal(true);
+    render();
+    requestAnimationFrame(() => document.querySelector(`[data-parent-ok="${key}"]`)?.focus());
+    return;
+  }
+
+  // 2e. Phụ huynh chốt hoàn thành cả tuần: xác nhận 12 buổi + tick tuần hoàn thành
+  const parentWeekOk = e.target.closest("[data-parent-week-ok]");
+  if (parentWeekOk) {
+    const weekId = parentWeekOk.dataset.parentWeekOk;
+    if (!/^w([1-9]|[12][0-9]|3[0-6])$/.test(weekId)) return;
+    const confirmed = !state.db.progress[weekId]?.parentOk;
+    const now = new Date().toISOString();
+    if (!state.db.lessonChecks) state.db.lessonChecks = {};
+    for (const subject of ["math", "vietnamese"]) {
+      for (let day = 1; day <= 6; day += 1) {
+        const key = `${weekId}-${subject}-${day}`;
+        state.db.lessonChecks[key] = { ...(state.db.lessonChecks[key] || {}), parent: confirmed, parentAt: now };
+      }
+    }
+    state.db.progress[weekId] = {
+      ...(state.db.progress[weekId] || {}),
+      parentOk: confirmed,
+      ...(confirmed ? { week: true } : {})
+    };
+    if (confirmed) tutorAudio.playSuccessChime();
+    await saveLocal(true);
+    render();
+    requestAnimationFrame(() => document.querySelector(`[data-parent-week-ok="${weekId}"]`)?.focus());
+    return;
+  }
+
   // 3. Mở chi tiết tuần
   const toggle = e.target.closest("[data-toggle]");
   if (toggle) {

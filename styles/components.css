@@ -15,6 +15,14 @@
 .check-button { width: 32px; height: 32px; border: 1px solid var(--line); border-radius: 10px; background: transparent; color: transparent; }
 .check-button.done { border-color: var(--mint); background: var(--mint); color: white; }
 
+/* Hoàn thành bài học: Bách tự tick, phụ huynh xác nhận, tiến độ tuần */
+.bach-understood-btn, .parent-ok-btn, .parent-week-ok-btn { min-height: 44px; border: 1px solid var(--line); border-radius: 10px; background: var(--card); color: var(--ink); font-weight: 700; padding: 8px 14px; cursor: pointer; }
+.bach-understood-btn.done, .parent-ok-btn.done, .parent-week-ok-btn.done { border-color: var(--mint); background: var(--mint); color: white; }
+.week-progress-line { display: grid; gap: 6px; padding: 8px 18px 14px; font-size: .86rem; color: var(--muted); }
+.parent-confirm-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 8px 0; }
+.parent-confirm-row > b { min-width: 72px; }
+.parent-confirm-actions { display: flex; justify-content: flex-end; margin-top: 10px; }
+
 /* Base Panels & Cards */
 .stat-card, .panel, .week-card, .rubric-card, .ladder-card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 8px 24px rgba(80,64,44,.03); }
 .stat-card { padding: 18px; min-height: 108px; }

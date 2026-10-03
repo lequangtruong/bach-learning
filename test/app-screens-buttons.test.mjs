@@ -252,7 +252,10 @@ test("app-screens: Global click handlers cover all interactive data-* attributes
     { attr: "data-save-lesson", handler: 'e.target.closest("[data-save-lesson]")' },
     { attr: "data-confirm-adaptive", handler: 'e.target.closest("[data-confirm-adaptive]")' },
     { attr: "data-reveal-hint", handler: 'e.target.closest("[data-reveal-hint]")' },
-    { attr: "data-voice-for", handler: 'e.target.closest("[data-voice-for]")' }
+    { attr: "data-voice-for", handler: 'e.target.closest("[data-voice-for]")' },
+    { attr: "data-bach-understood", handler: 'e.target.closest("[data-bach-understood]")' },
+    { attr: "data-parent-ok", handler: 'e.target.closest("[data-parent-ok]")' },
+    { attr: "data-parent-week-ok", handler: 'e.target.closest("[data-parent-week-ok]")' }
   ];
 
   for (const { attr, handler } of dataHandlers) {

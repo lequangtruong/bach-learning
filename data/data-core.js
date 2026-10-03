@@ -26,6 +26,7 @@ export function createEmptyDatabase() {
     notes: {},    // { [weekId]: string }
     lessonResponses: {}, // { [weekId-subject-day]: { answer, explanation, updatedAt } }
     lessonTimers: {}, // { [weekId-subject-day]: { status, remainingSeconds, durationSeconds, lastStartedAt, updatedAt } }
+    lessonChecks: {}, // { [weekId-subject-day]: { bach?: boolean, bachAt?: string, parent?: boolean, parentAt?: string } }
     adaptive: { math: { level: 0, extraCount: 0, reason: "", lastDay: 0 }, vietnamese: { level: 0, extraCount: 0, reason: "", lastDay: 0 } },
     weeklySummaries: {}, // { [weekId]: string } · báo cáo AI dành cho phụ huynh
     chatHistory: [], // [{ id, role, text, subject, weekId, timestamp }]
@@ -76,6 +77,7 @@ export function validateDatabasePayload(data) {
     if (val.vietnamese !== undefined && typeof val.vietnamese !== "boolean") return false;
     if (val.mentalMath !== undefined && typeof val.mentalMath !== "boolean") return false;
     if (val.needsReview !== undefined && typeof val.needsReview !== "boolean") return false;
+    if (val.parentOk !== undefined && typeof val.parentOk !== "boolean") return false;
   }
 
   if (data.learningProfile !== undefined) {
@@ -107,6 +109,18 @@ export function validateDatabasePayload(data) {
       if (val.explanation !== undefined && typeof val.explanation !== "string") return false;
       if (val.quality !== undefined && !["", "too_easy", "right", "hard"].includes(val.quality)) return false;
       if (val.updatedAt !== undefined && typeof val.updatedAt !== "string") return false;
+    }
+  }
+
+  if (data.lessonChecks !== undefined) {
+    if (!data.lessonChecks || typeof data.lessonChecks !== "object" || Array.isArray(data.lessonChecks)) return false;
+    for (const [key, val] of Object.entries(data.lessonChecks)) {
+      if (!isValidLessonKey(key)) return false;
+      if (!val || typeof val !== "object" || Array.isArray(val)) return false;
+      if (val.bach !== undefined && typeof val.bach !== "boolean") return false;
+      if (val.parent !== undefined && typeof val.parent !== "boolean") return false;
+      if (val.bachAt !== undefined && typeof val.bachAt !== "string") return false;
+      if (val.parentAt !== undefined && typeof val.parentAt !== "string") return false;
     }
   }
 

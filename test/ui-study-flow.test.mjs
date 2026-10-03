@@ -513,6 +513,7 @@ test("representative coverage audit: interactive controls in study view have wir
         /audio-read-btn/.test(attrs) ||
         /data-reveal-hint/.test(attrs) ||
         /data-done-mental/.test(attrs) ||
+        /data-bach-understood/.test(attrs) ||
         /data-confirm-adaptive/.test(attrs);
       assert.ok(hasAction, `Study view button in ${subj} must have a click route: ${btnMatch[0]}`);
     }
@@ -551,6 +552,9 @@ test("representative coverage audit: interactive controls in study view have wir
   assert.match(appSource, /e\.target\.closest\("\.audio-read-btn"\)/);
   assert.match(appSource, /e\.target\.closest\("\[data-reveal-hint\]"\)/);
   assert.match(appSource, /e\.target\.closest\("\[data-confirm-adaptive\]"\)/);
+  assert.match(appSource, /e\.target\.closest\("\[data-bach-understood\]"\)/);
+  assert.match(appSource, /e\.target\.closest\("\[data-parent-ok\]"\)/);
+  assert.match(appSource, /e\.target\.closest\("\[data-parent-week-ok\]"\)/);
   const combinedSource = getCombinedSource(appSource);
   assert.match(combinedSource, /document(Obj)?\.querySelectorAll\("\[data-lesson-answer\]"\)/);
   assert.match(combinedSource, /document(Obj)?\.querySelectorAll\("\[data-lesson-explanation\]"\)/);
@@ -996,4 +1000,119 @@ test("Guide page learning profile summary renders semantic items with distinct l
   assert.doesNotMatch(combinedStyles, /@media[^{]+\{[^}]*learning-profile-item\s*\{[^}]*border-left:/);
 });
 
+test("lesson completion: Bách self-tick, parent confirmation and week progress", async () => {
+  const appSource = await readFile(new URL("../app.js", import.meta.url), "utf8");
+  const sandbox = {
+    ...coreBindings,
+    window: {},
+    curriculum: null,
+    state: {
+      db: {
+        progress: { w1: { parentOk: false } },
+        lessonTimers: {},
+        lessonResponses: {},
+        adaptive: {},
+        notes: {},
+        lessonChecks: {
+          "w1-math-1": { bach: true },
+          "w1-math-2": { parent: true },
+          "w1-vietnamese-1": { bach: true, parent: true }
+        }
+      },
+      tutor: { selectedWeek: "w1" },
+      openWeek: "w1"
+    },
+    app: { innerHTML: "" },
+    document: { querySelectorAll: () => [], querySelector: () => null },
+    lessonTimerManager: { updateActiveElements: () => {} },
+    renderDriveBar: () => "",
+    adaptiveNextStep: () => "",
+    lessonDifficulty: () => ({ level: 3, label: "Vừa sức", note: "Bám sát tiến độ" }),
+    getLessonDefaultSeconds,
+    computeCurrentTimerState,
+    formatTimerSeconds
+  };
+  vm.runInNewContext(curriculumSource, sandbox);
+  sandbox.curriculum = sandbox.window.BACH_CURRICULUM;
+  bindViewsToSandbox(sandbox);
+
+  const phase0 = sandbox.curriculum.phases[0];
+  const week1 = { id: "w1", number: 1, phase: phase0, math: phase0.math[0], vietnamese: phase0.vietnamese[0] };
+
+  // 1. Thống kê 12 buổi của tuần: 2 Bách tự tick, 2 phụ huynh xác nhận, 3 buổi có ít nhất một tick
+  const stats = sandbox.weekCheckStats("w1", week1);
+  assert.equal(stats.total, 12);
+  assert.equal(stats.bach, 2);
+  assert.equal(stats.parent, 2);
+  assert.equal(stats.done, 3);
+  assert.equal(stats.percent, 25);
+
+  // 2. Mỗi buổi học của Bách có nút tick riêng, phản ánh trạng thái đã lưu
+  const mathHtml = sandbox.renderDailyPlan(week1.math, "math", true, "w1", "P1");
+  assert.match(mathHtml, /data-bach-understood="w1-math-1"[^>]*aria-pressed="true"/);
+  assert.match(mathHtml, /data-bach-understood="w1-math-2"[^>]*aria-pressed="false"/);
+  assert.match(mathHtml, /Bách đã hiểu bài này/);
+  assert.match(mathHtml, /Phụ huynh đã xác nhận ✓/);
+  const vietHtml = sandbox.renderDailyPlan(week1.vietnamese, "vietnamese", true, "w1", "P1");
+  assert.match(vietHtml, /data-bach-understood="w1-vietnamese-1"/);
+
+  // 3. Phụ huynh xem trước phải giữ hợp đồng chỉ-xem: không có nút tick của Bách
+  const previewHtml = sandbox.renderDailyPlan(week1.math, "math", true, "w1", "P1", 0, true);
+  assert.doesNotMatch(previewHtml, /data-bach-understood/);
+
+  // 4. Thẻ tuần ở khu vực phụ huynh: tiến độ, xác nhận từng buổi và chốt cả tuần
+  const cardHtml = sandbox.weekCard(week1);
+  assert.match(cardHtml, /data-week-progress="w1"/);
+  assert.match(cardHtml, /Bách đã hiểu <b>2\/12<\/b>/);
+  assert.match(cardHtml, /Phụ huynh xác nhận <b>2\/12<\/b>/);
+  assert.match(cardHtml, /data-parent-ok="w1-math-2"[^>]*aria-pressed="true"/);
+  assert.match(cardHtml, /data-parent-ok="w1-vietnamese-6"/);
+  assert.match(cardHtml, /data-parent-week-ok="w1"/);
+  assert.match(cardHtml, /Xác nhận hoàn thành cả tuần/);
+  const parentButtons = cardHtml.match(/<button[^>]*data-parent-(?:ok|week-ok)=[^>]*>/g) || [];
+  assert.equal(parentButtons.length, 13, "12 lesson buttons + 1 week button");
+  for (const btn of parentButtons) assert.match(btn, /type="button"/);
+
+  // 5. Khi tuần đã chốt, thẻ hiển thị trạng thái đã hoàn thành
+  sandbox.state.db.progress.w1 = { parentOk: true, week: true };
+  const closedHtml = sandbox.weekCard(week1);
+  assert.match(closedHtml, /Tuần đã chốt/);
+  assert.match(closedHtml, /data-parent-week-ok="w1"[^>]*aria-pressed="true"/);
+
+  // 6. app.js nối đủ handler và an toàn khóa
+  assert.match(appSource, /e\.target\.closest\("\[data-bach-understood\]"\)/);
+  assert.match(appSource, /e\.target\.closest\("\[data-parent-ok\]"\)/);
+  assert.match(appSource, /e\.target\.closest\("\[data-parent-week-ok\]"\)/);
+  assert.match(appSource, /if \(!isValidLessonKey\(key\)\) return;/);
+  assert.match(stylesSource, /\.parent-ok-btn/);
+  assert.match(stylesSource, /\.bach-understood-btn/);
+});
+
+test("lesson completion: lessonChecks and progress.parentOk are validated strictly", () => {
+  const empty = createEmptyDatabase();
+  assert.deepEqual(empty.lessonChecks, {});
+  assert.equal(validateDatabasePayload(empty), true);
+
+  const valid = createEmptyDatabase();
+  valid.lessonChecks["w3-math-4"] = { bach: true, bachAt: "2026-10-03T10:00:00.000Z", parent: false };
+  valid.progress.w3 = { week: true, parentOk: true };
+  assert.equal(validateDatabasePayload(valid), true);
+
+  const badKey = createEmptyDatabase();
+  badKey.lessonChecks["w99-math-1"] = { bach: true };
+  assert.equal(validateDatabasePayload(badKey), false, "lesson key must be a real week/day");
+
+  const badType = createEmptyDatabase();
+  badType.lessonChecks["w1-math-1"] = { bach: "yes" };
+  assert.equal(validateDatabasePayload(badType), false, "bach must be boolean");
+
+  const badParentOk = createEmptyDatabase();
+  badParentOk.progress.w1 = { parentOk: "yes" };
+  assert.equal(validateDatabasePayload(badParentOk), false, "parentOk must be boolean");
+
+  // DB cũ chưa có lessonChecks vẫn hợp lệ (tương thích ngược)
+  const legacy = createEmptyDatabase();
+  delete legacy.lessonChecks;
+  assert.equal(validateDatabasePayload(legacy), true);
+});
 
