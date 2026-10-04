@@ -455,7 +455,7 @@ export const WEEKEND_MATH_EXAMS_FULL = {
         questions: [
           {
             q: "Bài 3 (3.0 điểm): Cô giáo có 48 chiếc bút màu muốn chia đều vào các hộp quà, mỗi hộp quà có số bút bằng nhau và nhiều hơn 3 chiếc nhưng ít hơn 15 chiếc. Hỏi cô giáo có thể chia thành bao nhiêu hộp quà? Hãy tìm tất cả các cách chia hợp lệ.",
-            answer: "Bài giải:\nSố bút trong mỗi hộp phải là ước của 48. [0.5đ]\nCác ước của 48 là: 1, 2, 3, 4, 6, 8, 12, 16, 24, 48. [0.5đ]\nVì số bút mỗi hộp nhiều hơn 3 và ít hơn 15 nên số bút mỗi hộp có thể là: 4, 6, 8, hoặc 12 chiếc. [0.5đ]\nCác cách chia tương ứng:\n- Cách 1: Mỗi hộp 4 bút -> có 48 ÷ 4 = 12 hộp. [0.35đ]\n- Cách 2: Mỗi hộp 6 bút -> có 48 ÷ 6 = 8 hộp. [0.35đ]\n- Cách 3: Mỗi hộp 8 bút -> có 48 ÷ 8 = 6 hộp. [0.35đ]\n- Cách 4: Mỗi hộp 12 bút -> có 48 ÷ 12 = 4 hộp. [0.4đ]"
+            answer: "Bài giải:\nSố bút trong mỗi hộp phải là ước của 48 và nằm trong khoảng từ 4 đến 12 chiếc. [0.5đ]\nCác ước thỏa mãn điều kiện là: 4, 6, 8, 12 chiếc bút. [0.5đ]\nCác cách chia tương ứng ra số hộp quà:\n- Cách 1: Mỗi hộp 4 bút -> có 48 ÷ 4 = 12 hộp. [0.5đ]\n- Cách 2: Mỗi hộp 6 bút -> có 48 ÷ 6 = 8 hộp. [0.5đ]\n- Cách 3: Mỗi hộp 8 bút -> có 48 ÷ 8 = 6 hộp. [0.5đ]\n- Cách 4: Mỗi hộp 12 bút -> có 48 ÷ 12 = 4 hộp. [0.5đ]"
           }
         ]
       },
@@ -1050,7 +1050,7 @@ export const WEEKEND_MATH_EXAMS_FULL = {
           { q: "1. Khi nhân một số với 10, 100, 1.000,... ta chỉ việc viết thêm lần lượt vào bên phải số đó:", choices: ["A. Một, hai, ba,... chữ số 0", "B. Một, hai, ba,... chữ số 1", "C. Giữ nguyên số đó", "D. Nhân số đó với chính nó"], answer: "A. Một, hai, ba,... chữ số 0" },
           { q: "2. Kết quả của phép tính 25 × 40 là:", choices: ["A. 100", "B. 1.000", "C. 10.000", "D. 250"], answer: "B. 1.000 (25 × 4 = 100 -> 25 × 40 = 1.000)" },
           { q: "3. Tích của 142 × 21 có chữ số tận cùng là:", choices: ["A. 1", "B. 2", "C. 3", "D. 4"], answer: "B. 2 (2 × 1 = 2)" },
-          { q: "4. Tính nhanh 15 × 8 × 5 bằng cách thuận tiện là:", choices: ["A. (15 × 8) × 5", "B. 15 × (8 × 5) = 15 × 40 = 600", "C. (15 × 5) × 8 = 75 × 8 = 600", "D. Cả B và C đều thuận tiện"], answer: "D. Cả B và C đều thuận tiện" }
+          { q: "4. Để tính giá trị biểu thức 15 × 8 × 5 bằng cách thuận tiện nhất (nhóm hai thừa số để tạo ra số tròn chục), ta nên nhóm như thế nào?", choices: ["A. (15 × 8) × 5", "B. 15 × (8 × 5) = 15 × 40 = 600", "C. (15 × 5) × 8", "D. (15 + 5) × 8"], answer: "B. 15 × (8 × 5) = 15 × 40 = 600 (nhóm 8 × 5 = 40 tạo ra số tròn chục giúp nhân nhẩm thuận tiện nhất)" }
         ]
       },
       {
@@ -1619,7 +1619,7 @@ export const WEEKEND_MATH_EXAMS_FULL = {
         level: "Mức 2: Thông hiểu",
         scoreText: "2.5 điểm",
         questions: [
-          { q: "Bài 1 (1.5 điểm): Đặt tính rồi tính ra vở ô ly:\n  a) 3/7 + 4/5\n  b) 5/12 + 7/18", answer: "a) 3/7 + 4/5 = 15/35 + 28/35 = 43/35 [0.75đ]\nb) MSC = 36: 5/12 + 7/18 = 15/36 + 14/36 = 29/36 [0.75đ]" },
+          { q: "Bài 1 (1.5 điểm): Tính và trình bày các bước quy đồng mẫu số ra vở ô ly:\n  a) 3/7 + 4/5\n  b) 5/12 + 7/18", answer: "a) 3/7 + 4/5 = 15/35 + 28/35 = 43/35 [0.75đ]\nb) MSC = 36: 5/12 + 7/18 = 15/36 + 14/36 = 29/36 [0.75đ]" },
           { q: "Bài 2 (1.0 điểm): Tính bằng cách thuận tiện nhất:\n  3/8 + 5/11 + 5/8 + 6/11", answer: "= (3/8 + 5/8) + (5/11 + 6/11) [0.5đ]\n= 8/8 + 11/11 = 1 + 1 = 2. [0.5đ]" }
         ]
       },
@@ -1834,7 +1834,7 @@ export const WEEKEND_MATH_EXAMS_FULL = {
           { q: "1. Phân số đảo ngược của phân số 4/7 là:", choices: ["A. 7/4", "B. 4/7", "C. 1/7", "D. 1/4"], answer: "A. 7/4" },
           { q: "2. Kết quả của phép chia 3/5 ÷ 2/3 là:", choices: ["A. 6/15 = 2/5", "B. 9/10", "C. 5/8", "D. 1/2"], answer: "B. 9/10 (3/5 × 3/2 = 9/10)" },
           { q: "3. Kết quả của phép tính 6 ÷ 3/4 là:", choices: ["A. 8", "B. 18/4 = 9/2", "C. 2/4", "D. 12"], answer: "A. 8 (6 × 4/3 = 24/3 = 8)" },
-          { q: "4. Phép tính nào có kết quả bằng 1/2?", choices: ["A. 1/4 ÷ 1/2", "B. 1/2 ÷ 2", "C. 3/8 ÷ 3/4", "D. Cả A và C"], answer: "D. Cả A và C (1/4 ÷ 1/2 = 1/2; 3/8 ÷ 3/4 = 3/8 × 4/3 = 1/2)" }
+          { q: "4. Phép tính nào có kết quả bằng 1/2?", choices: ["A. 1/4 ÷ 2", "B. 1/2 ÷ 2", "C. 3/8 ÷ 3/4", "D. 5/6 ÷ 1/3"], answer: "C. 3/8 ÷ 3/4 (3/8 × 4/3 = 12/24 = 1/2)" }
         ]
       },
       {

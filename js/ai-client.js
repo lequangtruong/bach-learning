@@ -71,11 +71,15 @@ export async function askAi({ mode = "student_tutor", userMessage = null, writin
 
   // Lấy bối cảnh môn và tuần từ bộ chọn Guide rõ ràng
   const weeks = allWeeks();
-  const selectedWeekObj = weeks.find(w => w.id === state.tutor.selectedWeek) || weeks[0];
+  const selectedWeekObj = weeks.find(w => w.id === state.tutor.selectedWeek) || weeks[0] || {
+    id: "w1",
+    math: ["Tuần 1", "Toán 4"],
+    vietnamese: ["Tuần 1", "Tiếng Việt 4"]
+  };
   const subject = state.tutor.selectedSubject || "math";
   const weekFocus = subject === "math"
-    ? `${selectedWeekObj.math[0]}: ${selectedWeekObj.math[1]}`
-    : `${selectedWeekObj.vietnamese[0]}: ${selectedWeekObj.vietnamese[1]}`;
+    ? `${selectedWeekObj.math?.[0] || "Tuần 1"}: ${selectedWeekObj.math?.[1] || "Toán 4"}`
+    : `${selectedWeekObj.vietnamese?.[0] || "Tuần 1"}: ${selectedWeekObj.vietnamese?.[1] || "Tiếng Việt 4"}`;
 
   const payload = formatConversationForTutor({
     subject,
@@ -104,6 +108,15 @@ export async function askAi({ mode = "student_tutor", userMessage = null, writin
     headers["X-Google-ID-Token"] = state.drive.idToken;
   }
 
+  // Lưu lại cấu hình yêu cầu để hỗ trợ nút Thử lại khi mất mạng hoặc stream bị ngắt
+  state.tutor.lastFailedSubmission = {
+    mode,
+    prompt: promptText,
+    userMessage: promptText,
+    writingImage,
+    sourceLessonKey
+  };
+
   try {
     const response = await fetch("/api/tutor", {
       method: "POST",
@@ -120,6 +133,7 @@ export async function askAi({ mode = "student_tutor", userMessage = null, writin
       let streamBuffer = "";
       let streamedText = "";
       let streamedAction = null;
+      let streamCompleted = false;
       if (answer) {
         answer.textContent = "";
         answer.hidden = false;
@@ -141,6 +155,9 @@ export async function askAi({ mode = "student_tutor", userMessage = null, writin
               if (l.startsWith("event:")) eventType = l.slice(6).trim();
               else if (l.startsWith("data:")) dataStr = l.slice(5).trim();
             }
+            if (eventType === "done") {
+              streamCompleted = true;
+            }
             if (eventType === "error") {
               let errText = "Lỗi đường truyền từ AI.";
               try {
@@ -156,6 +173,9 @@ export async function askAi({ mode = "student_tutor", userMessage = null, writin
             } else if (dataStr) {
               try {
                 const parsed = JSON.parse(dataStr);
+                if (parsed.done === true) {
+                  streamCompleted = true;
+                }
                 if (parsed.text) {
                   streamedText += parsed.text;
                   if (answer) answer.textContent = streamedText;
@@ -166,6 +186,9 @@ export async function askAi({ mode = "student_tutor", userMessage = null, writin
         }
       } finally {
         reader.releaseLock();
+      }
+      if (!streamCompleted) {
+        throw new Error("Quá trình nhận phản hồi bị ngắt quãng giữa chừng. Bách hãy bấm nút 'Thử lại' để AI hoàn tất nhé.");
       }
       if (!streamedText) {
         throw new Error("AI chưa trả về nội dung hoàn chỉnh. Bách có thể bấm thử lại nhé.");
@@ -181,7 +204,11 @@ export async function askAi({ mode = "student_tutor", userMessage = null, writin
     }
 
     state.tutor.lastError = null;
+    state.tutor.lastFailedSubmission = null;
     state.tutor.lastAnswer = data.answer;
+    if (state.examSession) {
+      state.examSession.lastAiAnswer = data.answer;
+    }
     state.tutor.lastAction = data.learningAction
       ? { ...data.learningAction, sourceLessonKey: isValidLessonKey(sourceLessonKey, data.learningAction.subject) ? sourceLessonKey : null }
       : null;

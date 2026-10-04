@@ -110,9 +110,21 @@ export async function compressImageToJpeg(file, { maxWidth = 1400, quality = 0.8
         ctx.fillRect(0, 0, width, height);
         ctx.drawImage(img, 0, 0, width, height);
 
-        const dataUrl = canvas.toDataURL("image/jpeg", quality);
-        const base64 = dataUrl.split(",")[1] || "";
-        const byteLength = Math.round((base64.length * 3) / 4);
+        let dataUrl = canvas.toDataURL("image/jpeg", quality);
+        let base64 = dataUrl.split(",")[1] || "";
+        let byteLength = Math.round((base64.length * 3) / 4);
+
+        // Đảm bảo không vượt quá giới hạn 1 MiB của Gemini API
+        if (byteLength > 950 * 1024 && quality > 0.6) {
+          dataUrl = canvas.toDataURL("image/jpeg", 0.65);
+          base64 = dataUrl.split(",")[1] || "";
+          byteLength = Math.round((base64.length * 3) / 4);
+        }
+        if (byteLength > 950 * 1024) {
+          dataUrl = canvas.toDataURL("image/jpeg", 0.50);
+          base64 = dataUrl.split(",")[1] || "";
+          byteLength = Math.round((base64.length * 3) / 4);
+        }
 
         resolve({
           name: fileName.replace(/\.[^/.]+$/, "") + ".jpg",

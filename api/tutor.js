@@ -312,7 +312,7 @@ export default async function handler(req, res) {
         if (learningAction) {
           res.write(`event: action\ndata: ${JSON.stringify(learningAction)}\n\n`);
         }
-        res.write(`event: done\ndata: {}\n\n`);
+        res.write(`event: done\ndata: ${JSON.stringify({ done: true })}\n\n`);
         res.end();
         return;
       } catch (streamErr) {

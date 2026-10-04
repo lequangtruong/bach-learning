@@ -225,7 +225,7 @@ test("weeks 7–36 use authored, self-contained learning material rather than ge
   const allMath = curriculum.phases.flatMap(phase => phase.math);
   assert.match(allMath[6].dailyPlan[0].example, /1, 2, 4, 7, 11, 16/);
   assert.match(allMath[32].dailyPlan[0].example, /3\/5/);
-  assert.match(allMath[33].dailyPlan[0].example, /chia 5 dư 2/);
+  assert.match(allMath[33].dailyPlan[0].example, /Tổng 45|tỉ số 2\/3/);
 });
 
 test("opening place-value lesson gives Bách a concrete, self-contained warm-up", () => {

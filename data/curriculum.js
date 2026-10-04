@@ -467,7 +467,7 @@ window.BACH_CURRICULUM = {
         ["Bội, ước và chia hết", "Lập bảng nhỏ, tìm cấu trúc thay vì thử tất cả."],
         ["Phân số qua hình ảnh", "Tử số, mẫu số, phân số bằng nhau bằng dải giấy và hình chữ nhật."],
         ["Cộng trừ phân số cùng mẫu", "Ước lượng kết quả, đặt bài toán ngược để kiểm tra."],
-        ["Số thập phân làm quen", "Tiền, độ dài, khối lượng; nối phân số thập phân với số thập phân."],
+        ["Cộng trừ phân số khác mẫu", "Quy đồng mẫu số, tìm mẫu số chung nhỏ nhất; bài toán lời văn hai bước."],
         ["Bảng và biểu đồ", "Đọc dữ liệu, đặt câu hỏi mới, tìm câu trả lời từ hai nguồn dữ kiện."]
       ],
       vietnamese: [
@@ -503,7 +503,7 @@ window.BACH_CURRICULUM = {
       id: "P4", weeks: "19–24", title: "Tư duy chiến lược và văn bản mạch lạc", color: "sky",
       focus: "Không chạy theo mẹo; biết thử chiến lược, bỏ chiến lược không hiệu quả.",
       math: [
-        ["Bảng và thử giá trị", "Liệt kê có tổ chức; không bỏ sót, không lặp."],
+        ["Nhân số có hai chữ số", "Tính chất giao hoán, kết hợp; đặt tính đúng vị trí tích riêng thứ hai; bài toán thực tế."],
         ["Làm việc ngược", "Từ đáp án quay về dữ kiện; dùng cho bài tuổi, tiền, số bị che."],
         ["Chẵn lẻ và bất biến", "Nhận ra đại lượng không đổi sau mỗi bước biến đổi."],
         ["Nguyên lý Dirichlet trực quan", "Xếp đồ vật vào ngăn; diễn đạt bằng ví dụ đời sống."],
@@ -524,7 +524,7 @@ window.BACH_CURRICULUM = {
       focus: "Tăng độ khó qua nhiều cách giải; văn phong rõ ràng nhưng vẫn hồn nhiên, đúng tuổi.",
       math: [
         ["Phân tích trường hợp", "Chia bài theo điều kiện; kiểm tra mọi trường hợp ở cuối."],
-        ["Suy luận từ hình", "Bổ sung đường phụ, đếm góc/cạnh, giải thích mỗi nét vẽ."],
+        ["Phân số và phép chia số tự nhiên", "Viết thương phép chia dưới dạng phân số; so sánh phân số với 1."],
         ["Tối ưu hóa đơn giản", "Tìm cách ít nhất/nhiều nhất; thử bảng nhỏ rồi đoán quy luật."],
         ["Bài toán nhiều lời giải", "Tìm ít nhất 2 cách: sơ đồ, đại số sơ cấp, lập luận."],
         ["Thi thử có chiến thuật", "3 lượt: câu chắc, câu vừa, câu khó; không mắc kẹt quá 8 phút."],
@@ -546,7 +546,7 @@ window.BACH_CURRICULUM = {
         ["Chẩn đoán lỗ hổng", "Làm đề tổng hợp, phân loại lỗi theo kiến thức hay phương pháp."],
         ["Sổ tay phương pháp", "Mỗi phương pháp có dấu hiệu nhận biết, ví dụ, bài tự tạo."],
         ["Đề mô phỏng Singapore", "Toán thực tế, đọc dữ liệu, nhiều bước; ưu tiên mô hình hóa."],
-        ["Đề mô phỏng Trung Quốc", "Số học, hình học, suy luận; trình bày ngắn mà đủ chứng minh."],
+        ["Tổng và tỉ số của hai số", "Vẽ sơ đồ đoạn thẳng, tìm tổng số phần bằng nhau, giá trị một phần."],
         ["Dự án Toán quanh nhà", "Đo một căn phòng, lập ngân sách nhỏ hoặc khảo sát dữ liệu gia đình."],
         ["Ngày hội Bách giải thích", "Chọn 3 bài hay nhất, quay/ghi lại cách giải bằng lời của mình."]
       ],

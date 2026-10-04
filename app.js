@@ -42,8 +42,12 @@ import {
   initKeyboardAdaptation
 } from "./js/keyboard-adapt.js";
 
-import { compressImageToJpeg } from "./js/image-compressor.js";
-import { getWeekendMathExam, buildExamGradingPrompt } from "./js/math-weekend-exam.js";
+import {
+  getWeekendMathExam,
+  buildExamGradingPrompt,
+  buildExamDisputePrompt,
+  buildExamResubmitPrompt
+} from "./js/math-weekend-exam.js";
 import { storage } from "./js/storage.js";
 import { driveSync, renderGoogleTutorButton } from "./js/drive-sync.js";
 import { lessonTimerManager, setTimerCallbacks } from "./js/study-timer.js";
@@ -125,6 +129,9 @@ export function scheduleLanSync(delayMs = 800) {
       // Offline / LAN server unreachable: fail silently, iPad retains local data
     }
   }, delayMs);
+  if (lanSyncTimer && typeof lanSyncTimer.unref === "function") {
+    lanSyncTimer.unref();
+  }
 }
 
 // Lưu tiến độ cả 2 nơi: trên iPad (localStorage/IndexedDB) và máy chủ LAN
@@ -397,6 +404,22 @@ function renderGuide() {
             </div>
             <span id="aiStatus" class="week-focus">Sẵn sàng trợ giúp học sinh lớp 4 tự suy nghĩ lời giải.</span>
           </div>
+
+          ${state.tutor.lastError ? `
+            <div id="aiErrorBanner" class="ai-error-banner" style="margin-top:12px; padding:12px 14px; background:#fef2f2; border:2px solid #fca5a5; border-radius:8px">
+              <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px">
+                <div style="color:#b91c1c; font-weight:600; font-size:0.92rem">
+                  ⚠️ <strong>Chưa chấm xong:</strong> ${escapeHtml(state.tutor.lastError)}
+                </div>
+                ${state.tutor.lastFailedSubmission ? `
+                  <button type="button" class="small-button" id="retryAiRequestBtn" style="background:#dc2626; color:#fff; font-weight:700">
+                    🔄 Gửi lại để chấm tiếp
+                  </button>
+                ` : ""}
+              </div>
+            </div>
+          ` : ""}
+
           <div id="aiAnswer" class="ai-answer" ${state.tutor.lastAnswer ? "" : "hidden"}>${escapeHtml(state.tutor.lastAnswer)}</div>
 
           <!-- Thanh công cụ tương tác hai chiều & phản hồi của Bách (Kể cả khi AI tính sai hoặc đọc nhầm nét chữ) -->
@@ -583,6 +606,10 @@ export function clearTransientAiPhotos() {
   }
   state.lastSubmittedExamPhoto = null;
   state.resubmitPhoto = null;
+  state.writingPhoto = null;
+  state.mathExamPhoto = null;
+  state.writingImage = null;
+  state.examSession = null;
   const resubmitInput = typeof document !== "undefined" ? document.querySelector?.("#resubmitPhotoInput") : null;
   if (resubmitInput) resubmitInput.value = "";
   const resubmitName = typeof document !== "undefined" ? document.querySelector?.("#resubmitPhotoName") : null;
@@ -908,6 +935,7 @@ export async function handleGlobalClick(e) {
 
   // 8c. Bỏ ảnh bài viết đã chọn
   if (e.target.closest("#removeWritingPhotoBtn")) {
+    state.writingPhoto = null;
     state.writingImage = null;
     const photoInput = document.querySelector("#writingPhotoInput");
     if (photoInput) photoInput.value = "";
@@ -917,6 +945,7 @@ export async function handleGlobalClick(e) {
 
   // 8c-bis. Xóa ảnh bài Kiểm Tra Toán
   if (e.target.closest("#removeMathPhotoBtn")) {
+    state.mathExamPhoto = null;
     state.writingImage = null;
     const mathPhotoInput = document.querySelector("#mathPhotoInput");
     if (mathPhotoInput) mathPhotoInput.value = "";
@@ -967,7 +996,7 @@ export async function handleGlobalClick(e) {
   // 8e. Chuyển Bài Kiểm Tra Toán Thứ 7 / Chủ Nhật sang Gemini để chấm theo Barem Toán 4 KNTT
   if (e.target.closest("#sendMathTestToAi")) {
     const explanation = document.querySelector("#mathTestExplanation")?.value.trim() || "";
-    const photo = state.writingImage;
+    const photo = state.mathExamPhoto || state.writingImage;
     if (!explanation && !photo) {
       alert("Bách hoặc phụ huynh hãy chụp ảnh bài làm trên vở hoặc ghi âm giải thích trước khi nộp nhé!");
       return;
@@ -993,25 +1022,23 @@ export async function handleGlobalClick(e) {
 
     const photoToSend = photo ? { mimeType: photo.mimeType, data: photo.data } : null;
     const submittedAt = Date.now();
-    state.lastSubmittedExamPhoto = photo ? {
-      mimeType: photo.mimeType,
-      data: photo.data,
+
+    // Khởi tạo hồ sơ phiên làm bài kiểm tra đầy đủ (giữ vững trong suốt buổi làm bài)
+    state.examSession = {
+      examWeek: weekNumber,
+      examTitle: exam.title,
+      examObj: exam,
+      originalExplanation: explanation,
+      originalPhoto: photoToSend,
+      lastAiAnswer: null,
+      submittedAt
+    };
+    state.lastSubmittedExamPhoto = photoToSend ? {
+      mimeType: photoToSend.mimeType,
+      data: photoToSend.data,
       examWeek: weekNumber,
       submittedAt
     } : null;
-    if (state.lastSubmittedExamPhotoTimeout) {
-      clearTimeout(state.lastSubmittedExamPhotoTimeout);
-    }
-    state.lastSubmittedExamPhotoTimeout = setTimeout(() => {
-      if (state.lastSubmittedExamPhoto?.submittedAt === submittedAt) {
-        state.lastSubmittedExamPhoto = null;
-        state.lastSubmittedExamPhotoTimeout = null;
-      }
-    }, 180000);
-    state.writingImage = null;
-    const mathPhotoInput = document.querySelector("#mathPhotoInput");
-    if (mathPhotoInput) mathPhotoInput.value = "";
-    updatePhotoPreviewUi();
 
     location.hash = "#guide";
     renderGuide();
@@ -1091,8 +1118,22 @@ export async function handleGlobalClick(e) {
     if (section) {
       section.hidden = !section.hidden;
       if (section.hidden) {
-        clearTransientAiPhotos();
+        state.resubmitPhoto = null;
+        const resubmitInput = document.querySelector("#resubmitPhotoInput");
+        if (resubmitInput) resubmitInput.value = "";
+        updatePhotoPreviewUi();
       }
+    }
+    return;
+  }
+
+  // Nút Thử lại khi stream bị ngắt hoặc lỗi mạng
+  if (e.target.closest("#retryAiRequestBtn")) {
+    if (state.tutor.lastFailedSubmission) {
+      const prev = state.tutor.lastFailedSubmission;
+      state.tutor.lastError = null;
+      if (typeof document !== "undefined") render();
+      askAi(prev);
     }
     return;
   }
@@ -1106,28 +1147,33 @@ export async function handleGlobalClick(e) {
     }
     const weeks = allWeeks();
     const currentSelectedWeekObj = weeks.find(w => w.id === state.tutor.selectedWeek) || weeks[0];
+    const examSession = state.examSession;
 
-    const disputePrompt = [
-      `BÁCH PHẢN HỒI / BẮT LỖI AI (BÀI HỌC / BÀI KIỂM TRA TOÁN LỚP 4 - ${currentSelectedWeekObj.id.toUpperCase()}):`,
-      `Nội dung phản hồi của Bách: "${feedbackText}"`,
-      "",
-      "NHIỆM VỤ CỦA TRỢ GIẢNG AI:",
-      "1. ĐỐI CHIẾU VÀ TỰ KIỂM TRA LẠI (NGAY CẢ KHI AI TÍNH SAI HOẶC ĐỌC NHẦM NÉT CHỮ):",
-      "   - Kiểm tra kỹ xem trước đó AI có tính sai không, có đọc nhầm chữ số nào của Bách không, hoặc cách giải của Bách có hợp lý không.",
-      "   - NẾU AI TÍNH SAI HOẶC ĐỌC NHẦM NÉT CHỮ: Hãy thành thật nhận lỗi vui vẻ, nhiệt liệt khen ngợi Bách ('Bách bắt lỗi mình rất chuẩn xác! Tinh thần phát hiện lỗi của Bách thật tuyệt vời!'), sau đó giải thích lại phép tính đúng và cập nhật lại điểm số chính xác cho Bách.",
-      "   - NẾU AI ĐÃ TÍNH ĐÚNG: Hãy ân cần, giải thích từng bước nhẹ nhàng để Bách hiểu vì sao kết quả lại như vậy.",
-      "2. PHONG CÁCH: Tự xưng là 'mình', gọi bạn học là 'Bách' (không xưng thầy/cô, không gọi 'con')."
-    ].join("\n");
+    let disputePrompt;
+    if (examSession && examSession.examObj) {
+      disputePrompt = buildExamDisputePrompt(examSession, feedbackText);
+    } else {
+      disputePrompt = [
+        `BÁCH PHẢN HỒI / BẮT LỖI AI (BÀI HỌC / BÀI KIỂM TRA TOÁN LỚP 4 - ${currentSelectedWeekObj.id.toUpperCase()}):`,
+        `Nội dung phản hồi của Bách: "${feedbackText}"`,
+        "",
+        "NHIỆM VỤ CỦA TRỢ GIẢNG AI:",
+        "1. ĐỐI CHIẾU VÀ TỰ KIỂM TRA LẠI (NGAY CẢ KHI AI TÍNH SAI HOẶC ĐỌC NHẦM NÉT CHỮ):",
+        "   - Kiểm tra kỹ xem trước đó AI có tính sai không, có đọc nhầm chữ số nào của Bách không, hoặc cách giải của Bách có hợp lý không.",
+        "   - NẾU AI TÍNH SAI HOẶC ĐỌC NHẦM NÉT CHỮ: Hãy thành thật nhận lỗi vui vẻ, nhiệt liệt khen ngợi Bách ('Bách bắt lỗi mình rất chuẩn xác! Tinh thần phát hiện lỗi của Bách thật tuyệt vời!'), sau đó giải thích lại phép tính đúng và cập nhật lại điểm số chính xác cho Bách.",
+        "   - NẾU AI ĐÃ TÍNH ĐÚNG: Hãy ân cần, giải thích từng bước nhẹ nhàng để Bách hiểu vì sao kết quả lại như vậy.",
+        "2. PHONG CÁCH: Tự xưng là 'mình', gọi bạn học là 'Bách' (không xưng thầy/cô, không gọi 'con')."
+      ].join("\n");
+    }
 
     if (feedbackInput) feedbackInput.value = "";
     const feedbackSection = document.querySelector("#studentFeedbackSection");
     if (feedbackSection) feedbackSection.hidden = true;
 
-    // Gắn ảnh đúng kỳ thi và giải phóng bộ nhớ ngay sau khi gửi phản hồi
-    const photoToAttach = (state.lastSubmittedExamPhoto && state.lastSubmittedExamPhoto.examWeek === currentSelectedWeekObj.number)
+    // Giữ ảnh bài gốc trong phiên làm bài để AI đối chiếu
+    const photoToAttach = examSession?.originalPhoto || (state.lastSubmittedExamPhoto && state.lastSubmittedExamPhoto.examWeek === currentSelectedWeekObj.number
       ? { mimeType: state.lastSubmittedExamPhoto.mimeType, data: state.lastSubmittedExamPhoto.data }
-      : null;
-    clearTransientAiPhotos();
+      : null);
 
     askAi({
       mode: "student_tutor",
@@ -1144,19 +1190,25 @@ export async function handleGlobalClick(e) {
       alert("Bách hãy chụp ảnh bài đã sửa hoặc ghi chú cách sửa trước khi nộp nhé!");
       return;
     }
-    const resubmitPrompt = [
-      "BÁCH NỘP LẠI BÀI TOÁN ĐÃ SỬA VÀO VỞ Ô LY:",
-      explanation ? `Lời giải thích của Bách: "${explanation}"` : "",
-      "",
-      "NHIỆM VỤ CỦA TRỢ GIẢNG AI:",
-      "1. Đọc lại bài làm mới của Bách trên ảnh trang vở vừa chụp.",
-      "2. Đối chiếu với bài trước, ghi nhận rõ ràng từng điểm tiến bộ (đặt tính thẳng hàng hơn, cộng/trừ đúng số nhớ, hoặc tự sửa được bài khó).",
-      "3. Chúc mừng sự kiên trì của Bách và cập nhật lại điểm số mới chính xác.",
-      "4. Xưng 'mình', gọi 'Bách' (không xưng thầy/cô, không gọi 'con')."
-    ].join("\n");
+    const examSession = state.examSession;
+
+    let resubmitPrompt;
+    if (examSession && examSession.examObj) {
+      resubmitPrompt = buildExamResubmitPrompt(examSession, explanation);
+    } else {
+      resubmitPrompt = [
+        "BÁCH NỘP LẠI BÀI TOÁN ĐÃ SỬA VÀO VỞ Ô LY:",
+        explanation ? `Lời giải thích của Bách: "${explanation}"` : "",
+        "",
+        "NHIỆM VỤ CỦA TRỢ GIẢNG AI:",
+        "1. Đọc lại bài làm mới của Bách trên ảnh trang vở vừa chụp.",
+        "2. Đối chiếu với bài trước, ghi nhận rõ ràng từng điểm tiến bộ (đặt tính thẳng hàng hơn, cộng/trừ đúng số nhớ, hoặc tự sửa được bài khó).",
+        "3. Chúc mừng sự kiên trì của Bách và cập nhật lại điểm số mới chính xác.",
+        "4. Xưng 'mình', gọi 'Bách' (không xưng thầy/cô, không gọi 'con')."
+      ].join("\n");
+    }
 
     const photoToSend = photo ? { mimeType: photo.mimeType, data: photo.data } : null;
-    clearTransientAiPhotos();
     const resubmitSection = document.querySelector("#resubmitSection");
     if (resubmitSection) resubmitSection.hidden = true;
 
@@ -1227,17 +1279,28 @@ export function updatePhotoPreviewUi() {
   const writingName = document.querySelector("#writingPhotoName");
   const mathPreview = document.querySelector("#mathPhotoPreview");
   const mathName = document.querySelector("#mathPhotoName");
+  const resubmitName = document.querySelector("#resubmitPhotoName");
 
-  const name = state.writingImage?.name || "Ảnh bài làm";
-  const hasImage = Boolean(state.writingImage);
+  const hasWritingImage = Boolean(state.writingPhoto || state.writingImage);
+  const writingImgName = state.writingPhoto?.name || state.writingImage?.name || "Ảnh bài viết";
+
+  const hasMathImage = Boolean(state.mathExamPhoto || state.examSession?.originalPhoto);
+  const mathImg = state.mathExamPhoto || state.examSession?.originalPhoto;
+  const mathImgName = mathImg?.name || "Ảnh bài kiểm tra";
+
+  const hasResubmitImage = Boolean(state.resubmitPhoto);
+  const resubmitImgName = state.resubmitPhoto?.name || "Ảnh bài sửa";
 
   if (writingPreview) {
-    if (writingName) writingName.textContent = hasImage ? name : "";
-    writingPreview.hidden = !hasImage;
+    if (writingName) writingName.textContent = hasWritingImage ? writingImgName : "";
+    writingPreview.hidden = !hasWritingImage;
   }
   if (mathPreview) {
-    if (mathName) mathName.textContent = hasImage ? name : "";
-    mathPreview.hidden = !hasImage;
+    if (mathName) mathName.textContent = hasMathImage ? mathImgName : "";
+    mathPreview.hidden = !hasMathImage;
+  }
+  if (resubmitName) {
+    resubmitName.textContent = hasResubmitImage ? `✓ Đã chọn: ${resubmitImgName}` : "";
   }
 }
 
@@ -1269,6 +1332,8 @@ export async function handleGlobalChange(e) {
     if (!isAllowedMime) {
       alert("Định dạng ảnh không được hỗ trợ. Vui lòng chọn ảnh JPEG, PNG hoặc WebP.");
       e.target.value = "";
+      if (e.target.id === "writingPhotoInput") state.writingPhoto = null;
+      else state.mathExamPhoto = null;
       state.writingImage = null;
       updatePhotoPreviewUi();
       return;
@@ -1280,6 +1345,8 @@ export async function handleGlobalChange(e) {
       if (!validation.ok) {
         alert(validation.error);
         e.target.value = "";
+        if (e.target.id === "writingPhotoInput") state.writingPhoto = null;
+        else state.mathExamPhoto = null;
         state.writingImage = null;
         updatePhotoPreviewUi();
         return;
@@ -1289,16 +1356,22 @@ export async function handleGlobalChange(e) {
     try {
       let photoData;
       if (typeof window !== "undefined" && typeof document !== "undefined" && window.HTMLCanvasElement) {
-        // Tự động nén qua Canvas phần cứng (1400px JPEG quality 0.82)
         photoData = await compressImageToJpeg(file, { maxWidth: 1400, quality: 0.82 });
       } else {
         photoData = await readPhotoAsBase64(file);
+      }
+      if (e.target.id === "writingPhotoInput") {
+        state.writingPhoto = photoData;
+      } else {
+        state.mathExamPhoto = photoData;
       }
       state.writingImage = photoData;
       updatePhotoPreviewUi();
     } catch (err) {
       alert("Không thể đọc file ảnh: " + err.message);
       e.target.value = "";
+      if (e.target.id === "writingPhotoInput") state.writingPhoto = null;
+      else state.mathExamPhoto = null;
       state.writingImage = null;
       updatePhotoPreviewUi();
     }
@@ -1309,6 +1382,15 @@ export async function handleGlobalChange(e) {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    const isAllowedMime = PHOTO_BOUNDS.ALLOWED_MIMES.includes(file.type);
+    if (!isAllowedMime) {
+      alert("Định dạng ảnh không được hỗ trợ. Vui lòng chọn ảnh JPEG, PNG hoặc WebP.");
+      e.target.value = "";
+      state.resubmitPhoto = null;
+      updatePhotoPreviewUi();
+      return;
+    }
+
     try {
       let photoData;
       if (typeof window !== "undefined" && typeof document !== "undefined" && window.HTMLCanvasElement) {
@@ -1317,12 +1399,12 @@ export async function handleGlobalChange(e) {
         photoData = await readPhotoAsBase64(file);
       }
       state.resubmitPhoto = photoData;
-      const nameEl = document.querySelector("#resubmitPhotoName");
-      if (nameEl) nameEl.textContent = `✓ Đã chọn ảnh: ${file.name} (~${Math.round((photoData.sizeBytes || photoData.data?.length || 0) / 1024)} KB)`;
+      updatePhotoPreviewUi();
     } catch (err) {
       alert("Không thể đọc ảnh: " + err.message);
       e.target.value = "";
       state.resubmitPhoto = null;
+      updatePhotoPreviewUi();
     }
     return;
   }
