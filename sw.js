@@ -65,6 +65,8 @@ const STATIC_ASSETS = [
   "js/render-tangram.js",
   "js/voice-input.js",
   "js/ai-client.js",
+  "js/image-compressor.js",
+  "js/math-weekend-exam.js",
   "data/curriculum-factory.js",
   "data/curriculum.js",
   "data/data-core.js",

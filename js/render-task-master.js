@@ -11,8 +11,22 @@ let activeTaskMasterSession = null;
 const esc = str => String(str ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
 export function renderTaskMasterView({ state, appRoot, saveLocal, levelIndex = 0, params = {} } = {}) {
-  const lIdx = params.level !== undefined ? parseInt(params.level, 10) - 1 : (params.puzzle !== undefined ? parseInt(params.puzzle, 10) : levelIndex);
-  const safeIdx = Math.max(0, Math.min(TASK_MASTER_LEVELS.length - 1, isNaN(lIdx) ? 0 : lIdx));
+  let targetIdx = levelIndex;
+  if (params.level !== undefined) {
+    targetIdx = parseInt(params.level, 10) - 1;
+  } else if (params.puzzle !== undefined) {
+    targetIdx = parseInt(params.puzzle, 10);
+  } else if (levelIndex === 0) {
+    const tmRecords = state?.db?.gameRecords?.taskMaster || {};
+    const completed = Array.isArray(tmRecords.completedLevels) ? tmRecords.completedLevels : [];
+    if (completed.length > 0) {
+      const nextUncompleted = TASK_MASTER_LEVELS.findIndex(lvl => !completed.includes(lvl.id));
+      if (nextUncompleted !== -1) {
+        targetIdx = nextUncompleted;
+      }
+    }
+  }
+  const safeIdx = Math.max(0, Math.min(TASK_MASTER_LEVELS.length - 1, isNaN(targetIdx) ? 0 : targetIdx));
 
   if (!activeTaskMasterSession || activeTaskMasterSession.levelIndex !== safeIdx) {
     activeTaskMasterSession = new TaskMasterSession({
@@ -37,9 +51,11 @@ export function renderTaskMasterView({ state, appRoot, saveLocal, levelIndex = 0
         }
 
         // Tự động thích ứng ZPD
+        const timeMs = Math.round(Date.now() - (activeTaskMasterSession.startTime || Date.now()));
         recordGameOutcome(state, "taskMaster", {
           success: true,
-          difficulty: activeTaskMasterSession.currentLevel.difficulty || 2
+          difficulty: activeTaskMasterSession.currentLevel.difficulty || 2,
+          timeMs
         });
 
         // Kiểm tra mở khóa huy chương
@@ -687,11 +703,27 @@ export function renderTaskMasterView({ state, appRoot, saveLocal, levelIndex = 0
       renderTaskMasterView({ state, appRoot, saveLocal, levelIndex: session.levelIndex });
     };
 
-    // 2. Chạy mô phỏng kế hoạch
+    // 2. Chạy mô phỏng kế hoạch (kèm chống bấm lướt khi làm quá nhanh)
     const runBtn = document.getElementById("btnRunSimulation");
     if (runBtn) {
       runBtn.onclick = async () => {
-        await session.runSimulation();
+        const elapsedSec = (Date.now() - (session.startTime || Date.now())) / 1000;
+        if (session.currentLevel?.tasks?.length >= 5 && elapsedSec < 4 && !session._rushConfirmed) {
+          if (typeof window !== "undefined" && typeof window.confirm === "function") {
+            const confirmed = window.confirm("⚡ Con làm siêu tốc quá! Con đã kiểm tra kỹ thứ tự các bước trước khi khởi động kế hoạch chưa?");
+            if (!confirmed) return;
+            session._rushConfirmed = true;
+          }
+        }
+        const val = await session.runSimulation();
+        if (val && !val.success && val.status === "failed") {
+          const timeMs = Math.round(Date.now() - (session.startTime || Date.now()));
+          recordGameOutcome(state, "taskMaster", {
+            success: false,
+            difficulty: session.currentLevel.difficulty || 2,
+            timeMs
+          });
+        }
       };
     }
 

@@ -21,6 +21,7 @@ export function renderSpatial3DView({ state, appRoot, saveLocal, challengeIndex 
   const diffMeta = getDifficultyMeta(ch.difficulty || 3);
   const records = state?.db?.gameRecords?.spatial3D || { stars: 0, completedChallenges: [] };
   const isCompleted = Array.isArray(records.completedChallenges) && records.completedChallenges.includes(ch.id);
+  const startTime = Date.now();
 
   // Lọc danh sách theo chế độ nếu người dùng chọn pill
   const filteredList = SPATIAL_3D_CHALLENGES.filter(c => currentFilterMode === "all" || c.mode === currentFilterMode);
@@ -208,13 +209,16 @@ export function renderSpatial3DView({ state, appRoot, saveLocal, challengeIndex 
             rec.completedChallenges.push(ch.id);
             rec.stars = (rec.stars || 0) + (ch.difficulty || 3);
             // Adaptive Engine: ghi nhận kết quả Spatial 3D
-            recordGameOutcome(state, "spatial3D", { success: true, difficulty: ch.difficulty || 3 });
+            const timeMs = Date.now() - startTime;
+            recordGameOutcome(state, "spatial3D", { success: true, difficulty: ch.difficulty || 3, timeMs });
             const newBadges = checkAndAwardBadges(state);
             for (const b of newBadges) showBadgeCelebration(b);
             if (typeof saveLocal === "function") await saveLocal();
           }
         }
       } else {
+        const timeMs = Date.now() - startTime;
+        recordGameOutcome(state, "spatial3D", { success: false, difficulty: ch.difficulty || 3, timeMs });
         feedbackArea.style.background = "#fff1f2";
         feedbackArea.style.color = "#9f1239";
         feedbackArea.innerHTML = `

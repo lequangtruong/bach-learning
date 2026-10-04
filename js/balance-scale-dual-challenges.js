@@ -592,7 +592,7 @@ export const DUAL_SCALE_CHALLENGES = [
     "id": "dual-13",
     "index": 12,
     "difficulty": 4,
-    "title": "Thử thách 1: Túi Vàng và Túi Xanh cơ bản",
+    "title": "Thử thách 13: Túi Vàng và Túi Xanh cơ bản",
     "problem": "Cân A: 2 Túi Vàng (X) + 1 Túi Xanh (Y) = 28 kg.\nCân B: 1 Túi Vàng (X) + 2 Túi Xanh (Y) = 26 kg.\nHãy tìm khối lượng của Túi Vàng (X) và Túi Xanh (Y) để cả hai cân cùng thăng bằng.",
     "unit": "kg",
     "scaleA": {
@@ -641,7 +641,7 @@ export const DUAL_SCALE_CHALLENGES = [
     "id": "dual-14",
     "index": 13,
     "difficulty": 4,
-    "title": "Thử thách 2: Quả dưa hấu và chùm nho",
+    "title": "Thử thách 14: Quả dưa hấu và chùm nho",
     "problem": "Cân A: 3 quả dưa (X) + 2 chùm nho (Y) = 32 kg.\nCân B: 1 quả dưa (X) + 2 chùm nho (Y) = 16 kg.\nHỏi mỗi quả dưa (X) và mỗi chùm nho (Y) nặng bao nhiêu kg?",
     "unit": "kg",
     "scaleA": {
@@ -690,7 +690,7 @@ export const DUAL_SCALE_CHALLENGES = [
     "id": "dual-15",
     "index": 14,
     "difficulty": 4,
-    "title": "Thử thách 3: Bình mật ong và hộp mứt",
+    "title": "Thử thách 15: Bình mật ong và hộp mứt",
     "problem": "Cân A: 2 bình mật ong (X) + 3 hộp mứt (Y) = 36 kg.\nCân B: 2 bình mật ong (X) + 1 hộp mứt (Y) = 20 kg.\nHỏi 1 bình mật ong (X) và 1 hộp mứt (Y) nặng bao nhiêu kg?",
     "unit": "kg",
     "scaleA": {
@@ -739,7 +739,7 @@ export const DUAL_SCALE_CHALLENGES = [
     "id": "dual-16",
     "index": 15,
     "difficulty": 4,
-    "title": "Thử thách 4: Phương pháp Thế Singapore",
+    "title": "Thử thách 16: Phương pháp Thế Singapore",
     "problem": "Cân A: 1 Túi Vàng (X) = 2 Túi Xanh (Y) + 3 kg.\nCân B: 1 Túi Vàng (X) + 1 Túi Xanh (Y) = 18 kg.\nHỏi Túi Vàng (X) và Túi Xanh (Y) nặng bao nhiêu kg?",
     "unit": "kg",
     "scaleA": {
@@ -788,7 +788,7 @@ export const DUAL_SCALE_CHALLENGES = [
     "id": "dual-17",
     "index": 16,
     "difficulty": 5,
-    "title": "Thử thách 5: Cân đối xứng Singapore (Olympic)",
+    "title": "Thử thách 17: Cân đối xứng Singapore (Olympic)",
     "problem": "Cân A: 4 Túi Vàng (X) + 3 Túi Xanh (Y) = 54 kg.\nCân B: 3 Túi Vàng (X) + 4 Túi Xanh (Y) = 51 kg.\nHỏi mỗi Túi Vàng (X) và Túi Xanh (Y) nặng bao nhiêu kg?",
     "unit": "kg",
     "scaleA": {
@@ -837,7 +837,7 @@ export const DUAL_SCALE_CHALLENGES = [
     "id": "dual-18",
     "index": 17,
     "difficulty": 5,
-    "title": "Thử thách 6: Cân gam trong phòng thí nghiệm",
+    "title": "Thử thách 18: Cân gam trong phòng thí nghiệm",
     "problem": "Cân A: 5 ống nghiệm X + 2 lọ dung dịch Y = 820 gam.\nCân B: 2 ống nghiệm X + 2 lọ dung dịch Y = 520 gam.\nHỏi mỗi ống nghiệm X và lọ dung dịch Y nặng bao nhiêu gam?",
     "unit": "g",
     "scaleA": {
@@ -886,7 +886,7 @@ export const DUAL_SCALE_CHALLENGES = [
     "id": "dual-19",
     "index": 18,
     "difficulty": 5,
-    "title": "Thử thách 7: Hai vế đều có vật nặng",
+    "title": "Thử thách 19: Hai vế đều có vật nặng",
     "problem": "Cân A: 3 Túi X + 2 Túi Y + 5 kg = 1 Túi X + 45 kg.\nCân B: 2 Túi X + 1 Túi Y = 29 kg.\nHỏi Túi X và Túi Y nặng bao nhiêu kg?",
     "unit": "kg",
     "scaleA": {
@@ -937,7 +937,7 @@ export const DUAL_SCALE_CHALLENGES = [
     "id": "dual-20",
     "index": 19,
     "difficulty": 5,
-    "title": "Thử thách 8: Gấp đôi một vế (Nhân hệ số)",
+    "title": "Thử thách 20: Gấp đôi một vế (Nhân hệ số)",
     "problem": "Cân A: 2 Túi Vàng (X) + 1 Túi Xanh (Y) = 25 kg.\nCân B: 3 Túi Vàng (X) + 2 Túi Xanh (Y) = 42 kg.\nHỏi mỗi Túi Vàng (X) và Túi Xanh (Y) nặng bao nhiêu kg?",
     "unit": "kg",
     "scaleA": {
@@ -986,7 +986,7 @@ export const DUAL_SCALE_CHALLENGES = [
     "id": "dual-21",
     "index": 20,
     "difficulty": 5,
-    "title": "Thử thách 9: Đổi đơn vị Tạ và Yến",
+    "title": "Thử thách 21: Đổi đơn vị Tạ và Yến",
     "problem": "Cân A: 3 bao ngô (X) + 1 bao gạo (Y) = 1 tạ 1 yến (11 yến).\nCân B: 1 bao ngô (X) + 1 bao gạo (Y) = 5 yến.\nHỏi mỗi bao ngô (X) và bao gạo (Y) nặng bao nhiêu yến?",
     "unit": "yến",
     "scaleA": {
@@ -1035,7 +1035,7 @@ export const DUAL_SCALE_CHALLENGES = [
     "id": "dual-22",
     "index": 21,
     "difficulty": 5,
-    "title": "Thử thách 10: Đỉnh cao Đại số liên hoàn",
+    "title": "Thử thách 22: Đỉnh cao Đại số liên hoàn",
     "problem": "Cân A: 5 Túi Vàng (X) + 3 Túi Xanh (Y) = 69 kg.\nCân B: 2 Túi Vàng (X) + 3 Túi Xanh (Y) = 42 kg.\nHỏi Túi Vàng (X) và Túi Xanh (Y) nặng bao nhiêu kg?",
     "unit": "kg",
     "scaleA": {
@@ -1084,7 +1084,7 @@ export const DUAL_SCALE_CHALLENGES = [
     "id": "dual-23",
     "index": 22,
     "difficulty": 4,
-    "title": "Thử thách 11: Khử 3 Túi Xanh",
+    "title": "Thử thách 23: Khử 3 Túi Xanh",
     "problem": "Cân A: 2 Túi Vàng (X) + 3 Túi Xanh (Y) = 39 kg.\nCân B: 1 Túi Vàng (X) + 3 Túi Xanh (Y) = 27 kg.\nHỏi mỗi Túi Vàng (X) và Túi Xanh (Y) nặng bao nhiêu kg?",
     "unit": "kg",
     "scaleA": {
@@ -1133,7 +1133,7 @@ export const DUAL_SCALE_CHALLENGES = [
     "id": "dual-24",
     "index": 23,
     "difficulty": 5,
-    "title": "Thử thách 12: Đấu trí Tổng–Hiệu Singapore",
+    "title": "Thử thách 24: Đấu trí Tổng–Hiệu Singapore",
     "problem": "Cân A: 1 Túi Vàng (X) + 2 Túi Xanh (Y) = 55 kg.\nCân B: 2 Túi Vàng (X) + 1 Túi Xanh (Y) = 50 kg.\nHỏi mỗi Túi Vàng (X) và Túi Xanh (Y) nặng bao nhiêu kg?",
     "unit": "kg",
     "scaleA": {
@@ -1182,7 +1182,7 @@ export const DUAL_SCALE_CHALLENGES = [
     "id": "dual-25",
     "index": 24,
     "difficulty": 5,
-    "title": "Thử thách 13: Bó hoa hồng và giỏ trái cây",
+    "title": "Thử thách 25: Bó hoa hồng và giỏ trái cây",
     "problem": "Cân A: 2 giỏ trái cây (X) + 1 bó hoa (Y) = 64 kg.\nCân B: 2 giỏ trái cây (X) + 3 bó hoa (Y) = 92 kg.\nHỏi mỗi giỏ trái cây (X) và bó hoa (Y) nặng bao nhiêu kg?",
     "unit": "kg",
     "scaleA": {
@@ -1231,7 +1231,7 @@ export const DUAL_SCALE_CHALLENGES = [
     "id": "dual-26",
     "index": 25,
     "difficulty": 5,
-    "title": "Thử thách 14: Phương pháp thế một vế",
+    "title": "Thử thách 26: Phương pháp thế một vế",
     "problem": "Cân A: 1 Túi Vàng (X) = 2 Túi Xanh (Y) + 4 kg.\nCân B: 1 Túi Vàng (X) + 2 Túi Xanh (Y) = 32 kg.\nHỏi Túi Vàng (X) và Túi Xanh (Y) nặng bao nhiêu kg?",
     "unit": "kg",
     "scaleA": {
@@ -1280,7 +1280,7 @@ export const DUAL_SCALE_CHALLENGES = [
     "id": "dual-27",
     "index": 26,
     "difficulty": 5,
-    "title": "Thử thách 15: Thùng dầu và can xăng",
+    "title": "Thử thách 27: Thùng dầu và can xăng",
     "problem": "Cân A: 3 thùng dầu (X) + 2 can xăng (Y) = 114 kg.\nCân B: 1 thùng dầu (X) + 2 can xăng (Y) = 54 kg.\nHỏi mỗi thùng dầu (X) và can xăng (Y) nặng bao nhiêu kg?",
     "unit": "kg",
     "scaleA": {
@@ -1329,7 +1329,7 @@ export const DUAL_SCALE_CHALLENGES = [
     "id": "dual-28",
     "index": 27,
     "difficulty": 5,
-    "title": "Thử thách 16: Cân đối xứng 3X+2Y và 2X+3Y",
+    "title": "Thử thách 28: Cân đối xứng 3X+2Y và 2X+3Y",
     "problem": "Cân A: 3 Túi Vàng (X) + 2 Túi Xanh (Y) = 74 kg.\nCân B: 2 Túi Vàng (X) + 3 Túi Xanh (Y) = 76 kg.\nHỏi Túi Vàng (X) và Túi Xanh (Y) nặng bao nhiêu kg?",
     "unit": "kg",
     "scaleA": {
@@ -1378,7 +1378,7 @@ export const DUAL_SCALE_CHALLENGES = [
     "id": "dual-29",
     "index": 28,
     "difficulty": 5,
-    "title": "Thử thách 17: Cân hóa chất gam chuẩn",
+    "title": "Thử thách 29: Cân hóa chất gam chuẩn",
     "problem": "Cân A: 2 lọ hóa chất X + 1 hộp bột Y = 550 gam.\nCân B: 2 lọ hóa chất X + 3 hộp bột Y = 1050 gam.\nHỏi mỗi lọ hóa chất X và hộp bột Y nặng bao nhiêu gam?",
     "unit": "g",
     "scaleA": {
@@ -1427,7 +1427,7 @@ export const DUAL_SCALE_CHALLENGES = [
     "id": "dual-30",
     "index": 29,
     "difficulty": 5,
-    "title": "Thử thách 18: Hai túi hàng số lớn",
+    "title": "Thử thách 30: Hai túi hàng số lớn",
     "problem": "Cân A: 2 Túi X + 3 Túi Y = 89 kg.\nCân B: 4 Túi X + 3 Túi Y = 133 kg.\nHỏi mỗi Túi X và Túi Y nặng bao nhiêu kg?",
     "unit": "kg",
     "scaleA": {
@@ -1476,7 +1476,7 @@ export const DUAL_SCALE_CHALLENGES = [
     "id": "dual-31",
     "index": 30,
     "difficulty": 5,
-    "title": "Thử thách 19: Nhân đôi một phương trình",
+    "title": "Thử thách 31: Nhân đôi một phương trình",
     "problem": "Cân A: 1 Túi Vàng (X) + 3 Túi Xanh (Y) = 95 kg.\nCân B: 2 Túi Vàng (X) + 1 Túi Xanh (Y) = 90 kg.\nHỏi mỗi Túi Vàng (X) và Túi Xanh (Y) nặng bao nhiêu kg?",
     "unit": "kg",
     "scaleA": {
@@ -1525,7 +1525,7 @@ export const DUAL_SCALE_CHALLENGES = [
     "id": "dual-32",
     "index": 31,
     "difficulty": 5,
-    "title": "Thử thách 20: Đỉnh cao Olympic 4X+3Y và 3X+4Y",
+    "title": "Thử thách 32: Đỉnh cao Olympic 4X+3Y và 3X+4Y",
     "problem": "Cân A: 4 Túi Vàng (X) + 3 Túi Xanh (Y) = 290 kg.\nCân B: 3 Túi Vàng (X) + 4 Túi Xanh (Y) = 270 kg.\nHỏi mỗi Túi Vàng (X) và Túi Xanh (Y) nặng bao nhiêu kg?",
     "unit": "kg",
     "scaleA": {

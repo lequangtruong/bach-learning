@@ -1,5 +1,5 @@
 // js/render-tangram.js - Giao diện Xếp Hình Trí Uẩn Tangram Singapore GEP cho Bách
-import { TangramSession, TANGRAM_PUZZLES, TANGRAM_PIECES_CONFIG, getPiecePolygonPoints } from "./tangram.js";
+import { TangramSession, TANGRAM_PUZZLES, TANGRAM_PIECES_CONFIG, getPiecePolygonPoints, generateSilhouettePath } from "./tangram.js";
 import { getDifficultyMeta } from "./render-games.js";
 import { recordGameOutcome } from "./adaptive-engine.js";
 import { checkAndAwardBadges, showBadgeCelebration } from "./badge-system.js";
@@ -121,7 +121,7 @@ export function renderTangramView({ state, appRoot, saveLocal, puzzleIndex = 0, 
             
             <!-- Hình bóng mục tiêu Silhouette -->
             <g id="tangramSilhouetteGroup">
-              <path d="${puzzle.silhouettePath}" fill="${session.guideMode === 'outline' ? '#e2e8f0' : '#1e293b'}" stroke="${session.guideMode === 'outline' ? '#94a3b8' : 'none'}" stroke-width="2" stroke-dasharray="${session.guideMode === 'outline' ? '4,4' : 'none'}" />
+              <path d="${puzzle.silhouettePath || generateSilhouettePath(puzzle.targetLayout)}" fill="${session.guideMode === 'outline' ? '#e2e8f0' : '#1e293b'}" stroke="${session.guideMode === 'outline' ? '#94a3b8' : 'none'}" stroke-width="2" stroke-dasharray="${session.guideMode === 'outline' ? '4,4' : 'none'}" />
             </g>
 
             <!-- Các mảnh ghép Tangram -->

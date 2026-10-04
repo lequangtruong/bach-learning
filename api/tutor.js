@@ -236,7 +236,7 @@ export default async function handler(req, res) {
   if (!imageValidation.valid) return sendJson(res, imageValidation.status, { error: imageValidation.error });
   const validWritingImage = imageValidation.image;
 
-  let userMessage = boundString(body.userMessage || body.prompt, 2400);
+  let userMessage = boundString(body.userMessage || body.prompt, 4000);
   if (!userMessage && validWritingImage) {
     userMessage = "Bách vừa gửi ảnh chụp bài viết trên giấy. Nhờ AI xem ảnh và chữa bài giúp Bách.";
   }

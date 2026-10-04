@@ -14,10 +14,10 @@ export const MEGAPROJECTS = [
     levelEnd: 100,
     description: "Xây dựng và vận hành trung tâm y tế cứu nạn khẩn cấp, từ lều phân loại thương binh, phòng mổ vô trùng đến trực thăng cứu thương.",
     stages: [
-      { id: "s1", title: "Tiếp Nhận & Phân Tuyến Cấp Cứu", levels: [81, 82, 83, 84, 85], icon: "🚑" },
-      { id: "s2", title: "Phòng Mổ Vô Trùng Dã Chiến", levels: [86, 87, 88, 89, 90], icon: "🩺" },
-      { id: "s3", title: "Kho Dược Phẩm & Trạm Oxy", levels: [91, 92, 93, 94, 95], icon: "💊" },
-      { id: "s4", title: "Sân Bay Trực Thăng & Hồi Sức Tích Cực", levels: [96, 97, 98, 99, 100], icon: "🚁" }
+      { id: "s1", title: "Sơ Cứu Khẩn Cấp & Tiệt Trùng Phòng Mổ", levels: [81, 82, 83, 84, 85], icon: "🚑" },
+      { id: "s2", title: "Thủ Thuật Heimlich, Cầm Máu & Bảo Quản Vaccine", levels: [86, 87, 88, 89, 90], icon: "🩺" },
+      { id: "s3", title: "Xe Cứu Thương & Buồng Cách Ly Áp Lực Âm", levels: [91, 92, 93, 94, 95], icon: "💊" },
+      { id: "s4", title: "Phân Loại Thảm Họa & Trực Thăng Cứu Nạn", levels: [96, 97, 98, 99, 100], icon: "🚁" }
     ]
   },
   {
@@ -33,10 +33,10 @@ export const MEGAPROJECTS = [
     levelEnd: 120,
     description: "Thiết lập dây chuyền sản xuất tự động hóa thông minh: từ cánh tay robot hàn laser, mắt thần AI kiểm tra lỗi đến lắp ráp xe tự lái.",
     stages: [
-      { id: "s1", title: "Hạ Tầng Điện & Băng Chuyền", levels: [101, 102, 103, 104, 105], icon: "⚡" },
-      { id: "s2", title: "Cánh Tay Robot Cơ Khí & Hàn", levels: [106, 107, 108, 109, 110], icon: "🦾" },
-      { id: "s3", title: "Cảm Biến AI & Mắt Thần Kiểm Định", levels: [111, 112, 113, 114, 115], icon: "👁️" },
-      { id: "s4", title: "Dây Chuyền Lắp Ráp Xe Tự Lái", levels: [116, 117, 118, 119, 120], icon: "🚗" }
+      { id: "s1", title: "Cánh Tay Robot CNC & Hàn Laser Tự Động", levels: [101, 102, 103, 104, 105], icon: "⚡" },
+      { id: "s2", title: "Camera AI Băng Chuyền & Dán Linh Kiện SMT", levels: [106, 107, 108, 109, 110], icon: "🦾" },
+      { id: "s3", title: "An Ninh Mạng Tường Lửa & Sơn Tĩnh Điện", levels: [111, 112, 113, 114, 115], icon: "👁️" },
+      { id: "s4", title: "Dây Chuyền Lắp Ráp Xuất Xưởng Xe Tự Lái", levels: [116, 117, 118, 119, 120], icon: "🚗" }
     ]
   },
   {
@@ -52,10 +52,10 @@ export const MEGAPROJECTS = [
     levelEnd: 140,
     description: "Hồi sinh một hòn đảo khô cằn và vùng rạn san hô bạc màu thành thiên đường sinh thái tràn ngập sự sống và công nghệ IoT bảo vệ động vật.",
     stages: [
-      { id: "s1", title: "Làm Sạch Nguồn Nước & Cải Tạo Đất", levels: [121, 122, 123, 124, 125], icon: "💧" },
-      { id: "s2", title: "Vườn Ươm Cây Bản Địa & Thủy Canh", levels: [126, 127, 128, 129, 130], icon: "🌱" },
-      { id: "s3", title: "Rạn San Hô & Lọc Rác Đại Dương", levels: [131, 132, 133, 134, 135], icon: "🪸" },
-      { id: "s4", title: "Trạm Cảm Biến IoT & Thả Thú Quý", levels: [136, 137, 138, 139, 140], icon: "🦅" }
+      { id: "s1", title: "Khảo Sát Nguồn Nước & Cải Tạo Đất Chua Phèn", levels: [121, 122, 123, 124, 125], icon: "💧" },
+      { id: "s2", title: "Cứu Hộ Rùa Biển & Cấy Ghép Rạn San Hô", levels: [126, 127, 128, 129, 130], icon: "🌱" },
+      { id: "s3", title: "Phòng Chống Cháy Rừng & Rừng Ngập Mặn Ven Biển", levels: [131, 132, 133, 134, 135], icon: "🪸" },
+      { id: "s4", title: "Định Vị Vệ Tinh & Tái Thả Động Vật Rừng", levels: [136, 137, 138, 139, 140], icon: "🦅" }
     ]
   },
   {
@@ -71,10 +71,10 @@ export const MEGAPROJECTS = [
     levelEnd: 160,
     description: "Quy hoạch và xây dựng một siêu đô thị trung hòa carbon: mạng lưới tàu điện ngầm ngầm, tháp lọc không khí, điện gió ngoài khơi.",
     stages: [
-      { id: "s1", title: "Khảo Sát Địa Chất & Nền Móng", levels: [141, 142, 143, 144, 145], icon: "🏗️" },
-      { id: "s2", title: "Mạng Lưới Tàu Điện Ngầm & Nước Thải", levels: [146, 147, 148, 149, 150], icon: "🚇" },
-      { id: "s3", title: "Lưới Điện Tái Tạo & Tháp Gió", levels: [151, 152, 153, 154, 155], icon: "🌬️" },
-      { id: "s4", title: "Tòa Tháp Xanh & Trung Tâm Điều Hành", levels: [156, 157, 158, 159, 160], icon: "🏢" }
+      { id: "s1", title: "Nền Móng Tháp & Tuyến Tàu Điện Ngầm Metro", levels: [141, 142, 143, 144, 145], icon: "🏗️" },
+      { id: "s2", title: "Xử Lý Nước Thải, Tuabin Gió & Cầu Vượt Biển", levels: [146, 147, 148, 149, 150], icon: "🚇" },
+      { id: "s3", title: "Vườn Treo Sinh Thái & Trung Tâm Điều Hành IOC", levels: [151, 152, 153, 154, 155], icon: "🌬️" },
+      { id: "s4", title: "Mạng Lưới Cảm Biến & Khánh Thành Tòa Tháp Biểu Tượng", levels: [156, 157, 158, 159, 160], icon: "🏢" }
     ]
   },
   {
@@ -90,9 +90,9 @@ export const MEGAPROJECTS = [
     levelEnd: 200,
     description: "Công trình vĩ đại nhất của nhân loại: xây dựng căn cứ tự cung tự cấp tại Cực Nam Mặt Trăng, mở đường cho kỷ nguyên thám hiểm Sao Hỏa.",
     stages: [
-      { id: "s1", title: "Tên Lửa Đẩy Siêu Nặng & Đổ Bộ", levels: [181, 182, 183, 184, 185], icon: "🚀" },
-      { id: "s2", title: "Robot Đào Hầm & Trạm Điện Mặt Trời", levels: [186, 187, 188, 189, 190], icon: "⚡" },
-      { id: "s3", title: "Khai Thác Băng Ngầm & Luyện Oxy", levels: [191, 192, 193, 194, 195], icon: "🧊" },
+      { id: "s1", title: "Tên Lửa Đẩy Siêu Nặng & Tàu Đổ Bộ", levels: [181, 182, 183, 184, 185], icon: "🚀" },
+      { id: "s2", title: "Robot Rover, Pin Mặt Trời & Khai Thác Băng Luyện Oxy", levels: [186, 187, 188, 189, 190], icon: "⚡" },
+      { id: "s3", title: "Robot In 3D Khiên Chắn & Khoang Sinh Hoạt Module", levels: [191, 192, 193, 194, 195], icon: "🧊" },
       { id: "s4", title: "Vòm Sinh Quyển Biosphere & Đón Người", levels: [196, 197, 198, 199, 200], icon: "👨‍🚀" }
     ]
   }

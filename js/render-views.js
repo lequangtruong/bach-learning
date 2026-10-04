@@ -16,6 +16,7 @@ import {
 } from "../data/data-core.js";
 import { BUG_CASES } from "./spot-the-bug.js";
 import { getDailyGameChallenges, getDifficultyMeta } from "./render-games.js";
+import { getWeekendMathExam, renderExamPaperHtml } from "./math-weekend-exam.js";
 
 // SVG視覚モデルのレンダリング関数
 export function renderSvgVisual(visual) {
@@ -684,6 +685,10 @@ export function createRenderViews(dependencies = {}) {
       const byNorm = item.dailyPlan.findIndex(d => d.day.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[\s\-_]/g, "") === norm);
       if (byNorm !== -1) return byNorm;
 
+      if (["sunday", "chunhat", "cn", "weekend", "test", "kiemtra"].includes(norm)) {
+        return Math.min(5, (item.dailyPlan.length || 6) - 1);
+      }
+
       const num = parseInt(target, 10);
       if (Number.isFinite(num)) {
         if (num >= 0 && num < item.dailyPlan.length) return num;
@@ -833,6 +838,15 @@ export function createRenderViews(dependencies = {}) {
     const app = getAppRoot();
     const documentObj = getDocumentObj();
 
+    const isWeekendMathTest = isMath && !isParentPreview && (
+      dayIndex === 5 ||
+      day?.day === "Thứ 7" ||
+      ["sunday", "chunhat", "cn", "saturday", "thu7", "t7", "test", "kiemtra"].includes(String(dayParam || "").toLowerCase()) ||
+      String(params?.get("mode") || "").toLowerCase() === "test"
+    );
+
+    const weekendExam = isWeekendMathTest ? getWeekendMathExam(week.number, day) : null;
+
     if (!app) return "";
     app.innerHTML = `
     ${renderDriveBar()}
@@ -841,7 +855,7 @@ export function createRenderViews(dependencies = {}) {
       <div>
         <div class="eyebrow">${name.toUpperCase()} · ${isParentPreview ? "PHỤ HUYNH ĐANG XEM TRƯỚC" : "VÀO HỌC NGAY"}</div>
         <h2>${escapeHtml(day?.title || (isShowAllDays ? `${name} Tuần ${week.number} · Toàn bộ 6 buổi học` : item[0]))}</h2>
-        <p>Tuần ${week.number} · ${escapeHtml(dayLabel)} · ${dayLabel === "Thứ 7" ? "50" : isShowAllDays ? "Toàn bộ tuần" : "25"} phút</p>
+        <p>Tuần ${week.number} · ${escapeHtml(dayLabel)} · ${isWeekendMathTest ? "30 phút kiểm tra (tổng 50′)" : dayLabel === "Thứ 7" ? "50" : isShowAllDays ? "Toàn bộ tuần" : "25"} phút</p>
       </div>
       <div class="study-hero-actions">
         ${isParentPreview ? `
@@ -852,6 +866,61 @@ export function createRenderViews(dependencies = {}) {
         `}
       </div>
     </section>
+    ${isWeekendMathTest ? `
+    <section class="math-test-hero-banner" aria-label="Bài kiểm tra 30 phút môn Toán">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px">
+        <span style="font-size:1.4rem">🏆</span>
+        <span style="font-size:0.82rem; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; background:rgba(255,255,255,0.2); padding:3px 10px; border-radius:999px">BÀI KIỂM TRA ĐỊNH KỲ 30 PHÚT · TOÁN LỚP 4</span>
+      </div>
+      <h3 style="margin:4px 0 8px; font-size:1.3rem; font-weight:800; color:#ffffff">${escapeHtml(day?.title || `Bài Kiểm Tra Tuần ${week.number}`)}</h3>
+      <div style="display:flex; flex-wrap:wrap; gap:12px; font-size:0.88rem; color:#e0f2fe; margin-bottom:10px">
+        <span>📚 <b>Bộ sách:</b> Kết Nối Tri Thức Với Cuộc Sống</span>
+        <span>⏱️ <b>Thời gian làm bài:</b> 30 phút</span>
+        <span>🎯 <b>Thang điểm:</b> 10 điểm</span>
+      </div>
+      <p style="margin:0; font-size:0.92rem; line-height:1.5; color:#f0f9ff">
+        📝 <b>Hướng dẫn cho Bách:</b> Bách cần có <b>vở nháp</b> trước khi làm bài để nháp các phép tính và thử lại kết quả cẩn thận. Bách làm bài ra vở ô ly trong 30 phút, trình bày đặt tính thẳng hàng, sạch đẹp. Làm xong Bách bấm <b>Chụp ảnh bài làm trên vở</b> bên dưới để cùng AI chấm điểm nhé!
+      </p>
+    </section>
+
+    ${weekendExam ? renderExamPaperHtml(weekendExam) : ""}
+
+    <section class="writing-submission-panel math-test-submission-panel" style="margin:16px 0; border:2px solid #0284c7 !important; background:#f0f9ff !important; border-radius:12px; padding:18px">
+      <div class="eyebrow" style="color:#0369a1">NỘP BÀI KIỂM TRA · CHỤP ẢNH VỞ Ô LY &amp; GHI ÂM (IPAD PRO 11")</div>
+      <h3 style="margin:4px 0 6px; font-size:1.15rem; font-weight:800; color:#0c4a6e">Chụp ảnh bài làm trên vở để AI chấm điểm theo Barem Toán 4</h3>
+      <p class="week-focus" style="margin-bottom:12px; color:#334155">
+        Hệ thống tự động nén ảnh siêu nét trong 15ms (chuẩn JPEG tối ưu cho iPad Pro 11" &amp; chip Apple). Bách có thể bấm nút mic nói thêm 15–20 giây giải thích cách làm câu khó nhất!
+      </p>
+
+      <div class="math-submission-controls" style="display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:12px">
+        <label for="mathPhotoInput" class="photo-button" role="button" tabindex="0" title="Chụp ảnh bài làm trên vở (JPEG, PNG, WebP tự động nén)" style="background:#0284c7; color:#fff">
+          📷 Chụp ảnh bài làm trên vở
+        </label>
+        <input type="file" id="mathPhotoInput" class="visually-hidden" accept="image/jpeg,image/png,image/webp" capture="environment">
+
+        <button class="voice-button" id="mathVoiceBtn" data-voice-for="#mathTestExplanation" type="button" title="Ghi âm Bách nói giải thích cách làm">
+          🎤 Đọc / Nói giải thích cách làm
+        </button>
+        <span id="mathVoiceIndicator" class="voice-listening-label" hidden>● Đang nghe Bách nói…</span>
+      </div>
+
+      <div id="mathPhotoPreview" class="photo-preview-bar" ${state?.writingImage ? "" : "hidden"}>
+        <span id="mathPhotoName" class="photo-name">${state?.writingImage ? escapeHtml(state.writingImage.name) : ""}</span>
+        <button type="button" id="removeMathPhotoBtn" class="text-button remove-photo-btn" title="Bỏ ảnh này">✕ Bỏ ảnh</button>
+      </div>
+
+      <div style="margin-top:10px">
+        <textarea id="mathTestExplanation" class="ai-input" rows="2" placeholder="Lời giải thích thêm bằng giọng nói của Bách (hoặc ghi chú cho bài toán nếu có)..."></textarea>
+      </div>
+
+      <div style="margin-top:12px; display:flex; flex-wrap:wrap; gap:12px; align-items:center">
+        <button class="small-button" id="sendMathTestToAi" type="button" style="background:#0284c7; color:#fff; font-weight:700; padding:12px 24px; font-size:1.05rem; border-radius:8px; cursor:pointer">
+          🚀 Nộp bài &amp; Chấm điểm theo Barem Toán 4
+        </button>
+        <span id="mathGradingStatus" style="font-size:0.88rem; color:#64748b; font-weight:600"></span>
+      </div>
+    </section>
+    ` : ""}
     ${!isMath && !isParentPreview ? `<section class="writing-submission-panel study-writing-shortcut">
       <div class="eyebrow">VIẾT TRÊN GIẤY · RỒI ĐỌC VÀO ĐÂY</div>
       <p>Bách viết xong thì đọc bài vào ô dưới đây. Bàn phím và ảnh chụp là phương án dự phòng.</p>

@@ -5,6 +5,7 @@ import { checkAndAwardBadges, showBadgeCelebration } from "./badge-system.js";
 
 let activeSession = null;
 let currentTimerId = null;
+let roundStartTime = null;
 
 const esc = str => String(str ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
@@ -168,6 +169,7 @@ export function renderChimpMemoryView({ state, appRoot, saveLocal, level } = {})
     // 1. Nút Bắt đầu
     appRoot.querySelector("#chimpStartBtn")?.addEventListener("click", () => {
       session.startRound();
+      roundStartTime = Date.now();
       renderChimpMemoryView({ state, appRoot, saveLocal });
 
       if (currentTimerId) clearTimeout(currentTimerId);
@@ -187,6 +189,7 @@ export function renderChimpMemoryView({ state, appRoot, saveLocal, level } = {})
           const res = session.tapTile(r, c);
 
           if (res.ok) {
+            const timeMs = roundStartTime ? Date.now() - roundStartTime : 0;
             if (res.isCompleted) {
               // Lưu sao và kỷ lục
               if (state?.db) {
@@ -203,11 +206,14 @@ export function renderChimpMemoryView({ state, appRoot, saveLocal, level } = {})
                   rec.maxLevel = session.currentLevel;
                 }
                 // Adaptive Engine: ghi nhận kết quả Chimp Memory
-                recordGameOutcome(state, "chimpMemory", { success: true, difficulty: Math.min(5, session.currentLevel) });
+                recordGameOutcome(state, "chimpMemory", { success: true, difficulty: Math.min(5, session.currentLevel), score: session.score, timeMs });
                 const newBadges = checkAndAwardBadges(state);
                 for (const b of newBadges) showBadgeCelebration(b);
                 if (typeof saveLocal === "function") await saveLocal();
               }
+            } else if (!res.isCorrect) {
+              // Sai số: Thua vòng
+              recordGameOutcome(state, "chimpMemory", { success: false, difficulty: Math.min(5, session.currentLevel), score: session.score, timeMs });
             }
             renderChimpMemoryView({ state, appRoot, saveLocal });
           }
@@ -219,6 +225,7 @@ export function renderChimpMemoryView({ state, appRoot, saveLocal, level } = {})
     appRoot.querySelector("#chimpNextLevelBtn")?.addEventListener("click", () => {
       session.nextLevel();
       session.startRound();
+      roundStartTime = Date.now();
       renderChimpMemoryView({ state, appRoot, saveLocal });
 
       if (currentTimerId) clearTimeout(currentTimerId);
@@ -231,6 +238,7 @@ export function renderChimpMemoryView({ state, appRoot, saveLocal, level } = {})
 
     appRoot.querySelector("#chimpPlayAgainBtn")?.addEventListener("click", () => {
       session.startRound();
+      roundStartTime = Date.now();
       renderChimpMemoryView({ state, appRoot, saveLocal });
 
       if (currentTimerId) clearTimeout(currentTimerId);
@@ -243,6 +251,7 @@ export function renderChimpMemoryView({ state, appRoot, saveLocal, level } = {})
 
     appRoot.querySelector("#chimpRetryBtn")?.addEventListener("click", () => {
       session.startRound();
+      roundStartTime = Date.now();
       renderChimpMemoryView({ state, appRoot, saveLocal });
 
       if (currentTimerId) clearTimeout(currentTimerId);

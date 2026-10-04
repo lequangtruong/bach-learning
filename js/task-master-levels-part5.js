@@ -2532,7 +2532,7 @@ export const TASK_MASTER_LEVELS_PART5 = [
   {
     "id": "tm-200",
     "level": 200,
-    "title": "Màn 200: Khởi Động Vận Hành Căn Cứ Mặt Trăng Tự Chủ Vĩnh Viễn",
+    "title": "Khởi Động Vận Hành Căn Cứ Mặt Trăng Tự Chủ Vĩnh Viễn",
     "category": "megaproject",
     "categoryName": "Căn Cứ Mặt Trăng",
     "icon": "🌕",

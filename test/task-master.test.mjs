@@ -817,3 +817,39 @@ test("task-master: plan info notebook, causality explanations, and kid-friendly 
   assert.ok(modalHtml81.includes("btnClosePlanInfo"), "Must provide modal close button");
 });
 
+test("task-master: tm-200 title is clean and megaproject stages match actual level contents", () => {
+  // 1. Verify tm-200 has no 'Màn 200:' prefix
+  const lvl200 = getLevelById("tm-200");
+  assert.ok(lvl200, "tm-200 must exist");
+  assert.equal(lvl200.title.startsWith("Màn 200:"), false, "tm-200 must not have 'Màn 200:' prefix");
+  assert.equal(lvl200.title, "Khởi Động Vận Hành Căn Cứ Mặt Trăng Tự Chủ Vĩnh Viễn");
+
+  // 2. Verify all 5 megaprojects have stages where key concepts appear in level titles
+  for (const project of MEGAPROJECTS) {
+    assert.equal(project.stages.length, 4, `Project ${project.id} must have 4 stages`);
+    for (const stage of project.stages) {
+      assert.ok(stage.title && stage.title.length > 5, `Stage ${stage.id} must have descriptive title`);
+      const stageLevels = stage.levels.map(num => getLevelById(`tm-${num}`));
+      assert.equal(stageLevels.length, 5, `Stage ${stage.id} must contain 5 levels`);
+
+      // Extract significant keywords from stage title (length >= 4, excluding conjunctions)
+      const stopWords = new Set(["và", "các", "cho", "của", "trên", "trong", "sang", "theo", "bằng"]);
+      const keywords = stage.title
+        .toLowerCase()
+        .replace(/[&(),.-]/g, " ")
+        .split(/\s+/)
+        .filter(w => w.length >= 4 && !stopWords.has(w));
+
+      // At least one keyword must be present in the level titles of this stage
+      const combinedLevelTitles = stageLevels.map(l => l.title.toLowerCase()).join(" ");
+      const hasMatch = keywords.some(kw => combinedLevelTitles.includes(kw));
+
+      assert.equal(
+        hasMatch,
+        true,
+        `Stage "${stage.title}" in project ${project.id} must match level contents: keywords [${keywords.join(", ")}] in "${combinedLevelTitles}"`
+      );
+    }
+  }
+});
+

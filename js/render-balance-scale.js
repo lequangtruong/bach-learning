@@ -52,6 +52,7 @@ export function renderBalanceScaleView({ state, appRoot, saveLocal, challengeInd
     const diffMeta = getDifficultyMeta(ch.difficulty || 5);
     const records = state?.db?.gameRecords?.dualBalanceScale || { stars: 0, completedChallenges: [] };
     const isCompleted = Array.isArray(records.completedChallenges) && records.completedChallenges.includes(ch.id);
+    const startTime = Date.now();
 
     appRoot.innerHTML = `
       <div style="margin-bottom:16px; display:flex; gap:12px; align-items:center; flex-wrap:wrap">
@@ -239,12 +240,15 @@ export function renderBalanceScaleView({ state, appRoot, saveLocal, challengeInd
             rec.completedChallenges.push(ch.id);
             rec.stars = (rec.stars || 0) + 1;
             // Adaptive Engine: ghi nhận kết quả Dual Balance Scale
-            recordGameOutcome(state, "balanceScale", { success: true, difficulty: ch.difficulty || 3 });
+            const timeMs = Date.now() - startTime;
+            recordGameOutcome(state, "balanceScale", { success: true, difficulty: ch.difficulty || 3, timeMs });
             const newBadges = checkAndAwardBadges(state);
             for (const b of newBadges) showBadgeCelebration(b);
             if (typeof saveLocal === "function") await saveLocal(true);
           }
         } else {
+          const timeMs = Date.now() - startTime;
+          recordGameOutcome(state, "balanceScale", { success: false, difficulty: ch.difficulty || 3, timeMs });
           fbArea.style.background = "#fffbeb";
           fbArea.style.border = "1px solid #fde68a";
           fbArea.style.color = "#92400e";
@@ -276,6 +280,7 @@ export function renderBalanceScaleView({ state, appRoot, saveLocal, challengeInd
     const p = session.getCurrentPuzzle();
     const records = state?.db?.gameRecords?.detectiveScale || { stars: 0, completedPuzzles: [] };
     const isCompleted = Array.isArray(records.completedPuzzles) && records.completedPuzzles.includes(p.id);
+    const startTime = Date.now();
 
     // Danh sách tất cả các quả bóng
     const allBalls = Array.from({ length: p.ballCount }, (_, i) => i + 1);
@@ -524,12 +529,15 @@ export function renderBalanceScaleView({ state, appRoot, saveLocal, challengeInd
             rec.completedPuzzles.push(p.id);
             rec.stars = (rec.stars || 0) + 1;
             // Adaptive Engine: ghi nhận kết quả Detective Scale
-            recordGameOutcome(state, "balanceScale", { success: true, difficulty: p.difficulty || 3 });
+            const timeMs = Date.now() - startTime;
+            recordGameOutcome(state, "balanceScale", { success: true, difficulty: p.difficulty || 3, timeMs });
             const newBadges = checkAndAwardBadges(state);
             for (const b of newBadges) showBadgeCelebration(b);
             if (typeof saveLocal === "function") await saveLocal(true);
           }
         } else {
+          const timeMs = Date.now() - startTime;
+          recordGameOutcome(state, "balanceScale", { success: false, difficulty: p.difficulty || 3, timeMs });
           guessFbArea.style.background = "#fffbeb";
           guessFbArea.style.border = "1px solid #fde68a";
           guessFbArea.style.color = "#92400e";
@@ -552,6 +560,7 @@ export function renderBalanceScaleView({ state, appRoot, saveLocal, challengeInd
     const diffMeta = getDifficultyMeta(ch.difficulty || 2);
     const bRec = state?.db?.gameRecords?.balanceScale || { stars: 0, completedChallenges: [] };
     const isCompleted = Array.isArray(bRec.completedChallenges) && bRec.completedChallenges.includes(ch.id);
+    const startTime = Date.now();
 
     appRoot.innerHTML = `
       <div style="margin-bottom:16px; display:flex; gap:12px; align-items:center; flex-wrap:wrap">
@@ -734,12 +743,15 @@ export function renderBalanceScaleView({ state, appRoot, saveLocal, challengeInd
             rec.completedChallenges.push(ch.id);
             rec.stars = (rec.stars || 0) + 1;
             // Adaptive Engine: ghi nhận kết quả Single Balance Scale
-            recordGameOutcome(state, "balanceScale", { success: true, difficulty: ch.difficulty || 2 });
+            const timeMs = Date.now() - startTime;
+            recordGameOutcome(state, "balanceScale", { success: true, difficulty: ch.difficulty || 2, timeMs });
             const newBadges = checkAndAwardBadges(state);
             for (const b of newBadges) showBadgeCelebration(b);
             if (typeof saveLocal === "function") await saveLocal(true);
           }
         } else {
+          const timeMs = Date.now() - startTime;
+          recordGameOutcome(state, "balanceScale", { success: false, difficulty: ch.difficulty || 2, timeMs });
           fbArea.style.background = "#fffbeb";
           fbArea.style.border = "1px solid #fde68a";
           fbArea.style.color = "#92400e";

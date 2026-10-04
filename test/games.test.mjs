@@ -1470,6 +1470,11 @@ test("games: DUAL_SCALE_CHALLENGES 32 challenges satisfy balance on both Scale A
   DUAL_SCALE_CHALLENGES.forEach((ch, idx) => {
     assert.equal(ch.index, idx, `Index mismatch for ${ch.id}`);
     assert.ok(ch.title && typeof ch.title === "string");
+    assert.equal(
+      ch.title.startsWith(`Thử thách ${idx + 1}:`),
+      true,
+      `Title must start with 'Thử thách ${idx + 1}:' for ${ch.id}, got '${ch.title}'`
+    );
     assert.ok(ch.problem && typeof ch.problem === "string");
     assert.ok(ch.hint && typeof ch.hint === "string");
     assert.ok(ch.solution && typeof ch.solution === "string");
@@ -1630,6 +1635,34 @@ test("games: MAKE_24_BANK 80 challenges including fraction division Master and d
   assert.equal(p80.target, 100);
   const session100 = new Make24Session(79);
   assert.equal(session100.getTarget(), 100);
+});
+
+test("games: all 80 Make 24 challenges are solvable with all 4 cards and have valid sampleSolutions", () => {
+  assert.equal(MAKE_24_BANK.length, 80, "Must have exactly 80 Make 24 challenges");
+
+  for (const ch of MAKE_24_BANK) {
+    const target = ch.target !== undefined ? ch.target : 24;
+    assert.equal(ch.cards.length, 4, `Challenge ${ch.id} must have exactly 4 cards`);
+
+    // Verify sampleSolution exists and is well-formatted
+    assert.ok(ch.sampleSolution, `Challenge ${ch.id} must have a sampleSolution`);
+    const expr = ch.sampleSolution.split("=")[0].trim();
+    const rawTokens = expr.match(/\d+|[+−–—\-×*:/()]/g) || [];
+    const nums = rawTokens.filter(t => /^\d+$/.test(t)).map(Number);
+
+    // Verify all 4 cards are used in sampleSolution
+    const sortedNums = [...nums].sort((a, b) => a - b);
+    const sortedCards = [...ch.cards].sort((a, b) => a - b);
+    assert.deepEqual(sortedNums, sortedCards, `Challenge ${ch.id} sampleSolution must use all 4 cards`);
+
+    // Verify evaluation matches target
+    const evalRes = evaluateArithmeticTokens(rawTokens);
+    assert.equal(evalRes.ok, true, `Challenge ${ch.id} sampleSolution expression must be syntactically valid`);
+    assert.ok(
+      Math.abs(evalRes.value - target) < 1e-6,
+      `Challenge ${ch.id} sampleSolution must evaluate to target ${target}, got ${evalRes.value}`
+    );
+  }
 });
 
 

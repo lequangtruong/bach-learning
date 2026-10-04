@@ -6,7 +6,8 @@ import {
   TANGRAM_PUZZLES, 
   TANGRAM_PIECES_CONFIG, 
   TangramSession, 
-  getPiecePolygonPoints 
+  getPiecePolygonPoints,
+  generateSilhouettePath
 } from "../js/tangram.js";
 
 import { renderTangramView } from "../js/render-tangram.js";
@@ -76,6 +77,122 @@ test("tangram: TANGRAM_PUZZLES bank data integrity and piece configurations", ()
     assert.ok(typeof cfg.color === "string");
     const pts = getPiecePolygonPoints(cfg.type);
     assert.ok(typeof pts === "string" && pts.length > 0);
+  }
+});
+
+test("tangram: standard mathematical proportions, areas, and generateSilhouettePath", () => {
+  function polygonArea(pts) {
+    let area = 0;
+    for (let i = 0; i < pts.length; i++) {
+      const j = (i + 1) % pts.length;
+      area += pts[i][0] * pts[j][1] - pts[j][0] * pts[i][1];
+    }
+    return Math.abs(area) / 2;
+  }
+  function parsePolyString(str) {
+    return str.trim().split(/\s+/).map(pair => pair.split(",").map(Number));
+  }
+
+  const largeArea = polygonArea(parsePolyString(getPiecePolygonPoints("large-triangle")));
+  const medArea = polygonArea(parsePolyString(getPiecePolygonPoints("med-triangle")));
+  const smallArea = polygonArea(parsePolyString(getPiecePolygonPoints("small-triangle")));
+  const squareArea = polygonArea(parsePolyString(getPiecePolygonPoints("square")));
+  const paraArea = polygonArea(parsePolyString(getPiecePolygonPoints("parallelogram")));
+
+  assert.equal(largeArea, 6400, "Large triangle area must be 6400");
+  assert.equal(medArea, 3200, "Medium triangle area must be 3200");
+  assert.equal(smallArea, 1600, "Small triangle area must be 1600");
+  assert.equal(squareArea, 3200, "Square area must be 3200");
+  assert.equal(paraArea, 3200, "Parallelogram area must be 3200");
+
+  const totalArea = largeArea * 2 + medArea + smallArea * 2 + squareArea + paraArea;
+  assert.equal(totalArea, 25600, "Total Tangram area must sum exactly to 25600 (160^2)");
+
+  const sil = generateSilhouettePath(TANGRAM_PUZZLES[0].targetLayout);
+  assert.ok(typeof sil === "string" && sil.startsWith("M "), "generateSilhouettePath must return SVG path starting with M");
+});
+
+test("tangram: all 19 puzzles have zero interior overlap (SAT) and fit within standard canvas", () => {
+  function parsePolyString(str) {
+    return str.trim().split(/\s+/).map(pair => pair.split(",").map(Number));
+  }
+  function transformPolygon(localPts, target) {
+    const rad = ((target.rot || 0) * Math.PI) / 180;
+    const cos = Math.cos(rad);
+    const sin = Math.sin(rad);
+    const sx = target.flipped ? -1 : 1;
+    return localPts.map(([px, py]) => {
+      const fx = px * sx;
+      const rx = fx * cos - py * sin;
+      const ry = fx * sin + py * cos;
+      return [Math.round(target.x + rx), Math.round(target.y + ry)];
+    });
+  }
+  function satOverlap(poly1, poly2, eps = 0.5) {
+    for (const poly of [poly1, poly2]) {
+      for (let i = 0; i < poly.length; i++) {
+        const j = (i + 1) % poly.length;
+        const edge = [poly[j][0] - poly[i][0], poly[j][1] - poly[i][1]];
+        const normal = [-edge[1], edge[0]];
+        const len = Math.hypot(normal[0], normal[1]);
+        if (len === 0) continue;
+        const nx = normal[0] / len;
+        const ny = normal[1] / len;
+        const dots1 = poly1.map(p => p[0] * nx + p[1] * ny);
+        const dots2 = poly2.map(p => p[0] * nx + p[1] * ny);
+        if (Math.max(...dots1) <= Math.min(...dots2) + eps || Math.max(...dots2) <= Math.min(...dots1) + eps) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  const pieceTypes = {
+    t1: "large-triangle", t2: "large-triangle", tm: "med-triangle",
+    ts1: "small-triangle", ts2: "small-triangle", sq: "square", para: "parallelogram"
+  };
+
+  for (const puzzle of TANGRAM_PUZZLES) {
+    const polys = {};
+    for (const [key, tgt] of Object.entries(puzzle.targetLayout)) {
+      const localPts = parsePolyString(getPiecePolygonPoints(pieceTypes[key]));
+      const worldPts = transformPolygon(localPts, tgt);
+      polys[key] = worldPts;
+
+      // Giới hạn trong vùng canvas 360x360 với viền đệm 20px
+      for (const [x, y] of worldPts) {
+        assert.ok(x >= 20 && x <= 340, `Puzzle ${puzzle.id} piece ${key} vertex X ${x} out of bounds`);
+        assert.ok(y >= 20 && y <= 340, `Puzzle ${puzzle.id} piece ${key} vertex Y ${y} out of bounds`);
+      }
+    }
+
+    const keys = Object.keys(polys);
+    for (let i = 0; i < keys.length; i++) {
+      for (let j = i + 1; j < keys.length; j++) {
+        const k1 = keys[i];
+        const k2 = keys[j];
+        const overlaps = satOverlap(polys[k1], polys[k2]);
+        assert.equal(overlaps, false, `Puzzle ${puzzle.id} pieces ${k1} and ${k2} must not overlap`);
+      }
+    }
+  }
+});
+
+test("tangram: all 19 puzzles win successfully when snapped to targets", () => {
+  for (let i = 0; i < TANGRAM_PUZZLES.length; i++) {
+    const p = TANGRAM_PUZZLES[i];
+    let winEvent = null;
+    const session = new TangramSession({
+      puzzleIndex: i,
+      onWin: (res) => { winEvent = res; }
+    });
+    for (const pieceKey of ["t1", "t2", "tm", "ts1", "ts2", "sq", "para"]) {
+      session.hintSnapPiece(pieceKey);
+    }
+    assert.equal(session.isSolved, true, `Puzzle ${p.id} must be marked solved`);
+    assert.ok(winEvent, `Puzzle ${p.id} must trigger win event`);
+    assert.equal(winEvent.puzzleId, p.id);
   }
 });
 

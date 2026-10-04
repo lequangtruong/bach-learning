@@ -19,6 +19,7 @@ export function renderLogicGridView({ state, appRoot, saveLocal, caseIndex } = {
   const diffMeta = getDifficultyMeta(c.difficulty || 2);
   const records = state?.db?.gameRecords?.logicGrid || { stars: 0, completedCases: [] };
   const isCompleted = Array.isArray(records.completedCases) && records.completedCases.includes(c.id);
+  const startTime = Date.now();
 
   appRoot.innerHTML = `
     <div style="margin-bottom:16px; display:flex; gap:12px; align-items:center; flex-wrap:wrap">
@@ -235,13 +236,16 @@ export function renderLogicGridView({ state, appRoot, saveLocal, caseIndex } = {
             rec.completedCases.push(c.id);
             rec.stars = (rec.stars || 0) + (c.difficulty || 2);
             // Adaptive Engine: ghi nhận kết quả Logic Grid
-            recordGameOutcome(state, "logicGrid", { success: true, difficulty: c.difficulty || 3 });
+            const timeMs = Date.now() - startTime;
+            recordGameOutcome(state, "logicGrid", { success: true, difficulty: c.difficulty || 3, timeMs });
             const newBadges = checkAndAwardBadges(state);
             for (const b of newBadges) showBadgeCelebration(b);
             if (typeof saveLocal === "function") await saveLocal();
           }
         }
       } else {
+        const timeMs = Date.now() - startTime;
+        recordGameOutcome(state, "logicGrid", { success: false, difficulty: c.difficulty || 3, timeMs });
         feedbackArea.style.background = "#fff1f2";
         feedbackArea.style.color = "#9f1239";
         feedbackArea.innerHTML = `

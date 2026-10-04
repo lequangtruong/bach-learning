@@ -21,9 +21,9 @@ export const MAKE_24_BANK_PART1 = [
     id: "make24-3",
     index: 2,
     difficulty: 1,
-    cards: [5, 1, 4, 6],
-    sampleSolution: "(5 − 1) × 6 = 24",
-    hint: "Lấy (5 − 1) = 4 rồi nhân với 6 = 24!"
+    cards: [5, 1, 6, 1],
+    sampleSolution: "((5 − 1) × 6) : 1 = 24",
+    hint: "Lấy (5 − 1) = 4 rồi nhân với 6 = 24, sau đó chia cho 1!"
   },
   {
     id: "make24-4",
@@ -45,9 +45,9 @@ export const MAKE_24_BANK_PART1 = [
     id: "make24-6",
     index: 5,
     difficulty: 1,
-    cards: [2, 2, 6, 2],
-    sampleSolution: "(2 + 2) × 6 = 24",
-    hint: "Tạo số 4 từ 2 + 2, rồi nhân với 6!"
+    cards: [2, 2, 6, 1],
+    sampleSolution: "((2 + 2) × 6) : 1 = 24",
+    hint: "Tạo số 4 từ (2 + 2), rồi nhân với 6 = 24, sau đó chia cho 1!"
   },
 
   // --- CẤP ĐỘ 2: Tạo số trung gian (Gộp hiệu & tổng để nhân) ---
@@ -56,8 +56,8 @@ export const MAKE_24_BANK_PART1 = [
     index: 6,
     difficulty: 2,
     cards: [3, 8, 4, 6],
-    sampleSolution: "(8 − 4) × 6 = 24",
-    hint: "Lấy 8 − 4 = 4, rồi lấy 4 × 6 = 24! (Hoặc (6 − 3) × 8 = 24)."
+    sampleSolution: "((3 × 4) − 8) × 6 = 24",
+    hint: "Tính trong ngoặc: 3 × 4 = 12, trừ đi 8 được 4, rồi nhân với 6: 4 × 6 = 24!"
   },
   {
     id: "make24-8",
@@ -72,8 +72,8 @@ export const MAKE_24_BANK_PART1 = [
     index: 8,
     difficulty: 2,
     cards: [3, 5, 7, 9],
-    sampleSolution: "(9 − 5) × (7 − 3) = 24",
-    hint: "Tạo hai số: 9 − 5 = 4 và 7 − 3 = 4, hoặc nhóm: (9 + 7) : 2 × 3!"
+    sampleSolution: "(3 + 5) + (7 + 9) = 24",
+    hint: "Cộng tất cả các số lại: (3 + 5) = 8 và (7 + 9) = 16, rồi lấy 8 + 16 = 24!"
   },
   {
     id: "make24-10",
@@ -88,16 +88,16 @@ export const MAKE_24_BANK_PART1 = [
     index: 10,
     difficulty: 2,
     cards: [2, 4, 6, 8],
-    sampleSolution: "(8 − 4) × 6 = 24",
-    hint: "Lấy (8 − 4) = 4, rồi nhân với 6 = 24!"
+    sampleSolution: "((2 × 6) : 4) × 8 = 24",
+    hint: "Tạo số 3 để nhân với 8: 2 × 6 = 12, chia cho 4 được 3, rồi lấy 3 × 8 = 24!"
   },
   {
     id: "make24-12",
     index: 11,
     difficulty: 2,
     cards: [2, 5, 6, 9],
-    sampleSolution: "(9 + 5 − 2) × 2 = 24",
-    hint: "9 + 5 − 2 = 12, rồi nhân đôi: 12 × 2 = 24!"
+    sampleSolution: "(5 × (6 : 2)) + 9 = 24",
+    hint: "Lấy 6 : 2 = 3, sau đó 5 × 3 = 15, rồi cộng thêm 9 = 24!"
   },
 
   // --- CẤP ĐỘ 3: Phép tính kết hợp & Đóng mở ngoặc ---
@@ -106,32 +106,32 @@ export const MAKE_24_BANK_PART1 = [
     index: 12,
     difficulty: 3,
     cards: [5, 5, 5, 1],
-    sampleSolution: "5 × 5 − (5 : 5) = 24",
-    hint: "Bộ số kinh điển thế giới: 5 × 5 = 25, bớt đi 1 bằng (5 : 5)!"
+    sampleSolution: "(5 − (1 : 5)) × 5 = 24",
+    hint: "Bộ số kinh điển thế giới: Lấy 1 : 5 = 0,2; sau đó (5 − 0,2) = 4,8; cuối cùng lấy 4,8 × 5 = 24!"
   },
   {
     id: "make24-14",
     index: 13,
     difficulty: 3,
     cards: [4, 4, 7, 7],
-    sampleSolution: "(7 − 4) × (7 + 1) = 24",
-    hint: "Lấy (7 − 4) = 3 và (7 + 1) = 8, rồi nhân 3 × 8 = 24!"
+    sampleSolution: "(4 − (4 : 7)) × 7 = 24",
+    hint: "Thử thách đỉnh cao phân số: (4 − 4 : 7) = 24 : 7, rồi nhân với 7 = 24!"
   },
   {
     id: "make24-15",
     index: 14,
     difficulty: 3,
     cards: [2, 2, 8, 8],
-    sampleSolution: "(2 × 8) + 8 = 24",
-    hint: "2 × 8 = 16, cộng thêm 8 = 24!"
+    sampleSolution: "((2 + 2) × 8) − 8 = 24",
+    hint: "Lấy (2 + 2) = 4, nhân với 8 = 32, rồi bớt đi 8 = 24!"
   },
   {
     id: "make24-16",
     index: 15,
     difficulty: 3,
     cards: [3, 3, 6, 6],
-    sampleSolution: "3 × 6 + 6 = 24",
-    hint: "Nhân 3 × 6 = 18, cộng thêm 6 = 24!"
+    sampleSolution: "((6 : 3) + 6) × 3 = 24",
+    hint: "Lấy 6 : 3 = 2, cộng thêm 6 = 8, rồi nhân với 3 = 24!"
   },
   {
     id: "make24-17",
@@ -146,8 +146,8 @@ export const MAKE_24_BANK_PART1 = [
     index: 17,
     difficulty: 3,
     cards: [3, 4, 7, 8],
-    sampleSolution: "(7 − 4) × 8 = 24",
-    hint: "(7 − 4) = 3, sau đó 3 × 8 = 24!"
+    sampleSolution: "((7 − 3) × 4) + 8 = 24",
+    hint: "Lấy (7 − 3) = 4, nhân với 4 được 16, rồi cộng thêm 8 = 24!"
   },
   {
     id: "make24-19",
@@ -162,8 +162,8 @@ export const MAKE_24_BANK_PART1 = [
     index: 19,
     difficulty: 3,
     cards: [1, 5, 6, 7],
-    sampleSolution: "(7 − 5 + 1) × 8 = 24",
-    hint: "(7 − 5 + 1) = 3, rồi nhân 3 × 8 = 24!"
+    sampleSolution: "((5 × 6) + 1) − 7 = 24",
+    hint: "Lấy 5 × 6 = 30, cộng thêm 1 = 31, rồi trừ đi 7 = 24!"
   },
 
   // --- CẤP ĐỘ 4: Phép nhân chia phức hợp ---
@@ -171,41 +171,41 @@ export const MAKE_24_BANK_PART1 = [
     id: "make24-21",
     index: 20,
     difficulty: 4,
-    cards: [3, 5, 8, 10],
-    sampleSolution: "(10 − 5) × 5 − 1 = 24",
-    hint: "(10 − 5) × 5 − 1 = 24 hoặc (8 − 5) × (10 − 2) = 24!"
+    cards: [2, 5, 8, 10],
+    sampleSolution: "(8 − 5) × (10 − 2) = 24",
+    hint: "Tạo cặp số vàng: (8 − 5) = 3 và (10 − 2) = 8, rồi nhân 3 × 8 = 24!"
   },
   {
     id: "make24-22",
     index: 21,
     difficulty: 4,
     cards: [4, 5, 7, 9],
-    sampleSolution: "(9 − 5) × (7 − 1) = 24",
-    hint: "9 − 5 = 4, 7 − 1 = 6. 4 × 6 = 24!"
+    sampleSolution: "(4 × 7) − (9 − 5) = 24",
+    hint: "Lấy 4 × 7 = 28, sau đó lấy 9 − 5 = 4, cuối cùng lấy 28 − 4 = 24!"
   },
   {
     id: "make24-23",
     index: 22,
     difficulty: 4,
     cards: [2, 6, 9, 11],
-    sampleSolution: "(11 − 9) × (6 + 6) = 24",
-    hint: "11 − 9 = 2, nhân với 12!"
+    sampleSolution: "(2 × 6) × (11 − 9) = 24",
+    hint: "Lấy 2 × 6 = 12 và (11 − 9) = 2, rồi nhân 12 × 2 = 24!"
   },
   {
     id: "make24-24",
     index: 23,
     difficulty: 4,
-    cards: [3, 4, 9, 10],
+    cards: [4, 5, 9, 10],
     sampleSolution: "(10 − 4) × (9 − 5) = 24",
-    hint: "10 − 4 = 6 và (9 − 5) = 4. 6 × 4 = 24!"
+    hint: "Tạo hai thừa số: (10 − 4) = 6 và (9 − 5) = 4, rồi nhân 6 × 4 = 24!"
   },
   {
     id: "make24-25",
     index: 24,
     difficulty: 4,
-    cards: [1, 8, 9, 10],
-    sampleSolution: "(10 − 8 + 1) × 8 = 24",
-    hint: "10 − 8 + 1 = 3. 3 × 8 = 24!"
+    cards: [1, 8, 8, 10],
+    sampleSolution: "((10 − 8) + 1) × 8 = 24",
+    hint: "Tính trong ngoặc: 10 − 8 + 1 = 3, rồi lấy 3 × 8 = 24!"
   },
   {
     id: "make24-26",
@@ -220,8 +220,8 @@ export const MAKE_24_BANK_PART1 = [
     index: 26,
     difficulty: 4,
     cards: [4, 5, 8, 11],
-    sampleSolution: "(11 − 5) × 4 = 24",
-    hint: "11 − 5 = 6, 6 × 4 = 24!"
+    sampleSolution: "(8 − 4) × (11 − 5) = 24",
+    hint: "Lấy (8 − 4) = 4 và (11 − 5) = 6, rồi nhân 4 × 6 = 24!"
   },
   {
     id: "make24-28",
@@ -244,8 +244,8 @@ export const MAKE_24_BANK_PART1 = [
     index: 29,
     difficulty: 4,
     cards: [5, 6, 7, 8],
-    sampleSolution: "(8 − 5) × (7 + 1) = 24",
-    hint: "8 − 5 = 3, 7 + 1 = 8. 3 × 8 = 24!"
+    sampleSolution: "((5 + 7) − 8) × 6 = 24",
+    hint: "Lấy 5 + 7 = 12, trừ đi 8 được 4, rồi nhân với 6: 4 × 6 = 24!"
   },
 
   // --- CẤP ĐỘ 5 (OLYMPIC MASTER 🔥): Tạo phân số trung gian & kết hợp lắt léo ---

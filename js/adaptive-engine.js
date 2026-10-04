@@ -137,13 +137,20 @@ export function recordGameOutcome(state, gameKey, outcome = {}) {
 
   profile.levels[gameKey] = newLvl;
   profile.streaks[gameKey] = newStreak;
-  profile.history.push({
+  const historyEntry = {
     gameKey,
     success: isSuccess,
     difficulty: outcome.difficulty || currentLvl,
     timestamp: new Date().toISOString(),
     status
-  });
+  };
+  if (typeof outcome.timeMs === "number") {
+    historyEntry.timeMs = outcome.timeMs;
+  }
+  if (typeof outcome.score === "number") {
+    historyEntry.score = outcome.score;
+  }
+  profile.history.push(historyEntry);
   if (profile.history.length > 50) profile.history.shift();
   profile.updatedAt = new Date().toISOString();
 
@@ -247,6 +254,58 @@ export function getSmartDailyRecommendation(records = {}) {
     }
   }
 
+  const mathRec = (() => {
+    const balCount = records.balanceScale?.completedChallenges?.length || 0;
+    const m24Count = records.make24?.solvedCount || records.make24?.completedChallenges?.length || 0;
+    const barCount = records.barModel?.completedChallenges?.length || 0;
+    if (balCount < m24Count && balCount < barCount) {
+      return {
+        title: "Chinh Phục Cân Thăng Bằng Đại Số",
+        gameName: "Cân Thăng Bằng Đại Số",
+        route: "#games/balance-scale",
+        icon: "⚖️",
+        reason: "Khám phá bản chất cân bằng đại số trực quan qua hệ phương trình 2 cân."
+      };
+    }
+    if (m24Count < barCount) {
+      return {
+        title: "Chinh Phục Biểu Thức Make 24",
+        gameName: "Đố Vui Make 24",
+        route: "#games/make-24",
+        icon: "🎯",
+        reason: "Rèn luyện tư duy cấu trúc biểu thức số học linh hoạt và sáng tạo."
+      };
+    }
+    return {
+      title: "Chinh Phục Mô Hình Hóa Singapore",
+      gameName: "Mini Bar Model Studio",
+      route: "#games/bar-model",
+      icon: "🧱",
+      reason: "Chuyển hóa bài toán lời văn phức tạp thành sơ đồ trực quan dễ hiểu."
+    };
+  })();
+
+  const spatialRec = (() => {
+    const tangramCount = records.tangram?.completedPuzzles?.length || 0;
+    const spatialCount = records.spatial3D?.completedChallenges?.length || 0;
+    if (tangramCount < spatialCount) {
+      return {
+        title: "Rèn Luyện Thị Giác Hình Học Tangram",
+        gameName: "Xếp Hình Trí Uẩn Tangram",
+        route: "#games/tangram",
+        icon: "📐",
+        reason: "Rèn luyện khả năng xoay ghép hình học không gian và thẩm mỹ trực quan."
+      };
+    }
+    return {
+      title: "Rèn Luyện Thị Giác Không Gian 3D",
+      gameName: "Thám Tử Khối 3D & Gấp Hộp",
+      route: "#games/spatial-3d",
+      icon: "🧊",
+      reason: "Tăng cường năng lực tưởng tượng đa chiều và xoay vật thể theo chuẩn Singapore GEP."
+    };
+  })();
+
   const recommendations = {
     fluid: {
       title: "Rèn Luyện Suy Luận Loại Trừ",
@@ -255,13 +314,7 @@ export function getSmartDailyRecommendation(records = {}) {
       icon: "🕵️",
       reason: "Bồi dưỡng khả năng suy luận phản biện và tư duy đa chiều của Einstein."
     },
-    spatial: {
-      title: "Rèn Luyện Thị Giác Không Gian 3D",
-      gameName: "Thám Tử Khối 3D & Gấp Hộp",
-      route: "#games/spatial-3d",
-      icon: "🧊",
-      reason: "Tăng cường năng lực tưởng tượng đa chiều và xoay vật thể theo chuẩn Singapore GEP."
-    },
+    spatial: spatialRec,
     speed: {
       title: "Kích Hoạt Phản Xạ Thần Tốc",
       gameName: "Đấu Tính Nhẩm 90 Giây",
@@ -276,13 +329,7 @@ export function getSmartDailyRecommendation(records = {}) {
       icon: "💭",
       reason: "Mở rộng dung lượng Working Memory - chìa khóa vàng ghi nhớ thông tin nhanh."
     },
-    math: {
-      title: "Chinh Phục Mô Hình Hóa Singapore",
-      gameName: "Mini Bar Model Studio",
-      route: "#games/bar-model",
-      icon: "🧱",
-      reason: "Chuyển hóa bài toán lời văn phức tạp thành sơ đồ trực quan dễ hiểu."
-    }
+    math: mathRec
   };
 
   return {

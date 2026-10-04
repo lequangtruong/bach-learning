@@ -42,6 +42,8 @@ import {
   initKeyboardAdaptation
 } from "./js/keyboard-adapt.js";
 
+import { compressImageToJpeg } from "./js/image-compressor.js";
+import { getWeekendMathExam, buildExamGradingPrompt } from "./js/math-weekend-exam.js";
 import { storage } from "./js/storage.js";
 import { driveSync, renderGoogleTutorButton } from "./js/drive-sync.js";
 import { lessonTimerManager, setTimerCallbacks } from "./js/study-timer.js";
@@ -834,6 +836,15 @@ document.addEventListener("click", async e => {
     return;
   }
 
+  // 8c-bis. Xóa ảnh bài Kiểm Tra Toán
+  if (e.target.closest("#removeMathPhotoBtn")) {
+    state.writingImage = null;
+    const mathPhotoInput = document.querySelector("#mathPhotoInput");
+    if (mathPhotoInput) mathPhotoInput.value = "";
+    updatePhotoPreviewUi();
+    return;
+  }
+
   // 8d. Chuyển bài Văn (đọc/gõ hoặc ảnh bài viết) sang Gemini để chữa
   if (e.target.closest("#sendWritingToAi")) {
     const writing = document.querySelector("#writingSubmission")?.value.trim() || "";
@@ -861,6 +872,47 @@ document.addEventListener("click", async e => {
     state.writingImage = null;
     const photoInput = document.querySelector("#writingPhotoInput");
     if (photoInput) photoInput.value = "";
+    updatePhotoPreviewUi();
+
+    location.hash = "#guide";
+    renderGuide();
+
+    askAi({
+      mode: "student_tutor",
+      userMessage: prompt,
+      writingImage: photoToSend
+    });
+    return;
+  }
+
+  // 8e. Chuyển Bài Kiểm Tra Toán Thứ 7 / Chủ Nhật sang Gemini để chấm theo Barem Toán 4 KNTT
+  if (e.target.closest("#sendMathTestToAi")) {
+    const explanation = document.querySelector("#mathTestExplanation")?.value.trim() || "";
+    const photo = state.writingImage;
+    if (!explanation && !photo) {
+      alert("Bách hoặc phụ huynh hãy chụp ảnh bài làm trên vở hoặc ghi âm giải thích trước khi nộp nhé!");
+      return;
+    }
+
+    const currentUrlParams = new URLSearchParams(location.hash.split("?")[1] || "");
+    const weekParam = currentUrlParams.get("week") || "w5";
+    const weekNumber = Number(weekParam.replace(/\D/g, "")) || 5;
+
+    state.tutor.selectedSubject = "math";
+    state.tutor.selectedWeek = weekParam.startsWith("w") ? weekParam : `w${weekNumber}`;
+    state.tutor.pendingSourceLessonKey = null;
+    state.tutor.reviewPromptExpected = null;
+    state.tutor.prefillPrompt = "";
+
+    const weekObj = allWeeks().find(w => w.id === (weekParam.startsWith("w") ? weekParam : `w${weekNumber}`)) || allWeeks()[0];
+    const saturdayLesson = weekObj?.math?.dailyPlan?.[5] || {};
+    const exam = getWeekendMathExam(weekNumber, saturdayLesson);
+    const prompt = buildExamGradingPrompt(exam, explanation);
+
+    const photoToSend = photo ? { mimeType: photo.mimeType, data: photo.data } : null;
+    state.writingImage = null;
+    const mathPhotoInput = document.querySelector("#mathPhotoInput");
+    if (mathPhotoInput) mathPhotoInput.value = "";
     updatePhotoPreviewUi();
 
     location.hash = "#guide";
@@ -965,17 +1017,23 @@ document.addEventListener("click", async e => {
   }
 });
 
-// Cập nhật thanh hiển thị ảnh bài viết đã chọn
+// Cập nhật thanh hiển thị ảnh bài viết hoặc bài kiểm tra đã chọn
 export function updatePhotoPreviewUi() {
-  const preview = document.querySelector("#writingPhotoPreview");
-  const nameSpan = document.querySelector("#writingPhotoName");
-  if (!preview || !nameSpan) return;
-  if (state.writingImage) {
-    nameSpan.textContent = state.writingImage.name || "Ảnh bài viết";
-    preview.hidden = false;
-  } else {
-    nameSpan.textContent = "";
-    preview.hidden = true;
+  const writingPreview = document.querySelector("#writingPhotoPreview");
+  const writingName = document.querySelector("#writingPhotoName");
+  const mathPreview = document.querySelector("#mathPhotoPreview");
+  const mathName = document.querySelector("#mathPhotoName");
+
+  const name = state.writingImage?.name || "Ảnh bài làm";
+  const hasImage = Boolean(state.writingImage);
+
+  if (writingPreview) {
+    if (writingName) writingName.textContent = hasImage ? name : "";
+    writingPreview.hidden = !hasImage;
+  }
+  if (mathPreview) {
+    if (mathName) mathName.textContent = hasImage ? name : "";
+    mathPreview.hidden = !hasImage;
   }
 }
 
@@ -997,21 +1055,41 @@ export function readPhotoAsBase64(file) {
   });
 }
 
-// Lắng nghe thay đổi bộ chọn môn/tuần trong Guide và chọn ảnh nộp bài Văn
+// Lắng nghe thay đổi bộ chọn môn/tuần trong Guide và chọn ảnh nộp bài (Văn hoặc Toán)
 document.addEventListener("change", async e => {
-  if (e.target.id === "writingPhotoInput") {
+  if (e.target.id === "writingPhotoInput" || e.target.id === "mathPhotoInput") {
     const file = e.target.files?.[0];
     if (!file) return;
-    const validation = validatePhotoFile(file);
-    if (!validation.ok) {
-      alert(validation.error);
+
+    const isAllowedMime = PHOTO_BOUNDS.ALLOWED_MIMES.includes(file.type);
+    if (!isAllowedMime) {
+      alert("Định dạng ảnh không được hỗ trợ. Vui lòng chọn ảnh JPEG, PNG hoặc WebP.");
       e.target.value = "";
       state.writingImage = null;
       updatePhotoPreviewUi();
       return;
     }
+
+    // Nếu môi trường không có Canvas (ví dụ chạy trong unit test Node.js), dùng validatePhotoFile
+    if (typeof window === "undefined" || typeof document === "undefined" || !window.HTMLCanvasElement) {
+      const validation = validatePhotoFile(file);
+      if (!validation.ok) {
+        alert(validation.error);
+        e.target.value = "";
+        state.writingImage = null;
+        updatePhotoPreviewUi();
+        return;
+      }
+    }
+
     try {
-      const photoData = await readPhotoAsBase64(file);
+      let photoData;
+      if (typeof window !== "undefined" && typeof document !== "undefined" && window.HTMLCanvasElement) {
+        // Tự động nén qua Canvas phần cứng (1400px JPEG quality 0.82)
+        photoData = await compressImageToJpeg(file, { maxWidth: 1400, quality: 0.82 });
+      } else {
+        photoData = await readPhotoAsBase64(file);
+      }
       state.writingImage = photoData;
       updatePhotoPreviewUi();
     } catch (err) {

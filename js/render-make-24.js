@@ -31,6 +31,7 @@ export function renderMake24View({ state, appRoot, saveLocal, challengeIndex, pa
     const diffMeta = getDifficultyMeta(ch.difficulty || 2);
     const mRec = state?.db?.gameRecords?.make24 || { stars: 0, solvedCount: 0, completedChallenges: [] };
     const isCompleted = Array.isArray(mRec.completedChallenges) && mRec.completedChallenges.includes(ch.id);
+    const startTime = Date.now();
 
     const target = session.getTarget();
 
@@ -292,12 +293,15 @@ export function renderMake24View({ state, appRoot, saveLocal, challengeIndex, pa
             rec.solvedCount = rec.completedChallenges.length;
             rec.stars = (rec.stars || 0) + 1;
             // Adaptive Engine: ghi nhận kết quả Make 24
-            recordGameOutcome(state, "make24", { success: true, difficulty: ch.difficulty || 3 });
+            const timeMs = Date.now() - startTime;
+            recordGameOutcome(state, "make24", { success: true, difficulty: ch.difficulty || 3, timeMs });
             const newBadges = checkAndAwardBadges(state);
             for (const b of newBadges) showBadgeCelebration(b);
             if (typeof saveLocal === "function") await saveLocal(true);
           }
         } else {
+          const timeMs = Date.now() - startTime;
+          recordGameOutcome(state, "make24", { success: false, difficulty: ch.difficulty || 3, timeMs });
           fbArea.style.background = "#fffbeb";
           fbArea.style.border = "1px solid #fde68a";
           fbArea.style.color = "#92400e";

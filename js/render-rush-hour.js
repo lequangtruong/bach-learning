@@ -20,6 +20,7 @@ export function renderRushHourView({ state, appRoot, saveLocal, boardIndex } = {
   const records = state?.db?.gameRecords?.rushHour || { stars: 0, completedBoards: [], bestMoves: {} };
   const isCompleted = Array.isArray(records.completedBoards) && records.completedBoards.includes(b.id);
   const bestForBoard = records.bestMoves?.[b.id] ?? null;
+  if (!session.startTime) session.startTime = Date.now();
 
   const isSolved = session.isSolved();
 
@@ -248,7 +249,8 @@ export function renderRushHourView({ state, appRoot, saveLocal, boardIndex } = {
             const earnedStars = res.moveCount <= b.minMoves + 2 ? 3 : (res.moveCount <= b.minMoves + 6 ? 2 : 1);
             rec.stars = (rec.stars || 0) + earnedStars;
             // Adaptive Engine: ghi nhận kết quả Rush Hour
-            recordGameOutcome(state, "rushHour", { success: true, difficulty: b.difficulty || 3 });
+            const timeMs = Date.now() - (session.startTime || Date.now());
+            recordGameOutcome(state, "rushHour", { success: true, difficulty: b.difficulty || 3, timeMs });
             const newBadges = checkAndAwardBadges(state);
             for (const b2 of newBadges) showBadgeCelebration(b2);
             if (typeof saveLocal === "function") await saveLocal();
@@ -269,7 +271,12 @@ export function renderRushHourView({ state, appRoot, saveLocal, boardIndex } = {
       renderRushHourView({ state, appRoot, saveLocal });
     });
     appRoot.querySelector("#rushResetBtn")?.addEventListener("click", () => {
+      if (session.moveCount >= 5 && !session.isSolved()) {
+        const timeMs = Date.now() - (session.startTime || Date.now());
+        recordGameOutcome(state, "rushHour", { success: false, difficulty: b.difficulty || 3, timeMs });
+      }
       session.reset();
+      session.startTime = Date.now();
       renderRushHourView({ state, appRoot, saveLocal });
     });
 

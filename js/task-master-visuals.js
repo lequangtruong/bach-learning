@@ -170,16 +170,16 @@ export function renderMoonBaseVisual(completedCount = 0, totalCount = 20, stageS
         <rect x="270" y="245" width="22" height="12" rx="3" fill="#e2e8f0"/>
         <circle cx="273" cy="259" r="4" fill="#334155"/>
         <circle cx="289" cy="259" r="4" fill="#334155"/>
-        <text x="335" y="240" text-anchor="middle" fill="#93c5fd" font-size="10" font-weight="bold">Trạm Năng Lượng</text>
+        <text x="335" y="240" text-anchor="middle" fill="#93c5fd" font-size="10" font-weight="bold">Trạm Năng Lượng & Oxy</text>
       </g>
 
-      <!-- Giai đoạn 3: Nhà máy băng ngầm & Trạm điện phân tạo Oxy (Levels 191-195) -->
+      <!-- Giai đoạn 3: In 3D vỏ khiên & Module sinh hoạt (Levels 191-195) -->
       <g opacity="${s3 ? '1' : (s3Started ? '0.55' : '0.15')}" style="transition:all 0.5s">
         <circle cx="430" cy="215" r="16" fill="#f8fafc" stroke="#38bdf8" stroke-width="2"/>
-        <text x="430" y="220" text-anchor="middle" fill="#0284c7" font-size="10" font-weight="bold">O₂</text>
+        <text x="430" y="220" text-anchor="middle" fill="#0284c7" font-size="10" font-weight="bold">3D</text>
         <path d="M446,218 Q460,225 480,220" fill="none" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"/>
         <line x1="140" y1="255" x2="140" y2="235" stroke="#f59e0b" stroke-width="3"/>
-        <text x="430" y="245" text-anchor="middle" fill="#67e8f9" font-size="10" font-weight="bold">Lọc Oxy & Nước</text>
+        <text x="430" y="245" text-anchor="middle" fill="#67e8f9" font-size="10" font-weight="bold">Khiên 3D & Khoang Sống</text>
       </g>
 
       <!-- Giai đoạn 4: Vòm sinh quyển Biosphere cây xanh (Levels 196-200) -->
@@ -232,7 +232,7 @@ export function renderHospitalVisual(completedCount = 0, totalCount = 20, stageS
         <polygon points="180,165 230,225 210,225 180,185" fill="#e11d48"/>
         <circle cx="180" cy="195" r="9" fill="#ffffff"/>
         <text x="180" y="199" text-anchor="middle" fill="#e11d48" font-size="11" font-weight="900">✚</text>
-        <text x="180" y="242" text-anchor="middle" fill="#881337" font-size="10" font-weight="bold">Lều Phân Tuyến</text>
+        <text x="180" y="242" text-anchor="middle" fill="#881337" font-size="10" font-weight="bold">Sơ Cứu Cấp Cứu</text>
       </g>
 
       <!-- Giai đoạn 2: Container Phòng Mổ Vô Trùng Dã Chiến (Levels 86-90) -->
@@ -242,7 +242,7 @@ export function renderHospitalVisual(completedCount = 0, totalCount = 20, stageS
         <rect x="295" y="180" width="25" height="18" fill="#bae6fd" stroke="#0284c7"/>
         <ellipse cx="305" cy="165" rx="14" ry="4" fill="#38bdf8" opacity="0.7"/>
         <path d="M260,210 Q270,205 275,215 T290,210" fill="none" stroke="#22c55e" stroke-width="2"/>
-        <text x="305" y="242" text-anchor="middle" fill="#0369a1" font-size="10" font-weight="bold">Phòng Mổ Vô Trùng</text>
+        <text x="305" y="242" text-anchor="middle" fill="#0369a1" font-size="10" font-weight="bold">Cầm Máu & Vaccine</text>
       </g>
 
       <!-- Giai đoạn 3: Bồn Oxy Lỏng & Kho Dược Phẩm (Levels 91-95) -->
@@ -252,7 +252,7 @@ export function renderHospitalVisual(completedCount = 0, totalCount = 20, stageS
         <rect x="445" y="175" width="45" height="50" rx="4" fill="#f8fafc" stroke="#10b981" stroke-width="2"/>
         <text x="467" y="205" text-anchor="middle" fill="#059669" font-size="13">💊</text>
         <path d="M428,185 L445,185" stroke="#38bdf8" stroke-width="3"/>
-        <text x="440" y="242" text-anchor="middle" fill="#047857" font-size="10" font-weight="bold">Trạm Oxy & Dược</text>
+        <text x="440" y="242" text-anchor="middle" fill="#047857" font-size="10" font-weight="bold">Xe Cứu Thương & Cách Ly</text>
       </g>
 
       <!-- Giai đoạn 4: Sân Bay Trực Thăng Cứu Hộ H-Pad (Levels 96-100) -->
@@ -305,7 +305,7 @@ export function renderFactoryVisual(completedCount = 0, totalCount = 20, stageSt
         <circle cx="310" cy="222" r="4" fill="#94a3b8"/>
         <circle cx="410" cy="222" r="4" fill="#94a3b8"/>
         <circle cx="510" cy="222" r="4" fill="#94a3b8"/>
-        <text x="72" y="242" text-anchor="middle" fill="#93c5fd" font-size="10" font-weight="bold">Điện Cao Áp</text>
+        <text x="72" y="242" text-anchor="middle" fill="#93c5fd" font-size="10" font-weight="bold">Robot CNC & Hàn</text>
       </g>
 
       <!-- Giai đoạn 2: Cánh Tay Robot Hàn Laser (Levels 106-110) -->
@@ -317,7 +317,7 @@ export function renderFactoryVisual(completedCount = 0, totalCount = 20, stageSt
         <polygon points="235,195 240,210 230,210" fill="#ef4444"/>
         <circle cx="235" cy="212" r="4" fill="#fef08a"/>
         <path d="M235,212 L245,205 M235,212 L225,207 M235,212 L240,220" stroke="#f59e0b" stroke-width="1.5"/>
-        <text x="210" y="248" text-anchor="middle" fill="#fcd34d" font-size="10" font-weight="bold">Robot Hàn Laser</text>
+        <text x="210" y="248" text-anchor="middle" fill="#fcd34d" font-size="10" font-weight="bold">AI Băng Chuyền & SMT</text>
       </g>
 
       <!-- Giai đoạn 3: Cảm Biến AI Mắt Thần Quét Lỗi (Levels 111-115) -->
@@ -325,7 +325,7 @@ export function renderFactoryVisual(completedCount = 0, totalCount = 20, stageSt
         <rect x="340" y="130" width="20" height="20" rx="4" fill="#0284c7" stroke="#38bdf8" stroke-width="2"/>
         <circle cx="350" cy="140" r="5" fill="#38bdf8"/>
         <polygon points="345,150 355,150 380,215 320,215" fill="#38bdf8" opacity="0.35"/>
-        <text x="350" y="248" text-anchor="middle" fill="#7dd3fc" font-size="10" font-weight="bold">AI Mắt Thần Lidar</text>
+        <text x="350" y="248" text-anchor="middle" fill="#7dd3fc" font-size="10" font-weight="bold">Tường Lửa & Sơn Robot</text>
       </g>
 
       <!-- Giai đoạn 4: Dây Chuyền Lắp Ráp Xe Điện Tự Lái (Levels 116-120) -->
@@ -368,7 +368,7 @@ export function renderBiosphereVisual(completedCount = 0, totalCount = 20, stage
       <g opacity="${s1 ? '1' : (s1Started ? '0.55' : '0.15')}" style="transition:all 0.5s">
         <ellipse cx="120" cy="195" rx="30" ry="10" fill="#f59e0b" stroke="#b45309" stroke-width="2"/>
         <line x1="120" y1="195" x2="120" y2="230" stroke="#fef08a" stroke-width="2.5" stroke-dasharray="3,2"/>
-        <text x="120" y="248" text-anchor="middle" fill="#fef08a" font-size="10" font-weight="bold">Lọc Rác Đại Dương</text>
+        <text x="120" y="248" text-anchor="middle" fill="#fef08a" font-size="10" font-weight="bold">Nguồn Nước & Đất</text>
       </g>
 
       <!-- Giai đoạn 2: Vườn Ươm Cây Bản Địa Thủy Canh (Levels 126-130) -->
@@ -377,7 +377,7 @@ export function renderBiosphereVisual(completedCount = 0, totalCount = 20, stage
         <circle cx="260" cy="140" r="18" fill="#22c55e"/>
         <circle cx="280" cy="148" r="15" fill="#15803d"/>
         <rect x="257" y="155" width="6" height="20" fill="#78350f"/>
-        <text x="260" y="190" text-anchor="middle" fill="#ecfdf5" font-size="10" font-weight="bold">Rừng Tái Sinh</text>
+        <text x="260" y="190" text-anchor="middle" fill="#ecfdf5" font-size="10" font-weight="bold">Cứu Hộ Rùa & San Hô</text>
       </g>
 
       <!-- Giai đoạn 3: Rạn San Hô Sừng Hươu & Đàn Cá Biển (Levels 131-135) -->
@@ -388,7 +388,7 @@ export function renderBiosphereVisual(completedCount = 0, totalCount = 20, stage
         <circle cx="440" cy="226" r="3" fill="#fed7aa"/>
         <polygon points="370,220 380,216 380,224" fill="#38bdf8"/>
         <polygon points="460,215 470,211 470,219" fill="#fef08a"/>
-        <text x="420" y="278" text-anchor="middle" fill="#99f6e4" font-size="10" font-weight="bold">Rạn San Hô Rực Rỡ</text>
+        <text x="420" y="278" text-anchor="middle" fill="#99f6e4" font-size="10" font-weight="bold">Cản Lửa & Rừng Ngập Mặn</text>
       </g>
 
       <!-- Giai đoạn 4: Trạm Cảm Biến IoT & Đón Chim Quý (Levels 136-140) -->
@@ -430,7 +430,7 @@ export function renderSmartCityVisual(completedCount = 0, totalCount = 20, stage
         <rect x="60" y="180" width="60" height="30" fill="#334155" stroke="#94a3b8" stroke-dasharray="4,2"/>
         <line x1="80" y1="180" x2="80" y2="240" stroke="#f59e0b" stroke-width="3"/>
         <line x1="100" y1="180" x2="100" y2="240" stroke="#f59e0b" stroke-width="3"/>
-        <text x="90" y="255" text-anchor="middle" fill="#fcd34d" font-size="10" font-weight="bold">Nền Móng Cọc Sâu</text>
+        <text x="90" y="255" text-anchor="middle" fill="#fcd34d" font-size="10" font-weight="bold">Móng Tháp & Metro</text>
       </g>
 
       <!-- Giai đoạn 2: Tàu Điện Ngầm Ngầm Metro Cao Tốc (Levels 146-150) -->
@@ -441,7 +441,7 @@ export function renderSmartCityVisual(completedCount = 0, totalCount = 20, stage
         <rect x="195" y="250" width="15" height="10" fill="#0284c7"/>
         <rect x="220" y="250" width="15" height="10" fill="#0284c7"/>
         <rect x="245" y="250" width="15" height="10" fill="#0284c7"/>
-        <text x="225" y="290" text-anchor="middle" fill="#7dd3fc" font-size="10" font-weight="bold">Metro Ngầm Cao Tốc</text>
+        <text x="225" y="290" text-anchor="middle" fill="#7dd3fc" font-size="10" font-weight="bold">Nước Thải & Điện Gió</text>
       </g>
 
       <!-- Giai đoạn 3: Turbine Gió Ngoài Khơi & Năng Lượng Tái Tạo (Levels 151-155) -->
@@ -451,7 +451,7 @@ export function renderSmartCityVisual(completedCount = 0, totalCount = 20, stage
         <line x1="580" y1="130" x2="560" y2="105" stroke="#f8fafc" stroke-width="2.5"/>
         <line x1="580" y1="130" x2="600" y2="115" stroke="#f8fafc" stroke-width="2.5"/>
         <line x1="580" y1="130" x2="578" y2="155" stroke="#f8fafc" stroke-width="2.5"/>
-        <text x="580" y="225" text-anchor="middle" fill="#93c5fd" font-size="10" font-weight="bold">Điện Gió Vịnh Biển</text>
+        <text x="580" y="225" text-anchor="middle" fill="#93c5fd" font-size="10" font-weight="bold">Vườn Treo & TT Điều Hành</text>
       </g>
 
       <!-- Giai đoạn 4: Siêu Tháp Xanh Chọc Trời & Drone Giao Hàng (Levels 156-160) -->

@@ -447,14 +447,25 @@ export function renderGamesHub({ state, appRoot } = {}) {
   `;
 }
 
-// 1. Màn chơi Đấu tính nhẩm 90 giây
-export function renderSpeedMathArena({ state, appRoot, saveLocal } = {}) {
+export function stopActiveSpeedMathSession() {
   if (activeSpeedMathSession) {
     activeSpeedMathSession.stop();
+    activeSpeedMathSession = null;
   }
+}
+
+// 1. Màn chơi Đấu tính nhẩm 90 giây
+export function renderSpeedMathArena({ state, appRoot, saveLocal } = {}) {
+  stopActiveSpeedMathSession();
 
   const savedSpeedMath = state?.db?.gameRecords?.speedMath || {};
-  const initialStreak = Number(savedSpeedMath.difficultyBoost) || 0;
+  const profile = getAdaptiveProfile(state?.db?.gameRecords);
+  const adaptiveLvl = profile?.levels?.speedMath || 2;
+  const levelStreakMap = { 1: 0, 2: 3, 3: 6, 4: 10, 5: 10 };
+  const baseStreak = levelStreakMap[adaptiveLvl] ?? 3;
+  const initialStreak = Math.max(baseStreak, Number(savedSpeedMath.difficultyBoost) || 0);
+  const startTime = Date.now();
+  const speedTierLabel = initialStreak >= 10 ? "4 (Olympic)" : (initialStreak >= 6 ? "3 (Olympic)" : "2");
 
   appRoot.innerHTML = `
     <div style="margin-bottom:20px; display:flex; gap:12px; align-items:center">
@@ -472,7 +483,7 @@ export function renderSpeedMathArena({ state, appRoot, saveLocal } = {}) {
         <div class="score-display">
           <span class="score-number" id="speedMathScore">0 đ</span>
           <span class="streak-badge" id="speedMathStreak">Streak: ${initialStreak}</span>
-          ${initialStreak >= 3 ? `<span class="streak-badge" style="background:#fef08a; color:#854d0e; border:1px solid #facc15">⚡ Tốc độ: Cấp ${initialStreak >= 6 ? "3 (Olympic)" : "2"}</span>` : ""}
+          ${initialStreak >= 3 ? `<span class="streak-badge" style="background:#fef08a; color:#854d0e; border:1px solid #facc15">⚡ Tốc độ: Cấp ${speedTierLabel}</span>` : ""}
         </div>
         <button type="button" class="text-button" id="speedMathQuitBtn" style="font-size:0.85rem; color:var(--muted); padding:4px 8px" title="Dừng chơi giữa chừng">✕ Dừng chơi</button>
       </div>
@@ -590,8 +601,16 @@ export function renderSpeedMathArena({ state, appRoot, saveLocal } = {}) {
         sm.velocityTier = velocityTier;
         sm.difficultyBoost = nextBoost; // Lưu để tự động tăng độ khó cho các ván tiếp theo!
 
+        const timeMs = Date.now() - startTime;
+        const playedDifficulty = bestStreak >= 10 ? Math.max(4, adaptiveLvl) : (bestStreak >= 6 ? 3 : (bestStreak >= 3 ? 2 : 1));
+
         // Adaptive Engine: ghi nhận kết quả và tự điều chỉnh ZPD
-        recordGameOutcome(state, "speedMath", { success: score > 0, difficulty: nextBoost >= 10 ? 5 : (nextBoost >= 6 ? 4 : (nextBoost >= 3 ? 3 : 2)), score });
+        recordGameOutcome(state, "speedMath", {
+          success: score > 0,
+          difficulty: playedDifficulty,
+          score,
+          timeMs
+        });
         const newBadges = checkAndAwardBadges(state);
         for (const b of newBadges) showBadgeCelebration(b);
 
@@ -749,6 +768,7 @@ export function renderBarModelStudioView({ state, appRoot, saveLocal, challengeI
   }
   activeBarModelState = new BarModelStudioState(initialIndex);
   const studio = activeBarModelState;
+  const startTime = Date.now();
 
   function updateStudioUI() {
     const stageEl = document.querySelector("#barSvgStage");
@@ -1117,12 +1137,15 @@ export function renderBarModelStudioView({ state, appRoot, saveLocal, challengeI
           bm.completedChallenges.push(ch.id);
           bm.stars = (bm.stars || 0) + 1;
           // Adaptive Engine: ghi nhận kết quả Bar Model
-          recordGameOutcome(state, "barModel", { success: true, difficulty: ch.difficulty || 2 });
+          const timeMs = Date.now() - startTime;
+          recordGameOutcome(state, "barModel", { success: true, difficulty: ch.difficulty || 2, timeMs });
           const newBadges = checkAndAwardBadges(state);
           for (const b of newBadges) showBadgeCelebration(b);
           if (typeof saveLocal === "function") await saveLocal(true);
         }
       } else {
+        const timeMs = Date.now() - startTime;
+        recordGameOutcome(state, "barModel", { success: false, difficulty: ch.difficulty || 2, timeMs });
         fbBox.className = "bug-feedback-box try-again";
         fbBox.innerHTML = `
           <strong>Chưa hoàn toàn chính xác!</strong> Hãy so sánh lại số phần và giá trị tổng/hiệu của hai thanh xem đã đúng với đề bài chưa nhé.
@@ -1164,6 +1187,7 @@ export function renderSpotTheBugView({ state, appRoot, saveLocal, caseIndex, par
   function renderCurrentProblem() {
     const c = session.getCurrentCase();
     const diffMeta = getDifficultyMeta(c.difficulty || 2);
+    const startTime = Date.now();
     appRoot.innerHTML = `
       <div style="margin-bottom:20px; display:flex; gap:12px; align-items:center">
         <a href="#math" class="text-button" style="display:inline-flex; align-items:center; gap:6px; font-weight:700">← Quay lại Buổi học Toán</a>
@@ -1351,12 +1375,15 @@ export function renderSpotTheBugView({ state, appRoot, saveLocal, caseIndex, par
               stb.solvedCount = stb.solvedBugs.length;
               stb.stars = (stb.stars || 0) + 1;
               // Adaptive Engine: ghi nhận kết quả Spot The Bug
-              recordGameOutcome(state, "spotTheBug", { success: true, difficulty: c.difficulty || 2 });
+              const timeMs = Date.now() - startTime;
+              recordGameOutcome(state, "spotTheBug", { success: true, difficulty: c.difficulty || 2, timeMs });
               const newBadges = checkAndAwardBadges(state);
               for (const b of newBadges) showBadgeCelebration(b);
               if (typeof saveLocal === "function") await saveLocal(true);
             }
           } else {
+            const timeMs = Date.now() - startTime;
+            recordGameOutcome(state, "spotTheBug", { success: false, difficulty: c.difficulty || 2, timeMs });
             item.classList.add(fb.isConsequential ? "selected-consequential" : "selected-wrong");
             fbArea.className = fb.isConsequential ? "bug-feedback-box warning-consequential" : "bug-feedback-box try-again";
             fbArea.innerHTML = `<strong>${fb.message}</strong>`;

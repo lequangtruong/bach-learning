@@ -16,6 +16,8 @@ import {
   getBadgesStatus 
 } from "../js/badge-system.js";
 
+import { renderSpeedMathArena, stopActiveSpeedMathSession } from "../js/render-games.js";
+
 test("adaptive: getAdaptiveProfile initializes default profile with 10 games", () => {
   const profile = getAdaptiveProfile({});
   assert.equal(typeof profile.levels, "object");
@@ -145,3 +147,133 @@ test("badges: checkAndAwardBadges awards badges and tracks progress", () => {
   assert.equal(speedDemon.isUnlocked, true);
   assert.equal(speedDemon.currentProgress, 100);
 });
+
+test("adaptive: recordGameOutcome persists timeMs and score in profile.history", () => {
+  const state = { db: { gameRecords: {} } };
+
+  recordGameOutcome(state, "speedMath", { success: true, difficulty: 4, score: 380, timeMs: 45000 });
+  const profile = state.db.gameRecords.adaptiveProfile;
+  assert.equal(profile.history.length, 1);
+  const entry = profile.history[0];
+  assert.equal(entry.gameKey, "speedMath");
+  assert.equal(entry.success, true);
+  assert.equal(entry.difficulty, 4);
+  assert.equal(entry.score, 380);
+  assert.equal(entry.timeMs, 45000);
+});
+
+test("adaptive: recordGameOutcome records failures and demotes upon repeated failure", () => {
+  const state = {
+    db: {
+      gameRecords: {
+        adaptiveProfile: {
+          levels: { balanceScale: 4 },
+          streaks: { balanceScale: 0 }
+        }
+      }
+    }
+  };
+
+  // Lần 1 sai
+  const res1 = recordGameOutcome(state, "balanceScale", { success: false, difficulty: 4, timeMs: 12000 });
+  assert.equal(res1.newLvl, 4);
+  assert.equal(res1.newStreak, -1);
+  assert.equal(res1.status, "steady");
+
+  // Lần 2 sai -> demoted
+  const res2 = recordGameOutcome(state, "balanceScale", { success: false, difficulty: 4, timeMs: 15000 });
+  assert.equal(res2.newLvl, 3);
+  assert.equal(res2.status, "demoted");
+  assert.ok(res2.message.includes("★3"));
+  assert.equal(state.db.gameRecords.adaptiveProfile.levels.balanceScale, 3);
+
+  const history = state.db.gameRecords.adaptiveProfile.history;
+  assert.equal(history.length, 2);
+  assert.equal(history[0].success, false);
+  assert.equal(history[0].timeMs, 12000);
+  assert.equal(history[1].success, false);
+  assert.equal(history[1].timeMs, 15000);
+});
+
+test("speed-math: renderSpeedMathArena maps profile adaptive level to initial streak", () => {
+  const elements = {};
+  const savedDoc = global.document;
+  global.document = {
+    createElement: (tag) => ({
+      tagName: tag.toUpperCase(),
+      style: {},
+      classList: { add: () => {}, remove: () => {} },
+      appendChild: () => {},
+      remove: () => {},
+      querySelector: () => ({ addEventListener: () => {} })
+    }),
+    body: {
+      appendChild: () => {}
+    },
+    querySelector: (sel) => {
+      if (sel === "#badgeModal") return null;
+      if (!elements[sel]) {
+        elements[sel] = {
+          style: {},
+          textContent: "",
+          value: "",
+          remove: () => {},
+          addEventListener: () => {}
+        };
+      }
+      return elements[sel];
+    },
+    querySelectorAll: () => []
+  };
+
+  let appHtml = "";
+  const mockAppRoot = {
+    set innerHTML(val) { appHtml = val; },
+    get innerHTML() { return appHtml; }
+  };
+
+  // 1. Profile Level 5 -> streak 10, Cấp 4 (Olympic)
+  const stateL5 = {
+    db: {
+      gameRecords: {
+        adaptiveProfile: {
+          levels: { speedMath: 5 }
+        }
+      }
+    }
+  };
+  renderSpeedMathArena({ state: stateL5, appRoot: mockAppRoot });
+  assert.ok(appHtml.includes("Streak: 10"), "Level 5 should initialize with streak 10");
+  assert.ok(appHtml.includes("Cấp 4 (Olympic)"), "Should show Cấp 4 (Olympic) badge");
+
+  // 2. Profile Level 3 -> streak 6, Cấp 3 (Olympic)
+  const stateL3 = {
+    db: {
+      gameRecords: {
+        adaptiveProfile: {
+          levels: { speedMath: 3 }
+        }
+      }
+    }
+  };
+  renderSpeedMathArena({ state: stateL3, appRoot: mockAppRoot });
+  assert.ok(appHtml.includes("Streak: 6"), "Level 3 should initialize with streak 6");
+  assert.ok(appHtml.includes("Cấp 3 (Olympic)"), "Should show Cấp 3 (Olympic) badge");
+
+  // 3. Profile Level 1 -> streak 0
+  const stateL1 = {
+    db: {
+      gameRecords: {
+        adaptiveProfile: {
+          levels: { speedMath: 1 }
+        }
+      }
+    }
+  };
+  renderSpeedMathArena({ state: stateL1, appRoot: mockAppRoot });
+  assert.ok(appHtml.includes("Streak: 0"), "Level 1 should initialize with streak 0");
+
+  stopActiveSpeedMathSession();
+  global.document = savedDoc;
+});
+

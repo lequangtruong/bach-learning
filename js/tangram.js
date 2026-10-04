@@ -9,23 +9,63 @@ export { TANGRAM_PUZZLES, TANGRAM_PIECES_CONFIG };
 export function getPiecePolygonPoints(type) {
   switch (type) {
     case "large-triangle":
-      // Đáy = 160, chiều cao = 80
+      // Đáy = 160, chiều cao = 80 (Diện tích = 6400)
       return "-80,40 80,40 0,-40";
     case "med-triangle":
-      // Cạnh góc vuông = 80, cạnh huyền = 113.14
-      return "-40,28 40,28 -40,-52";
+      // Cạnh góc vuông = 80, cạnh huyền = 113.14 (Diện tích = 3200)
+      return "-40,40 40,40 -40,-40";
     case "small-triangle":
-      // Đáy = 80, chiều cao = 40
+      // Đáy = 80, chiều cao = 40 (Diện tích = 1600)
       return "-40,20 40,20 0,-20";
     case "square":
-      // Cạnh = 56.57 (xoay 45 độ: rộng 80, cao 80)
-      return "0,-35 35,0 0,35 -35,0";
+      // Cạnh = 40*sqrt(2) ≈ 56.57, đường chéo = 80 (Diện tích = 3200)
+      return "0,-40 40,0 0,40 -40,0";
     case "parallelogram":
-      // Đáy = 70, cao = 35
-      return "-35,18 20,18 35,-18 -20,-18";
+      // Đáy = 80, cao = 40 (Diện tích = 3200)
+      return "-60,20 20,20 60,-20 -20,-20";
     default:
       return "0,0";
   }
+}
+
+/**
+ * Tạo chuỗi đường bao SVG Silhouette compound path (M ... Z M ... Z)
+ * chính xác từ vị trí mục tiêu của các mảnh ghép chuẩn toán học.
+ */
+export function generateSilhouettePath(targetLayout) {
+  if (!targetLayout) return "";
+  const pieceTypes = {
+    t1: "large-triangle", t2: "large-triangle", tm: "med-triangle",
+    ts1: "small-triangle", ts2: "small-triangle", sq: "square", para: "parallelogram"
+  };
+  const piecePolys = {
+    "large-triangle": [[-80, 40], [80, 40], [0, -40]],
+    "med-triangle": [[-40, 40], [40, 40], [-40, -40]],
+    "small-triangle": [[-40, 20], [40, 20], [0, -20]],
+    "square": [[0, -40], [40, 0], [0, 40], [-40, 0]],
+    "parallelogram": [[-60, 20], [20, 20], [60, -20], [-20, -20]]
+  };
+  const subpaths = [];
+  for (const [key, target] of Object.entries(targetLayout)) {
+    const type = pieceTypes[key];
+    const poly = piecePolys[type];
+    if (!poly || !target) continue;
+    const rad = ((target.rot || 0) * Math.PI) / 180;
+    const cos = Math.cos(rad);
+    const sin = Math.sin(rad);
+    const sx = target.flipped ? -1 : 1;
+    const pts = poly.map(([px, py]) => {
+      const fx = px * sx;
+      const rx = fx * cos - py * sin;
+      const ry = fx * sin + py * cos;
+      return [Math.round(target.x + rx), Math.round(target.y + ry)];
+    });
+    if (pts.length > 0) {
+      const d = "M " + pts.map(p => `${p[0]} ${p[1]}`).join(" L ") + " Z";
+      subpaths.push(d);
+    }
+  }
+  return subpaths.join(" ");
 }
 
 export class TangramSession {

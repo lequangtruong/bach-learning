@@ -2993,9 +2993,9 @@ export const RUSH_HOUR_BOARDS_PART2 = [
         "name": "Xe Con F"
       }
     ],
-    "title": "👑 Vua Kẹt Xe: Kỷ Lục Thế Giới Mensa (81 bước)",
+    "title": "👑 [Siêu Khó] Vua Kẹt Xe: Kỷ Lục Thế Giới Mensa (81 bước)",
     "difficulty": 5,
-    "hint": "Thế cờ đỉnh cao Mensa đòi hỏi chuỗi xoay chuyển phức tạp giữa nhiều xe tải lớn. Hãy ghi nhớ các chu kỳ giải!",
+    "hint": "⚠️ THỬ THÁCH SIÊU KHÓ (81 bước): Thế cờ đỉnh cao kỷ lục Mensa thế giới. Đòi hỏi chuỗi xoay chuyển phức tạp giữa nhiều xe tải lớn. Hãy kiên nhẫn khám phá từng chu kỳ giải!",
     "id": "rh-50",
     "minMoves": 81
   }
