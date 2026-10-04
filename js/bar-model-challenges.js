@@ -351,8 +351,8 @@ export const BAR_MODEL_CHALLENGES = [
     "index": 15,
     "level": "Cấp độ 2: Tổng – Tỉ Đơn giản (Gấp mấy lần)",
     "difficulty": 2,
-    "title": "Thử thách 16: Tuổi Mẹ và Bách (Gấp 3 lần)",
-    "problem": "Năm nay mẹ gấp 3 lần tuổi Bách. Tổng số tuổi của mẹ và Bách là 48 tuổi. Hãy dựng mô hình biểu diễn số tuổi của mẹ và Bách.",
+    "title": "Thử thách 16: Tuổi Mẹ và Huy (Gấp 3 lần)",
+    "problem": "Năm nay mẹ gấp 3 lần tuổi Huy. Tổng số tuổi của mẹ và Huy là 48 tuổi. Hãy dựng mô hình biểu diễn số tuổi của mẹ và Huy.",
     "target": {
       "bar1Parts": 3,
       "bar2Parts": 1,
@@ -360,10 +360,10 @@ export const BAR_MODEL_CHALLENGES = [
       "diffValue": "",
       "totalValue": "48",
       "bar1Name": "Tuổi Mẹ",
-      "bar2Name": "Tuổi Bách"
+      "bar2Name": "Tuổi Huy"
     },
-    "hint": "Tuổi Mẹ là 3 phần bằng nhau, tuổi Bách là 1 phần. Ngoặc tổng 4 phần là 48.",
-    "solution": "Tuổi Bách: 48 : (3 + 1) = 12 (tuổi). Tuổi Mẹ: 12 × 3 = 36 (tuổi)."
+    "hint": "Tuổi Mẹ là 3 phần bằng nhau, tuổi Huy là 1 phần. Ngoặc tổng 4 phần là 48.",
+    "solution": "Tuổi Huy: 48 : (3 + 1) = 12 (tuổi). Tuổi Mẹ: 12 × 3 = 36 (tuổi)."
   },
   {
     "id": "challenge-17",
@@ -679,8 +679,8 @@ export const BAR_MODEL_CHALLENGES = [
     "index": 31,
     "level": "Cấp độ 3: Hiệu – Tỉ Đơn giản (Gấp mấy lần)",
     "difficulty": 2,
-    "title": "Thử thách 32: Tuổi Bố và Bách (Hiệu – Tỉ)",
-    "problem": "Bố hơn Bách 30 tuổi. Hiện nay tuổi bố gấp 4 lần tuổi Bách. Hãy dựng mô hình biểu diễn số tuổi của bố và Bách.",
+    "title": "Thử thách 32: Tuổi Bố và Triết (Hiệu – Tỉ)",
+    "problem": "Bố hơn Triết 30 tuổi. Hiện nay tuổi bố gấp 4 lần tuổi Triết. Hãy dựng mô hình biểu diễn số tuổi của bố và Triết.",
     "target": {
       "bar1Parts": 4,
       "bar2Parts": 1,
@@ -688,10 +688,10 @@ export const BAR_MODEL_CHALLENGES = [
       "diffValue": "30",
       "totalValue": "",
       "bar1Name": "Tuổi Bố",
-      "bar2Name": "Tuổi Bách"
+      "bar2Name": "Tuổi Triết"
     },
-    "hint": "Tuổi Bố vẽ 4 phần, tuổi Bách vẽ 1 phần. Bố hơn Bách 3 phần tương ứng 30 tuổi.",
-    "solution": "Hiệu số phần: 4 − 1 = 3 (phần). Tuổi Bách: 30 : 3 = 10 (tuổi). Tuổi Bố: 10 × 4 = 40 (tuổi)."
+    "hint": "Tuổi Bố vẽ 4 phần, tuổi Triết vẽ 1 phần. Bố hơn Triết 3 phần tương ứng 30 tuổi.",
+    "solution": "Hiệu số phần: 4 − 1 = 3 (phần). Tuổi Triết: 30 : 3 = 10 (tuổi). Tuổi Bố: 10 × 4 = 40 (tuổi)."
   },
   {
     "id": "challenge-33",
@@ -1534,8 +1534,8 @@ export const BAR_MODEL_CHALLENGES = [
     "index": 76,
     "level": "Cấp độ 6: Bài toán Tuổi tác Singapore",
     "difficulty": 4,
-    "title": "Thử thách 77: Bố hơn Bách 27 tuổi (Gấp 4 lần)",
-    "problem": "Bố hơn Bách 27 tuổi. Cách đây 5 năm tuổi bố gấp 4 lần tuổi Bách. Dựng mô hình tuổi bố và Bách cách đây 5 năm.",
+    "title": "Thử thách 77: Bố hơn Huy 27 tuổi (Gấp 4 lần)",
+    "problem": "Bố hơn Huy 27 tuổi. Cách đây 5 năm tuổi bố gấp 4 lần tuổi Huy. Dựng mô hình tuổi bố và Huy cách đây 5 năm.",
     "target": {
       "bar1Parts": 4,
       "bar2Parts": 1,
@@ -1543,10 +1543,10 @@ export const BAR_MODEL_CHALLENGES = [
       "diffValue": "27",
       "totalValue": "",
       "bar1Name": "Tuổi Bố",
-      "bar2Name": "Tuổi Bách"
+      "bar2Name": "Tuổi Huy"
     },
-    "hint": "Dù 5 năm trước hay hiện nay thì bố luôn hơn Bách 27 tuổi! Bố vẽ 4 phần, Bách vẽ 1 phần.",
-    "solution": "Tuổi Bách 5 năm trước: 27 : (4 − 1) = 9 (tuổi). Tuổi Bách hiện nay: 9 + 5 = 14 (tuổi)."
+    "hint": "Dù 5 năm trước hay hiện nay thì bố luôn hơn Huy 27 tuổi! Bố vẽ 4 phần, Huy vẽ 1 phần.",
+    "solution": "Tuổi Huy 5 năm trước: 27 : (4 − 1) = 9 (tuổi). Tuổi Huy hiện nay: 9 + 5 = 14 (tuổi)."
   },
   {
     "id": "challenge-78",

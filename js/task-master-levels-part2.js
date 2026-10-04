@@ -913,17 +913,17 @@ export const TASK_MASTER_LEVELS_PART2 = [
     categoryName: "Sứ Mệnh Đặc Biệt",
     icon: "👑",
     difficulty: 4,
-    description: "Bài toán tổng hợp đỉnh cao: Lập kế hoạch 6 bước chiến lược để Bách trở thành học sinh xuất sắc toàn diện.",
+    description: "Bài toán tổng hợp đỉnh cao: Lập kế hoạch 6 bước chiến lược để học sinh trở thành chiến lược gia xuất sắc toàn diện.",
     tasks: [
       { id: "t1", text: "Tự soi xét bản thân: nhận diện rõ điểm mạnh và điểm cần cải thiện (không làm qua loa)", icon: "🪞", hint: "Biết mình biết người: Dũng cảm nhìn thẳng vào thói quen làm ẩu để quyết tâm thay đổi." },
       { id: "t2", text: "Xây dựng mục tiêu rõ ràng SMART và bản kế hoạch hành động từng ngày", icon: "🎯", requires: ["t1"], hint: "Mục tiêu cụ thể: 25 phút tập trung cao độ mỗi ngày, không bị xao nhãng." },
       { id: "t3", text: "Thiết lập thói quen: 'Dừng lại 15 giây suy nghĩ trước khi bắt tay vào làm'", icon: "🧠", requires: ["t2"], hint: "Thần chú thành công: Không bao giờ bấm bừa, luôn nhìn thấy bước kết thúc trước khi đi bước 1." },
       { id: "t4", text: "Rèn luyện kiên trì qua các bài toán tư duy, cuốn sách văn học và trò chơi logic", icon: "📚", requires: ["t3"], hint: "Mỗi ngày giải 1 bài khó, tập trung cao độ vượt qua thử thách." },
       { id: "t5", text: "Chữa sâu từng lỗi sai: ghi vào sổ tay bí kíp để không bao giờ mắc lại lần 2", icon: "📓", requires: ["t4"], hint: "Người thông minh học từ sai lầm của chính mình và biến nó thành bậc thang đi lên." },
-      { id: "t6", text: "Tự tin bước vào năm học lớp 4 với tư duy chiến lược gia nhí xuất sắc toàn diện!", icon: "👑", requires: ["t5"], hint: "Bách đã làm chủ năng lực suy nghĩ trước khi hành động — trở thành phiên bản vượt trội nhất!" }
+      { id: "t6", text: "Tự tin bước vào năm học lớp 4 với tư duy chiến lược gia nhí xuất sắc toàn diện!", icon: "👑", requires: ["t5"], hint: "Đã làm chủ năng lực suy nghĩ trước khi hành động — trở thành phiên bản vượt trội nhất!" }
     ],
     distractors: [
-      { id: "d1", text: "Làm qua loa đối phó cho xong việc để đi chơi điện tử", icon: "🎮", failReason: "Làm qua loa sẽ làm con mãi dậm chân tại chỗ và đánh mất tương lai tươi sáng!" },
+      { id: "d1", text: "Làm qua loa đối phó cho xong việc để đi chơi điện tử", icon: "🎮", failReason: "Làm qua loa sẽ khiến mình mãi dậm chân tại chỗ và đánh mất tương lai tươi sáng!" },
       { id: "d2", text: "Hành động theo cảm tính bộc phát không cần tính toán bước tiếp theo", icon: "🌪️", failReason: "Chỉ huy bốc đồng không có chiến lược sẽ đẩy toàn bộ đội hình vào thảm bại!" }
     ],
     lesson: "Chiến lược gia xuất sắc: Luôn dừng lại suy nghĩ thấu đáo trước khi hành động!"

@@ -6,20 +6,20 @@ export const LOGIC_GRID_CASES_PART1 = [
     id: "lg-01",
     title: "Vụ Án Ba Bạn Nhỏ Và Môn Thi Tài",
     difficulty: 1,
-    story: "Trong hội thi sáng tạo trường tiểu học, ba bạn Bách, Nam và An tham gia 3 môn khác nhau: Cờ Vua, Bơi Lội và Chế Tạo Robot.",
-    rows: { name: "Học sinh", items: ["Bách", "Nam", "An"] },
+    story: "Trong hội thi sáng tạo trường tiểu học, ba bạn Huy, Nam và An tham gia 3 môn khác nhau: Cờ Vua, Bơi Lội và Chế Tạo Robot.",
+    rows: { name: "Học sinh", items: ["Huy", "Nam", "An"] },
     cols: { name: "Môn thi", items: ["Cờ Vua", "Bơi Lội", "Robot"] },
     clues: [
       "1. Nam rất mê thi đấu trên bàn cờ 64 ô vuông và luôn mang theo quân Hậu may mắn.",
-      "2. Bách không biết bơi và rất sợ nước sâu.",
+      "2. Huy không biết bơi và rất sợ nước sâu.",
       "3. Người thi Robot thích lập trình điều khiển cánh tay cơ khí."
     ],
     solution: {
-      "Bách": "Robot",
+      "Huy": "Robot",
       "Nam": "Cờ Vua",
       "An": "Bơi Lội"
     },
-    explanation: "Từ manh mối 1, Nam thi Cờ Vua. Từ manh mối 2, Bách sợ nước nên không thi Bơi, vậy Bách thi Robot. Còn lại An thi Bơi Lội."
+    explanation: "Từ manh mối 1, Nam thi Cờ Vua. Từ manh mối 2, Huy sợ nước nên không thi Bơi, vậy Huy thi Robot. Còn lại An thi Bơi Lội."
   },
   {
     id: "lg-02",
@@ -44,43 +44,43 @@ export const LOGIC_GRID_CASES_PART1 = [
     id: "lg-03",
     title: "Huy Hiệu Bốn Đội Trưởng Tài Ba",
     difficulty: 2,
-    story: "Bốn bạn Bách, Khoa, Minh và Tùng là đội trưởng của 4 câu lạc bộ: Toán Học, Thiên Văn, Lịch Sử và Mỹ Thuật. Mỗi bạn mang một huy hiệu: Vàng, Bạc, Đồng và Lam ngọc.",
-    rows: { name: "Đội trưởng", items: ["Bách", "Khoa", "Minh", "Tùng"] },
+    story: "Bốn bạn Triết, Khoa, Minh và Tùng là đội trưởng của 4 câu lạc bộ: Toán Học, Thiên Văn, Lịch Sử và Mỹ Thuật. Mỗi bạn mang một huy hiệu: Vàng, Bạc, Đồng và Lam ngọc.",
+    rows: { name: "Đội trưởng", items: ["Triết", "Khoa", "Minh", "Tùng"] },
     cols: { name: "Huy hiệu", items: ["Vàng", "Bạc", "Đồng", "Lam ngọc"] },
     clues: [
-      "1. Bách đeo huy hiệu bằng kim loại quý nhất trong bảng giải thưởng (Huy hiệu Vàng).",
+      "1. Triết đeo huy hiệu bằng kim loại quý nhất trong bảng giải thưởng (Huy hiệu Vàng).",
       "2. Khoa và bạn đeo huy hiệu Đồng thường xuyên cùng nhau quan sát kính thiên văn.",
       "3. Tùng không đeo huy hiệu Lam ngọc.",
       "4. Minh rất tự hào về chiếc huy hiệu màu Bạc lấp lánh trên ngực áo."
     ],
     solution: {
-      "Bách": "Vàng",
+      "Triết": "Vàng",
       "Khoa": "Lam ngọc",
       "Minh": "Bạc",
       "Tùng": "Đồng"
     },
-    explanation: "Bách đeo Vàng. Minh đeo Bạc. Khoa cùng bạn đeo Đồng nên Khoa không đeo Đồng, do đó Khoa đeo Lam ngọc. Còn lại Tùng đeo Đồng."
+    explanation: "Triết đeo Vàng. Minh đeo Bạc. Khoa cùng bạn đeo Đồng nên Khoa không đeo Đồng, do đó Khoa đeo Lam ngọc. Còn lại Tùng đeo Đồng."
   },
   {
     id: "lg-04",
     title: "Bữa Trưa Yêu Thích Của Bốn Nhà Du Hành",
     difficulty: 2,
-    story: "Trên trạm vũ trụ, 4 phi hành gia Bách, Neil, Yuri và John chọn 4 món ăn đóng gói không gian: Táo sấy, Bánh mì ống, Súp gà và Cơm nắm Rong biển.",
-    rows: { name: "Phi hành gia", items: ["Bách", "Neil", "Yuri", "John"] },
+    story: "Trên trạm vũ trụ, 4 phi hành gia Huy, Neil, Yuri và John chọn 4 món ăn đóng gói không gian: Táo sấy, Bánh mì ống, Súp gà và Cơm nắm Rong biển.",
+    rows: { name: "Phi hành gia", items: ["Huy", "Neil", "Yuri", "John"] },
     cols: { name: "Món ăn", items: ["Táo sấy", "Bánh mì", "Súp gà", "Cơm nắm"] },
     clues: [
-      "1. Bách thích ăn món cơm dẻo truyền thống cuộn rong biển giòn tan.",
+      "1. Huy thích ăn món cơm dẻo truyền thống cuộn rong biển giòn tan.",
       "2. Yuri là người gốc Âu và rất thích món tráng miệng từ trái cây giòn ngọt.",
       "3. Neil không thích ăn các món dạng lỏng nóng như súp.",
       "4. John thích húp súp ấm nóng bồi bổ sức khỏe trong môi trường không trọng lực."
     ],
     solution: {
-      "Bách": "Cơm nắm",
+      "Huy": "Cơm nắm",
       "Neil": "Bánh mì",
       "Yuri": "Táo sấy",
       "John": "Súp gà"
     },
-    explanation: "Bách ăn Cơm nắm. Yuri ăn Táo sấy. John ăn Súp gà. Còn lại Neil ăn Bánh mì ống."
+    explanation: "Huy ăn Cơm nắm. Yuri ăn Táo sấy. John ăn Súp gà. Còn lại Neil ăn Bánh mì ống."
   },
   {
     id: "lg-05",
@@ -107,22 +107,22 @@ export const LOGIC_GRID_CASES_PART1 = [
     id: "lg-06",
     title: "Bốn Bạn Và Bốn Cung Hoàng Đạo",
     difficulty: 3,
-    story: "Bách, Chi, Dũng, Hà sinh vào 4 tháng thuộc 4 chòm sao: Bạch Dương (Lửa), Kim Ngưu (Đất), Song Tử (Khí), Cự Giải (Nước).",
-    rows: { name: "Bạn nhỏ", items: ["Bách", "Chi", "Dũng", "Hà"] },
+    story: "Triết, Chi, Dũng, Hà sinh vào 4 tháng thuộc 4 chòm sao: Bạch Dương (Lửa), Kim Ngưu (Đất), Song Tử (Khí), Cự Giải (Nước).",
+    rows: { name: "Bạn nhỏ", items: ["Triết", "Chi", "Dũng", "Hà"] },
     cols: { name: "Chòm sao", items: ["Bạch Dương", "Kim Ngưu", "Song Tử", "Cự Giải"] },
     clues: [
-      "1. Bách có tính cách sôi nổi, nhiệt huyết như ngọn lửa và thuộc cung Lửa (Bạch Dương).",
+      "1. Triết có tính cách sôi nổi, nhiệt huyết như ngọn lửa và thuộc cung Lửa (Bạch Dương).",
       "2. Chi rất thích bơi lội dưới làn nước mát và thuộc cung Nước.",
       "3. Dũng kiên định, vững chãi như mặt đất và không phải cung Song Tử.",
       "4. Hà yêu tự do như những cơn gió bay bổng trên bầu trời."
     ],
     solution: {
-      "Bách": "Bạch Dương",
+      "Triết": "Bạch Dương",
       "Chi": "Cự Giải",
       "Dũng": "Kim Ngưu",
       "Hà": "Song Tử"
     },
-    explanation: "Bách thuộc cung Bạch Dương (Lửa). Chi thuộc cung Cự Giải (Nước). Dũng thuộc cung Đất (Kim Ngưu). Hà thuộc cung Khí (Song Tử)."
+    explanation: "Triết thuộc cung Bạch Dương (Lửa). Chi thuộc cung Cự Giải (Nước). Dũng thuộc cung Đất (Kim Ngưu). Hà thuộc cung Khí (Song Tử)."
   },
   {
     id: "lg-07",
@@ -212,7 +212,7 @@ export const LOGIC_GRID_CASES_PART1 = [
     id: "lg-11",
     title: "Bốn Món Quà Sinh Nhật Bí Mật",
     difficulty: 5,
-    story: "Trong tiệc sinh nhật Bách, 4 hộp quà được gói bằng 4 dải nơ màu: Đỏ, Xanh, Tím, Vàng. Bên trong là 4 món quà: Kính Thiên Văn, Xe Đua Điều Khiển, Bộ Lego Lâu Đài và Bàn Cờ Vua Nam Châm.",
+    story: "Trong tiệc sinh nhật Huy, 4 hộp quà được gói bằng 4 dải nơ màu: Đỏ, Xanh, Tím, Vàng. Bên trong là 4 món quà: Kính Thiên Văn, Xe Đua Điều Khiển, Bộ Lego Lâu Đài và Bàn Cờ Vua Nam Châm.",
     rows: { name: "Món quà", items: ["Kính Thiên Văn", "Xe Đua", "Lego Lâu Đài", "Cờ Vua"] },
     cols: { name: "Nơ gói quà", items: ["Nơ Đỏ", "Nơ Xanh", "Nơ Tím", "Nơ Vàng"] },
     clues: [
@@ -254,22 +254,22 @@ export const LOGIC_GRID_CASES_PART1 = [
     id: "lg-13",
     title: "Bốn Bạn Và Bốn Loài Hoa Biểu Tượng",
     difficulty: 5,
-    story: "Bách, Mai, Lan, Cúc trồng 4 loài hoa biểu tượng cho 4 đức tính: Hoa Hướng Dương (Lạc quan), Hoa Sen (Thanh khiết), Hoa Hồng (Dũng cảm), Hoa Phong Lan (Tinh tế).",
-    rows: { name: "Bạn nhỏ", items: ["Bách", "Mai", "Lan", "Cúc"] },
+    story: "Huy, Mai, Lan, Cúc trồng 4 loài hoa biểu tượng cho 4 đức tính: Hoa Hướng Dương (Lạc quan), Hoa Sen (Thanh khiết), Hoa Hồng (Dũng cảm), Hoa Phong Lan (Tinh tế).",
+    rows: { name: "Bạn nhỏ", items: ["Huy", "Mai", "Lan", "Cúc"] },
     cols: { name: "Loài hoa", items: ["Hướng Dương", "Hoa Sen", "Hoa Hồng", "Phong Lan"] },
     clues: [
       "1. Bạn Lan có tên trùng hoa nhưng tuyệt đối không trồng hoa Lan mà trồng loài hoa luôn hướng về ánh mặt trời (Hướng Dương).",
       "2. Bạn Mai thích vẻ đẹp thanh tao của loài hoa mọc giữa hồ nước (Hoa Sen).",
-      "3. Bạn Bách có tính cách dũng cảm, kiên cường và trồng Hoa Hồng có gai nhọn bảo vệ.",
+      "3. Bạn Huy có tính cách dũng cảm, kiên cường và trồng Hoa Hồng có gai nhọn bảo vệ.",
       "4. Bạn Cúc chăm sóc loài hoa còn lại nở rực rỡ trong vườn."
     ],
     solution: {
-      "Bách": "Hoa Hồng",
+      "Huy": "Hoa Hồng",
       "Mai": "Hoa Sen",
       "Lan": "Hướng Dương",
       "Cúc": "Phong Lan"
     },
-    explanation: "Lan trồng Hướng Dương. Mai trồng Hoa Sen. Bách trồng Hoa Hồng dũng cảm. Cúc trồng Phong Lan."
+    explanation: "Lan trồng Hướng Dương. Mai trồng Hoa Sen. Huy trồng Hoa Hồng dũng cảm. Cúc trồng Phong Lan."
   },
   {
     id: "lg-14",
@@ -296,22 +296,22 @@ export const LOGIC_GRID_CASES_PART1 = [
     id: "lg-15",
     title: "Bốn Nhà Khoa Học Nhí Và Bốn Giải Thưởng",
     difficulty: 5,
-    story: "Bách, Khoa, Hoàng, Long nhận 4 giải thưởng đặc biệt: Sáng Tạo Nhất, Kỹ Thuật Tối Ưu, Trình Bày Ấn Tượng và Thân Thiện Môi Trường.",
-    rows: { name: "Nhà khoa học", items: ["Bách", "Khoa", "Hoàng", "Long"] },
+    story: "Triết, Khoa, Hoàng, Long nhận 4 giải thưởng đặc biệt: Sáng Tạo Nhất, Kỹ Thuật Tối Ưu, Trình Bày Ấn Tượng và Thân Thiện Môi Trường.",
+    rows: { name: "Nhà khoa học", items: ["Triết", "Khoa", "Hoàng", "Long"] },
     cols: { name: "Giải thưởng", items: ["Sáng Tạo", "Kỹ Thuật", "Trình Bày", "Môi Trường"] },
     clues: [
-      "1. Bách thiết kế dự án lọc nước tự nhiên bằng vỏ trấu và nhận giải Thân Thiện Môi Trường.",
+      "1. Triết thiết kế dự án lọc nước tự nhiên bằng vỏ trấu và nhận giải Thân Thiện Môi Trường.",
       "2. Khoa lập trình robot né tránh vật cản tự động và nhận giải Kỹ Thuật Tối Ưu.",
       "3. Hoàng có bài thuyết trình lưu loát, tự tin trước hội đồng giám khảo và nhận giải Trình Bày Ấn Tượng.",
       "4. Long có ý tưởng độc đáo phá cách và nhận giải thưởng danh giá còn lại."
     ],
     solution: {
-      "Bách": "Môi Trường",
+      "Triết": "Môi Trường",
       "Khoa": "Kỹ Thuật",
       "Hoàng": "Trình Bày",
       "Long": "Sáng Tạo"
     },
-    explanation: "Bách nhận giải Môi Trường. Khoa nhận giải Kỹ Thuật. Hoàng nhận giải Trình Bày. Long nhận giải Sáng Tạo."
+    explanation: "Triết nhận giải Môi Trường. Khoa nhận giải Kỹ Thuật. Hoàng nhận giải Trình Bày. Long nhận giải Sáng Tạo."
   },
 
   // --- CÁC VỤ ÁN MỚI BỔ SUNG (BÀI 16 ĐẾN 25) ---
@@ -319,85 +319,85 @@ export const LOGIC_GRID_CASES_PART1 = [
     id: "lg-16",
     title: "Vụ Án Mật Mã Trong Kim Tự Tháp",
     difficulty: 3,
-    story: "Bốn nhà khảo cổ nhí Bách, Emma, Lucas và Maya khai quật được 4 cổ vật Ai Cập quý giá: Bọ Hung Vàng, Mặt Nạ Pharaoh, Phiến Đá Rosetta và Chiếc Trượng Bạc.",
-    rows: { name: "Nhà khảo cổ", items: ["Bách", "Emma", "Lucas", "Maya"] },
+    story: "Bốn nhà khảo cổ nhí Huy, Emma, Lucas và Maya khai quật được 4 cổ vật Ai Cập quý giá: Bọ Hung Vàng, Mặt Nạ Pharaoh, Phiến Đá Rosetta và Chiếc Trượng Bạc.",
+    rows: { name: "Nhà khảo cổ", items: ["Huy", "Emma", "Lucas", "Maya"] },
     cols: { name: "Cổ vật", items: ["Bọ Hung Vàng", "Mặt Nạ", "Phiến Đá", "Trượng Bạc"] },
     clues: [
-      "1. Bách tìm thấy phiến đá ghi các ký tự tượng hình cổ đại nghìn năm (Phiến Đá Rosetta).",
+      "1. Huy tìm thấy phiến đá ghi các ký tự tượng hình cổ đại nghìn năm (Phiến Đá Rosetta).",
       "2. Lucas phát hiện biểu tượng con bọ hung bằng vàng nguyên khối lấp lánh dưới cát.",
       "3. Maya không cầm chiếc trượng bạc quyền lực của vị đại tế tư.",
       "4. Emma vô cùng kinh ngạc khi mở nắp quan tài và nhìn thấy chiếc Mặt Nạ bằng vàng rực rỡ."
     ],
     solution: {
-      "Bách": "Phiến Đá",
+      "Huy": "Phiến Đá",
       "Emma": "Mặt Nạ",
       "Lucas": "Bọ Hung Vàng",
       "Maya": "Trượng Bạc"
     },
-    explanation: "Bách tìm Phiến Đá. Lucas tìm Bọ Hung Vàng. Emma tìm Mặt Nạ. Maya tìm Trượng Bạc."
+    explanation: "Huy tìm Phiến Đá. Lucas tìm Bọ Hung Vàng. Emma tìm Mặt Nạ. Maya tìm Trượng Bạc."
   },
   {
     id: "lg-17",
     title: "Giải Vô Địch Cờ Vua Thiếu Nhi",
     difficulty: 3,
-    story: "Bốn đại kiện tướng nhí Bách, Tuấn, Đức, Long đại diện cho 4 câu lạc bộ mang 4 màu quân cờ may mắn: Quân Trắng, Quân Đen, Quân Đỏ và Quân Lam.",
-    rows: { name: "Kỳ thủ", items: ["Bách", "Tuấn", "Đức", "Long"] },
+    story: "Bốn đại kiện tướng nhí Triết, Tuấn, Đức, Long đại diện cho 4 câu lạc bộ mang 4 màu quân cờ may mắn: Quân Trắng, Quân Đen, Quân Đỏ và Quân Lam.",
+    rows: { name: "Kỳ thủ", items: ["Triết", "Tuấn", "Đức", "Long"] },
     cols: { name: "Màu quân cờ", items: ["Quân Trắng", "Quân Đen", "Quân Đỏ", "Quân Lam"] },
     clues: [
-      "1. Bách luôn giành quyền đi tiên trong ván đấu khai mạc nhờ cầm bộ Quân Trắng tinh khôi.",
+      "1. Triết luôn giành quyền đi tiên trong ván đấu khai mạc nhờ cầm bộ Quân Trắng tinh khôi.",
       "2. Tuấn là bậc thầy phòng ngự phản công với bộ Quân Đen huyền bí.",
       "3. Long rất thích màu của biển khơi và chọn bộ Quân Lam.",
       "4. Đức mang tinh thần thi đấu bốc lửa cùng bộ quân còn lại."
     ],
     solution: {
-      "Bách": "Quân Trắng",
+      "Triết": "Quân Trắng",
       "Tuấn": "Quân Đen",
       "Đức": "Quân Đỏ",
       "Long": "Quân Lam"
     },
-    explanation: "Bách cầm Quân Trắng. Tuấn cầm Quân Đen. Long cầm Quân Lam. Đức cầm Quân Đỏ."
+    explanation: "Triết cầm Quân Trắng. Tuấn cầm Quân Đen. Long cầm Quân Lam. Đức cầm Quân Đỏ."
   },
   {
     id: "lg-18",
     title: "Trạm Cứu Hộ Động Vật Hoang Dã",
     difficulty: 3,
-    story: "Bốn bác sĩ thú y nhí Bách, Hà, Nam, Linh chăm sóc 4 bạn động vật đang hồi phục sức khỏe: Hổ Con, Gấu Trúc, Đại Bàng và Rùa Biển.",
-    rows: { name: "Bác sĩ nhí", items: ["Bách", "Hà", "Nam", "Linh"] },
+    story: "Bốn bác sĩ thú y nhí Huy, Hà, Nam, Linh chăm sóc 4 bạn động vật đang hồi phục sức khỏe: Hổ Con, Gấu Trúc, Đại Bàng và Rùa Biển.",
+    rows: { name: "Bác sĩ nhí", items: ["Huy", "Hà", "Nam", "Linh"] },
     cols: { name: "Động vật", items: ["Hổ Con", "Gấu Trúc", "Đại Bàng", "Rùa Biển"] },
     clues: [
-      "1. Bách băng bó vết thương ở cánh cho chú Đại Bàng chúa tể bầu trời.",
+      "1. Huy băng bó vết thương ở cánh cho chú Đại Bàng chúa tể bầu trời.",
       "2. Linh cho chú Gấu Trúc đáng yêu ăn những ngọn trúc xanh non mỗi ngày.",
       "3. Hà chăm sóc bể nước biển ấm áp cho chú Rùa Biển khổng lồ.",
       "4. Nam can đảm và nhẹ nhàng vuốt ve bạn động vật dũng mãnh còn lại."
     ],
     solution: {
-      "Bách": "Đại Bàng",
+      "Huy": "Đại Bàng",
       "Hà": "Rùa Biển",
       "Nam": "Hổ Con",
       "Linh": "Gấu Trúc"
     },
-    explanation: "Bách chăm Đại Bàng. Linh chăm Gấu Trúc. Hà chăm Rùa Biển. Nam chăm Hổ Con."
+    explanation: "Huy chăm Đại Bàng. Linh chăm Gấu Trúc. Hà chăm Rùa Biển. Nam chăm Hổ Con."
   },
   {
     id: "lg-19",
     title: "Vụ Án Chiếc Bánh Sinh Nhật Bị Ăn Vụng",
     difficulty: 4,
-    story: "Một chiếc bánh kem 4 tầng có 4 vị: Dâu Tây, Sô-cô-la, Vani, Trà Xanh bị 4 bạn nhỏ nếm thử trước bữa tiệc: Bách, Cún Bông, Mèo Mướp, Chú Vẹt.",
-    rows: { name: "Nhân vật", items: ["Bách", "Cún Bông", "Mèo Mướp", "Chú Vẹt"] },
+    story: "Một chiếc bánh kem 4 tầng có 4 vị: Dâu Tây, Sô-cô-la, Vani, Trà Xanh bị 4 bạn nhỏ nếm thử trước bữa tiệc: Triết, Cún Bông, Mèo Mướp, Chú Vẹt.",
+    rows: { name: "Nhân vật", items: ["Triết", "Cún Bông", "Mèo Mướp", "Chú Vẹt"] },
     cols: { name: "Vị bánh", items: ["Dâu Tây", "Sô-cô-la", "Vani", "Trà Xanh"] },
     clues: [
       "1. Cún Bông tuyệt đối không ăn món có chứa cacao (Sô-cô-la) vì rất nguy hiểm cho loài cún, bạn ấy chọn tầng bánh màu trắng kem Vani ngọt dịu.",
       "2. Chú Vẹt thích mổ những quả mọng màu đỏ tươi (vị Dâu Tây).",
       "3. Mèo Mướp không thích vị trà đắng chát của lá Trà Xanh.",
-      "4. Bách rất mê vị thanh mát của bột Trà Xanh Nhật Bản."
+      "4. Triết rất mê vị thanh mát của bột Trà Xanh Nhật Bản."
     ],
     solution: {
-      "Bách": "Trà Xanh",
+      "Triết": "Trà Xanh",
       "Cún Bông": "Vani",
       "Mèo Mướp": "Sô-cô-la",
       "Chú Vẹt": "Dâu Tây"
     },
-    explanation: "Cún Bông ăn Vani. Vẹt ăn Dâu Tây. Bách mê Trà Xanh. Còn lại Mèo Mướp ăn Sô-cô-la."
+    explanation: "Cún Bông ăn Vani. Vẹt ăn Dâu Tây. Triết mê Trà Xanh. Còn lại Mèo Mướp ăn Sô-cô-la."
   },
   {
     id: "lg-20",
@@ -424,85 +424,85 @@ export const LOGIC_GRID_CASES_PART1 = [
     id: "lg-21",
     title: "Bí Mật Bốn Phi Thuyền Thám Hiểm Vũ Trụ",
     difficulty: 4,
-    story: "Bốn con tàu thám hiểm không gian: Bách-1, Apollo, Vostok và Pioneer bay tới 4 hành tinh: Sao Hỏa, Sao Mộc, Sao Thổ và Sao Kim.",
-    rows: { name: "Phi thuyền", items: ["Bách-1", "Apollo", "Vostok", "Pioneer"] },
+    story: "Bốn con tàu thám hiểm không gian: Huy-1, Apollo, Vostok và Pioneer bay tới 4 hành tinh: Sao Hỏa, Sao Mộc, Sao Thổ và Sao Kim.",
+    rows: { name: "Phi thuyền", items: ["Huy-1", "Apollo", "Vostok", "Pioneer"] },
     cols: { name: "Hành tinh", items: ["Sao Hỏa", "Sao Mộc", "Sao Thổ", "Sao Kim"] },
     clues: [
-      "1. Tàu Bách-1 đáp xuống bề mặt hành tinh Đỏ phủ đầy cát bụi oxit sắt (Sao Hỏa).",
+      "1. Tàu Huy-1 đáp xuống bề mặt hành tinh Đỏ phủ đầy cát bụi oxit sắt (Sao Hỏa).",
       "2. Tàu Pioneer bay xuyên qua chiếc vành đai băng lộng lẫy nhất hệ mặt trời của Sao Thổ.",
       "3. Tàu Apollo không bay tới hành tinh khí khổng lồ có Vết Đỏ Lớn (Sao Mộc).",
       "4. Tàu Vostok nghiên cứu hành tinh lớn nhất hệ mặt trời là Sao Mộc."
     ],
     solution: {
-      "Bách-1": "Sao Hỏa",
+      "Huy-1": "Sao Hỏa",
       "Apollo": "Sao Kim",
       "Vostok": "Sao Mộc",
       "Pioneer": "Sao Thổ"
     },
-    explanation: "Bách-1 đến Sao Hỏa. Pioneer đến Sao Thổ. Vostok nghiên cứu Sao Mộc. Apollo đến Sao Kim."
+    explanation: "Huy-1 đến Sao Hỏa. Pioneer đến Sao Thổ. Vostok nghiên cứu Sao Mộc. Apollo đến Sao Kim."
   },
   {
     id: "lg-22",
     title: "Cuộc Thi Siêu Đầu Bếp Nhí MasterChef",
     difficulty: 4,
-    story: "Bốn bạn Bách, Liam, Sofia và Ken trổ tài nấu 4 món đặc sản nổi tiếng thế giới: Phở Bò Việt Nam, Pizza Ý, Sushi Nhật Bản và Bánh Tacos Mexico.",
-    rows: { name: "Đầu bếp nhí", items: ["Bách", "Liam", "Sofia", "Ken"] },
+    story: "Bốn bạn Triết, Liam, Sofia và Ken trổ tài nấu 4 món đặc sản nổi tiếng thế giới: Phở Bò Việt Nam, Pizza Ý, Sushi Nhật Bản và Bánh Tacos Mexico.",
+    rows: { name: "Đầu bếp nhí", items: ["Triết", "Liam", "Sofia", "Ken"] },
     cols: { name: "Món ăn", items: ["Phở Bò", "Pizza", "Sushi", "Bánh Tacos"] },
     clues: [
-      "1. Bách tự hào nấu nồi nước dùng thơm lừng hương hồi quế của món Phở Bò truyền thống quê hương.",
+      "1. Triết tự hào nấu nồi nước dùng thơm lừng hương hồi quế của món Phở Bò truyền thống quê hương.",
       "2. Ken là bạn nhỏ đến từ xứ sở hoa anh đào và khéo léo cuộn những miếng cơm Sushi cá hồi tươi rói.",
       "3. Sofia thích nướng bánh bột mì với phô mai mozzarella kéo sợi (Pizza Ý).",
       "4. Liam trổ tài chế biến món bánh kẹp giòn rụm của vùng Trung Mỹ còn lại."
     ],
     solution: {
-      "Bách": "Phở Bò",
+      "Triết": "Phở Bò",
       "Liam": "Bánh Tacos",
       "Sofia": "Pizza",
       "Ken": "Sushi"
     },
-    explanation: "Bách nấu Phở Bò. Ken làm Sushi. Sofia làm Pizza. Liam làm Bánh Tacos."
+    explanation: "Triết nấu Phở Bò. Ken làm Sushi. Sofia làm Pizza. Liam làm Bánh Tacos."
   },
   {
     id: "lg-23",
     title: "Vụ Án Bức Tranh Nghệ Thuật Giấu Kín",
     difficulty: 5,
-    story: "Bốn bức tranh đạt giải đặc biệt được vẽ trên 4 chất liệu nghệ thuật: Tranh Lụa, Tranh Sơn Dầu, Tranh Thủy Mặc và Tranh Khắc Gỗ bởi 4 họa sĩ nhí: Bách, Quỳnh, Khang, Trâm.",
-    rows: { name: "Họa sĩ nhí", items: ["Bách", "Quỳnh", "Khang", "Trâm"] },
+    story: "Bốn bức tranh đạt giải đặc biệt được vẽ trên 4 chất liệu nghệ thuật: Tranh Lụa, Tranh Sơn Dầu, Tranh Thủy Mặc và Tranh Khắc Gỗ bởi 4 họa sĩ nhí: Huy, Quỳnh, Khang, Trâm.",
+    rows: { name: "Họa sĩ nhí", items: ["Huy", "Quỳnh", "Khang", "Trâm"] },
     cols: { name: "Chất liệu tranh", items: ["Tranh Lụa", "Sơn Dầu", "Thủy Mặc", "Khắc Gỗ"] },
     clues: [
       "1. Khang dùng mực tàu đen tuyền và bút lông để vẽ dãy núi mờ sương (Tranh Thủy Mặc).",
-      "2. Bách vẽ phong cảnh mùa thu rực rỡ bằng các vệt màu dày dặn của chất liệu Sơn Dầu.",
+      "2. Huy vẽ phong cảnh mùa thu rực rỡ bằng các vệt màu dày dặn của chất liệu Sơn Dầu.",
       "3. Trâm không dùng dao điêu khắc trên các bản gỗ lim.",
       "4. Quỳnh khéo léo dệt và vẽ những nét cọ mềm mại trên dải lụa tơ tằm óng ả."
     ],
     solution: {
-      "Bách": "Sơn Dầu",
+      "Huy": "Sơn Dầu",
       "Quỳnh": "Tranh Lụa",
       "Khang": "Thủy Mặc",
       "Trâm": "Khắc Gỗ"
     },
-    explanation: "Khang vẽ Thủy Mặc. Bách vẽ Sơn Dầu. Quỳnh vẽ Tranh Lụa. Trâm vẽ Khắc Gỗ."
+    explanation: "Khang vẽ Thủy Mặc. Huy vẽ Sơn Dầu. Quỳnh vẽ Tranh Lụa. Trâm vẽ Khắc Gỗ."
   },
   {
     id: "lg-24",
     title: "Chuyến Thám Hiểm Rừng Nguyên Sinh Amazon",
     difficulty: 5,
-    story: "Bốn nhà thám hiểm Bách, David, Elena, Tom mang theo 4 trang bị sinh tồn quan trọng: La Bàn Laze, Dây Leo Dù, Bình Lọc Nước Nano và Bộ Đàm Vệ Tinh.",
-    rows: { name: "Nhà thám hiểm", items: ["Bách", "David", "Elena", "Tom"] },
+    story: "Bốn nhà thám hiểm Triết, David, Elena, Tom mang theo 4 trang bị sinh tồn quan trọng: La Bàn Laze, Dây Leo Dù, Bình Lọc Nước Nano và Bộ Đàm Vệ Tinh.",
+    rows: { name: "Nhà thám hiểm", items: ["Triết", "David", "Elena", "Tom"] },
     cols: { name: "Trang bị", items: ["La Bàn", "Dây Leo", "Bình Lọc Nước", "Bộ Đàm"] },
     clues: [
       "1. Elena chịu trách nhiệm liên lạc khẩn cấp với trực thăng cứu hộ bằng Bộ Đàm Vệ Tinh.",
-      "2. Bách dẫn đường băng qua rừng rậm bằng chiếc La Bàn Laze siêu chuẩn xác.",
+      "2. Triết dẫn đường băng qua rừng rậm bằng chiếc La Bàn Laze siêu chuẩn xác.",
       "3. Tom phụ trách nguồn nước uống tinh khiết cho cả đoàn bằng Bình Lọc Nước Nano.",
       "4. David phụ trách việc vượt thác ghềnh hiểm trở với trang bị leo núi còn lại."
     ],
     solution: {
-      "Bách": "La Bàn",
+      "Triết": "La Bàn",
       "David": "Dây Leo",
       "Elena": "Bộ Đàm",
       "Tom": "Bình Lọc Nước"
     },
-    explanation: "Elena mang Bộ Đàm. Bách mang La Bàn. Tom mang Bình Lọc Nước. David mang Dây Leo."
+    explanation: "Elena mang Bộ Đàm. Triết mang La Bàn. Tom mang Bình Lọc Nước. David mang Dây Leo."
   },
   {
     id: "lg-25",

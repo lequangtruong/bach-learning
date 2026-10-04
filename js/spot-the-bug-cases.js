@@ -1852,7 +1852,7 @@ export const BUG_CASES = [
     "topic": "Trung bình cộng & Toán suy luận",
     "difficulty": 3,
     "title": "Vụ án 53: Bẫy Bài toán nhiều hơn mức trung bình cộng cả 4 bạn",
-    "problem": "Ba bạn có số bi: Nam có 45 viên, Hải có 35 viên, Minh có 40 viên. Bách có số bi nhiều hơn trung bình cộng của cả 4 bạn là 6 viên. Hỏi Bách có bao nhiêu viên bi?",
+    "problem": "Ba bạn có số bi: Nam có 45 viên, Hải có 35 viên, Minh có 40 viên. Huy có số bi nhiều hơn trung bình cộng của cả 4 bạn là 6 viên. Hỏi Huy có bao nhiêu viên bi?",
     "steps": [
       {
         "num": 1,
@@ -1863,7 +1863,7 @@ export const BUG_CASES = [
       },
       {
         "num": 2,
-        "text": "Số bi của Bách là: 40 + 6 = 46 (viên)",
+        "text": "Số bi của Huy là: 40 + 6 = 46 (viên)",
         "isBug": true,
         "isValid": false,
         "isConsequential": false
@@ -1876,8 +1876,8 @@ export const BUG_CASES = [
         "isConsequential": true
       }
     ],
-    "bugExplanation": "Đề bài cho Bách hơn TBC CỦA CẢ 4 BẠN, không phải hơn TBC của 3 bạn! Gọi TBC của cả 4 bạn là T. Ta có: 3 × T = Tổng 3 bạn + 6 = 120 + 6 = 126 → T = 126 : 3 = 42 viên. Số bi của Bách = 42 + 6 = 48 viên!",
-    "correctSolution": "TBC 4 bạn = (45 + 35 + 40 + 6) : 3 = 42 viên. Bách có: 42 + 6 = 48 (viên)"
+    "bugExplanation": "Đề bài cho Huy hơn TBC CỦA CẢ 4 BẠN, không phải hơn TBC của 3 bạn! Gọi TBC của cả 4 bạn là T. Ta có: 3 × T = Tổng 3 bạn + 6 = 120 + 6 = 126 → T = 126 : 3 = 42 viên. Số bi của Huy = 42 + 6 = 48 viên!",
+    "correctSolution": "TBC 4 bạn = (45 + 35 + 40 + 6) : 3 = 42 viên. Huy có: 42 + 6 = 48 (viên)"
   },
   {
     "id": "bug-54",
@@ -1951,7 +1951,7 @@ export const BUG_CASES = [
     "topic": "Trung bình cộng & Toán suy luận",
     "difficulty": 4,
     "title": "Vụ án 56: Bẫy Tìm số điểm bài thi để nâng điểm trung bình",
-    "problem": "Qua 4 bài kiểm tra Toán, Bách đạt điểm trung bình là 9 điểm. Hỏi ở bài kiểm tra thứ năm, Bách cần đạt mấy điểm để điểm trung bình của cả 5 bài là 9.2 (tức tổng là 46 điểm)?",
+    "problem": "Qua 4 bài kiểm tra Toán, Triết đạt điểm trung bình là 9 điểm. Hỏi ở bài kiểm tra thứ năm, Triết cần đạt mấy điểm để điểm trung bình của cả 5 bài là 9.2 (tức tổng là 46 điểm)?",
     "steps": [
       {
         "num": 1,
@@ -1975,7 +1975,7 @@ export const BUG_CASES = [
         "isConsequential": false
       }
     ],
-    "bugExplanation": "Bách cần đạt đúng 46 − 36 = 10 điểm tuyệt đối ở bài thứ năm để đạt trung bình 9.2 điểm!",
+    "bugExplanation": "Triết cần đạt đúng 46 − 36 = 10 điểm tuyệt đối ở bài thứ năm để đạt trung bình 9.2 điểm!",
     "correctSolution": "Điểm bài 5 = 46 − 36 = 10 (điểm)"
   },
   {
@@ -3711,11 +3711,11 @@ export const BUG_CASES = [
     "topic": "Tìm phân số của một số & Bài toán thực tế",
     "difficulty": 5,
     "title": "Vụ án 107: Bẫy Góp tiền mua đồ dùng học tập",
-    "problem": "Ba bạn góp tiền mua quả bóng giá 120 000 đồng. Bách góp 1/3 tổng số tiền, Nam góp 2/5 tổng số tiền, Minh góp phần còn lại. Hỏi Minh góp bao nhiêu tiền?",
+    "problem": "Ba bạn góp tiền mua quả bóng giá 120 000 đồng. Huy góp 1/3 tổng số tiền, Nam góp 2/5 tổng số tiền, Minh góp phần còn lại. Hỏi Minh góp bao nhiêu tiền?",
     "steps": [
       {
         "num": 1,
-        "text": "Bách góp: 120 000 × 1/3 = 40 000 (đồng)",
+        "text": "Huy góp: 120 000 × 1/3 = 40 000 (đồng)",
         "isBug": false,
         "isValid": true,
         "isConsequential": false
@@ -4048,7 +4048,7 @@ export const BUG_CASES = [
     "topic": "Toán thực tế (Trồng cây, Thời gian, Tỉ lệ nghịch)",
     "difficulty": 5,
     "title": "Vụ án 117: Bẫy Leo cầu thang giữa các tầng lầu",
-    "problem": "Bách leo bộ từ tầng 1 lên tầng 3 mất 36 giây. Hỏi với cùng tốc độ đó, Bách leo từ tầng 1 lên tầng 6 mất bao nhiêu giây?",
+    "problem": "Triết leo bộ từ tầng 1 lên tầng 3 mất 36 giây. Hỏi với cùng tốc độ đó, Triết leo từ tầng 1 lên tầng 6 mất bao nhiêu giây?",
     "steps": [
       {
         "num": 1,

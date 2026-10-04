@@ -96,7 +96,7 @@ export const DETECTIVE_PUZZLES = [
     "fakeType": "lighter",
     "maxWeighsAllowed": 3,
     "title": "Vụ án 7: Mười lọ độc dược hoàng gia (10 lọ - 3 lần cân)",
-    "problem": "Trong phòng thí nghiệm hoàng gia có 10 lọ độc dược đánh số 1..10. Kẻ gian đã pha loãng 1 lọ khiến nó NHẸ HƠN. Thám tử Bách hãy dùng cân đĩa tối đa 3 lần để tìm lọ bị pha loãng!",
+    "problem": "Trong phòng thí nghiệm hoàng gia có 10 lọ độc dược đánh số 1..10. Kẻ gian đã pha loãng 1 lọ khiến nó NHẸ HƠN. Thám tử Huy hãy dùng cân đĩa tối đa 3 lần để tìm lọ bị pha loãng!",
     "hint": "Chia 10 lọ thành: 3 lọ - 3 lọ - 4 lọ! Cân (1,2,3) vs (4,5,6) trước.",
     "solution": "Lần 1: Cân (1,2,3) vs (4,5,6) thấy (4,5,6) nhẹ hơn => Lọ giả ở (4,5,6). Lần 2: Cân 4 vs 5 => Thăng bằng thì lọ giả là 6, hoặc cân 5 vs 6 => Lọ 6 nhẹ hơn!"
   },
@@ -124,7 +124,7 @@ export const DETECTIVE_PUZZLES = [
     "fakeType": "lighter",
     "maxWeighsAllowed": 3,
     "title": "Vụ án 9: Mười hai túi bột ngũ cốc (12 túi)",
-    "problem": "Có 12 túi bột ngũ cốc đánh số 1..12. Một túi bị vơi bớt nên NHẸ HƠN. Bách hãy tìm túi nhẹ hơn trong tối đa 3 lần cân!",
+    "problem": "Có 12 túi bột ngũ cốc đánh số 1..12. Một túi bị vơi bớt nên NHẸ HƠN. Triết hãy tìm túi nhẹ hơn trong tối đa 3 lần cân!",
     "hint": "Chia 12 túi thành 3 nhóm: 4 túi - 4 túi - 4 túi. Lần 1 cân 4 túi vs 4 túi!",
     "solution": "Lần 1: Cân (1..4) vs (5..8) thăng bằng => Thuộc (9..12). Lần 2: Cân (9,10) vs (11,12) => (11,12) nhẹ hơn. Lần 3: Cân 11 vs 12 => Túi 11 chính là túi nhẹ hơn!"
   },
@@ -166,7 +166,7 @@ export const DETECTIVE_PUZZLES = [
     "fakeType": "lighter",
     "maxWeighsAllowed": 3,
     "title": "Vụ án 12: Mười hai quân cờ ngà voi (Quân số 1 nhẹ hơn)",
-    "problem": "Bàn cờ có 12 quân ngà voi, quân số 1 bị xốp nhẹ hơn. Bách hãy lập kế hoạch cân hoàn hảo!",
+    "problem": "Bàn cờ có 12 quân ngà voi, quân số 1 bị xốp nhẹ hơn. Huy hãy lập kế hoạch cân hoàn hảo!",
     "hint": "Cân 4 quân vs 4 quân: (1..4) vs (5..8). Đĩa trái nhẹ hơn!",
     "solution": "Lần 1: Cân (1..4) vs (5..8) => (1..4) nhẹ hơn. Lần 2: Cân (1,2) vs (3,4) => (1,2) nhẹ hơn. Lần 3: Cân 1 vs 2 => Quân 1 nhẹ hơn!"
   },
@@ -180,7 +180,7 @@ export const DETECTIVE_PUZZLES = [
     "fakeType": "lighter",
     "maxWeighsAllowed": 3,
     "title": "Vụ án 13: Mười ba viên ruby của Nữ Hoàng (Viên số 13)",
-    "problem": "Kho báu cung điện có 13 viên ruby số 1..13. Kẻ trộm đánh tráo viên số 13 bằng ngọc nhân tạo NHẸ HƠN. Chỉ với 3 lần cân, thám tử tài ba Bách hãy tìm ra nó!",
+    "problem": "Kho báu cung điện có 13 viên ruby số 1..13. Kẻ trộm đánh tráo viên số 13 bằng ngọc nhân tạo NHẸ HƠN. Chỉ với 3 lần cân, thám tử tài ba Triết hãy tìm ra nó!",
     "hint": "Chia 13 viên thành: 4 viên - 4 viên - 5 viên! (hoặc cân 4 vs 4, nếu bằng cân tiếp nhóm còn lại).",
     "solution": "Lần 1: Cân (1..4) vs (5..8) thăng bằng. Lần 2: Cân (9,10) vs (11,12) thăng bằng => Chắc chắn là viên 13! Cân kiểm tra viên 13 với viên 1 chuẩn."
   },
@@ -264,7 +264,7 @@ export const DETECTIVE_PUZZLES = [
     "fakeType": "lighter",
     "maxWeighsAllowed": 3,
     "title": "Vụ án 19: Mười lăm quả cầu năng lượng (15 quả - 3 lần cân)",
-    "problem": "Trên tàu vũ trụ có 15 lõi năng lượng số 1..15. Đúng 1 lõi bị cạn pin nên NHẸ HƠN. Thám tử Bách chỉ có đúng 3 lần cân đĩa để cứu con tàu!",
+    "problem": "Trên tàu vũ trụ có 15 lõi năng lượng số 1..15. Đúng 1 lõi bị cạn pin nên NHẸ HƠN. Thám tử Huy chỉ có đúng 3 lần cân đĩa để cứu con tàu!",
     "hint": "Chiến thuật chia 3: Chia 15 thành 3 nhóm đều nhau 5 - 5 - 5! Lần 1 cân 5 quả vs 5 quả: (1..5) vs (6..10).",
     "solution": "Lần 1: Cân (1..5) vs (6..10) thăng bằng => Lõi cạn ở nhóm (11..15). Lần 2: Cân (11,12) vs (13,14) => (11,12) nhẹ hơn. Lần 3: Cân 11 vs 12 => Quả 12 nhẹ hơn!"
   },
@@ -278,7 +278,7 @@ export const DETECTIVE_PUZZLES = [
     "fakeType": "lighter",
     "maxWeighsAllowed": 3,
     "title": "Vụ án 20: Mười tám viên ngọc trai đen (18 viên - 3 lần cân)",
-    "problem": "Thương nhân mang về 18 viên ngọc trai đen quý hiếm đánh số 1..18, 1 viên bị rỗng nhẹ hơn. Với 3 lần cân, thám tử Bách hãy chứng minh đẳng cấp!",
+    "problem": "Thương nhân mang về 18 viên ngọc trai đen quý hiếm đánh số 1..18, 1 viên bị rỗng nhẹ hơn. Với 3 lần cân, thám tử Triết hãy chứng minh đẳng cấp!",
     "hint": "Chia 18 thành 3 nhóm đều nhau: 6 viên - 6 viên - 6 viên! Lần 1 cân 6 viên vs 6 viên.",
     "solution": "Lần 1: Cân (1..6) vs (7..12) thăng bằng => Ngọc giả ở (13..18). Lần 2: Chia 6 viên thành 2-2-2, cân (13,14) vs (15,16) => (15,16) nhẹ hơn. Lần 3: Cân 15 vs 16 => Viên 16 nhẹ hơn!"
   },
@@ -320,7 +320,7 @@ export const DETECTIVE_PUZZLES = [
     "fakeType": "lighter",
     "maxWeighsAllowed": 3,
     "title": "Vụ án 23: Bài toán kinh điển SASMO: 27 quả bóng - 3 lần cân",
-    "problem": "Đây là bài thi toán Olympic SASMO danh tiếng: Có 27 quả bóng giống hệt nhau số 1..27. Có đúng 1 QUẢ BÓNG NHẸ HƠN. Với thuật toán lũy thừa ba (3^3 = 27), thám tử Bách hãy tìm ra quả bóng giả trong đúng 3 LẦN CÂN!",
+    "problem": "Đây là bài thi toán Olympic SASMO danh tiếng: Có 27 quả bóng giống hệt nhau số 1..27. Có đúng 1 QUẢ BÓNG NHẸ HƠN. Với thuật toán lũy thừa ba (3^3 = 27), thám tử Huy hãy tìm ra quả bóng giả trong đúng 3 LẦN CÂN!",
     "hint": "Thuật toán chia 3 hoàn hảo: Lần 1 cân 9 quả vs 9 quả: (1..9) vs (10..18). Nhóm bên nào nhẹ hơn, hoặc nếu bằng nhau thì ở nhóm còn lại!",
     "solution": "Lần 1: Cân (1..9) vs (10..18) => (10..18) nhẹ hơn => Xác định được trong 9 quả. Lần 2: Cân (10..12) vs (13..15) => (13..15) nhẹ hơn => Xác định trong 3 quả. Lần 3: Cân 13 vs 14 => Quả 14 nhẹ hơn chính là quả bóng giả!"
   },

@@ -14,7 +14,7 @@ export const WEEKEND_MATH_EXAMS_FULL = {
       {
         id: "part1",
         name: "PHẦN I: TRẮC NGHIỆM KHỞI ĐỘNG & TƯ DUY LOGIC",
-        level: "Mức 1: Nhận biết & Quy luật (Vừa sức Bách)",
+        level: "Mức 1: Nhận biết & Quy luật",
         scoreText: "3.0 điểm (4 câu × 0.75đ)",
         questions: [
           {
@@ -62,7 +62,7 @@ export const WEEKEND_MATH_EXAMS_FULL = {
         scoreText: "3.0 điểm",
         questions: [
           {
-            q: "Bài 3 (3.0 điểm): Một thư viện trường học nhận quyên góp 1.450 quyển sách. Thư viện chuyển tặng học sinh vùng cao 250 quyển sách. Số sách còn lại chia đều vào 3 tủ sách lớn của các khối lớp. Hỏi mỗi tủ sách nhận được bao nhiêu quyển sách? (Bách hãy vẽ sơ đồ đoạn thẳng hoặc ghi rõ các bước giải ra vở ô ly nhé!)",
+            q: "Bài 3 (3.0 điểm): Một thư viện trường học nhận quyên góp 1.450 quyển sách. Thư viện chuyển tặng học sinh vùng cao 250 quyển sách. Số sách còn lại chia đều vào 3 tủ sách lớn của các khối lớp. Hỏi mỗi tủ sách nhận được bao nhiêu quyển sách? (Hãy vẽ sơ đồ đoạn thẳng hoặc ghi rõ các bước giải ra vở ô ly nhé!)",
             answer: "Bài giải:\nSố quyển sách còn lại sau khi tặng học sinh vùng cao là:\n  1.450 − 250 = 1.200 (quyển) [1.25đ]\nMỗi tủ sách nhận được số quyển sách là:\n  1.200 ÷ 3 = 400 (quyển) [1.25đ]\n  Đáp số: 400 quyển sách. [0.5đ]\n(Chấp nhận cách giải gộp: (1.450 − 250) ÷ 3 = 400 quyển đầy đủ lời giải)"
           }
         ]
@@ -74,8 +74,8 @@ export const WEEKEND_MATH_EXAMS_FULL = {
         scoreText: "1.5 điểm",
         questions: [
           {
-            q: "Bài 4 (1.5 điểm - Thử thách Olympic): Bách viết liên tiếp các số tự nhiên từ 1 đến 30 để tạo thành một số tự nhiên rất lớn:\n  A = 123456789101112...2930\na) Hỏi số A có tất cả bao nhiêu chữ số?\nb) Nếu Bách xóa đi 40 chữ số của số A sao cho các chữ số còn lại vẫn giữ nguyên thứ tự ban đầu để thu được số lớn nhất có thể, thì chữ số đầu tiên (hàng cao nhất) của số lớn nhất đó là chữ số nào? Vì sao?",
-            answer: "Lời giải chi tiết:\na) Đếm số chữ số của A:\n- Từ 1 đến 9 có 9 chữ số. [0.25đ]\n- Từ 10 đến 30 có 21 số có 2 chữ số -> có 21 × 2 = 42 chữ số. [0.25đ]\nTổng cộng số A có: 9 + 42 = 51 chữ số. [0.25đ]\nb) Để số lớn nhất, chữ số đầu tiên phải là 9. Chữ số 9 đầu tiên ở vị trí thứ 9 (số 9). Bách chỉ cần xóa 8 chữ số đầu tiên (1 đến 8), còn lại 40 − 8 = 32 lượt xóa phía sau. Do đó chữ số đầu tiên chắc chắn là chữ số 9! [0.75đ]"
+            q: "Bài 4 (1.5 điểm - Thử thách Olympic): Huy viết liên tiếp các số tự nhiên từ 1 đến 30 để tạo thành một số tự nhiên rất lớn:\n  A = 123456789101112...2930\na) Hỏi số A có tất cả bao nhiêu chữ số?\nb) Nếu Huy xóa đi 40 chữ số của số A sao cho các chữ số còn lại vẫn giữ nguyên thứ tự ban đầu để thu được số lớn nhất có thể, thì chữ số đầu tiên (hàng cao nhất) của số lớn nhất đó là chữ số nào? Vì sao?",
+            answer: "Lời giải chi tiết:\na) Đếm số chữ số của A:\n- Từ 1 đến 9 có 9 chữ số. [0.25đ]\n- Từ 10 đến 30 có 21 số có 2 chữ số -> có 21 × 2 = 42 chữ số. [0.25đ]\nTổng cộng số A có: 9 + 42 = 51 chữ số. [0.25đ]\nb) Để số lớn nhất, chữ số đầu tiên phải là 9. Chữ số 9 đầu tiên ở vị trí thứ 9 (số 9). Huy chỉ cần xóa 8 chữ số đầu tiên (1 đến 8), còn lại 40 − 8 = 32 lượt xóa phía sau. Do đó chữ số đầu tiên chắc chắn là chữ số 9! [0.75đ]"
           }
         ]
       }
@@ -490,7 +490,7 @@ export const WEEKEND_MATH_EXAMS_FULL = {
           { q: "1. Phân số chỉ phần đã tô màu của hình tròn chia làm 8 phần bằng nhau, đã tô 3 phần là:", choices: ["A. 3/8", "B. 5/8", "C. 8/3", "D. 3/5"], answer: "A. 3/8 (Tử số là số phần tô màu 3, mẫu số là tổng số phần 8)" },
           { q: "2. Phân số nào dưới đây bằng phân số 3/4?", choices: ["A. 6/12", "B. 9/12", "C. 8/12", "D. 12/15"], answer: "B. 9/12 (Nhân cả tử số và mẫu số với 3: 3×3 / 4×3 = 9/12)" },
           { q: "3. Trong các phân số sau, phân số nào tối giản?", choices: ["A. 4/6", "B. 9/15", "C. 7/12", "D. 10/25"], answer: "C. 7/12 (7 và 12 không cùng chia hết cho số tự nhiên nào lớn hơn 1)" },
-          { q: "4. Mẹ chia chiếc bánh gato làm 6 phần bằng nhau, Bách ăn 2 phần. Phân số chỉ số phần bánh Bách đã ăn là:", choices: ["A. 1/3", "B. 1/2", "C. 2/4", "D. 3/6"], answer: "A. 1/3 (2/6 rút gọn chia cả tử và mẫu cho 2 được 1/3)" }
+          { q: "4. Mẹ chia chiếc bánh gato làm 6 phần bằng nhau, Triết ăn 2 phần. Phân số chỉ số phần bánh Triết đã ăn là:", choices: ["A. 1/3", "B. 1/2", "C. 2/4", "D. 3/6"], answer: "A. 1/3 (2/6 rút gọn chia cả tử và mẫu cho 2 được 1/3)" }
         ]
       },
       {
@@ -667,8 +667,8 @@ export const WEEKEND_MATH_EXAMS_FULL = {
         level: "Mức 2: Thông hiểu",
         scoreText: "2.5 điểm",
         questions: [
-          { q: "Bài 1 (1.5 điểm): Bảng số liệu thời gian đọc sách trong tuần của Bách:\n  - Thứ 2: 25 phút\n  - Thứ 3: 35 phút\n  - Thứ 4: 25 phút\n  - Thứ 5: 35 phút\n  - Thứ 6: 40 phút\nHãy tính trung bình mỗi ngày Bách đọc sách bao nhiêu phút?", answer: "Tổng thời gian đọc sách trong 5 ngày là:\n  25 + 35 + 25 + 35 + 40 = 160 (phút) [0.75đ]\nTrung bình mỗi ngày Bách đọc sách là:\n  160 ÷ 5 = 32 (phút). [0.75đ]" },
-          { q: "Bài 2 (1.0 điểm): Dựa vào bảng số liệu trên, ngày nào Bách đọc nhiều nhất và nhiều hơn ngày đọc ít nhất bao nhiêu phút?", answer: "Bách đọc nhiều nhất vào Thứ 6 (40 phút). [0.5đ]\nBách đọc ít nhất vào Thứ 2 và Thứ 4 (25 phút).\nThời gian nhiều hơn là: 40 − 25 = 15 (phút). [0.5đ]" }
+          { q: "Bài 1 (1.5 điểm): Bảng số liệu thời gian đọc sách trong tuần của Huy:\n  - Thứ 2: 25 phút\n  - Thứ 3: 35 phút\n  - Thứ 4: 25 phút\n  - Thứ 5: 35 phút\n  - Thứ 6: 40 phút\nHãy tính trung bình mỗi ngày Huy đọc sách bao nhiêu phút?", answer: "Tổng thời gian đọc sách trong 5 ngày là:\n  25 + 35 + 25 + 35 + 40 = 160 (phút) [0.75đ]\nTrung bình mỗi ngày Huy đọc sách là:\n  160 ÷ 5 = 32 (phút). [0.75đ]" },
+          { q: "Bài 2 (1.0 điểm): Dựa vào bảng số liệu trên, ngày nào Huy đọc nhiều nhất và nhiều hơn ngày đọc ít nhất bao nhiêu phút?", answer: "Huy đọc nhiều nhất vào Thứ 6 (40 phút). [0.5đ]\nHuy đọc ít nhất vào Thứ 2 và Thứ 4 (25 phút).\nThời gian nhiều hơn là: 40 − 25 = 15 (phút). [0.5đ]" }
         ]
       },
       {
@@ -746,7 +746,7 @@ export const WEEKEND_MATH_EXAMS_FULL = {
         scoreText: "1.5 điểm",
         questions: [
           {
-            q: "Bài 4 (1.5 điểm): Một hình vuông có độ dài cạnh tăng gấp đôi thì diện tích của nó tăng gấp mấy lần? Bách hãy giải thích chi tiết vì sao nhé!",
+            q: "Bài 4 (1.5 điểm): Một hình vuông có độ dài cạnh tăng gấp đôi thì diện tích của nó tăng gấp mấy lần? Hãy giải thích chi tiết vì sao nhé!",
             answer: "Lời giải:\nGọi độ dài cạnh hình vuông ban đầu là a (cm).\nDiện tích hình vuông ban đầu là: S1 = a × a. [0.5đ]\nKhi cạnh tăng gấp đôi, độ dài cạnh mới là: 2 × a.\nDiện tích hình vuông mới là:\n  S2 = (2 × a) × (2 × a) = (2 × 2) × (a × a) = 4 × S1. [0.5đ]\nVậy diện tích của hình vuông tăng gấp 4 lần. [0.5đ]"
           }
         ]
@@ -1003,7 +1003,7 @@ export const WEEKEND_MATH_EXAMS_FULL = {
         level: "Mức 2: Thông hiểu",
         scoreText: "2.5 điểm",
         questions: [
-          { q: "Bài 1 (1.5 điểm): Tìm hai số biết tổng của chúng bằng 120 và hiệu của chúng bằng 30. (Bách hãy vẽ sơ đồ đoạn thẳng ra vở ô ly nhé!)", answer: "Vẽ sơ đồ đoạn thẳng: đoạn số lớn dài hơn đoạn số bé một phần biểu thị 30 đơn vị, tổng là 120. [0.5đ]\nSố lớn là: (120 + 30) ÷ 2 = 75 [0.5đ]\nSố bé là: 120 − 75 = 45 (hoặc 75 − 30 = 45). [0.5đ]" },
+          { q: "Bài 1 (1.5 điểm): Tìm hai số biết tổng của chúng bằng 120 và hiệu của chúng bằng 30. (Hãy vẽ sơ đồ đoạn thẳng ra vở ô ly nhé!)", answer: "Vẽ sơ đồ đoạn thẳng: đoạn số lớn dài hơn đoạn số bé một phần biểu thị 30 đơn vị, tổng là 120. [0.5đ]\nSố lớn là: (120 + 30) ÷ 2 = 75 [0.5đ]\nSố bé là: 120 − 75 = 45 (hoặc 75 − 30 = 45). [0.5đ]" },
           { q: "Bài 2 (1.0 điểm): Hai thùng dầu chứa tất cả 84 lít dầu. Thùng thứ nhất nhiều hơn thùng thứ hai 16 lít dầu. Tính số lít dầu ở mỗi thùng.", answer: "Thùng thứ nhất chứa: (84 + 16) ÷ 2 = 50 (lít) [0.5đ]\nThùng thứ hai chứa: 50 − 16 = 34 (lít). [0.5đ]" }
         ]
       },
@@ -1014,8 +1014,8 @@ export const WEEKEND_MATH_EXAMS_FULL = {
         scoreText: "3.0 điểm",
         questions: [
           {
-            q: "Bài 3 (3.0 điểm): Tổng số tuổi của bố và Bách là 46 tuổi. Bố hơn Bách 28 tuổi.\na) Hỏi bố bao nhiêu tuổi và Bách bao nhiêu tuổi?\nb) Sau 3 năm nữa, bố hơn Bách bao nhiêu tuổi?",
-            answer: "Bài giải:\na) Tuổi của bố hiện nay là:\n  (46 + 28) ÷ 2 = 37 (tuổi) [1.25đ]\nTuổi của Bách hiện nay là:\n  37 − 28 = 9 (tuổi) [1.0đ]\nb) Vì mỗi năm mỗi người đều tăng thêm 1 tuổi nên hiệu số tuổi giữa hai người không bao giờ thay đổi theo thời gian.\n  Sau 3 năm nữa, bố vẫn hơn Bách đúng 28 tuổi. [0.5đ]\n  Đáp số: a) Bố 37 tuổi, Bách 9 tuổi; b) 28 tuổi. [0.25đ]"
+            q: "Bài 3 (3.0 điểm): Tổng số tuổi của bố và Triết là 46 tuổi. Bố hơn Triết 28 tuổi.\na) Hỏi bố bao nhiêu tuổi và Triết bao nhiêu tuổi?\nb) Sau 3 năm nữa, bố hơn Triết bao nhiêu tuổi?",
+            answer: "Bài giải:\na) Tuổi của bố hiện nay là:\n  (46 + 28) ÷ 2 = 37 (tuổi) [1.25đ]\nTuổi của Triết hiện nay là:\n  37 − 28 = 9 (tuổi) [1.0đ]\nb) Vì mỗi năm mỗi người đều tăng thêm 1 tuổi nên hiệu số tuổi giữa hai người không bao giờ thay đổi theo thời gian.\n  Sau 3 năm nữa, bố vẫn hơn Triết đúng 28 tuổi. [0.5đ]\n  Đáp số: a) Bố 37 tuổi, Triết 9 tuổi; b) 28 tuổi. [0.25đ]"
           }
         ]
       },
@@ -1686,8 +1686,8 @@ export const WEEKEND_MATH_EXAMS_FULL = {
         scoreText: "3.0 điểm",
         questions: [
           {
-            q: "Bài 3 (3.0 điểm): Một bình chứa 5/4 lít nước hoa quả. Bách uống 1/2 lít nước hoa quả vào buổi sáng và uống thêm 3/8 lít vào buổi chiều.\na) Hỏi trong cả ngày Bách đã uống tất cả bao nhiêu lít nước hoa quả?\nb) Trong bình còn lại bao nhiêu lít nước hoa quả?",
-            answer: "Bài giải:\na) Trong cả ngày Bách đã uống số lít nước hoa quả là:\n  1/2 + 3/8 = 4/8 + 3/8 = 7/8 (lít) [1.25đ]\nb) Trong bình còn lại số lít nước hoa quả là:\n  5/4 − 7/8 = 10/8 − 7/8 = 3/8 (lít) [1.25đ]\n  Đáp số: a) 7/8 lít; b) 3/8 lít. [0.5đ]"
+            q: "Bài 3 (3.0 điểm): Một bình chứa 5/4 lít nước hoa quả. Huy uống 1/2 lít nước hoa quả vào buổi sáng và uống thêm 3/8 lít vào buổi chiều.\na) Hỏi trong cả ngày Huy đã uống tất cả bao nhiêu lít nước hoa quả?\nb) Trong bình còn lại bao nhiêu lít nước hoa quả?",
+            answer: "Bài giải:\na) Trong cả ngày Huy đã uống số lít nước hoa quả là:\n  1/2 + 3/8 = 4/8 + 3/8 = 7/8 (lít) [1.25đ]\nb) Trong bình còn lại số lít nước hoa quả là:\n  5/4 − 7/8 = 10/8 − 7/8 = 3/8 (lít) [1.25đ]\n  Đáp số: a) 7/8 lít; b) 3/8 lít. [0.5đ]"
           }
         ]
       },
@@ -1810,8 +1810,8 @@ export const WEEKEND_MATH_EXAMS_FULL = {
         scoreText: "1.5 điểm",
         questions: [
           {
-            q: "Bài 4 (1.5 điểm): Bách có một số viên bi. Bách cho em 1/3 số bi đó, rồi cho bạn 1/4 số bi còn lại. Cuối cùng Bách còn lại 12 viên bi. Hỏi lúc đầu Bách có tất cả bao nhiêu viên bi?",
-            answer: "Lời giải:\nCoi số bi ban đầu là 1 đơn vị.\nSau khi cho em 1/3 số bi, Bách còn lại số phần bi là:\n  1 − 1/3 = 2/3 (số bi ban đầu). [0.5đ]\nSố bi Bách cho bạn chiếm số phần là:\n  2/3 × 1/4 = 2/12 = 1/6 (số bi ban đầu). [0.25đ]\nSố phần bi còn lại sau cùng là:\n  2/3 − 1/6 = 4/6 − 1/6 = 3/6 = 1/2 (số bi ban đầu). [0.25đ]\nVì 1/2 số bi ban đầu bằng 12 viên bi, nên lúc đầu Bách có:\n  12 ÷ (1/2) = 12 × 2 = 24 (viên bi). [0.5đ]\nĐáp số: 24 viên bi."
+            q: "Bài 4 (1.5 điểm): Triết có một số viên bi. Triết cho em 1/3 số bi đó, rồi cho bạn 1/4 số bi còn lại. Cuối cùng Triết còn lại 12 viên bi. Hỏi lúc đầu Triết có tất cả bao nhiêu viên bi?",
+            answer: "Lời giải:\nCoi số bi ban đầu là 1 đơn vị.\nSau khi cho em 1/3 số bi, Triết còn lại số phần bi là:\n  1 − 1/3 = 2/3 (số bi ban đầu). [0.5đ]\nSố bi Triết cho bạn chiếm số phần là:\n  2/3 × 1/4 = 2/12 = 1/6 (số bi ban đầu). [0.25đ]\nSố phần bi còn lại sau cùng là:\n  2/3 − 1/6 = 4/6 − 1/6 = 3/6 = 1/2 (số bi ban đầu). [0.25đ]\nVì 1/2 số bi ban đầu bằng 12 viên bi, nên lúc đầu Triết có:\n  12 ÷ (1/2) = 12 × 2 = 24 (viên bi). [0.5đ]\nĐáp số: 24 viên bi."
           }
         ]
       }
@@ -1899,7 +1899,7 @@ export const WEEKEND_MATH_EXAMS_FULL = {
         level: "Mức 2: Thông hiểu",
         scoreText: "2.5 điểm",
         questions: [
-          { q: "Bài 1 (1.5 điểm): Tìm hai số biết tổng của chúng bằng 140 và số bé bằng 2/5 số lớn. (Bách hãy vẽ sơ đồ đoạn thẳng ra vở ô ly nhé!)", answer: "Vẽ sơ đồ đoạn thẳng: số bé 2 phần, số lớn 5 phần, tổng 140. [0.5đ]\nTổng số phần bằng nhau: 2 + 5 = 7 (phần). [0.25đ]\nSố bé là: 140 ÷ 7 × 2 = 40. [0.35đ]\nSố lớn là: 140 − 40 = 100. [0.4đ]" },
+          { q: "Bài 1 (1.5 điểm): Tìm hai số biết tổng của chúng bằng 140 và số bé bằng 2/5 số lớn. (Hãy vẽ sơ đồ đoạn thẳng ra vở ô ly nhé!)", answer: "Vẽ sơ đồ đoạn thẳng: số bé 2 phần, số lớn 5 phần, tổng 140. [0.5đ]\nTổng số phần bằng nhau: 2 + 5 = 7 (phần). [0.25đ]\nSố bé là: 140 ÷ 7 × 2 = 40. [0.35đ]\nSố lớn là: 140 − 40 = 100. [0.4đ]" },
           { q: "Bài 2 (1.0 điểm): Một khối lớp Bốn có 150 học sinh, trong đó số học sinh nam bằng 2/3 số học sinh nữ. Tính số học sinh nam và nữ.", answer: "Tổng số phần: 2 + 3 = 5 phần.\nSố học sinh nam: 150 ÷ 5 × 2 = 60 (em). [0.5đ]\nSố học sinh nữ: 150 − 60 = 90 (em). [0.5đ]" }
         ]
       },
@@ -1955,7 +1955,7 @@ export const WEEKEND_MATH_EXAMS_FULL = {
         level: "Mức 2: Thông hiểu",
         scoreText: "2.5 điểm",
         questions: [
-          { q: "Bài 1 (1.5 điểm): Tìm hai số biết hiệu của chúng bằng 85 và số lớn gấp 6 lần số bé. (Bách hãy vẽ sơ đồ đoạn thẳng ra vở ô ly nhé!)", answer: "Vẽ sơ đồ: số bé 1 phần, số lớn 6 phần, đoạn chênh lệch là 85. [0.5đ]\nHiệu số phần bằng nhau: 6 − 1 = 5 (phần). [0.25đ]\nSố bé là: 85 ÷ 5 × 1 = 17. [0.35đ]\nSố lớn là: 17 + 85 = 102. [0.4đ]" },
+          { q: "Bài 1 (1.5 điểm): Tìm hai số biết hiệu của chúng bằng 85 và số lớn gấp 6 lần số bé. (Hãy vẽ sơ đồ đoạn thẳng ra vở ô ly nhé!)", answer: "Vẽ sơ đồ: số bé 1 phần, số lớn 6 phần, đoạn chênh lệch là 85. [0.5đ]\nHiệu số phần bằng nhau: 6 − 1 = 5 (phần). [0.25đ]\nSố bé là: 85 ÷ 5 × 1 = 17. [0.35đ]\nSố lớn là: 17 + 85 = 102. [0.4đ]" },
           { q: "Bài 2 (1.0 điểm): Bác An thu hoạch nhiều hơn bác Bình 75 kg thóc. Biết rằng số thóc của bác Bình bằng 4/7 số thóc của bác An. Tính số thóc mỗi bác thu hoạch được.", answer: "Hiệu số phần: 7 − 4 = 3 phần.\nSố thóc bác Bình thu được: 75 ÷ 3 × 4 = 100 (kg). [0.5đ]\nSố thóc bác An thu được: 100 + 75 = 175 (kg). [0.5đ]" }
         ]
       },
@@ -1978,8 +1978,8 @@ export const WEEKEND_MATH_EXAMS_FULL = {
         scoreText: "1.5 điểm",
         questions: [
           {
-            q: "Bài 4 (1.5 điểm): Hiện nay tuổi của mẹ gấp 3 lần tuổi của Bách. Biết rằng 4 năm trước đây, mẹ hơn Bách 24 tuổi. Hỏi hiện nay mẹ bao nhiêu tuổi và Bách bao nhiêu tuổi?",
-            answer: "Lời giải:\nVì mỗi năm mỗi người đều tăng thêm 1 tuổi nên hiệu số tuổi giữa mẹ và Bách không bao giờ thay đổi.\nHiện nay mẹ vẫn hơn Bách đúng 24 tuổi. [0.5đ]\nCoi tuổi Bách hiện nay là 1 phần thì tuổi mẹ hiện nay là 3 phần như thế.\nHiệu số phần bằng nhau là: 3 − 1 = 2 (phần). [0.25đ]\nTuổi của Bách hiện nay là:\n  24 ÷ 2 × 1 = 12 (tuổi). [0.35đ]\nTuổi của mẹ hiện nay là:\n  12 + 24 = 36 (tuổi). [0.4đ]\nĐáp số: Mẹ 36 tuổi, Bách 12 tuổi."
+            q: "Bài 4 (1.5 điểm): Hiện nay tuổi của mẹ gấp 3 lần tuổi của Huy. Biết rằng 4 năm trước đây, mẹ hơn Huy 24 tuổi. Hỏi hiện nay mẹ bao nhiêu tuổi và Huy bao nhiêu tuổi?",
+            answer: "Lời giải:\nVì mỗi năm mỗi người đều tăng thêm 1 tuổi nên hiệu số tuổi giữa mẹ và Huy không bao giờ thay đổi.\nHiện nay mẹ vẫn hơn Huy đúng 24 tuổi. [0.5đ]\nCoi tuổi Huy hiện nay là 1 phần thì tuổi mẹ hiện nay là 3 phần như thế.\nHiệu số phần bằng nhau là: 3 − 1 = 2 (phần). [0.25đ]\nTuổi của Huy hiện nay là:\n  24 ÷ 2 × 1 = 12 (tuổi). [0.35đ]\nTuổi của mẹ hiện nay là:\n  12 + 24 = 36 (tuổi). [0.4đ]\nĐáp số: Mẹ 36 tuổi, Huy 12 tuổi."
           }
         ]
       }

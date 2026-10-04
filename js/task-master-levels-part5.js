@@ -1295,7 +1295,7 @@ export const TASK_MASTER_LEVELS_PART5 = [
         "requires": [
           "t5"
         ],
-        "hint": "Thám tử Bách phá giải vụ án căn phòng khóa kín kinh điển vang danh lừng lẫy!"
+        "hint": "Thám tử Huy phá giải vụ án căn phòng khóa kín kinh điển vang danh lừng lẫy!"
       }
     ],
     "lesson": "Phát hiện sợi cước khe cửa -> Tìm vết ma sát chốt -> Soi UV vết găng tay -> Giám định chữ viết run -> Camera lật tẩy quản gia -> Phá án bắt giữ."
@@ -2548,9 +2548,9 @@ export const TASK_MASTER_LEVELS_PART5 = [
     "tasks": [
       {
         "id": "t1",
-        "text": "Mốc Neo: Chỉ huy Bách nhấn nút kiểm tra toàn diện 10 phân hệ kỹ thuật của căn cứ",
+        "text": "Mốc Neo: Chỉ huy Huy nhấn nút kiểm tra toàn diện 10 phân hệ kỹ thuật của căn cứ",
         "icon": "👑",
-        "hint": "Tổng chỉ huy Bách bắt đầu quy trình vận hành tự chủ vĩnh viễn."
+        "hint": "Tổng chỉ huy Huy bắt đầu quy trình vận hành tự chủ vĩnh viễn."
       },
       {
         "id": "t2",
@@ -2596,9 +2596,9 @@ export const TASK_MASTER_LEVELS_PART5 = [
         "requires": [
           "t5"
         ],
-        "hint": "Chiến thắng vang dội! Bách trở thành Tổng Công Trình Sư Vĩ Đại của Bậc Thầy Kế Hoạch 200 Màn!"
+        "hint": "Chiến thắng vang dội! Bạn trở thành Tổng Công Trình Sư Vĩ Đại của Bậc Thầy Kế Hoạch 200 Màn!"
       }
     ],
-    "lesson": "Mốc Bách kiểm tra -> Hòa điện kép Mặt trời & Hạt nhân -> Bơm tuần hoàn Oxy nước -> Robot AI tuần tra -> Laser gửi lời chào Trái Đất -> Vận hành vĩnh viễn thành công rực rỡ!"
+    "lesson": "Mốc Chỉ huy kiểm tra -> Hòa điện kép Mặt trời & Hạt nhân -> Bơm tuần hoàn Oxy nước -> Robot AI tuần tra -> Laser gửi lời chào Trái Đất -> Vận hành vĩnh viễn thành công rực rỡ!"
   }
 ];
