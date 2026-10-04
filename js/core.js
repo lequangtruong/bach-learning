@@ -167,12 +167,13 @@ export function buildLearningContext() {
 }
 
 export function buildWeeklySummaryPrompt(week) {
-  const progress = state.db.progress[week.id] || {};
-  const note = state.db.notes[week.id] || "Chưa có ghi chú riêng cho tuần này.";
-  const weekChats = (state.db.chatHistory || [])
+  if (!week) return "";
+  const progress = state.db?.progress?.[week.id] || {};
+  const note = state.db?.notes?.[week.id] || "Chưa có ghi chú riêng cho tuần này.";
+  const weekChats = (state.db?.chatHistory || [])
     .filter(item => item.weekId === week.id)
     .slice(-4)
     .map(item => `${item.role === "user" ? "Bách/phụ huynh" : "Gemini"}: ${item.text}`)
     .join("\n") || "Chưa có hội thoại AI được lưu cho tuần này.";
-  return `Lập báo cáo cuối tuần cho phụ huynh về Tuần ${week.number}. Hãy tách rõ các mục: Đã học; Tiến bộ quan sát được; Điểm còn vướng/bất cập; Việc nên làm tuần sau. Không chấm điểm nếu không có dữ liệu.\n\nDữ liệu tuần ${week.number}:\n- Toán: ${week.math[0]} — ${week.math[1]}\n- Tiếng Việt: ${week.vietnamese[0]} — ${week.vietnamese[1]}\n- Đã đánh dấu Toán: ${progress.math ? "có" : "chưa"}; Đã đánh dấu Văn: ${progress.vietnamese ? "có" : "chưa"}; Nền tính nhẩm: ${progress.mentalMath ? "có" : "chưa"}\n- Ghi chú của gia đình: ${note}\n- Hội thoại liên quan:\n${weekChats}`;
+  return `Lập báo cáo cuối tuần cho phụ huynh về Tuần ${week.number}. Hãy tách rõ các mục: Đã học; Tiến bộ quan sát được; Điểm còn vướng/bất cập; Việc nên làm tuần sau. Không chấm điểm nếu không có dữ liệu.\n\nDữ liệu tuần ${week.number}:\n- Toán: ${week.math?.[0] || ""} — ${week.math?.[1] || ""}\n- Tiếng Việt: ${week.vietnamese?.[0] || ""} — ${week.vietnamese?.[1] || ""}\n- Đã đánh dấu Toán: ${progress.math ? "có" : "chưa"}; Đã đánh dấu Văn: ${progress.vietnamese ? "có" : "chưa"}; Nền tính nhẩm: ${progress.mentalMath ? "có" : "chưa"}\n- Ghi chú của gia đình: ${note}\n- Hội thoại liên quan:\n${weekChats}`;
 }

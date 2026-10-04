@@ -33,9 +33,10 @@ export function getWeekendMathExam(weekNumber, fallbackLesson = {}) {
 /**
  * Render HTML Tờ đề thi chính thức chuẩn iPad Pro 11 inch
  * @param {object} exam
+ * @param {object} [studentAnswers]
  * @returns {string}
  */
-export function renderExamPaperHtml(exam) {
+export function renderExamPaperHtml(exam, studentAnswers = {}) {
   if (!exam || !Array.isArray(exam.sections)) return "";
 
   const escapeHtml = (value = "") => String(value).replace(/[&<>"']/g, c => ({
@@ -56,7 +57,7 @@ export function renderExamPaperHtml(exam) {
       </div>
       <h2 class="exam-paper-title">${escapeHtml(exam.title)}</h2>
       <p class="exam-paper-instruction">
-        📝 <b>Hướng dẫn cho Bách:</b> Bách cần có <b>vở nháp</b> trước khi làm bài để nháp các phép tính và thử lại kết quả cẩn thận nhé! Sau đó Bách mở <b>vở ô ly</b> ghi rõ <i>"Bài kiểm tra tuần ${escapeHtml(exam.week)}"</i>, viết chữ số nắn nót, đặt tính thẳng hàng. Làm xong Bách bấm nút <b>Chụp ảnh bài làm trên vở</b> phía dưới để cùng AI chấm điểm nhé!
+        📝 <b>Hướng dẫn cho Bách:</b> Bách cần có <b>vở nháp</b> trước khi làm bài để nháp các phép tính và thử lại kết quả cẩn thận nhé! Với các câu <b>Trắc nghiệm</b>, Bách có thể bấm chọn trực tiếp đáp án A, B, C, D trên màn hình. Với các bài <b>Tự luận</b>, Bách mở <b>vở ô ly</b> ghi rõ <i>"Bài kiểm tra tuần ${escapeHtml(exam.week)}"</i>, viết chữ số nắn nót, đặt tính thẳng hàng. Làm xong Bách bấm nút <b>Chụp ảnh bài làm trên vở</b> phía dưới để cùng AI chấm điểm nhé!
       </p>
       <div class="exam-paper-prerequisites" style="margin-top:8px; padding:8px 12px; background:#f0fdf4; border-left:4px solid #16a34a; border-radius:4px; font-size:0.88rem; color:#166534">
         <span>🎯 <b>Trọng tâm kiểm tra:</b> Bám sát chương trình tuần ${escapeHtml(exam.week)} SGK Toán 4 Kết nối tri thức.</span>
@@ -65,8 +66,8 @@ export function renderExamPaperHtml(exam) {
     </header>
 
     <div class="exam-sections-grid">
-      ${exam.sections.map((sec, idx) => `
-        <section class="exam-section-card exam-level-${idx + 1}" id="${escapeHtml(sec.id)}">
+      ${exam.sections.map((sec, sIdx) => `
+        <section class="exam-section-card exam-level-${sIdx + 1}" id="${escapeHtml(sec.id)}">
           <div class="exam-section-head">
             <div class="exam-section-title-wrap">
               <span class="exam-section-tag">${escapeHtml(sec.name)}</span>
@@ -76,21 +77,139 @@ export function renderExamPaperHtml(exam) {
           </div>
 
           <div class="exam-questions-list">
-            ${sec.questions.map(qObj => `
-              <div class="exam-question-item">
+            ${sec.questions.map((qObj, qIdx) => {
+              const qKey = `s${sIdx}_q${qIdx}`;
+              const selectedAnswer = studentAnswers[qKey] || studentAnswers[`q_${sIdx}_${qIdx}`] || "";
+              return `
+              <div class="exam-question-item" data-q-key="${qKey}">
                 <div class="exam-q-text">${escapeHtml(qObj.q || "").replace(/\n/g, "<br>")}</div>
                 ${Array.isArray(qObj.choices) && qObj.choices.length ? `
-                  <div class="exam-choices-grid">
-                    ${qObj.choices.map(c => `<span class="exam-choice-chip">${escapeHtml(c)}</span>`).join("")}
+                  <div class="exam-choices-grid" role="group" aria-label="Các lựa chọn câu trả lời">
+                    ${qObj.choices.map((c, cIdx) => {
+                      const letterMatch = c.match(/^([A-D])\./i);
+                      const letter = letterMatch ? letterMatch[1].toUpperCase() : String.fromCharCode(65 + cIdx);
+                      const isSelected = selectedAnswer === letter || selectedAnswer === c;
+                      const choiceLabel = c.replace(/^[A-D]\.\s*/i, "");
+                      return `
+                        <button type="button"
+                          class="exam-choice-btn exam-choice-chip ${isSelected ? "is-selected" : ""}"
+                          data-exam-week="${exam.week}"
+                          data-sec-idx="${sIdx}"
+                          data-q-idx="${qIdx}"
+                          data-choice-letter="${letter}"
+                          data-choice-text="${escapeHtml(c)}"
+                          aria-pressed="${isSelected ? "true" : "false"}"
+                          title="Chọn đáp án ${letter}">
+                          <span class="exam-choice-badge">${letter}</span>
+                          <span class="exam-choice-text">${escapeHtml(choiceLabel)}</span>
+                          ${isSelected ? `<span class="exam-choice-check" aria-hidden="true">✓</span>` : ""}
+                        </button>
+                      `;
+                    }).join("")}
                   </div>
                 ` : ""}
               </div>
-            `).join("")}
+            `;
+            }).join("")}
           </div>
         </section>
       `).join("")}
     </div>
   </article>
+  `;
+}
+
+/**
+ * Render thẻ Tóm tắt & Tiến trình làm bài kiểm tra cho Bách và phụ huynh
+ * @param {object} exam
+ * @param {object} [studentAnswers]
+ * @param {object} [appState]
+ * @returns {string}
+ */
+export function renderExamSummaryHtml(exam, studentAnswers = {}, appState = {}) {
+  if (!exam || !Array.isArray(exam.sections)) return "";
+
+  const escapeHtml = (value = "") => String(value).replace(/[&<>"']/g, c => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[c]);
+
+  let totalChoiceQuestions = 0;
+  let answeredChoiceCount = 0;
+  const choiceDetails = [];
+
+  exam.sections.forEach((sec, sIdx) => {
+    (sec.questions || []).forEach((qObj, qIdx) => {
+      if (Array.isArray(qObj.choices) && qObj.choices.length > 0) {
+        totalChoiceQuestions++;
+        const qKey = `s${sIdx}_q${qIdx}`;
+        const chosen = studentAnswers[qKey] || studentAnswers[`q_${sIdx}_${qIdx}`] || "";
+        if (chosen) {
+          answeredChoiceCount++;
+        }
+        choiceDetails.push({
+          num: qIdx + 1,
+          secName: sec.name,
+          chosen,
+          text: qObj.q ? qObj.q.split("\n")[0] : ""
+        });
+      }
+    });
+  });
+
+  const hasPhoto = Boolean(appState.mathExamPhoto || appState.writingImage || appState.examSession?.originalPhoto);
+  const photoName = appState.mathExamPhoto?.name || appState.writingImage?.name || appState.examSession?.originalPhoto?.name || "Ảnh vở ô ly";
+  const lastAiAnswer = appState.examSession?.lastAiAnswer || 
+                       appState.db?.examGrades?.[exam.week]?.lastAiAnswer ||
+                       (appState.tutor?.lastAnswer && appState.examSession ? appState.tutor.lastAnswer : null);
+
+  return `
+  <section class="exam-summary-card" id="examSummarySection" aria-label="Tổng kết bài kiểm tra Toán 30 phút">
+    <div class="exam-summary-header">
+      <div style="display:flex; align-items:center; gap:8px">
+        <span style="font-size:1.3rem">📊</span>
+        <h3 style="margin:0; font-size:1.1rem; font-weight:800; color:#0f172a">
+          Tổng kết tiến trình bài kiểm tra · Tuần ${escapeHtml(exam.week)}
+        </h3>
+      </div>
+      <div class="exam-summary-badges">
+        <span class="exam-summary-badge ${answeredChoiceCount === totalChoiceQuestions && totalChoiceQuestions > 0 ? "is-complete" : ""}">
+          ${totalChoiceQuestions > 0 ? `🔘 Trắc nghiệm: Đã chọn ${answeredChoiceCount}/${totalChoiceQuestions} câu` : "📝 Tự luận"}
+        </span>
+        <span class="exam-summary-badge ${hasPhoto ? "is-complete" : ""}">
+          ${hasPhoto ? `📷 Vở ô ly: ${escapeHtml(photoName)}` : "📷 Vở ô ly: Chưa chụp"}
+        </span>
+        ${lastAiAnswer ? `<span class="exam-summary-badge is-graded">✓ AI đã chấm điểm</span>` : ""}
+      </div>
+    </div>
+
+    ${totalChoiceQuestions > 0 ? `
+      <div class="exam-summary-choices-list">
+        <span class="eyebrow" style="color:#475569; display:block; margin-bottom:6px">CÁC CÂU TRẮC NGHIỆM ĐÃ CHỌN TRÊN MÀN HÌNH:</span>
+        <div style="display:flex; flex-wrap:wrap; gap:8px">
+          ${choiceDetails.map(c => `
+            <div class="exam-summary-choice-item ${c.chosen ? "has-choice" : "missing-choice"}">
+              <span class="choice-num">Câu ${c.num}:</span>
+              ${c.chosen ? `<strong class="choice-val">${escapeHtml(c.chosen)}</strong>` : `<span class="choice-empty">(chưa chọn)</span>`}
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    ` : ""}
+
+    ${lastAiAnswer ? `
+      <div class="exam-ai-summary-result" style="margin-top:14px; padding:12px; background:#f0fdf4; border:1.5px solid #86efac; border-radius:8px">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px">
+          <strong style="color:#166534">🏆 Kết quả chấm từ Trợ giảng AI:</strong>
+          <a href="#guide" style="font-size:0.85rem; font-weight:700; color:#15803d; text-decoration:underline">Xem chi tiết &amp; phản hồi tại Guide →</a>
+        </div>
+        <div style="font-size:0.92rem; color:#1e293b; max-height:160px; overflow-y:auto; line-height:1.5; white-space:pre-wrap">${escapeHtml(lastAiAnswer.slice(0, 500))}${lastAiAnswer.length > 500 ? "..." : ""}</div>
+      </div>
+    ` : ""}
+  </section>
   `;
 }
 
@@ -116,20 +235,47 @@ export function buildExamRubricMarkdown(exam) {
  * Tích hợp cơ chế phản hồi hai chiều (kể cả khi AI tính sai thì Bách cũng có thể phản biện lại)
  * @param {object} exam
  * @param {string} [studentExplanation]
+ * @param {object} [studentAnswers]
  * @returns {string}
  */
-export function buildExamGradingPrompt(exam, studentExplanation = "") {
+export function buildExamGradingPrompt(exam, studentExplanation = "", studentAnswers = {}) {
   const rubricText = buildExamRubricMarkdown(exam);
+
+  let answersSummary = "";
+  if (studentAnswers && typeof studentAnswers === "object" && Object.keys(studentAnswers).length > 0) {
+    const lines = [];
+    (exam.sections || []).forEach((sec, sIdx) => {
+      (sec.questions || []).forEach((qObj, qIdx) => {
+        const key = `s${sIdx}_q${qIdx}`;
+        const keyAlt = `q_${sIdx}_${qIdx}`;
+        const chosen = studentAnswers[key] || studentAnswers[keyAlt];
+        if (chosen) {
+          lines.push(`- ${sec.name} - Câu ${qIdx + 1}: Bách đã chọn "${chosen}" (Đáp án & barem chuẩn: "${qObj.answer || ""}")`);
+        }
+      });
+    });
+    if (lines.length > 0) {
+      answersSummary = [
+        "",
+        "--- ĐÁP ÁN TRẮC NGHIỆM BÁCH ĐÃ CHỌN TRỰC TIẾP TRÊN MÀN HÌNH ---",
+        ...lines,
+        "----------------------------------------------------------------",
+        ""
+      ].join("\n");
+    }
+  }
 
   return [
     `Bách vừa hoàn thành BÀI KIỂM TRA ĐỊNH KỲ 30 PHÚT - MÔN TOÁN LỚP 4 (${exam.title}).`,
     `Bộ sách: ${exam.textbook || "Kết nối tri thức với cuộc sống"}. Thang điểm: 10 điểm.`,
     `Bách đã có vở nháp để tính toán cẩn thận trước khi viết bài giải vào vở ô ly. Ảnh chụp trang vở ô ly bài làm của Bách được đính kèm.`,
     studentExplanation ? `Lời giải thích / ghi âm của Bách: "${studentExplanation}"` : "",
+    answersSummary,
     "",
     "--- DƯỚI ĐÂY LÀ ĐỀ BÀI GỐC VÀ ĐÁP ÁN - BAREM CHUẨN ĐỂ ĐỐI CHIẾU ---",
     rubricText,
     "----------------------------------------------------------------",
+
     "",
     "QUY TẮC SƯ PHẠM VÀ HƯỚNG DẪN ĐỌC ẢNH VỞ Ô LY:",
     "1. ĐỌC NÉT CHỮ VIẾT TAY TRÊN VỞ Ô LY: Đọc từng bài Bách đã viết ra vở. Xem Bách đặt tính có thẳng hàng đơn vị dưới hàng đơn vị, chục dưới chục không; có cộng/trừ số nhớ chính xác không. So sánh kết quả của Bách với ĐÁP ÁN VÀ BAREM CHUẨN ở trên.",

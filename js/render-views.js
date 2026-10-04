@@ -16,7 +16,7 @@ import {
 } from "../data/data-core.js";
 import { BUG_CASES } from "./spot-the-bug.js";
 import { getDailyGameChallenges, getDifficultyMeta } from "./render-games.js";
-import { getWeekendMathExam, renderExamPaperHtml } from "./math-weekend-exam.js";
+import { getWeekendMathExam, renderExamPaperHtml, renderExamSummaryHtml } from "./math-weekend-exam.js";
 
 // SVG視覚モデルのレンダリング関数
 export function renderSvgVisual(visual) {
@@ -908,7 +908,8 @@ export function createRenderViews(dependencies = {}) {
       </p>
     </section>
 
-    ${weekendExam ? renderExamPaperHtml(weekendExam) : ""}
+    ${weekendExam ? renderExamPaperHtml(weekendExam, state?.db?.examAnswers?.[weekendExam.week] || state?.db?.examAnswers?.[`w${weekendExam.week}`] || {}) : ""}
+    ${weekendExam && !isParentPreview ? renderExamSummaryHtml(weekendExam, state?.db?.examAnswers?.[weekendExam.week] || state?.db?.examAnswers?.[`w${weekendExam.week}`] || {}, state) : ""}
 
     ${!isParentPreview ? `
     <section class="writing-submission-panel math-test-submission-panel" data-exam-week="${weekendExam ? weekendExam.week : week.number}" style="margin:16px 0; border:2px solid #0284c7 !important; background:#f0f9ff !important; border-radius:12px; padding:18px">
@@ -932,8 +933,8 @@ export function createRenderViews(dependencies = {}) {
         <span id="mathVoiceIndicator" class="voice-listening-label" hidden>● Đang nghe Bách nói…</span>
       </div>
 
-      <div id="mathPhotoPreview" class="photo-preview-bar" ${state?.writingImage ? "" : "hidden"}>
-        <span id="mathPhotoName" class="photo-name">${state?.writingImage ? escapeHtml(state.writingImage.name) : ""}</span>
+      <div id="mathPhotoPreview" class="photo-preview-bar" ${Boolean(state?.mathExamPhoto || state?.writingImage || state?.examSession?.originalPhoto) ? "" : "hidden"}>
+        <span id="mathPhotoName" class="photo-name">${escapeHtml((state?.mathExamPhoto || state?.writingImage || state?.examSession?.originalPhoto)?.name || "")}</span>
         <button type="button" id="removeMathPhotoBtn" class="text-button remove-photo-btn" title="Bỏ ảnh này">✕ Bỏ ảnh</button>
       </div>
 

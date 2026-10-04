@@ -158,6 +158,18 @@ export async function compressImageToJpeg(file, { maxWidth = 1400, quality = 0.8
 }
 
 function fallbackFileReader(file, fileName, originalSize, resolve, reject) {
+  if (file && typeof file.arrayBuffer === "function" && (typeof Blob === "undefined" || !(file instanceof Blob))) {
+    file.arrayBuffer().then(buf => {
+      resolve({
+        name: fileName,
+        mimeType: file.type || "image/jpeg",
+        sizeBytes: originalSize,
+        data: Buffer.from(buf).toString("base64"),
+        originalSizeBytes: originalSize
+      });
+    }).catch(reject);
+    return;
+  }
   if (typeof FileReader === "undefined") {
     resolve({
       name: fileName,

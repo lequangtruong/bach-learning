@@ -45,18 +45,29 @@ export async function askAi({ mode = "student_tutor", userMessage = null, writin
   state.tutor.reviewPromptExpected = null;
 
   state.tutor.isLoading = true;
+  state.tutor.currentStreamText = "";
   if (askBtn) askBtn.disabled = true;
   if (askBtn) askBtn.textContent = "Đang suy nghĩ…";
+  const summaryBtn = typeof document !== "undefined" ? document.querySelector("#weeklySummaryBtn") : null;
+  if (summaryBtn && mode === "parent_summary") {
+    summaryBtn.disabled = true;
+    summaryBtn.textContent = "AI đang tổng kết…";
+  }
+
   const thinkingIndicator = typeof document !== "undefined" ? document.querySelector("#aiThinkingIndicator") : null;
   const thinkingText = typeof document !== "undefined" ? document.querySelector("#aiThinkingText") : null;
   if (thinkingIndicator) {
     thinkingIndicator.hidden = false;
     thinkingIndicator.setAttribute("aria-hidden", "false");
   }
-  if (status) status.textContent = "AI đang suy nghĩ gợi ý cho Bách…";
+  if (status) status.textContent = mode === "parent_summary" ? "AI đang tổng hợp tiến độ tuần cho phụ huynh…" : "AI đang suy nghĩ gợi ý cho Bách…";
   if (answer) answer.hidden = true;
 
-  const thinkingMessages = [
+  const thinkingMessages = mode === "parent_summary" ? [
+    "AI đang đọc tiến độ môn Toán và Tiếng Việt…",
+    "AI đang tổng hợp các điểm tiến bộ và điểm cần ôn…",
+    "AI đang chuẩn bị báo cáo hoàn chỉnh cho phụ huynh…"
+  ] : [
     "AI đang đọc kỹ câu hỏi…",
     "AI đang tìm cách gợi ý vừa sức…",
     "AI đang kiểm tra lại hướng giải…"
@@ -65,8 +76,10 @@ export async function askAi({ mode = "student_tutor", userMessage = null, writin
   clearInterval(state.tutor.thinkingTimer);
   state.tutor.thinkingTimer = setInterval(() => {
     thinkingIndex = (thinkingIndex + 1) % thinkingMessages.length;
-    if (thinkingText) thinkingText.textContent = thinkingMessages[thinkingIndex];
-    if (status) status.textContent = thinkingMessages[thinkingIndex];
+    const liveThinkingText = typeof document !== "undefined" ? document.querySelector("#aiThinkingText") : thinkingText;
+    const liveStatus = typeof document !== "undefined" ? document.querySelector("#aiStatus") : status;
+    if (liveThinkingText) liveThinkingText.textContent = thinkingMessages[thinkingIndex];
+    if (liveStatus) liveStatus.textContent = thinkingMessages[thinkingIndex];
   }, 1800);
 
   // Lấy bối cảnh môn và tuần từ bộ chọn Guide rõ ràng
@@ -134,11 +147,13 @@ export async function askAi({ mode = "student_tutor", userMessage = null, writin
       let streamedText = "";
       let streamedAction = null;
       let streamCompleted = false;
-      if (answer) {
-        answer.textContent = "";
-        answer.hidden = false;
+      const initialAnswer = typeof document !== "undefined" ? document.querySelector("#aiAnswer") : answer;
+      if (initialAnswer) {
+        initialAnswer.textContent = "";
+        initialAnswer.hidden = false;
       }
-      if (status) status.textContent = "AI đang trả lời…";
+      const initialStatus = typeof document !== "undefined" ? document.querySelector("#aiStatus") : status;
+      if (initialStatus) initialStatus.textContent = "AI đang trả lời…";
 
       try {
         while (true) {
@@ -178,7 +193,12 @@ export async function askAi({ mode = "student_tutor", userMessage = null, writin
                 }
                 if (parsed.text) {
                   streamedText += parsed.text;
-                  if (answer) answer.textContent = streamedText;
+                  state.tutor.currentStreamText = streamedText;
+                  const liveAnswer = typeof document !== "undefined" ? document.querySelector("#aiAnswer") : answer;
+                  if (liveAnswer) {
+                    liveAnswer.textContent = streamedText;
+                    liveAnswer.hidden = false;
+                  }
                 }
               } catch {}
             }
@@ -206,15 +226,24 @@ export async function askAi({ mode = "student_tutor", userMessage = null, writin
     state.tutor.lastError = null;
     state.tutor.lastFailedSubmission = null;
     state.tutor.lastAnswer = data.answer;
+    state.tutor.currentStreamText = "";
     if (state.examSession) {
       state.examSession.lastAiAnswer = data.answer;
+      if (!state.db.examGrades) state.db.examGrades = {};
+      state.db.examGrades[state.examSession.examWeek] = {
+        examWeek: state.examSession.examWeek,
+        lastAiAnswer: data.answer,
+        gradedAt: new Date().toISOString()
+      };
     }
     state.tutor.lastAction = data.learningAction
       ? { ...data.learningAction, sourceLessonKey: isValidLessonKey(sourceLessonKey, data.learningAction.subject) ? sourceLessonKey : null }
       : null;
-    if (answer) {
-      answer.textContent = data.answer;
-      answer.hidden = false;
+
+    const liveAnswer = typeof document !== "undefined" ? document.querySelector("#aiAnswer") : answer;
+    if (liveAnswer) {
+      liveAnswer.textContent = data.answer;
+      liveAnswer.hidden = false;
     }
     const feedbackToolbar = typeof document !== "undefined" ? document.querySelector("#aiFeedbackToolbar") : null;
     if (feedbackToolbar) {
@@ -225,7 +254,9 @@ export async function askAi({ mode = "student_tutor", userMessage = null, writin
       if (!state.db.weeklySummaries) state.db.weeklySummaries = {};
       state.db.weeklySummaries[selectedWeekObj.id] = data.answer;
       await saveLocalHandler(true);
-      if (status) status.textContent = "Đã tạo và lưu tổng kết tuần cho phụ huynh.";
+      const liveStatus = typeof document !== "undefined" ? document.querySelector("#aiStatus") : status;
+      if (liveStatus) liveStatus.textContent = "Đã hoàn thành và lưu tổng kết tuần cho phụ huynh.";
+      renderGuideHandler();
       return;
     }
 
@@ -248,28 +279,37 @@ export async function askAi({ mode = "student_tutor", userMessage = null, writin
     }
     await saveLocalHandler(true);
 
-    if (status) {
-      status.textContent = data.provider === "gemini-oauth-rest"
+    const liveStatus = typeof document !== "undefined" ? document.querySelector("#aiStatus") : status;
+    if (liveStatus) {
+      liveStatus.textContent = data.provider === "gemini-oauth-rest"
         ? "Gợi ý từ Gemini · OAuth Trực Tuyến"
         : "Gợi ý từ Trợ giảng AI (Local Dev)";
     }
   } catch (error) {
     state.tutor.lastError = error.message;
-    if (status) status.textContent = `Lỗi: ${error.message}`;
+    state.tutor.currentStreamText = "";
+    const liveStatus = typeof document !== "undefined" ? document.querySelector("#aiStatus") : status;
+    if (liveStatus) liveStatus.textContent = `Lỗi: ${error.message}`;
   } finally {
     state.tutor.isLoading = false;
+    state.tutor.currentStreamText = "";
     clearInterval(state.tutor.thinkingTimer);
     state.tutor.thinkingTimer = null;
-    if (askBtn) {
-      askBtn.disabled = false;
-      askBtn.textContent = "Hỏi trợ giảng AI";
+    const liveAskBtn = typeof document !== "undefined" ? document.querySelector("#askAi") : askBtn;
+    if (liveAskBtn) {
+      liveAskBtn.disabled = false;
+      liveAskBtn.textContent = "Hỏi trợ giảng AI";
+    }
+    const liveSummaryBtn = typeof document !== "undefined" ? document.querySelector("#weeklySummaryBtn") : null;
+    if (liveSummaryBtn) {
+      liveSummaryBtn.disabled = false;
+      liveSummaryBtn.textContent = "AI tổng kết tuần";
     }
     const thinkingIndicator = typeof document !== "undefined" ? document.querySelector("#aiThinkingIndicator") : null;
     if (thinkingIndicator) {
       thinkingIndicator.hidden = true;
       thinkingIndicator.setAttribute("aria-hidden", "true");
     }
-    // Rerender lại phần history nếu đang ở trang guide
     if (typeof location !== "undefined" && (location.hash === "#guide" || location.hash.startsWith("#guide"))) {
       renderGuideHandler();
     }

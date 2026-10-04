@@ -890,18 +890,150 @@
   margin-top: 8px;
 }
 
-.exam-choice-chip {
-  padding: 8px 12px;
-  border-radius: 8px;
+.exam-choice-chip,
+.exam-choice-btn {
+  padding: 10px 14px;
+  border-radius: 10px;
   background: #ffffff;
-  border: 1px solid #cbd5e1;
-  font-size: 0.9rem;
+  border: 1.5px solid #cbd5e1;
+  font-size: 0.95rem;
   font-weight: 600;
   color: #334155;
   display: flex;
   align-items: center;
-  min-height: 42px;
+  gap: 10px;
+  min-height: 48px;
+  cursor: pointer;
+  text-align: left;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: all 0.15s ease-in-out;
 }
+
+.exam-choice-btn:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+}
+
+.exam-choice-btn:active {
+  transform: scale(0.98);
+}
+
+.exam-choice-btn.is-selected {
+  background: #eff6ff !important;
+  border-color: #0284c7 !important;
+  color: #0369a1 !important;
+  box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.25);
+  font-weight: 700;
+}
+
+.exam-choice-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  color: #1e293b;
+  font-weight: 800;
+  font-size: 0.88rem;
+  flex-shrink: 0;
+  transition: all 0.15s ease-in-out;
+}
+
+.exam-choice-btn.is-selected .exam-choice-badge {
+  background: #0284c7;
+  color: #ffffff;
+}
+
+.exam-choice-text {
+  flex: 1;
+}
+
+.exam-choice-check {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #0284c7;
+  margin-left: auto;
+}
+
+.exam-summary-card {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+  margin: 16px 0;
+}
+
+.exam-summary-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.exam-summary-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.exam-summary-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #e2e8f0;
+  color: #334155;
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.exam-summary-badge.is-complete {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.exam-summary-badge.is-graded {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.exam-summary-choice-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 0.88rem;
+}
+
+.exam-summary-choice-item.has-choice {
+  border-color: #0284c7;
+  background: #f0f9ff;
+}
+
+.exam-summary-choice-item .choice-num {
+  color: #64748b;
+  font-weight: 600;
+}
+
+.exam-summary-choice-item .choice-val {
+  color: #0284c7;
+  font-weight: 800;
+}
+
+.exam-summary-choice-item .choice-empty {
+  color: #94a3b8;
+  font-style: italic;
+}
+
 
 /* Tối ưu riêng cho iPad Pro 11 inch & màn hình cảm ứng Retina */
 @media (min-width: 768px) and (max-width: 1200px) {

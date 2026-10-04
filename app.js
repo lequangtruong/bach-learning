@@ -46,8 +46,10 @@ import {
   getWeekendMathExam,
   buildExamGradingPrompt,
   buildExamDisputePrompt,
-  buildExamResubmitPrompt
+  buildExamResubmitPrompt,
+  renderExamSummaryHtml
 } from "./js/math-weekend-exam.js";
+import { compressImageToJpeg } from "./js/image-compressor.js";
 import { storage } from "./js/storage.js";
 import { driveSync, renderGoogleTutorButton } from "./js/drive-sync.js";
 import { lessonTimerManager, setTimerCallbacks } from "./js/study-timer.js";
@@ -298,12 +300,18 @@ function renderMentalMathFoundation() {
 }
 
 function renderGuide() {
-  const weeks = allWeeks();
-  const currentSelectedWeekObj = weeks.find(w => w.id === state.tutor.selectedWeek) || weeks[0];
+  const weeks = allWeeks() || [];
+  const currentSelectedWeekObj = weeks.find(w => w.id === state.tutor.selectedWeek) || weeks[0] || {
+    id: "w1",
+    number: 1,
+    phase: { id: "p1", title: "Khởi động" },
+    math: ["Tuần 1", "Toán 4"],
+    vietnamese: ["Tuần 1", "Tiếng Việt 4"]
+  };
   const isMath = state.tutor.selectedSubject === "math";
   const currentFocus = isMath
-    ? `${currentSelectedWeekObj.math[0]}: ${currentSelectedWeekObj.math[1]}`
-    : `${currentSelectedWeekObj.vietnamese[0]}: ${currentSelectedWeekObj.vietnamese[1]}`;
+    ? `${currentSelectedWeekObj?.math?.[0] || "Tuần 1"}: ${currentSelectedWeekObj?.math?.[1] || "Toán 4"}`
+    : `${currentSelectedWeekObj?.vietnamese?.[0] || "Tuần 1"}: ${currentSelectedWeekObj?.vietnamese?.[1] || "Tiếng Việt 4"}`;
 
   const historyItems = (state.db.chatHistory || []).slice(-10);
   const learningProfile = state.db.learningProfile || { method: "Gợi ý từng bước", pace: "ổn định", focus: "" };
@@ -420,7 +428,7 @@ function renderGuide() {
             </div>
           ` : ""}
 
-          <div id="aiAnswer" class="ai-answer" ${state.tutor.lastAnswer ? "" : "hidden"}>${escapeHtml(state.tutor.lastAnswer)}</div>
+          <div id="aiAnswer" class="ai-answer" ${(state.tutor.lastAnswer || state.tutor.currentStreamText) ? "" : "hidden"}>${escapeHtml(state.tutor.lastAnswer || state.tutor.currentStreamText || "")}</div>
 
           <!-- Thanh công cụ tương tác hai chiều & phản hồi của Bách (Kể cả khi AI tính sai hoặc đọc nhầm nét chữ) -->
           <div id="aiFeedbackToolbar" class="ai-feedback-toolbar" ${state.tutor.lastAnswer ? "" : "hidden"} style="margin-top:14px">
@@ -609,7 +617,6 @@ export function clearTransientAiPhotos() {
   state.writingPhoto = null;
   state.mathExamPhoto = null;
   state.writingImage = null;
-  state.examSession = null;
   const resubmitInput = typeof document !== "undefined" ? document.querySelector?.("#resubmitPhotoInput") : null;
   if (resubmitInput) resubmitInput.value = "";
   const resubmitName = typeof document !== "undefined" ? document.querySelector?.("#resubmitPhotoName") : null;
@@ -619,7 +626,7 @@ export function clearTransientAiPhotos() {
 export function render() {
   cleanupActiveGames();
   const { route, params } = parseRoute();
-  if (route !== "guide") {
+  if (route !== "guide" && !state.tutor.isLoading) {
     clearTransientAiPhotos();
   }
   state.openWeek = state.openWeek || null;
@@ -937,7 +944,7 @@ export async function handleGlobalClick(e) {
   if (e.target.closest("#removeWritingPhotoBtn")) {
     state.writingPhoto = null;
     state.writingImage = null;
-    const photoInput = document.querySelector("#writingPhotoInput");
+    const photoInput = typeof document !== "undefined" ? document.querySelector("#writingPhotoInput") : null;
     if (photoInput) photoInput.value = "";
     updatePhotoPreviewUi();
     return;
@@ -947,9 +954,70 @@ export async function handleGlobalClick(e) {
   if (e.target.closest("#removeMathPhotoBtn")) {
     state.mathExamPhoto = null;
     state.writingImage = null;
-    const mathPhotoInput = document.querySelector("#mathPhotoInput");
+    if (state.examSession) state.examSession.originalPhoto = null;
+    const mathPhotoInput = typeof document !== "undefined" ? document.querySelector("#mathPhotoInput") : null;
     if (mathPhotoInput) mathPhotoInput.value = "";
     updatePhotoPreviewUi();
+    const summaryCard = typeof document !== "undefined" ? document.querySelector("#examSummarySection") : null;
+    if (summaryCard) {
+      const examPaperEl = typeof document !== "undefined" ? document.querySelector(".math-exam-paper, .math-test-submission-panel") : null;
+      const domWeek = Number(examPaperEl?.dataset?.examWeek) || 1;
+      const exam = getWeekendMathExam(domWeek);
+      summaryCard.outerHTML = renderExamSummaryHtml(exam, state.db?.examAnswers?.[domWeek] || {}, state);
+    }
+    return;
+  }
+
+  // 8c-ter. Chọn đáp án câu hỏi Trắc nghiệm bài kiểm tra
+  const choiceBtn = e.target.closest(".exam-choice-btn");
+  if (choiceBtn) {
+    const examWeek = Number(choiceBtn.dataset.examWeek) || 1;
+    const secIdx = Number(choiceBtn.dataset.secIdx) || 0;
+    const qIdx = Number(choiceBtn.dataset.qIdx) || 0;
+    const choiceLetter = choiceBtn.dataset.choiceLetter || "";
+    const key = `s${secIdx}_q${qIdx}`;
+
+    if (!state.db.examAnswers) state.db.examAnswers = {};
+    if (!state.db.examAnswers[examWeek]) state.db.examAnswers[examWeek] = {};
+
+    state.db.examAnswers[examWeek][key] = choiceLetter;
+
+    // Cập nhật DOM của các button trong câu hỏi hiện tại
+    const questionItem = choiceBtn.closest(".exam-question-item");
+    if (questionItem) {
+      questionItem.querySelectorAll(".exam-choice-btn").forEach(btn => {
+        const isCurrent = btn === choiceBtn;
+        btn.classList.toggle("is-selected", isCurrent);
+        btn.setAttribute("aria-pressed", isCurrent ? "true" : "false");
+        const checkEl = btn.querySelector(".exam-choice-check");
+        if (isCurrent && !checkEl) {
+          if (typeof document !== "undefined") {
+            const span = document.createElement("span");
+            span.className = "exam-choice-check";
+            span.setAttribute("aria-hidden", "true");
+            span.textContent = "✓";
+            btn.appendChild(span);
+          } else if (typeof btn.appendChild === "function") {
+            btn.appendChild({ className: "exam-choice-check", remove() {} });
+          }
+        } else if (!isCurrent && checkEl) {
+          if (typeof checkEl.remove === "function") checkEl.remove();
+        }
+      });
+    }
+
+    // Cập nhật thẻ tổng kết nếu có trên màn hình
+    const summaryCard = typeof document !== "undefined" ? document.querySelector("#examSummarySection") : null;
+    if (summaryCard) {
+      const exam = getWeekendMathExam(examWeek);
+      summaryCard.outerHTML = renderExamSummaryHtml(exam, state.db.examAnswers[examWeek], state);
+    }
+
+    if (tutorAudio?.playSuccessChime) {
+      try { tutorAudio.playSuccessChime(); } catch {}
+    }
+
+    await saveLocal(true);
     return;
   }
 
@@ -995,19 +1063,25 @@ export async function handleGlobalClick(e) {
 
   // 8e. Chuyển Bài Kiểm Tra Toán Thứ 7 / Chủ Nhật sang Gemini để chấm theo Barem Toán 4 KNTT
   if (e.target.closest("#sendMathTestToAi")) {
-    const explanation = document.querySelector("#mathTestExplanation")?.value.trim() || "";
+    const explanation = typeof document !== "undefined" ? (document.querySelector("#mathTestExplanation")?.value.trim() || "") : "";
     const photo = state.mathExamPhoto || state.writingImage;
-    if (!explanation && !photo) {
-      alert("Bách hoặc phụ huynh hãy chụp ảnh bài làm trên vở hoặc ghi âm giải thích trước khi nộp nhé!");
-      return;
-    }
 
-    const examPaperEl = document.querySelector(".math-exam-paper, .math-test-submission-panel");
-    const domWeek = examPaperEl?.dataset.examWeek;
-    const currentUrlParams = new URLSearchParams(location.hash.split("?")[1] || "");
+    const examPaperEl = typeof document !== "undefined" ? document.querySelector(".math-exam-paper, .math-test-submission-panel") : null;
+    const domWeek = examPaperEl?.dataset?.examWeek;
+    const currentUrlParams = new URLSearchParams(typeof location !== "undefined" && location.hash ? (location.hash.split("?")[1] || "") : "");
     const urlWeek = currentUrlParams.get("week");
     const weekParam = domWeek ? `w${domWeek}` : (urlWeek || state.tutor.selectedWeek || "w1");
     const weekNumber = Number(weekParam.replace(/\D/g, "")) || 1;
+
+    const studentAnswers = state.db.examAnswers?.[weekNumber] || state.db.examAnswers?.[`w${weekNumber}`] || {};
+    const hasAnyChoice = Object.keys(studentAnswers).length > 0;
+
+    if (!explanation && !photo && !hasAnyChoice) {
+      if (typeof alert !== "undefined") {
+        alert("Bách hoặc phụ huynh hãy chọn đáp án trắc nghiệm, chụp ảnh bài làm trên vở hoặc ghi âm giải thích trước khi nộp nhé!");
+      }
+      return;
+    }
 
     state.tutor.selectedSubject = "math";
     state.tutor.selectedWeek = weekParam.startsWith("w") ? weekParam : `w${weekNumber}`;
@@ -1018,7 +1092,7 @@ export async function handleGlobalClick(e) {
     const weekObj = allWeeks().find(w => w.id === (weekParam.startsWith("w") ? weekParam : `w${weekNumber}`)) || allWeeks()[0];
     const saturdayLesson = weekObj?.math?.dailyPlan?.[5] || {};
     const exam = getWeekendMathExam(weekNumber, saturdayLesson);
-    const prompt = buildExamGradingPrompt(exam, explanation);
+    const prompt = buildExamGradingPrompt(exam, explanation, studentAnswers);
 
     const photoToSend = photo ? { mimeType: photo.mimeType, data: photo.data } : null;
     const submittedAt = Date.now();
@@ -1028,6 +1102,7 @@ export async function handleGlobalClick(e) {
       examWeek: weekNumber,
       examTitle: exam.title,
       examObj: exam,
+      studentAnswers,
       originalExplanation: explanation,
       originalPhoto: photoToSend,
       lastAiAnswer: null,
@@ -1040,8 +1115,17 @@ export async function handleGlobalClick(e) {
       submittedAt
     } : null;
 
-    location.hash = "#guide";
-    renderGuide();
+    const statusEl = typeof document !== "undefined" ? document.querySelector("#mathGradingStatus") : null;
+    if (statusEl) {
+      statusEl.textContent = "⏳ Đang chuyển sang Trợ giảng AI để chấm điểm...";
+    }
+
+    if (typeof location !== "undefined") {
+      location.hash = "#guide";
+    }
+    if (typeof location !== "undefined" && (location.hash === "#guide" || location.hash.startsWith("#guide"))) {
+      renderGuide();
+    }
 
     askAi({
       mode: "student_tutor",
@@ -1056,8 +1140,19 @@ export async function handleGlobalClick(e) {
     state.tutor.pendingSourceLessonKey = null;
     state.tutor.reviewPromptExpected = null;
     clearTransientAiPhotos();
-    const week = allWeeks().find(item => item.id === state.tutor.selectedWeek) || allWeeks()[0];
+    const currentWeekId = state.tutor.selectedWeek || state.openWeek || "w1";
+    state.tutor.selectedWeek = currentWeekId;
+    const week = allWeeks().find(item => item.id === currentWeekId) || allWeeks()[0];
     if (week) {
+      const summaryBtn = typeof document !== "undefined" ? document.querySelector("#weeklySummaryBtn") : null;
+      if (summaryBtn) {
+        summaryBtn.disabled = true;
+        summaryBtn.textContent = "AI đang tổng kết…";
+      }
+      const aiStatus = typeof document !== "undefined" ? document.querySelector("#aiStatus") : null;
+      if (aiStatus) {
+        aiStatus.textContent = "AI đang đọc tiến độ để tổng kết tuần cho phụ huynh...";
+      }
       askAi({ mode: "parent_summary", userMessage: buildWeeklySummaryPrompt(week) });
     }
     return;
@@ -1275,6 +1370,7 @@ if (typeof document !== "undefined") {
 
 // Cập nhật thanh hiển thị ảnh bài viết hoặc bài kiểm tra đã chọn
 export function updatePhotoPreviewUi() {
+  if (typeof document === "undefined") return;
   const writingPreview = document.querySelector("#writingPhotoPreview");
   const writingName = document.querySelector("#writingPhotoName");
   const mathPreview = document.querySelector("#mathPhotoPreview");
@@ -1304,7 +1400,16 @@ export function updatePhotoPreviewUi() {
   }
 }
 
-export function readPhotoAsBase64(file) {
+export async function readPhotoAsBase64(file) {
+  if (typeof FileReader === "undefined" && file && typeof file.arrayBuffer === "function") {
+    const buf = await file.arrayBuffer();
+    return {
+      name: file.name,
+      mimeType: file.type,
+      sizeBytes: file.size,
+      data: Buffer.from(buf).toString("base64")
+    };
+  }
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => {
@@ -1328,9 +1433,14 @@ export async function handleGlobalChange(e) {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const isAllowedMime = PHOTO_BOUNDS.ALLOWED_MIMES.includes(file.type);
+    const fileType = (file.type || "").toLowerCase();
+    const fileName = (file.name || "").toLowerCase();
+    const isImage = fileType.startsWith("image/") || /\.(jpe?g|png|webp|heic|heif)$/i.test(fileName);
+    const isAllowedMime = PHOTO_BOUNDS.ALLOWED_MIMES.includes(file.type) || isImage;
     if (!isAllowedMime) {
-      alert("Định dạng ảnh không được hỗ trợ. Vui lòng chọn ảnh JPEG, PNG hoặc WebP.");
+      if (typeof alert !== "undefined") {
+        alert("Định dạng ảnh không được hỗ trợ. Vui lòng chọn ảnh JPEG, PNG hoặc WebP.");
+      }
       e.target.value = "";
       if (e.target.id === "writingPhotoInput") state.writingPhoto = null;
       else state.mathExamPhoto = null;
@@ -1343,7 +1453,7 @@ export async function handleGlobalChange(e) {
     if (typeof window === "undefined" || typeof document === "undefined" || !window.HTMLCanvasElement) {
       const validation = validatePhotoFile(file);
       if (!validation.ok) {
-        alert(validation.error);
+        if (typeof alert !== "undefined") alert(validation.error);
         e.target.value = "";
         if (e.target.id === "writingPhotoInput") state.writingPhoto = null;
         else state.mathExamPhoto = null;
@@ -1367,8 +1477,16 @@ export async function handleGlobalChange(e) {
       }
       state.writingImage = photoData;
       updatePhotoPreviewUi();
+
+      const summaryCard = typeof document !== "undefined" ? document.querySelector("#examSummarySection") : null;
+      if (summaryCard) {
+        const examPaperEl = typeof document !== "undefined" ? document.querySelector(".math-exam-paper, .math-test-submission-panel") : null;
+        const domWeek = Number(examPaperEl?.dataset?.examWeek) || 1;
+        const exam = getWeekendMathExam(domWeek);
+        summaryCard.outerHTML = renderExamSummaryHtml(exam, state.db?.examAnswers?.[domWeek] || {}, state);
+      }
     } catch (err) {
-      alert("Không thể đọc file ảnh: " + err.message);
+      if (typeof alert !== "undefined") alert("Không thể đọc file ảnh: " + err.message);
       e.target.value = "";
       if (e.target.id === "writingPhotoInput") state.writingPhoto = null;
       else state.mathExamPhoto = null;
@@ -1382,9 +1500,14 @@ export async function handleGlobalChange(e) {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const isAllowedMime = PHOTO_BOUNDS.ALLOWED_MIMES.includes(file.type);
+    const fileType = (file.type || "").toLowerCase();
+    const fileName = (file.name || "").toLowerCase();
+    const isImage = fileType.startsWith("image/") || /\.(jpe?g|png|webp|heic|heif)$/i.test(fileName);
+    const isAllowedMime = PHOTO_BOUNDS.ALLOWED_MIMES.includes(file.type) || isImage;
     if (!isAllowedMime) {
-      alert("Định dạng ảnh không được hỗ trợ. Vui lòng chọn ảnh JPEG, PNG hoặc WebP.");
+      if (typeof alert !== "undefined") {
+        alert("Định dạng ảnh không được hỗ trợ. Vui lòng chọn ảnh JPEG, PNG hoặc WebP.");
+      }
       e.target.value = "";
       state.resubmitPhoto = null;
       updatePhotoPreviewUi();
@@ -1401,7 +1524,7 @@ export async function handleGlobalChange(e) {
       state.resubmitPhoto = photoData;
       updatePhotoPreviewUi();
     } catch (err) {
-      alert("Không thể đọc ảnh: " + err.message);
+      if (typeof alert !== "undefined") alert("Không thể đọc ảnh: " + err.message);
       e.target.value = "";
       state.resubmitPhoto = null;
       updatePhotoPreviewUi();
