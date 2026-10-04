@@ -419,7 +419,7 @@ export function createRenderViews(dependencies = {}) {
     const altItem = altSubject === "math" ? targetWeek.math : targetWeek.vietnamese;
     const altDayPlan = altItem?.dailyPlan?.[targetDayIndex] || altItem?.dailyPlan?.[0] || { day: dayPlan.day };
 
-    const duration = dayPlan.day === "Thứ 7" ? "50 phút" : "25 phút";
+    const duration = dayPlan.day === "Thứ 7" ? "40 phút" : "25 phút";
     const url = `#${targetSubject}?week=${targetWeek.id}&day=${encodeURIComponent(dayPlan.day)}`;
     const altUrl = `#${altSubject}?week=${targetWeek.id}&day=${encodeURIComponent(altDayPlan.day)}`;
 
@@ -648,6 +648,7 @@ export function createRenderViews(dependencies = {}) {
         const encodedDay = encodeURIComponent(day.day);
         return `<a class="parent-launcher-btn" href="#${subject}?week=${weekId}&day=${encodedDay}&preview=parent" data-parent-link="${subject}-${weekId}-${dayIndex}" data-subject="${subject}" data-day="${escapeHtml(day.day)}"><span class="parent-launcher-day">${escapeHtml(day.day)}</span>: <span class="parent-launcher-title">${escapeHtml(day.title)}</span></a>`;
       }).join("")}
+      ${isMath ? `<a class="parent-launcher-btn parent-launcher-sunday-btn" href="#math?week=${weekId}&day=sunday&preview=parent" data-parent-link="math-${weekId}-sunday" style="background:#eff6ff; color:#1d4ed8; border-color:#bfdbfe"><span class="parent-launcher-day">Chủ nhật</span>: <span class="parent-launcher-title">⏱️ Bài kiểm tra 30 phút</span></a>` : ""}
       <a class="parent-launcher-btn parent-launcher-all-btn" href="#${subject}?week=${weekId}&day=all&preview=parent" data-parent-link="${subject}-${weekId}-all" style="font-weight:700; background:#f0fdf4; color:#166534; border-color:#bbf7d0"><span class="parent-launcher-day">Cả tuần</span>: <span class="parent-launcher-title">📄 Xem tất cả 6 buổi tuần ${weekNumber}</span></a>
     </div>
   </div>`;
@@ -770,7 +771,7 @@ export function createRenderViews(dependencies = {}) {
     `;
   }
 
-  function renderLessonQuickNavigator(subject, week, dayIndex, isParentPreview) {
+  function renderLessonQuickNavigator(subject, week, dayIndex, isParentPreview, isSunday = false) {
     const isShowAllDays = dayIndex === null;
     const item = subject === "math" ? week.math : week.vietnamese;
     const previewQuery = isParentPreview ? "&preview=parent" : "";
@@ -778,7 +779,7 @@ export function createRenderViews(dependencies = {}) {
     const otherSubject = subject === "math" ? "vietnamese" : "math";
     const otherSubjectName = subject === "math" ? "Tiếng Việt" : "Toán";
     const curDay = !isShowAllDays && dayIndex !== null && item.dailyPlan[dayIndex] ? item.dailyPlan[dayIndex].day : null;
-    const dayQuery = isShowAllDays ? "&day=all" : (curDay ? `&day=${encodeURIComponent(curDay)}` : "");
+    const dayQuery = isShowAllDays ? "&day=all" : (isSunday ? "&day=sunday" : (curDay ? `&day=${encodeURIComponent(curDay)}` : ""));
 
     return `<nav class="lesson-quick-nav ${isParentPreview ? "parent-nav" : ""}" aria-label="Bộ chọn bài học nhanh">
       <div class="quick-nav-top">
@@ -798,11 +799,16 @@ export function createRenderViews(dependencies = {}) {
         <span class="quick-nav-label">Buổi học:</span>
         <div class="quick-nav-days-list">
           ${item.dailyPlan.map((d, dIdx) => {
-            const isSelected = !isShowAllDays && dayIndex === dIdx;
+            const isSelected = !isShowAllDays && !isSunday && dayIndex === dIdx;
             return `<a href="#${subject}?week=${week.id}&day=${encodeURIComponent(d.day)}${previewQuery}" class="quick-nav-pill ${isSelected ? "active" : ""}">
               <b>${escapeHtml(d.day)}</b>: <small>${escapeHtml(d.title)}</small>
             </a>`;
           }).join("")}
+          ${subject === "math" ? `
+            <a href="#math?week=${week.id}&day=sunday${previewQuery}" class="quick-nav-pill quick-nav-sunday-pill ${isSunday ? "active" : ""}">
+              <b>Chủ nhật</b>: <small>⏱️ Bài kiểm tra 30 phút</small>
+            </a>
+          ` : ""}
           <a href="#${subject}?week=${week.id}&day=all${previewQuery}" class="quick-nav-pill quick-nav-all-pill ${isShowAllDays ? "active" : ""}">
             <b>📄 Xem toàn bộ 6 buổi tuần ${week.number}</b>
           </a>
@@ -829,16 +835,20 @@ export function createRenderViews(dependencies = {}) {
     const dayParam = params?.get("day");
     const isParentPreview = params ? (params.get("preview") === "parent" || params.get("mode") === "parent_preview" || params.get("parent") === "1") : false;
 
+    const normDayParam = String(dayParam || "").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[\s\-_]/g, "");
+    const isSunday = ["sunday", "chunhat", "cn"].includes(normDayParam);
+    const isSaturday = ["saturday", "thu7", "t7"].includes(normDayParam);
+
     const week = getStudyWeek(subject, weekParam);
     const item = isMath ? week.math : week.vietnamese;
     const isShowAllDays = String(dayParam || "").trim().toLowerCase() === "all";
     const dayIndex = isShowAllDays ? null : resolveStudyDayIndex(item, dayParam);
     const day = dayIndex !== null ? item.dailyPlan?.[dayIndex] : null;
-    const dayLabel = isShowAllDays ? "Toàn bộ 6 buổi tuần này" : (day?.day || "Buổi hôm nay");
-    const app = getAppRoot();
-    const documentObj = getDocumentObj();
 
-    const isWeekendMathTest = isMath && !isParentPreview && (
+    // Thứ 7 thì có cả 2 (bài thi 30' và bài học 40'); Chủ nhật thì CHỈ có bài kiểm tra 30 phút thôi
+    const isWeekendMathTest = isMath && (
+      isSunday ||
+      isSaturday ||
       dayIndex === 5 ||
       day?.day === "Thứ 7" ||
       ["sunday", "chunhat", "cn", "saturday", "thu7", "t7", "test", "kiemtra"].includes(String(dayParam || "").toLowerCase()) ||
@@ -846,16 +856,30 @@ export function createRenderViews(dependencies = {}) {
     );
 
     const weekendExam = isWeekendMathTest ? getWeekendMathExam(week.number, day) : null;
+    const app = getAppRoot();
+    const documentObj = getDocumentObj();
+
+    const dayLabel = isSunday
+      ? "Chủ nhật"
+      : (isShowAllDays ? "Toàn bộ 6 buổi tuần này" : (day?.day || "Buổi hôm nay"));
+
+    const heroTitle = isSunday
+      ? `Toán Tuần ${week.number} · Bài Kiểm Tra Định Kỳ 30 Phút`
+      : escapeHtml(day?.title || (isShowAllDays ? `${name} Tuần ${week.number} · Toàn bộ 6 buổi học` : item[0]));
+
+    const heroDurationText = isSunday
+      ? "30"
+      : (isWeekendMathTest ? "40" : dayLabel === "Thứ 7" ? "40" : isShowAllDays ? "Toàn bộ tuần" : "25");
 
     if (!app) return "";
     app.innerHTML = `
     ${renderDriveBar()}
-    ${isParentPreview ? renderLessonQuickNavigator(subject, week, dayIndex, isParentPreview) : ""}
+    ${renderLessonQuickNavigator(subject, week, dayIndex, isParentPreview, isSunday)}
     <section class="study-now-hero ${isParentPreview ? "parent-preview-hero" : ""}" aria-label="${isParentPreview ? "Xem trước bài học của Bách" : "Buổi học của Bách"}">
       <div>
         <div class="eyebrow">${name.toUpperCase()} · ${isParentPreview ? "PHỤ HUYNH ĐANG XEM TRƯỚC" : "VÀO HỌC NGAY"}</div>
-        <h2>${escapeHtml(day?.title || (isShowAllDays ? `${name} Tuần ${week.number} · Toàn bộ 6 buổi học` : item[0]))}</h2>
-        <p>Tuần ${week.number} · ${escapeHtml(dayLabel)} · ${isWeekendMathTest ? "30 phút kiểm tra (tổng 50′)" : dayLabel === "Thứ 7" ? "50" : isShowAllDays ? "Toàn bộ tuần" : "25"} phút</p>
+        <h2>${heroTitle}</h2>
+        <p>Tuần ${week.number} · ${escapeHtml(dayLabel)} · ${isShowAllDays ? heroDurationText : `${heroDurationText} phút`}</p>
       </div>
       <div class="study-hero-actions">
         ${isParentPreview ? `
@@ -872,11 +896,12 @@ export function createRenderViews(dependencies = {}) {
         <span style="font-size:1.4rem">🏆</span>
         <span style="font-size:0.82rem; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; background:rgba(255,255,255,0.2); padding:3px 10px; border-radius:999px">BÀI KIỂM TRA ĐỊNH KỲ 30 PHÚT · TOÁN LỚP 4</span>
       </div>
-      <h3 style="margin:4px 0 8px; font-size:1.3rem; font-weight:800; color:#ffffff">${escapeHtml(day?.title || `Bài Kiểm Tra Tuần ${week.number}`)}</h3>
+      <h3 style="margin:4px 0 8px; font-size:1.3rem; font-weight:800; color:#ffffff">${escapeHtml(weekendExam?.title || `Bài Kiểm Tra Cuối Tuần 30 Phút · Tuần ${week.number}`)}</h3>
       <div style="display:flex; flex-wrap:wrap; gap:12px; font-size:0.88rem; color:#e0f2fe; margin-bottom:10px">
         <span>📚 <b>Bộ sách:</b> Kết Nối Tri Thức Với Cuộc Sống</span>
         <span>⏱️ <b>Thời gian làm bài:</b> 30 phút</span>
         <span>🎯 <b>Thang điểm:</b> 10 điểm</span>
+        ${!isSunday ? `<span>📅 <b>Lịch thi:</b> Thứ 7 hoặc <a href="#math?week=${week.id}&day=sunday${isParentPreview ? "&preview=parent" : ""}" style="color:#ffffff; font-weight:800; text-decoration:underline; background:rgba(255,255,255,0.15); padding:2px 8px; border-radius:4px">Chủ nhật ⏱️</a></span>` : ""}
       </div>
       <p style="margin:0; font-size:0.92rem; line-height:1.5; color:#f0f9ff">
         📝 <b>Hướng dẫn cho Bách:</b> Bách cần có <b>vở nháp</b> trước khi làm bài để nháp các phép tính và thử lại kết quả cẩn thận. Bách làm bài ra vở ô ly trong 30 phút, trình bày đặt tính thẳng hàng, sạch đẹp. Làm xong Bách bấm <b>Chụp ảnh bài làm trên vở</b> bên dưới để cùng AI chấm điểm nhé!
@@ -885,11 +910,14 @@ export function createRenderViews(dependencies = {}) {
 
     ${weekendExam ? renderExamPaperHtml(weekendExam) : ""}
 
-    <section class="writing-submission-panel math-test-submission-panel" style="margin:16px 0; border:2px solid #0284c7 !important; background:#f0f9ff !important; border-radius:12px; padding:18px">
+    ${!isParentPreview ? `
+    <section class="writing-submission-panel math-test-submission-panel" data-exam-week="${weekendExam ? weekendExam.week : week.number}" style="margin:16px 0; border:2px solid #0284c7 !important; background:#f0f9ff !important; border-radius:12px; padding:18px">
       <div class="eyebrow" style="color:#0369a1">NỘP BÀI KIỂM TRA · CHỤP ẢNH VỞ Ô LY &amp; GHI ÂM (IPAD PRO 11")</div>
       <h3 style="margin:4px 0 6px; font-size:1.15rem; font-weight:800; color:#0c4a6e">Chụp ảnh bài làm trên vở để AI chấm điểm theo Barem Toán 4</h3>
-      <p class="week-focus" style="margin-bottom:12px; color:#334155">
+      <p class="week-focus" style="margin-bottom:12px; color:#334155; line-height:1.5">
         Hệ thống tự động nén ảnh siêu nét trong 15ms (chuẩn JPEG tối ưu cho iPad Pro 11" &amp; chip Apple). Bách có thể bấm nút mic nói thêm 15–20 giây giải thích cách làm câu khó nhất!
+        <br>
+        💡 <b>Tương tác hai chiều:</b> Sau khi AI chấm bài, ngay cả khi AI tính sai hoặc đọc nhầm nét chữ của Bách, Bách luôn có thể bấm <b>Phản hồi / Bắt lỗi AI</b> để đối chiếu và bảo vệ cách làm của mình!
       </p>
 
       <div class="math-submission-controls" style="display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:12px">
@@ -921,6 +949,7 @@ export function createRenderViews(dependencies = {}) {
       </div>
     </section>
     ` : ""}
+    ` : ""}
     ${!isMath && !isParentPreview ? `<section class="writing-submission-panel study-writing-shortcut">
       <div class="eyebrow">VIẾT TRÊN GIẤY · RỒI ĐỌC VÀO ĐÂY</div>
       <p>Bách viết xong thì đọc bài vào ô dưới đây. Bàn phím và ảnh chụp là phương án dự phòng.</p>
@@ -930,7 +959,12 @@ export function createRenderViews(dependencies = {}) {
       <div id="writingPhotoPreview" class="photo-preview-bar" ${state?.writingImage ? "" : "hidden"}><span id="writingPhotoName" class="photo-name">${state?.writingImage ? escapeHtml(state.writingImage.name) : ""}</span><button type="button" id="removeWritingPhotoBtn" class="text-button remove-photo-btn">✕ Bỏ ảnh</button></div>
       <button class="small-button" id="sendWritingToAi" type="button">Chuyển bài sang AI chữa</button>
     </section>` : ""}
-    <main class="study-session">${renderDailyPlan(item, subject, true, week.id, week.phase.id, dayIndex, isParentPreview)}</main>
+
+    ${isSunday ? `
+      <!-- Chủ nhật: Chỉ có bài kiểm tra 30 phút, KHÔNG có bài học 40 phút Thứ 7 và KHÔNG nhúng games trilogy -->
+    ` : `
+      <main class="study-session">${renderDailyPlan(item, subject, true, week.id, week.phase.id, dayIndex, isParentPreview)}</main>
+    `}
   `;
     if (!isParentPreview && documentObj) {
       documentObj.querySelectorAll("[data-lesson-answer]").forEach(input => {
@@ -1002,10 +1036,10 @@ export function createRenderViews(dependencies = {}) {
       </div>` : ""}
       ${pageFrame(
         "Thứ 7 · Tổng kết tuần",
-        "PHIÊN DÀI · 50 PHÚT",
-        "Hết 50 phút thì dừng; phần chưa xong chuyển sang mục tiêu tuần sau, không học bù quá sức.",
+        "PHIÊN DÀI · 40 PHÚT",
+        "Hết 40 phút thì dừng; phần chưa xong chuyển sang mục tiêu tuần sau, không học bù quá sức.",
         `<div class="panel saturday-panel">
-          <div class="eyebrow">NHỊP THỨ 7 · ${curriculum?.meta?.saturdayMinutes?.[subject] || 50} PHÚT · ${name.toUpperCase()}</div>
+          <div class="eyebrow">NHỊP THỨ 7 · ${curriculum?.meta?.saturdayMinutes?.[subject] || 40} PHÚT · ${name.toUpperCase()}</div>
           ${saturdayRoutines.map(r => `<div class="routine-row"><b>${r[0]}</b><span class="time">${r[1]}</span><span>${r[2]}</span></div>`).join("")}
         </div>`
       )}
@@ -1107,8 +1141,8 @@ export function createRenderViews(dependencies = {}) {
       ${visibleDays.map(({ day, dayIndex }) => {
         const responseKey = `${weekId}-${subject}-${dayIndex + 1}`;
         const weekNumber = Number(weekId.replace(/\D/g, "")) || 1;
-        const dailyBarChallenges = subject === "math" ? getDailyGameChallenges({ gameType: "bar-model", weekNumber, dayIndex }) : [];
-        const dailyBugCases = subject === "math" ? getDailyGameChallenges({ gameType: "spot-the-bug", weekNumber, dayIndex }) : [];
+        const dailyBarChallenges = subject === "math" ? getDailyGameChallenges({ gameType: "bar-model", weekNumber, dayIndex, state }) : [];
+        const dailyBugCases = subject === "math" ? getDailyGameChallenges({ gameType: "spot-the-bug", weekNumber, dayIndex, state }) : [];
         const adaptiveNote = adaptiveNextStep(subject, weekId, dayIndex);
         const difficulty = lessonDifficulty(subject, phaseId, weekId, dayIndex);
         const timerKey = responseKey;
@@ -1136,7 +1170,7 @@ export function createRenderViews(dependencies = {}) {
         const parentDone = Boolean(lessonChecked.parent);
 
         return `<details class="daily-plan-day" ${focusedDayIndex !== null || dayIndex === 0 || isParentPreview ? "open" : ""}>
-        <summary class="daily-plan-day-head"><span class="daily-plan-day-label">${escapeHtml(day.day)}</span><b>${escapeHtml(day.title)}</b><span class="daily-plan-duration">${day.day === "Thứ 7" ? "50 phút" : "25 phút"}</span></summary>
+        <summary class="daily-plan-day-head"><span class="daily-plan-day-label">${escapeHtml(day.day)}</span><b>${escapeHtml(day.title)}</b><span class="daily-plan-duration">${day.day === "Thứ 7" ? "40 phút" : "25 phút"}</span></summary>
         <div class="daily-plan-sections">
           ${isParentPreview ? "" : `<div class="lesson-timer-panel" data-timer-container="${timerKey}" data-day-label="${escapeHtml(day.day)}">
             <div class="lesson-timer-head">
@@ -1236,6 +1270,7 @@ export function createRenderViews(dependencies = {}) {
                             <div class="stage-game-task-main">
                               <div class="stage-game-task-lead">
                                 <span class="stage-game-task-role stage-game-task-role--bar">${item.roleLabel}</span>
+                                ${item.isSolved ? `<span class="task-solved-badge" style="background:#ecfdf5; color:#059669; font-size:0.75rem; font-weight:700; padding:2px 8px; border-radius:999px; margin-left:6px; border:1px solid #a7f3d0">✓ Đã làm</span>` : ""}
                                 <span class="stage-game-task-title">${escapeHtml(item.challenge.title.replace(/^Thử thách \d+:\s*/, ""))}</span>
                               </div>
                               <div class="stage-game-task-level">
@@ -1249,6 +1284,14 @@ export function createRenderViews(dependencies = {}) {
                             </div>
                           </div>
                         `).join("")}
+                      </div>
+                      <div class="stage-game-alternatives" style="margin-top:12px; padding:10px 12px; background:#f8fafc; border-radius:8px; border:1px dashed #cbd5e1">
+                        <div style="font-size:0.83rem; font-weight:700; color:#475569; margin-bottom:6px">🔄 Bài đã làm rồi hoặc muốn đổi trò chơi khác? Bách có thể chọn ngay:</div>
+                        <div style="display:flex; flex-wrap:wrap; gap:6px">
+                          <a href="#games/balance-scale" class="text-button" style="background:#f5f3ff; color:#7c3aed; padding:4px 10px; border-radius:6px; font-weight:700; font-size:0.8rem; border:1px solid #ddd6fe">⚖️ Cân logic đại số →</a>
+                          <a href="#games/spatial-3d" class="text-button" style="background:#eef2ff; color:#4f46e5; padding:4px 10px; border-radius:6px; font-weight:700; font-size:0.8rem; border:1px solid #c7d2fe">🧊 Xoay khối 3D →</a>
+                          <a href="#games/tangram" class="text-button" style="background:#ecfdf5; color:#059669; padding:4px 10px; border-radius:6px; font-weight:700; font-size:0.8rem; border:1px solid #a7f3d0">🔺 Ghép hình Tangram →</a>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1289,6 +1332,7 @@ export function createRenderViews(dependencies = {}) {
                             <div class="stage-game-task-main">
                               <div class="stage-game-task-lead">
                                 <span class="stage-game-task-role stage-game-task-role--bug">${item.roleLabel.replace("Bài", "Vụ")}</span>
+                                ${item.isSolved ? `<span class="task-solved-badge" style="background:#fdf2f8; color:#be185d; font-size:0.75rem; font-weight:700; padding:2px 8px; border-radius:999px; margin-left:6px; border:1px solid #fbcfe8">✓ Đã phá án</span>` : ""}
                                 <span class="stage-game-task-title">${escapeHtml(item.challenge.title.replace(/^Vụ án \d+:\s*/, ""))}</span>
                               </div>
                               <div class="stage-game-task-level">
@@ -1302,6 +1346,16 @@ export function createRenderViews(dependencies = {}) {
                             </div>
                           </div>
                         `).join("")}
+                      </div>
+                      <div class="stage-game-alternatives" style="margin-top:12px; padding:10px 12px; background:#fdf2f8; border-radius:8px; border:1px dashed #fbcfe8">
+                        <div style="font-size:0.83rem; font-weight:700; color:#831843; margin-bottom:6px">🔄 Vụ án đã làm rồi hoặc muốn đổi trò khác? Bách có thể chọn ngay:</div>
+                        <div style="display:flex; flex-wrap:wrap; gap:6px">
+                          <a href="#games/make-24" class="text-button" style="background:#fffbeb; color:#b45309; padding:4px 10px; border-radius:6px; font-weight:700; font-size:0.8rem; border:1px solid #fde68a">🎯 Đấu trường 24 (Make 24) →</a>
+                          <a href="#games/rush-hour" class="text-button" style="background:#fef2f2; color:#b91c1c; padding:4px 10px; border-radius:6px; font-weight:700; font-size:0.8rem; border:1px solid #fecaca">🚗 Giải cứu xe đỏ Rush Hour →</a>
+                          <a href="#games/logic-grid" class="text-button" style="background:#fffbeb; color:#d97706; padding:4px 10px; border-radius:6px; font-weight:700; font-size:0.8rem; border:1px solid #fef3c7">🔍 Lưới logic Sherlock →</a>
+                          <a href="#games/task-master" class="text-button" style="background:#f0fdf4; color:#15803d; padding:4px 10px; border-radius:6px; font-weight:700; font-size:0.8rem; border:1px solid #bbf7d0">🏗️ Task Master Chỉ huy →</a>
+                          <a href="#games/chimp-memory" class="text-button" style="background:#f0f9ff; color:#0369a1; padding:4px 10px; border-radius:6px; font-weight:700; font-size:0.8rem; border:1px solid #bae6fd">🧠 Trí nhớ Chimp Memory →</a>
+                        </div>
                       </div>
                     </div>
                   </div>

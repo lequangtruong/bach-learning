@@ -141,6 +141,16 @@ export async function askAi({ mode = "student_tutor", userMessage = null, writin
               if (l.startsWith("event:")) eventType = l.slice(6).trim();
               else if (l.startsWith("data:")) dataStr = l.slice(5).trim();
             }
+            if (eventType === "error") {
+              let errText = "Lỗi đường truyền từ AI.";
+              try {
+                const parsedErr = JSON.parse(dataStr);
+                errText = parsedErr.error || parsedErr.message || errText;
+              } catch {
+                errText = dataStr || errText;
+              }
+              throw new Error(errText);
+            }
             if (eventType === "action" && dataStr) {
               try { streamedAction = JSON.parse(dataStr); } catch {}
             } else if (dataStr) {
@@ -157,6 +167,9 @@ export async function askAi({ mode = "student_tutor", userMessage = null, writin
       } finally {
         reader.releaseLock();
       }
+      if (!streamedText) {
+        throw new Error("AI chưa trả về nội dung hoàn chỉnh. Bách có thể bấm thử lại nhé.");
+      }
       data = { answer: streamedText, learningAction: streamedAction };
     } else {
       data = await response.json();
@@ -167,6 +180,7 @@ export async function askAi({ mode = "student_tutor", userMessage = null, writin
       throw new Error(errDetail);
     }
 
+    state.tutor.lastError = null;
     state.tutor.lastAnswer = data.answer;
     state.tutor.lastAction = data.learningAction
       ? { ...data.learningAction, sourceLessonKey: isValidLessonKey(sourceLessonKey, data.learningAction.subject) ? sourceLessonKey : null }
@@ -174,6 +188,10 @@ export async function askAi({ mode = "student_tutor", userMessage = null, writin
     if (answer) {
       answer.textContent = data.answer;
       answer.hidden = false;
+    }
+    const feedbackToolbar = typeof document !== "undefined" ? document.querySelector("#aiFeedbackToolbar") : null;
+    if (feedbackToolbar) {
+      feedbackToolbar.hidden = false;
     }
 
     if (mode === "parent_summary") {
@@ -209,8 +227,10 @@ export async function askAi({ mode = "student_tutor", userMessage = null, writin
         : "Gợi ý từ Trợ giảng AI (Local Dev)";
     }
   } catch (error) {
-    if (status) status.textContent = error.message;
+    state.tutor.lastError = error.message;
+    if (status) status.textContent = `Lỗi: ${error.message}`;
   } finally {
+    state.tutor.isLoading = false;
     clearInterval(state.tutor.thinkingTimer);
     state.tutor.thinkingTimer = null;
     if (askBtn) {
@@ -223,7 +243,7 @@ export async function askAi({ mode = "student_tutor", userMessage = null, writin
       thinkingIndicator.setAttribute("aria-hidden", "true");
     }
     // Rerender lại phần history nếu đang ở trang guide
-    if (typeof location !== "undefined" && location.hash === "#guide") {
+    if (typeof location !== "undefined" && (location.hash === "#guide" || location.hash.startsWith("#guide"))) {
       renderGuideHandler();
     }
   }

@@ -11,7 +11,7 @@
     "customer_ref": "BACH-EDU-001"
   },
   "scope": {
-    "in_scope": ["Chương trình 36 tuần", "Phiếu bài học đầy đủ 6 ngày/tuần cho cả Toán và Tiếng Việt", "Nhịp học 25 phút ngày thường và 50 phút Thứ 7", "Ô nhập đáp số Toán và đọc cách giải bằng giọng nói", "Viết Văn trên giấy rồi đọc trọn bài vào khung để Gemini chữa", "Cầu nối lớp 3–4", "Progress và lesson responses cục bộ IndexedDB schema v2", "Google Drive DB file Bach Learning DB.json", "Báo cáo tổng kết tuần cho phụ huynh qua Gemini", "Vercel serverless /api/tutor Gemini OAuth", "Nhập giọng nói Web Speech API", "Đọc câu trả lời bằng SpeechSynthesis tiếng Việt", "Responsive web Safari iPad"],
+    "in_scope": ["Chương trình 36 tuần", "Phiếu bài học đầy đủ 6 ngày/tuần cho cả Toán và Tiếng Việt", "Nhịp học 25 phút ngày thường và 40 phút Thứ 7", "Ô nhập đáp số Toán và đọc cách giải bằng giọng nói", "Viết Văn trên giấy rồi đọc trọn bài vào khung để Gemini chữa", "Cầu nối lớp 3–4", "Progress và lesson responses cục bộ IndexedDB schema v2", "Google Drive DB file Bach Learning DB.json", "Báo cáo tổng kết tuần cho phụ huynh qua Gemini", "Vercel serverless /api/tutor Gemini OAuth", "Nhập giọng nói Web Speech API", "Đọc câu trả lời bằng SpeechSynthesis tiếng Việt", "Responsive web Safari iPad"],
     "out_of_scope": ["Tài khoản người dùng riêng", "API key Gemini trong browser", "Tự động chấm điểm thay giáo viên/phụ huynh", "Chức năng báo lỗi để AGY sửa code trong app"],
     "invariants": ["Không lưu OAuth token vào repository", "Không gửi API key trong browser", "AI chỉ gợi mở, không làm hộ", "Nội dung phù hợp lứa tuổi lớp 4", "Không cache dữ liệu nhạy cảm trong Service Worker"]
   },

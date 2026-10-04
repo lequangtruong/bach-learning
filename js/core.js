@@ -77,8 +77,11 @@ export const state = {
     pendingSourceLessonKey: null,
     reviewPromptExpected: null
   },
-  // Ảnh bài viết tạm thời cho nộp bài Văn (không persist vào DB/Drive/history)
-  writingImage: null
+  // Ảnh bài viết tạm thời cho nộp bài Văn / Toán (không persist vào DB/Drive/history)
+  writingImage: null,
+  lastSubmittedExamPhoto: null,
+  lastSubmittedExamPhotoTimeout: null,
+  resubmitPhoto: null
 };
 
 export function escapeHtml(value = "") {

@@ -38,5 +38,5 @@ test("smoke: core bindings and database validation are initialized correctly", (
   const db = createEmptyDatabase();
   assert.equal(validateDatabasePayload(db), true);
   assert.equal(WEEKDAY_LESSON_SECONDS, 25 * 60);
-  assert.equal(SATURDAY_LESSON_SECONDS, 50 * 60);
+  assert.equal(SATURDAY_LESSON_SECONDS, 40 * 60);
 });

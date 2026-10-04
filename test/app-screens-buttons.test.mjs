@@ -270,7 +270,8 @@ test("app-screens: Global click handlers cover all interactive data-* attributes
     "#askAi", "#weeklySummaryBtn", "#applyAiAction", "#dismissAiAction",
     "#speakTutorBtn", "#stopTutorBtn", "#clearChatBtn",
     "#loginDriveBtn", "#syncDriveBtn", "#logoutDriveBtn",
-    "#removeWritingPhotoBtn", "#sendWritingToAi"
+    "#removeWritingPhotoBtn", "#sendWritingToAi",
+    "#removeMathPhotoBtn", "#sendMathTestToAi"
   ];
   for (const id of namedButtons) {
     assert.ok(
@@ -288,6 +289,7 @@ test("app-screens: Change event handlers cover photo input, voice select, subjec
 
   const changeTargets = [
     "writingPhotoInput",
+    "mathPhotoInput",
     "tutorVoiceSelect",
     "guideSubjectSelect",
     "guideWeekSelect",

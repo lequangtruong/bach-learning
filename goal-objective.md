@@ -8,7 +8,7 @@ Hoàn thành ứng dụng web/PWA cho iPad Safari giúp Bách (chuẩn bị vào
 - Bám chương trình lớp 3–4, bộ Kết nối tri thức với cuộc sống; 6 tuần đầu vừa chẩn đoán vừa bù nền lớp 3 có chọn lọc.
 - Mỗi tuần có Toán và Tiếng Việt:
   - Thứ 2–6: 25 phút/môn/ngày; hết giờ thì dừng, không ép học bù.
-  - Thứ 7: 50 phút/môn gồm mini-test, chữa lỗi, tổng kết và mục tiêu tuần sau.
+  - Thứ 7: 40 phút/môn gồm mini-test, chữa lỗi, tổng kết và mục tiêu tuần sau (chuẩn 1 tiết học).
 - Có lộ trình 36 tuần; mỗi tuần có 6 buổi học thật, không chỉ tiêu đề hoặc câu mẫu chung.
 
 ## 2. Chất lượng chương trình Toán

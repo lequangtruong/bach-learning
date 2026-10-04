@@ -46,16 +46,39 @@ const MIME_TYPES = {
   ".png": "image/png"
 };
 
+// Hàm kiểm tra Origin hợp lệ cho mạng nội bộ LAN / Localhost (chống tấn công CSRF / data exfiltration từ web ngoài)
+export function isAllowedOrigin(origin, hostHeader = "") {
+  if (!origin) return true;
+  try {
+    const parsed = new URL(origin);
+    const hostname = parsed.hostname;
+    // Localhost và Loopback
+    if (hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1") return true;
+    // Dải IP private LAN (192.168.0.0/16, 10.0.0.0/8, 172.16.0.0/12)
+    if (/^(192\.168\.|10\.|172\.(1[6-9]|2[0-9]|3[0-1])\.)/.test(hostname)) return true;
+    // Tên miền cục bộ mDNS (ví dụ: macbook.local)
+    if (hostname.endsWith(".local")) return true;
+    // Khớp với Host header hiện tại
+    if (hostHeader && (parsed.host === hostHeader || hostname === hostHeader.split(":")[0])) return true;
+  } catch {}
+  return false;
+}
+
 // Quản lý kết nối SSE Live-Reload tự động refresh khi mã nguồn thay đổi
 const liveReloadClients = new Set();
 
 function handleLiveReload(req, res) {
-  res.writeHead(200, {
+  const origin = req.headers?.origin;
+  const headers = {
     "Content-Type": "text/event-stream; charset=utf-8",
     "Cache-Control": "no-cache, no-transform",
-    "Connection": "keep-alive",
-    "Access-Control-Allow-Origin": "*"
-  });
+    "Connection": "keep-alive"
+  };
+  if (origin && isAllowedOrigin(origin, req.headers?.host)) {
+    headers["Access-Control-Allow-Origin"] = origin;
+    headers["Vary"] = "Origin";
+  }
+  res.writeHead(200, headers);
   res.write("retry: 2000\n\n");
   res.write("data: connected\n\n");
 
@@ -124,7 +147,11 @@ async function handleApi(req, res) {
   if (req.method === "GET" && urlPath === "/api/ping") {
     res.statusCode = 200;
     res.setHeader("Content-Type", "application/json; charset=utf-8");
-    res.setHeader("Access-Control-Allow-Origin", "*");
+    const origin = req.headers?.origin;
+    if (origin && isAllowedOrigin(origin, req.headers?.host)) {
+      res.setHeader("Access-Control-Allow-Origin", origin);
+      res.setHeader("Vary", "Origin");
+    }
     res.end(JSON.stringify({ status: "ok", mode: "local-mac", time: new Date().toISOString() }));
     return true;
   }
@@ -137,9 +164,18 @@ async function handleApi(req, res) {
     return true;
   }
   if (urlPath === "/api/db") {
+    const origin = req.headers?.origin;
+    if (origin) {
+      if (!isAllowedOrigin(origin, req.headers?.host)) {
+        res.writeHead(403, { "Content-Type": "application/json; charset=utf-8" });
+        res.end(JSON.stringify({ error: "403 Forbidden: Origin không được phép truy cập cơ sở dữ liệu LAN." }));
+        return true;
+      }
+      res.setHeader("Access-Control-Allow-Origin", origin);
+      res.setHeader("Vary", "Origin");
+    }
     const dbPath = join(root, "data", "db-lan.json");
     res.setHeader("Content-Type", "application/json; charset=utf-8");
-    res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 

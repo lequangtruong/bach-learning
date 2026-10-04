@@ -11,7 +11,7 @@
 ## I. ĐẶT HÀNG & BỐI CẢNH SỬ DỤNG (BẮT BUỘC AI CODE PHẢI NẮM RÕ)
 
 1. **Bản chất phiên học (Deliberate Micro-learning):**
-   - Ban ngày Bách đã học chính khóa ở trường. Buổi tối tại nhà là phiên **rèn luyện có chủ đích 25 phút/môn/ngày (Thứ 2–6)** và **50 phút/môn (Thứ 7)**.
+   - Ban ngày Bách đã học chính khóa ở trường. Buổi tối tại nhà là phiên **rèn luyện có chủ đích 25 phút/môn/ngày (Thứ 2–6)** và **40 phút/môn (Thứ 7)** (chuẩn 1 tiết học).
    - Mục tiêu: Kích hoạt tư duy bậc cao, bứt phá năng lực cho học sinh giỏi vì bài tập đại trà ở lớp không đủ độ sâu. Tuyệt đối không dạy lại từ số 0 theo kiểu mất gốc.
 2. **Nguyên tắc môn Toán (`MATH-4`):**
    - SGK Kết nối tri thức là trục tiến độ; phương pháp Singapore (CPA, Bar Model, Heuristics, Polya) là công cụ tư duy.
@@ -22,7 +22,7 @@
    - **Xóa bỏ văn mẫu sáo rỗng nhưng KHÔNG tạo ra "văn mẫu mới" (Anti-Meta-Template Trap):** Tránh áp đặt các cụm từ "đắt giá" của người lớn (như "vết xước hộp bút", "tiếng dép của bố") thành khuôn mẫu bắt chước mới. Thay vào đó, tập trung vào **Bể quan sát cá nhân (Personal Observation Pool)**: khơi gợi chi tiết từ chính trải nghiệm thật của Bách qua 3 kênh giác quan (Thị giác, Thính giác, Xúc giác).
    - **Kỹ thuật Đọc to (Oral Rehearsal)**: Kỹ thuật tư duy ngôn ngữ bắt buộc. Quy trình: Viết nháp trên giấy $\rightarrow$ Đọc to vào máy (STT) $\rightarrow$ Tự rà soát sửa lỗi $\rightarrow$ Lưu bản hoàn thiện. Bàn phím/chụp ảnh là phương án dự phòng.
 4. **Quy tắc dừng an toàn (Stop Rule):**
-   - Hết đúng thời gian (25 phút ngày thường, 50 phút Thứ 7) thì dừng ngay, không ép học bù.
+   - Hết đúng thời gian (25 phút ngày thường, 40 phút Thứ 7) thì dừng ngay, không ép học bù.
 5. **Chính sách nghỉ học linh hoạt (No Streak Pressure):**
    - Việc nghỉ là hoàn toàn bình thường khi mệt hoặc bận việc gia đình, **không tính vào tiến độ và không bị phạt**.
    - Tuyệt đối không tạo áp lực chuỗi ngày liên tục (No streak shaming/guilt), không gán nhãn bỏ lỡ hay thất bại.

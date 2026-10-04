@@ -604,6 +604,28 @@ export function generateSpeedMathProblem(streak = 0, options = {}) {
   return { ...item, level: 4, type: "master_curated", group: "C" };
 }
 
+/**
+ * Tính điểm thưởng tốc độ cho từng câu (Speed-based Scoring)
+ * Dành cho Bách khi giải nhẩm nhanh và độc lập:
+ * - Giải siêu tốc <= 1.5s: +50 điểm (Phản xạ đỉnh cao ⚡⚡)
+ * - Giải thần tốc <= 2.5s: +30 điểm (Thần tốc ⚡)
+ * - Giải nhanh <= 3.5s: +20 điểm (Nhanh nhạy 🚀)
+ * - Giải chuẩn xác <= 5.0s: +10 điểm (Ổn định 🎯)
+ * - Trên 5.0s hoặc có dùng gợi ý trợ giúp: 0 điểm thưởng tốc độ
+ *
+ * @param {number} responseTime Thời gian trả lời tính bằng giây
+ * @param {boolean} usedHint Có xem gợi ý mẹo không
+ * @returns {number} Điểm thưởng tốc độ (0, 10, 20, 30, hoặc 50)
+ */
+export function calculateSpeedBonus(responseTime, usedHint = false) {
+  if (usedHint || typeof responseTime !== "number" || responseTime <= 0) return 0;
+  if (responseTime <= 1.5) return 50;
+  if (responseTime <= 2.5) return 30;
+  if (responseTime <= 3.5) return 20;
+  if (responseTime <= 5.0) return 10;
+  return 0;
+}
+
 export class SpeedMathSession {
   constructor({ onTick, onEnd, onScoreChange, initialStreak = 0 } = {}) {
     this.duration = 90;
@@ -611,6 +633,7 @@ export class SpeedMathSession {
     this.timer = null;
     this.isRunning = false;
     this.score = 0;
+    this.totalSpeedBonus = 0;
     this.initialStreak = Math.max(0, Number(initialStreak) || 0);
     this.streak = this.initialStreak;
     this.bestStreak = this.streak;
@@ -686,6 +709,7 @@ export class SpeedMathSession {
       bestStreak: this.bestStreak,
       avgResponseTime,
       fastSolveCount: this.fastSolveCount,
+      totalSpeedBonus: this.totalSpeedBonus || 0,
       velocityTier,
       difficultyBoost
     });
@@ -696,6 +720,7 @@ export class SpeedMathSession {
     this.timer = null;
     this.remaining = this.duration;
     this.score = 0;
+    this.totalSpeedBonus = 0;
     this.streak = 0;
     this.bestStreak = 0;
     this.correctCount = 0;
@@ -751,6 +776,10 @@ export class SpeedMathSession {
     const usedHint = Boolean(this.usedHintInCurrentProblem);
     const wasFast = isCorrect && responseTime <= 2.5 && !usedHint;
 
+    let points = 0;
+    let basePoints = 0;
+    let speedBonus = 0;
+
     if (isCorrect) {
       this.responseTimes.push(responseTime);
       if (wasFast) this.fastSolveCount += 1;
@@ -769,12 +798,18 @@ export class SpeedMathSession {
       else if (this.streak >= 5) multiplier = 1.5;
       else if (this.streak >= 3) multiplier = 1.2;
 
-      const points = usedHint ? 30 : Math.round(100 * multiplier);
+      // Tính điểm cơ bản và điểm thưởng tốc độ (Speed-based Scoring)
+      basePoints = usedHint ? 30 : Math.round(100 * multiplier);
+      speedBonus = calculateSpeedBonus(responseTime, usedHint);
+      points = basePoints + speedBonus;
       this.score += points;
+      this.totalSpeedBonus = (this.totalSpeedBonus || 0) + speedBonus;
 
       this.onScoreChange({
         isCorrect: true,
         points,
+        basePoints,
+        speedBonus,
         score: this.score,
         streak: this.streak,
         problem: this.currentProblem,
@@ -789,6 +824,8 @@ export class SpeedMathSession {
       this.onScoreChange({
         isCorrect: false,
         points: 0,
+        basePoints: 0,
+        speedBonus: 0,
         score: this.score,
         streak: this.streak,
         problem: this.currentProblem,
@@ -799,7 +836,7 @@ export class SpeedMathSession {
     }
 
     const next = this.nextProblem();
-    return { isCorrect, nextProblem: next, responseTime, wasFast };
+    return { isCorrect, nextProblem: next, responseTime, wasFast, points, speedBonus };
   }
 }
 

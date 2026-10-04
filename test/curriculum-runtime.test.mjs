@@ -147,17 +147,17 @@ test("mental math continuation provides a distinct 8–10 minute bank for every 
 });
 
 
-test("weekly rhythm is 25 minutes on weekdays and 50 minutes on Saturday", () => {
+test("weekly rhythm is 25 minutes on weekdays and 40 minutes on Saturday", () => {
   const sandbox = { window: {} };
   vm.runInNewContext(curriculumSource, sandbox);
   const curriculum = sandbox.window.BACH_CURRICULUM;
   assert.equal(curriculum.meta.dailyMinutes.math, 25);
   assert.equal(curriculum.meta.dailyMinutes.vietnamese, 25);
-  assert.equal(curriculum.meta.saturdayMinutes.math, 50);
-  assert.equal(curriculum.meta.saturdayMinutes.vietnamese, 50);
+  assert.equal(curriculum.meta.saturdayMinutes.math, 40);
+  assert.equal(curriculum.meta.saturdayMinutes.vietnamese, 40);
   for (const subject of ["math", "vietnamese"]) {
     assert.equal(curriculum.routines[subject].reduce((sum, row) => sum + Number.parseInt(row[1], 10), 0), 25);
-    assert.equal(curriculum.saturdayRoutines[subject].reduce((sum, row) => sum + Number.parseInt(row[1], 10), 0), 50);
+    assert.equal(curriculum.saturdayRoutines[subject].reduce((sum, row) => sum + Number.parseInt(row[1], 10), 0), 40);
   }
 });
 
@@ -623,7 +623,7 @@ test("Vietnamese bridge weeks 1–6 have 100% concrete, self-contained stimuli w
   }
 });
 
-test("Saturday Mini-tests across weeks 7–36 are fully authored 50-minute tests with structured questions", () => {
+test("Saturday Mini-tests across weeks 7–36 are fully authored 40-minute tests with structured questions", () => {
   const sandbox = { window: {} };
   vm.runInNewContext(curriculumSource, sandbox);
   const mathPhases = sandbox.window.BACH_CURRICULUM.phases.slice(1);
@@ -632,14 +632,14 @@ test("Saturday Mini-tests across weeks 7–36 are fully authored 50-minute tests
 
   for (let i = 0; i < allSaturdayMath.length; i++) {
     const sat = allSaturdayMath[i];
-    assert.match(sat.title, /Mini-test 50 phút/);
+    assert.match(sat.title, /Mini-test 40 phút/);
     if (i === 0) {
       assert.match(sat.basic, /1\. Viết tiếp ba số hạng vào dãy số sau/);
       assert.match(sat.basic, /2\. Tìm số hạng thứ 30/);
       assert.match(sat.applied, /1\. Một khán đài có 16 hàng ghế/);
       assert.match(sat.challenge, /1\. Cho dãy số/);
     } else {
-      assert.match(sat.basic, /Đề thi Mini-test 50 phút/);
+      assert.match(sat.basic, /Đề thi Mini-test 40 phút/);
       assert.match(sat.basic, /Câu 1/);
       assert.match(sat.basic, /Câu 2/);
       assert.match(sat.basic, /Olympic thử thách/);
@@ -651,8 +651,8 @@ test("Saturday Mini-tests across weeks 7–36 are fully authored 50-minute tests
   assert.equal(allSaturdayVietnamese.length, 30, "Must have 30 authored Saturday Vietnamese tests in weeks 7-36");
   for (let i = 0; i < allSaturdayVietnamese.length; i++) {
     const satV = allSaturdayVietnamese[i];
-    assert.match(satV.title, /Mini-test 50 phút/);
-    assert.match(satV.basic, /Đề kiểm tra Tiếng Việt 50 phút/);
+    assert.match(satV.title, /Mini-test 40 phút/);
+    assert.match(satV.basic, /Đề kiểm tra Tiếng Việt 40 phút/);
     assert.match(satV.basic, /Phần 1 - Đọc hiểu/);
     assert.match(satV.applied, /Tự chấm điểm/);
   }

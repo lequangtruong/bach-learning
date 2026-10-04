@@ -12,7 +12,7 @@ Review the current working tree at `/Volumes/DATA/Github/ToolbyMyself/Bach-learn
 
 Check, with concrete evidence:
 
-1. Each Math/Vietnamese daily lesson has an independent 25-minute timer, except Saturday at 50 minutes.
+1. Each Math/Vietnamese daily lesson has an independent 25-minute timer, except Saturday at 40 minutes.
 2. It does not auto-start; start, pause/resume, reset and time-up behaviour are correct.
 3. A running timer remains correct after reload, background/sleep and does not create duplicate intervals or write to Drive every second.
 4. Existing saved databases without `lessonTimers` remain valid; malformed timer records reject safely.

@@ -20,7 +20,7 @@ let digest = `# BẢN TỔNG HỢP NỘI DUNG 432 BÀI HỌC BÁCH LEARNING LAB 
 - Đối tượng: Bách (học sinh 9 tuổi, học lực khá-giỏi, cần rèn tính nhẩm và lập luận logic, tư duy viết mạch lạc)
 - Bộ sách chuẩn: Kết nối tri thức với cuộc sống (Lớp 4)
 - Quy mô: 36 tuần x 2 môn (Toán & Tiếng Việt) x 6 ngày = 432 bài học hằng ngày + 72 khung chương trình tuần
-- Nhịp học: 25 phút/ngày thường (T2-T6), 50 phút/Thứ Bảy (Mini-test + chữa bài)
+- Nhịp học: 25 phút/ngày thường (T2-T6), 40 phút/Thứ Bảy (Mini-test + chữa bài)
 
 ---
 ## CÁC PHA ĐÀO TẠO (6 PHASES):

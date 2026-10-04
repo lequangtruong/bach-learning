@@ -6,7 +6,7 @@ window.BACH_CURRICULUM = {
     learnerProfile: "Bách là học sinh giỏi đang hướng tới mức vượt trội; không hạ bài xuống mức remedial. Điểm cần rèn riêng là tốc độ tính nhẩm còn chậm, nên bài nền ngắn nhưng bài chính phải ở mức khá–giỏi và có tầng Olympic vừa sức.",
     totalWeeks: 36,
     dailyMinutes: { math: 25, vietnamese: 25 },
-    saturdayMinutes: { math: 50, vietnamese: 50 },
+    saturdayMinutes: { math: 40, vietnamese: 40 },
     bridge: {
       title: "Cầu nối lớp 3 → lớp 4",
       note: "6 tuần đầu không chạy thẳng vào bài khó. Mỗi tuần có 2 buổi kiểm tra nền lớp 3, 3 buổi học trước lớp 4; điểm yếu được quay lại ở Thứ 6.",
@@ -19,7 +19,7 @@ window.BACH_CURRICULUM = {
       ["Thứ 4", "Bài vận dụng"],
       ["Thứ 5", "Bài thử thách / Olympic"],
       ["Thứ 6", "Chữa lỗi + viết lại"],
-      ["Thứ 7", "50 phút/môn · mini-test, chữa lỗi và tổng kết tuần"],
+      ["Thứ 7", "40 phút/môn · mini-test, chữa lỗi và tổng kết tuần"],
       ["Chủ nhật", "Nghỉ, đọc tự chọn, kể lại bằng lời"]
     ]
   },
@@ -577,14 +577,14 @@ window.BACH_CURRICULUM = {
   saturdayRoutines: {
     math: [
       ["Mini-test", "20 phút", "Câu chắc → câu vận dụng → một câu suy luận; không dùng máy tính bỏ túi."],
-      ["Chữa lỗi", "15 phút", "Phân loại lỗi: kiến thức, chiến lược hay cẩu thả; làm lại một câu tiêu biểu."],
-      ["Tổng kết", "10 phút", "Nói lại chiến lược đã dùng, tốc độ tính nhẩm và điểm cần ôn; phụ huynh chỉ ghi nhận."],
-      ["Mục tiêu mới", "5 phút", "Chọn một kỹ năng giữ vững và một thử thách cho tuần sau."]
+      ["Chữa lỗi", "10 phút", "Phân loại lỗi: kiến thức, chiến lược hay cẩu thả; làm lại một câu tiêu biểu."],
+      ["Tổng kết", "6 phút", "Nói lại chiến lược đã dùng, tốc độ tính nhẩm và điểm cần ôn; phụ huynh chỉ ghi nhận."],
+      ["Mục tiêu mới", "4 phút", "Chọn một kỹ năng giữ vững và một thử thách cho tuần sau."]
     ],
     vietnamese: [
-      ["Đọc–viết test", "20 phút", "Đọc hiểu hoặc viết theo đề mới cùng kỹ năng; không học thuộc văn mẫu."],
-      ["Chữa bài", "15 phút", "Sửa ý, câu, từ, chính tả theo thứ tự; chọn tối đa 3 lỗi quan trọng."],
-      ["Tổng kết", "10 phút", "Bách đọc bản 1 và bản 2, nói tiến bộ và điều còn vướng; phụ huynh ghi nhận."],
+      ["Đọc–viết test", "18 phút", "Đọc hiểu hoặc viết theo đề mới cùng kỹ năng; không học thuộc văn mẫu."],
+      ["Chữa bài", "10 phút", "Sửa ý, câu, từ, chính tả theo thứ tự; chọn tối đa 2 lỗi quan trọng."],
+      ["Tổng kết", "7 phút", "Bách đọc bản 1 và bản 2, nói tiến bộ và điều còn vướng; phụ huynh ghi nhận."],
       ["Mục tiêu mới", "5 phút", "Chọn một thói quen viết và một kỹ thuật diễn đạt để thử tuần sau."]
     ]
   },
@@ -1146,14 +1146,14 @@ window.BACH_CURRICULUM.bridgeDailyLessons = {
         {
           day: "Thứ 7",
           title: "Mini-check tuần 1: Câu, đoạn và chi tiết",
-          objective: "Đánh giá khả năng viết câu trọn ý, dùng từ nối và đọc hiểu qua bài kiểm tra mini 50 phút cuối tuần.",
+          objective: "Đánh giá khả năng viết câu trọn ý, dùng từ nối và đọc hiểu qua bài kiểm tra mini 40 phút cuối tuần.",
           example: "Hoàn thành 3 phần: (1) Đọc hiểu có dẫn chứng; (2) Sửa câu và liên kết; (3) Viết đoạn văn ngắn 5 câu.",
-          basic: "Làm 3 bài tập: (1) Thêm bộ phận vị ngữ để hoàn thành câu: 'Trên cành cây cao, những chú chim non...'; (2) Tìm từ khóa của đoạn văn tả cơn mưa rào; (3) Sắp xếp 4 câu thành đoạn văn hoàn chỉnh theo trình tự thời gian.",
-          applied: "Phần 2 - Luyện câu và Viết đoạn (25 phút):\n(1) Sửa câu cụt sau thành câu trọn vẹn: 'Trên cành cây cao rợp bóng mát.'\n(2) Dùng từ nối 'tuy... nhưng' để ghép 2 câu sau: 'Trời mùa đông rất lạnh. Bách vẫn dậy sớm tập thể dục.'\n(3) Viết một đoạn văn ngắn (5–7 câu) tả góc học tập của con, có câu mở đoạn nêu cảm xúc và ít nhất 2 chi tiết quan sát thật.",
-          reasoning: "Phần 3 - Tự soát lỗi (10 phút): Đọc to bài văn con vừa viết. Tìm và tự sửa 2 lỗi: 1 lỗi dùng từ chưa chính xác và 1 lỗi dấu câu/chính tả.",
+          basic: "Phần 1 - Đọc hiểu & Luyện từ và câu (12 phút):\n(1) Thêm bộ phận vị ngữ để hoàn chỉnh câu: 'Trên cành cây cao, những chú chim non...'\n(2) Đọc đoạn văn sau và tìm 3 từ khóa gợi tả cơn mưa rào: 'Mây đen ùn ùn kéo đến tối sầm cả góc trời. Gió nổi lên cuồn cuộn giật mạnh từng cơn. Rồi những hạt mưa rào rào trút xuống xối xả làm mát rượi cả sân trường.'\n(3) Sắp xếp 4 câu sau theo trình tự thời gian hợp lý (từ a đến d):\na) Mưa ngớt dần rồi tạnh hẳn.\nb) Bầu trời bỗng tối sầm vì mây đen kéo đến.\nc) Cầu vồng bảy sắc lung linh hiện ra sau làn mưa.\nd) Từng hạt mưa rào rào gõ lộp độp trên mái tôn.",
+          applied: "Phần 2 - Luyện câu và Viết đoạn (20 phút):\n(1) Sửa câu cụt sau thành câu trọn vẹn: 'Trên cành cây cao rợp bóng mát.'\n(2) Dùng từ nối 'tuy... nhưng' để ghép 2 câu sau: 'Trời mùa đông rất lạnh. Bách vẫn dậy sớm tập thể dục.'\n(3) Viết một đoạn văn ngắn (5–7 câu) tả góc học tập của con, có câu mở đoạn nêu cảm xúc và ít nhất 2 chi tiết quan sát thật.",
+          reasoning: "Phần 3 - Tự soát lỗi (8 phút): Đọc to bài văn con vừa viết. Tìm và tự sửa 2 lỗi: 1 lỗi dùng từ chưa chính xác và 1 lỗi dấu câu/chính tả.",
           selfCheck: "Chấm điểm theo 3 tiêu chí: (1) Đọc hiểu đúng ý (4 điểm); (2) Câu đúng ngữ pháp, nối mạch lạc (3 điểm); (3) Đoạn văn có chi tiết thật, giàu cảm xúc (3 điểm).",
           challenge: "Viết thêm 1 câu kết đoạn thật đắt giá cho đoạn văn tả góc học tập (thể hiện lời hứa hoặc ước mơ của con).",
-          hint: "Mẹo làm bài thi: Đọc kỹ đề trước khi viết; dành 5 phút cuối để đọc to bài làm và rà soát lỗi chính tả."
+          hint: "Mẹo làm bài thi: Đọc kỹ đề trước khi viết; dành 4 phút cuối để đọc to bài làm và rà soát lỗi chính tả."
         }
       ]
     },
@@ -1224,14 +1224,14 @@ window.BACH_CURRICULUM.bridgeDailyLessons = {
         {
           day: "Thứ 7",
           title: "Mini-check tuần 2: Đoạn văn hoàn chỉnh 5–7 câu",
-          objective: "Kiểm tra kỹ năng lập dàn ý, chọn chi tiết quan sát thật và viết đoạn văn trọn vẹn 5–7 câu trong 50 phút.",
+          objective: "Kiểm tra kỹ năng lập dàn ý, chọn chi tiết quan sát thật và viết đoạn văn trọn vẹn 5–7 câu trong 40 phút.",
           example: "Hoàn thiện một đoạn văn hoàn chỉnh có mở đoạn hấp dẫn, thân đoạn giàu hình ảnh và kết đoạn đọng lại dư vị.",
-          basic: "Phần 1 - Đọc và Nhận xét (15 phút): Đọc đoạn văn sau:\n“Mỗi buổi trưa hè, cây phượng vĩ nơi góc sân lại rực lên như một đốm lửa khổng lồ. Từng chùm hoa đỏ thắm chen chúc nhau trên nền lá xanh biếc xòe rộng. Dưới bóng râm mát rượi của cây, chúng em quây quần bên nhau bắn bi, nhảy dây rộn rã tiếng cười.”\n(1) Tìm hình ảnh so sánh trong đoạn văn.\n(2) Tác giả đã dùng những giác quan nào để quan sát cây phượng?\n(3) Nêu cảm xúc của học trò đối với cây phượng.",
+          basic: "Phần 1 - Đọc và Nhận xét (10 phút): Đọc đoạn văn sau:\n“Mỗi buổi trưa hè, cây phượng vĩ nơi góc sân lại rực lên như một đốm lửa khổng lồ. Từng chùm hoa đỏ thắm chen chúc nhau trên nền lá xanh biếc xòe rộng. Dưới bóng râm mát rượi của cây, chúng em quây quần bên nhau bắn bi, nhảy dây rộn rã tiếng cười.”\n(1) Tìm hình ảnh so sánh trong đoạn văn.\n(2) Tác giả đã dùng những giác quan nào để quan sát cây phượng?\n(3) Nêu cảm xúc của học trò đối với cây phượng.",
           applied: "Viết một đoạn văn từ 5 đến 7 câu tả một góc quen thuộc trong ngôi nhà của em, có chi tiết hình ảnh cụ thể và câu kết tự nhiên.",
-          reasoning: "Phần 3 - Tự rà soát và ghi chú (10 phút): Con đã dùng chi tiết thật nào của riêng con mà bài văn mẫu không thể có?",
+          reasoning: "Phần 3 - Tự rà soát và ghi chú (8 phút): Con đã dùng chi tiết thật nào của riêng con mà bài văn mẫu không thể có?",
           selfCheck: "Đánh giá: (1) Đủ số câu quy định; (2) Không lặp từ; (3) Đúng chính tả và dấu câu; (4) Giọng văn hồn nhiên, chân thật.",
           challenge: "Viết thêm 1 câu miêu tả đồ vật đó vào một thời khắc đặc biệt (Ví dụ buổi tối khi đèn bàn bật sáng hoặc khi kết thúc một tuần học).",
-          hint: "Mẹo nhỏ: Dành 5 phút đầu lập ý ra giấy nháp; viết liền mạch trong 15 phút; 5 phút cuối đọc to để chỉnh sửa."
+          hint: "Mẹo nhỏ: Dành 4 phút đầu lập ý ra giấy nháp; viết liền mạch trong 15 phút; 4 phút cuối đọc to để chỉnh sửa."
         }
       ]
     },
@@ -1302,11 +1302,11 @@ window.BACH_CURRICULUM.bridgeDailyLessons = {
         {
           day: "Thứ 7",
           title: "Mini-check tuần 3: Đọc hiểu và dẫn chứng",
-          objective: "Đo lường năng lực đọc hiểu sâu, tìm bằng chứng xác thực và viết đoạn cảm nghĩ ngắn trong 50 phút.",
+          objective: "Đo lường năng lực đọc hiểu sâu, tìm bằng chứng xác thực và viết đoạn cảm nghĩ ngắn trong 40 phút.",
           example: "Làm bài kiểm tra mini gồm phần đọc hiểu văn bản 200 chữ và phần viết đoạn văn có dẫn chứng.",
           basic: "Đọc văn bản ngắn và trả lời 4 câu hỏi đọc hiểu: (1) Nhận biết nhân vật và sự việc; (2) Tìm 2 chi tiết then chốt; (3) Giải thích nguyên nhân hành động; (4) Nêu bài học rút ra.",
-          applied: "Phần 2 - Viết đoạn văn có dẫn chứng (20 phút): Viết một đoạn văn (6–8 câu) nêu cảm nhận của con về tình cảm yêu thương của người bà trong bài đọc trên. Trong đoạn văn phải trích dẫn ít nhất 1 chi tiết cụ thể làm bằng chứng.",
-          reasoning: "Phần 3 - Tự đánh giá (10 phút): Đọc lại bài làm. Gạch chân câu văn trích dẫn bằng chứng của con.",
+          applied: "Phần 2 - Viết đoạn văn có dẫn chứng (16 phút): Viết một đoạn văn (6–8 câu) nêu cảm nhận của con về tình cảm yêu thương của người bà trong bài đọc trên. Trong đoạn văn phải trích dẫn ít nhất 1 chi tiết cụ thể làm bằng chứng.",
+          reasoning: "Phần 3 - Tự đánh giá (8 phút): Đọc lại bài làm. Gạch chân câu văn trích dẫn bằng chứng của con.",
           selfCheck: "Chấm điểm: (1) Trả lời đúng và trọn câu 4 câu đọc hiểu (5 điểm); (2) Viết đoạn văn cảm xúc, có dẫn chứng xác thực (5 điểm).",
           challenge: "Viết 1 câu kết đoạn bày tỏ mong muốn của con được đền đáp công ơn chăm sóc của ông bà, cha mẹ.",
           hint: "Mẹo làm bài: Đọc kỹ văn bản 2 lần; trả lời trọn ý; dùng dấu ngoặc kép khi trích dẫn lời hoặc hành động trong bài."
@@ -1380,11 +1380,11 @@ window.BACH_CURRICULUM.bridgeDailyLessons = {
         {
           day: "Thứ 7",
           title: "Mini-check tuần 4: Bài văn kể việc đáng nhớ",
-          objective: "Kiểm tra kỹ năng kể lại một sự việc có mở đầu, diễn biến kịch tính, kết thúc ý nghĩa và lời thoại sinh động trong 50 phút.",
+          objective: "Kiểm tra kỹ năng kể lại một sự việc có mở đầu, diễn biến kịch tính, kết thúc ý nghĩa và lời thoại sinh động trong 40 phút.",
           example: "Viết một bài văn ngắn 3 phần (khoảng 8–10 câu) kể lại một kỉ niệm chân thật của chính con.",
           basic: "Viết bài văn ngắn (khoảng 8–10 câu) kể lại một việc tốt em đã làm, có chi tiết hành động và lời thoại tự nhiên.",
-          applied: "Phần 2 - Viết bài văn kể chuyện (25 phút): Đề bài: Hãy kể lại một kỉ niệm đáng nhớ của con với một người bạn hoặc người thân trong gia đình.\n- Yêu cầu: Bài có đủ 3 phần (Mở bài, Thân bài, Kết bài); có ít nhất 1 câu đối thoại hoặc suy nghĩ; có chi tiết thể hiện cảm xúc qua hành động.",
-          reasoning: "Phần 3 - Tự nhận xét (10 phút): Điều gì trong câu chuyện làm con nhớ nhất? Con rút ra được bài học gì sau sự việc đó?",
+          applied: "Phần 2 - Viết bài văn kể chuyện (20 phút): Đề bài: Hãy kể lại một kỉ niệm đáng nhớ của con với một người bạn hoặc người thân trong gia đình.\n- Yêu cầu: Bài có đủ 3 phần (Mở bài, Thân bài, Kết bài); có ít nhất 1 câu đối thoại hoặc suy nghĩ; có chi tiết thể hiện cảm xúc qua hành động.",
+          reasoning: "Phần 3 - Tự nhận xét (8 phút): Điều gì trong câu chuyện làm con nhớ nhất? Con rút ra được bài học gì sau sự việc đó?",
           selfCheck: "Chấm điểm: (1) Bố cục 3 phần rõ ràng (3 điểm); (2) Diễn biến liền mạch, có lời thoại (4 điểm); (3) Cảm xúc chân thành, đúng lứa tuổi (3 điểm).",
           challenge: "Đặt một nhan đề thật gợi cảm và ý nghĩa cho bài viết của con (Ví dụ: 'Món quà từ trái tim', 'Buổi trưa đáng nhớ').",
           hint: "Mẹo thi: Hãy chọn việc có thật mà con nhớ rõ nhất; sự chân thật luôn chạm tới trái tim người đọc hơn là câu chuyện bịa đặt."
@@ -1458,11 +1458,11 @@ window.BACH_CURRICULUM.bridgeDailyLessons = {
         {
           day: "Thứ 7",
           title: "Mini-check tuần 5: Dùng từ, đặt câu và chính tả",
-          objective: "Kiểm tra tổng hợp kiến thức về từ vựng, kiểu câu, chính tả và kỹ năng biên tập câu văn trong 50 phút.",
+          objective: "Kiểm tra tổng hợp kiến thức về từ vựng, kiểu câu, chính tả và kỹ năng biên tập câu văn trong 40 phút.",
           example: "Hoàn thành bài tập trắc nghiệm và tự luận gồm 6 câu hỏi đo độ nhạy bén ngôn từ.",
-          basic: "Phần 1 - Trắc nghiệm & Sửa lỗi (20 phút):\n(1) Chọn từ thích hợp (lung linh / long lanh / lấp lánh): 'Giọt nước mắt ............ trên khóe mi bạn nhỏ.'\n(2) Tìm 3 lỗi chính tả trong câu: 'Bầu trới trong xunh, những chú chim sẻ ríu dít trên cành.'\n(3) Chuyển câu sau thành câu hỏi: 'Bách đã giải xong bài toán thử thách sáng tạo.'\n(4) Đặt dấu câu thích hợp vào đoạn: 'Trời ơi ( ) Bông hoa hồng nhung nở đẹp làm sao ( )'",
-          applied: "Phần 2 - Tự luận & Viết đoạn (20 phút):\nViết một đoạn văn (5–7 câu) tả cảnh một buổi sáng sớm trên quê hương hoặc khu phố nơi con ở.\n- Yêu cầu: Dùng ít nhất 2 từ láy gợi tả âm thanh hoặc màu sắc; có 1 câu hỏi tu từ; không mắc lỗi chính tả ch/tr, s/x.",
-          reasoning: "Phần 3 - Tự soát và giải thích (10 phút): Chọn ra 1 từ đắt giá nhất trong bài văn của con và giải thích vì sao con thích từ đó.",
+          basic: "Phần 1 - Trắc nghiệm & Sửa lỗi (14 phút):\n(1) Chọn từ thích hợp (lung linh / long lanh / lấp lánh): 'Giọt nước mắt ............ trên khóe mi bạn nhỏ.'\n(2) Tìm 3 lỗi chính tả trong câu: 'Bầu trới trong xunh, những chú chim sẻ ríu dít trên cành.'\n(3) Chuyển câu sau thành câu hỏi: 'Bách đã giải xong bài toán thử thách sáng tạo.'\n(4) Đặt dấu câu thích hợp vào đoạn: 'Trời ơi ( ) Bông hoa hồng nhung nở đẹp làm sao ( )'",
+          applied: "Phần 2 - Tự luận & Viết đoạn (18 phút):\nViết một đoạn văn (5–7 câu) tả cảnh một buổi sáng sớm trên quê hương hoặc khu phố nơi con ở.\n- Yêu cầu: Dùng ít nhất 2 từ láy gợi tả âm thanh hoặc màu sắc; có 1 câu hỏi tu từ; không mắc lỗi chính tả ch/tr, s/x.",
+          reasoning: "Phần 3 - Tự soát và giải thích (8 phút): Chọn ra 1 từ đắt giá nhất trong bài văn của con và giải thích vì sao con thích từ đó.",
           selfCheck: "Chấm điểm: (1) Phần 1 làm đúng hoàn toàn (5 điểm); (2) Phần 2 viết mượt mà, đúng ngữ pháp và không sai chính tả (5 điểm).",
           challenge: "Tìm 2 từ đồng nghĩa với từ 'chăm chỉ' nhưng mang sắc thái trang trọng hơn.",
           hint: "Mẹo thi: Đọc kỹ từng từ trong phần trắc nghiệm chính tả; viết chữ nắn nót, rõ ràng ở phần viết đoạn."

@@ -476,14 +476,14 @@ const AUTHORED_P2_WEEK7_MATH = [
   },
   {
     day: "Thứ 7",
-    title: "Mini-test 50 phút · Dãy số và quy luật",
-    objective: "Đánh giá toàn diện kỹ năng phân tích quy luật, tính số hạng, tính tổng và giải bài toán thực tế trong 50 phút.",
+    title: "Mini-test 40 phút · Dãy số và quy luật",
+    objective: "Đánh giá toàn diện kỹ năng phân tích quy luật, tính số hạng, tính tổng và giải bài toán thực tế trong 40 phút.",
     example: "1. Dãy số cách đều 5 đơn vị: 5, 10, 15, 20, ...\n2. Dãy số tăng khoảng cách: 1, 2, 4, 7, 11, ...\n3. Bài toán thực tế 16 hàng ghế khán đài.\n4. Phát hiện số sai và tính tổng 4 số.",
     basic: "1. Viết tiếp ba số hạng vào dãy số sau: 2, 7, 12, 17, 22, ..., ..., ...\n2. Tìm số hạng thứ 30 của dãy số cách đều: 5, 9, 13, 17, 21, ...\n3. Tính số số hạng của dãy số: 11, 14, 17, 20, ..., 101.\n4. Tìm số hạng thứ 8 của dãy số tăng khoảng cách: 1, 2, 4, 7, 11, 16, ...",
     applied: "1. Một khán đài có 16 hàng ghế, hàng đầu có 24 ghế, mỗi hàng sau hơn hàng trước 2 ghế. Hỏi hàng thứ 16 có bao nhiêu ghế?\n2. Tính tổng số ghế của cả 16 hàng ghế trên khán đài đó.\n3. Nếu ban tổ chức cần 650 chỗ ngồi thì khán đài này có đủ chỗ cho khán giả không?\n4. Muốn có đúng 700 chỗ ngồi thì cần kê thêm bao nhiêu ghế vào các hàng?",
     challenge: "1. Cho dãy số: 3, 8, 15, 24, 35, 48, ... Tìm số hạng thứ 10 của dãy số.\n2. Dãy số: 2, 5, 11, 23, 47, ... có quy luật gì? Tìm số hạng thứ 7.\n3. Cho dãy: 4, 9, 15, 22, 30, 39, 49. Chỉ ra số sai quy luật và sửa lại.\n4. Tính tổng 20 số hạng đầu tiên của dãy số cách đều: 3, 7, 11, 15, 19, ...",
     visual: MATH_WEEK7_VISUAL,
-    reasoning: "1. Phân bổ 50 phút: Bài 1 (10 phút), Bài 2 (10 phút), Bài 3 (15 phút), Bài 4 (10 phút), soát bài (5 phút).\n2. Nhận diện dạng dãy số trước khi áp dụng công thức tính số hạng hoặc tính tổng.\n3. Kiểm tra lại phép nhân và cộng dồn từng bước tính.",
+    reasoning: "1. Phân bổ 40 phút: Bài 1 (8 phút), Bài 2 (8 phút), Bài 3 (12 phút), Bài 4 (8 phút), soát bài (4 phút).\n2. Nhận diện dạng dãy số trước khi áp dụng công thức tính số hạng hoặc tính tổng.\n3. Kiểm tra lại phép nhân và cộng dồn từng bước tính.",
     selfCheck: "1. Đã hoàn thành đủ 4 bài toán và ghi rõ số thứ tự câu chưa?\n2. Các phép tính có đầy đủ lời giải, phép tính và danh số đơn vị không?\n3. Đáp số của bài toán thực tế đã kiểm tra tính hợp lý chưa?\n4. Các phép tính cộng trừ nhân chia đã nháp lại độc lập chưa?",
     drill: "1. Tính nhẩm nhanh số số hạng của: 10, 20, 30, ..., 200.\n2. Tìm số tiếp theo của: 1, 4, 9, 16, 25, ...\n3. Tìm số tiếp theo của: 2, 6, 18, 54, ...\n4. Tìm số trung bình cộng của 5 số: 12, 14, 16, 18, 20.",
     variant: "1. Cho dãy số: 1, 5, 9, 13, 17, ... Số 2021 có thuộc dãy số này không?\n2. Tìm số hạng thứ 50 của dãy số: 3, 8, 13, 18, 23, ...\n3. Một đội xếp hàng hình tam giác: hàng 1 có 1 người, hàng 2 có 2 người, ..., hàng 12 có 12 người. Đội có bao nhiêu người?\n4. Tìm và sửa số sai trong dãy: 1, 3, 6, 10, 16, 21, 28.",
@@ -564,17 +564,17 @@ const AUTHORED_P2_WEEK7_VIETNAMESE = [
   },
   {
     day: "Thứ 7",
-    title: "Mini-test 50 phút · Tả chiếc hộp bút",
-    objective: "Thực hiện bài kiểm tra hoàn chỉnh 50 phút gồm đúng 3 phần: lập dàn ý, viết bài văn 12–15 câu và tự đánh giá theo bảng tiêu chí.",
-    example: "1. Phần 1 (10 phút): Lập dàn ý 4 phần vắn tắt.\n2. Phần 2 (30 phút): Viết bài văn hoàn chỉnh 12–15 câu tả chiếc hộp bút.\n3. Phần 3 (10 phút): Đọc soát bài và ghi 3 điểm tự chỉnh sửa theo bảng tiêu chí.",
-    basic: "1. Lập dàn ý vắn tắt cho bài văn tả chiếc hộp bút gồm 4 phần: Mở bài, Tả bên ngoài, Tả bên trong và công dụng, Kết bài.\n2. Viết bài văn hoàn chỉnh từ 12 đến 15 câu theo dàn ý trên, có câu mở bài hấp dẫn và chi tiết giác quan cụ thể.\n3. Đọc lại bài viết, chỉ ra một lỗi chính tả hoặc từ ngữ lặp và viết lại câu đó cho hoàn chỉnh hơn.",
-    applied: "1. Lập dàn ý chi tiết có ghi rõ ít nhất 3 từ ngữ gợi tả màu sắc, chất liệu và âm thanh em sẽ dùng trong bài.\n2. Viết bài văn 12–15 câu tả chiếc hộp bút thật của em, sử dụng ít nhất một phép so sánh và một phép nhân hóa tự nhiên.\n3. Điền bảng tự đánh giá 3 tiêu chí: bài viết đủ 3 phần chưa, câu văn có rõ ý không, có chi tiết nào em tâm đắc nhất.",
+    title: "Mini-test 40 phút · Tả chiếc hộp bút",
+    objective: "Thực hiện bài kiểm tra hoàn chỉnh 40 phút gồm đúng 3 phần: lập dàn ý, viết bài văn 10–12 câu và tự đánh giá theo bảng tiêu chí.",
+    example: "1. Phần 1 (8 phút): Lập dàn ý 4 phần vắn tắt.\n2. Phần 2 (24 phút): Viết bài văn hoàn chỉnh 10–12 câu tả chiếc hộp bút.\n3. Phần 3 (8 phút): Đọc soát bài và ghi 3 điểm tự chỉnh sửa theo bảng tiêu chí.",
+    basic: "1. Lập dàn ý vắn tắt cho bài văn tả chiếc hộp bút gồm 4 phần: Mở bài, Tả bên ngoài, Tả bên trong và công dụng, Kết bài.\n2. Viết bài văn hoàn chỉnh từ 10 đến 12 câu theo dàn ý trên, có câu mở bài hấp dẫn và chi tiết giác quan cụ thể.\n3. Đọc lại bài viết, chỉ ra một lỗi chính tả hoặc từ ngữ lặp và viết lại câu đó cho hoàn chỉnh hơn.",
+    applied: "1. Lập dàn ý chi tiết có ghi rõ ít nhất 3 từ ngữ gợi tả màu sắc, chất liệu và âm thanh em sẽ dùng trong bài.\n2. Viết bài văn 10–12 câu tả chiếc hộp bút thật của em, sử dụng ít nhất một phép so sánh và một phép nhân hóa tự nhiên.\n3. Điền bảng tự đánh giá 3 tiêu chí: bài viết đủ 3 phần chưa, câu văn có rõ ý không, có chi tiết nào em tâm đắc nhất.",
     challenge: "1. Lập dàn ý mở bài gián tiếp từ một kỷ niệm ngày khai giảng đầu năm lớp 4.\n2. Viết bài văn tả chiếc hộp bút với điểm nhấn là sự thay đổi cách sắp xếp ngăn nắp của em sau một học kỳ.\n3. Tự viết đoạn nhận xét 3 câu về sự tiến bộ trong cách dùng từ gợi cảm giác so với bài viết đầu năm.",
-    reasoning: "1. Phân bổ thời gian: 10 phút lập ý chọn từ, 30 phút viết bài hoàn chỉnh, 10 phút đọc lại soát lỗi.\n2. Giữ nguyên giọng kể tự nhiên, mộc mạc của lứa tuổi học sinh lớp 4 thay vì sao chép các câu văn mẫu.\n3. Tập trung làm nổi bật một chi tiết em yêu thích nhất để tạo điểm nhấn riêng cho bài văn.",
-    selfCheck: "1. Bài làm đã hoàn thành đủ cả 3 phần đánh số theo yêu cầu chưa?\n2. Bài văn có đạt độ dài yêu cầu từ 12 đến 15 câu và có câu mở bài, kết bài trọn ý không?\n3. Em đã tự phát hiện và sửa được ít nhất một lỗi chính tả hoặc cách dùng từ trực tiếp trên bài chưa?",
+    reasoning: "1. Phân bổ thời gian: 8 phút lập ý chọn từ, 24 phút viết bài hoàn chỉnh, 8 phút đọc lại soát lỗi.\n2. Giữ nguyên giọng kể tự nhiên, mộc mạc của lứa tuổi học sinh lớp 4 thay vì sao chép các câu văn mẫu.\n3. Tập trung làm nổi bật một chi tiết em yêu thích nhất để tạo điểm nhấn riêng cho bài văn.",
+    selfCheck: "1. Bài làm đã hoàn thành đủ cả 3 phần đánh số theo yêu cầu chưa?\n2. Bài văn có đạt độ dài yêu cầu từ 10 đến 12 câu và có câu mở bài, kết bài trọn ý không?\n3. Em đã tự phát hiện và sửa được ít nhất một lỗi chính tả hoặc cách dùng từ trực tiếp trên bài chưa?",
     drill: "1. Viết nhanh 1 câu mở bài gián tiếp cho bài văn tả chiếc hộp bút.\n2. Viết nhanh 1 câu kết bài mở rộng nêu lời hứa giữ gìn đồ dùng học tập.\n3. Gạch chân và sửa lỗi chính tả trong câu: ‘Chiếc khoá kéo kim loại sáng loáng sột soạt mở ra.’",
     variant: "1. Lập dàn ý 3 phần cho đề bài tả hộp bút màu sáp 24 màu của em.\n2. Viết đoạn 10 câu tả hộp màu vẽ với điểm nhấn là sự phong phú của các thỏi màu.\n3. Tự chấm điểm bài viết theo thang điểm 10 với các tiêu chí rõ ràng.",
-    advanced: "1. Lập dàn ý cho bài văn kết hợp giữa tả chiếc hộp bút và kể lại kỷ niệm cùng bạn cùng bàn tìm lại nắp bút bị rơi.\n2. Viết bài văn 15 câu hoàn chỉnh thể hiện tình bạn qua món đồ dùng học tập.\n3. Đóng vai chiếc hộp bút viết lời tự giới thiệu 4 câu gửi tới bạn học sinh lớp 4."
+    advanced: "1. Lập dàn ý cho bài văn kết hợp giữa tả chiếc hộp bút và kể lại kỷ niệm cùng bạn cùng bàn tìm lại nắp bút bị rơi.\n2. Viết bài văn 10–12 câu hoàn chỉnh thể hiện tình bạn qua món đồ dùng học tập.\n3. Đóng vai chiếc hộp bút viết lời tự giới thiệu 4 câu gửi tới bạn học sinh lớp 4."
   }
 ];
 
@@ -598,8 +598,8 @@ function authoredDailyPlan(item, subject, weekNumber, phase) {
   const isMath = subject === "math";
 
   const dayTitles = isMath
-    ? [`Hiểu trọng tâm · ${title}`, `Luyện kỹ thuật · ${title}`, `Vận dụng · ${title}`, `Thử thách · ${title}`, `Chữa lỗi · ${title}`, `Mini-test 50 phút · ${title}`]
-    : [`Đọc và nói · ${title}`, `Lập ý · ${title}`, `Viết bản 1 · ${title}`, `Thử nghiệm cách viết · ${title}`, `Biên tập · ${title}`, `Mini-test 50 phút · ${title}`];
+    ? [`Hiểu trọng tâm · ${title}`, `Luyện kỹ thuật · ${title}`, `Vận dụng · ${title}`, `Thử thách · ${title}`, `Chữa lỗi · ${title}`, `Mini-test 40 phút · ${title}`]
+    : [`Đọc và nói · ${title}`, `Lập ý · ${title}`, `Viết bản 1 · ${title}`, `Thử nghiệm cách viết · ${title}`, `Biên tập · ${title}`, `Mini-test 40 phút · ${title}`];
 
   const dayObjectives = isMath
     ? [
@@ -608,7 +608,7 @@ function authoredDailyPlan(item, subject, weekNumber, phase) {
       `Vận dụng kiến thức “${title}” để giải quyết bài toán thực tế có lời văn.`,
       `Thử sức với bài toán nâng cao, rèn luyện tư duy tìm quy luật và mô hình hóa.`,
       `Phát hiện bẫy sai lầm, phân tích nguyên nhân và trình bày lại lời giải chuẩn.`,
-      `Đánh giá năng lực toàn diện tuần ${weekNumber} với đề kiểm tra 50 phút đa mức độ.`
+      `Đánh giá năng lực toàn diện tuần ${weekNumber} với đề kiểm tra 40 phút đa mức độ.`
     ]
     : [
       `Đọc kỹ yêu cầu và ngữ liệu “${title}”, phát hiện chi tiết đắt giá và nói trọn ý.`,
@@ -616,7 +616,7 @@ function authoredDailyPlan(item, subject, weekNumber, phase) {
       `Viết đoạn văn bản nháp đầu tiên với chi tiết chân thật và mạch liên kết tự nhiên.`,
       `Thử nghiệm biện pháp nghệ thuật và cách diễn đạt mới để làm sáng tỏ ý văn.`,
       `Rà soát và biên tập câu văn theo tiêu chí cụ thể: ý–câu–từ–chính tả.`,
-      `Hoàn thành bài viết kiểm tra 50 phút theo thang điểm 10 và tự đánh giá sản phẩm.`
+      `Hoàn thành bài viết kiểm tra 40 phút theo thang điểm 10 và tự đánh giá sản phẩm.`
     ];
 
   // Đảm bảo bài vận dụng môn Toán luôn có dữ liệu số và ngữ cảnh cụ thể
@@ -694,11 +694,11 @@ function authoredDailyPlan(item, subject, weekNumber, phase) {
       advanced: "Chữa sâu và phòng tránh lỗi: " + cleanExampleText(repair)
     },
     {
-      example: "Đề bài tổng hợp và trọng tâm ôn tập tuần " + weekNumber + " (50 phút): " + cleanExampleText(test),
-      basic: "Đề thi Mini-test 50 phút (Tuần " + weekNumber + " - " + title + "):\n- Câu 1 (Cơ bản - 3đ): " + miniTestQ1 + "\n- Câu 2 (Kỹ thuật tính - 3đ): " + miniTestQ2 + "\n- Câu 3 (Vận dụng thực tế - 2đ): " + miniTestQ3 + "\n- Câu 4 (Olympic thử thách - 2đ): " + miniTestQ4,
+      example: "Đề bài tổng hợp và trọng tâm ôn tập tuần " + weekNumber + " (40 phút): " + cleanExampleText(test),
+      basic: "Đề thi Mini-test 40 phút (Tuần " + weekNumber + " - " + title + "):\n- Câu 1 (Cơ bản - 3đ): " + miniTestQ1 + "\n- Câu 2 (Kỹ thuật tính - 3đ): " + miniTestQ2 + "\n- Câu 3 (Vận dụng thực tế - 2đ): " + miniTestQ3 + "\n- Câu 4 (Olympic thử thách - 2đ): " + miniTestQ4,
       applied: "1. Tự chấm điểm bài thi tuần " + weekNumber + " theo thang 10 điểm: Cơ bản & Kỹ thuật tính (6đ - mỗi câu 3đ), Vận dụng thực tế (2đ), Thử thách Olympic (2đ). Trình bày sạch đẹp có danh số.",
       challenge: "1. Câu hỏi điểm 10 trong đề thi: " + miniTestQ4,
-      reasoning: "Phân bổ 50 phút thi Tuần " + weekNumber + " (“" + title + "”): Câu 1 (10 phút), Câu 2 (10 phút), Câu 3 (15 phút), Câu 4 (10 phút), soát bài (5 phút).",
+      reasoning: "Phân bổ 40 phút thi Tuần " + weekNumber + " (“" + title + "”): Câu 1 (8 phút), Câu 2 (8 phút), Câu 3 (12 phút), Câu 4 (8 phút), soát bài (4 phút).",
       selfCheck: "Tự chấm điểm theo thang 10: Cơ bản & Kỹ thuật tính (6đ), Vận dụng thực tế (2đ), Thử thách Olympic (2đ). Trình bày sạch đẹp, có danh số rõ ràng.",
       drill: cleanExampleText(test),
       variant: miniTestQ3,
@@ -763,11 +763,11 @@ function authoredDailyPlan(item, subject, weekNumber, phase) {
       advanced: "Biên tập chuyên sâu: " + cleanExampleText(repair)
     },
     {
-      example: "Khung đề kiểm tra Tiếng Việt tổng hợp tuần " + weekNumber + " (50 phút): Dựa trên ngữ liệu trọng tâm về “" + title + "”, hoàn thành các phần kiểm tra: " + cleanExampleText(test),
-      basic: "Đề kiểm tra Tiếng Việt 50 phút (Tuần " + weekNumber + " - " + title + "):\n- Phần 1 - Đọc hiểu & Phân tích (15 phút): Đọc văn bản ngữ liệu về “" + title + "” và trả lời 3 câu hỏi trọn ý: nêu ý chính, tìm 2 chi tiết đắt giá và nêu cảm nhận.\n- Phần 2 - Luyện câu & Viết đoạn (25 phút): " + cleanExampleText(applied) + "\n- Phần 3 - Soát lỗi 4 bước (10 phút): " + cleanExampleText(repair),
+      example: "Khung đề kiểm tra Tiếng Việt tổng hợp tuần " + weekNumber + " (40 phút): Dựa trên ngữ liệu trọng tâm về “" + title + "”, hoàn thành các phần kiểm tra: " + cleanExampleText(test),
+      basic: "Đề kiểm tra Tiếng Việt 40 phút (Tuần " + weekNumber + " - " + title + "):\n- Phần 1 - Đọc hiểu & Phân tích (10 phút): Đọc văn bản ngữ liệu về “" + title + "” và trả lời 3 câu hỏi trọn ý: nêu ý chính, tìm 2 chi tiết đắt giá và nêu cảm nhận.\n- Phần 2 - Luyện câu & Viết đoạn (20 phút): " + cleanExampleText(applied) + "\n- Phần 3 - Soát lỗi 4 bước (10 phút): " + cleanExampleText(repair),
       applied: "1. Tự chấm điểm bài thi tuần " + weekNumber + " theo thang điểm 10: Đọc hiểu (3đ), Viết đoạn văn theo đề “" + cleanExampleText(applied) + "” (5đ), Chính tả và soát lỗi (2đ). Đạt tối đa 10/10.",
       challenge: "1. Yêu cầu sáng tạo đạt điểm tối đa cho bài “" + title + "”: " + cleanExampleText(challenge),
-      reasoning: "Phân bổ thời gian làm bài Tiếng Việt Tuần " + weekNumber + " (“" + title + "”): Đọc hiểu 15 phút, viết đoạn 25 phút, soát lỗi và sửa bài 10 phút.",
+      reasoning: "Phân bổ thời gian làm bài Tiếng Việt Tuần " + weekNumber + " (“" + title + "”): Đọc hiểu 10 phút, viết đoạn 20 phút, soát lỗi và sửa bài 10 phút.",
       selfCheck: "Tự chấm điểm theo thang 10: Đọc hiểu (3đ), Viết đoạn văn (5đ), Chính tả và chữ đẹp (2đ). Đạt tối đa 10/10.",
       drill: cleanExampleText(test),
       variant: cleanExampleText(challenge),

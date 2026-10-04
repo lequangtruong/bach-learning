@@ -119,7 +119,7 @@ test("each daily lesson explains its difficulty for Bách and adapts after feedb
 });
 
 
-test("UI uses the curriculum 25 weekday / 50 Saturday study rhythm and home displays 25′", async () => {
+test("UI uses the curriculum 25 weekday / 40 Saturday study rhythm and home displays 25′", async () => {
   const appSource = await readFile(new URL("../app.js", import.meta.url), "utf8");
   const combinedSource = getCombinedSource(appSource);
 
@@ -133,11 +133,11 @@ test("UI uses the curriculum 25 weekday / 50 Saturday study rhythm and home disp
     /<div class="stat-card"><span class="eyebrow">NHỊP HỌC<\/span><span class="number">25′<\/span><small>Mỗi môn \/ ngày<\/small><\/div>/
   );
 
-  // UI môn học phản ánh nhịp weekday 25 phút và Saturday 50 phút từ curriculum
+  // UI môn học phản ánh nhịp weekday 25 phút và Saturday 40 phút từ curriculum
   assert.match(combinedSource, /\$\{curriculum\??\.meta\??\.dailyMinutes\??\.?\[subject\](?: \|\| 25)?\}\s*phút/);
   assert.match(combinedSource, /NHỊP MỘT BUỔI · \$\{curriculum\??\.meta\??\.dailyMinutes\??\.?\[subject\](?: \|\| 25)?\}\s*PHÚT/);
-  assert.match(combinedSource, /NHỊP THỨ 7 · \$\{curriculum\??\.meta\??\.saturdayMinutes\??\.?\[subject\](?: \|\| 50)?\}\s*PHÚT/);
-  assert.match(combinedSource, /PHIÊN DÀI · 50 PHÚT/);
+  assert.match(combinedSource, /NHỊP THỨ 7 · \$\{curriculum\??\.meta\??\.saturdayMinutes\??\.?\[subject\](?: \|\| 40)?\}\s*PHÚT/);
+  assert.match(combinedSource, /PHIÊN DÀI · 40 PHÚT/);
 });
 
 test("AI ADVANCE is tied to the reviewed lesson and rolls over Saturday to Monday", async () => {

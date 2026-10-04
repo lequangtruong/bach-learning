@@ -49,11 +49,19 @@ export function getDifficultyMeta(diff) {
   return table[d];
 }
 
-export function getDailyGameChallenges({ gameType = "bar-model", weekNumber = 1, dayIndex = 0 } = {}) {
+export function getDailyGameChallenges({ gameType = "bar-model", weekNumber = 1, dayIndex = 0, state = null } = {}) {
   const w = Math.max(1, Math.min(36, Number(weekNumber) || 1));
   const d = Math.max(0, Math.min(5, Number(dayIndex) || 0));
   const isSat = d === 5;
   const items = gameType === "bar-model" ? BAR_MODEL_CHALLENGES : BUG_CASES;
+
+  const records = state?.db?.gameRecords || {};
+  const solvedSet = new Set();
+  if (gameType === "bar-model") {
+    (records.barModel?.completedChallenges || []).forEach(id => solvedSet.add(id));
+  } else if (gameType === "spot-the-bug") {
+    (records.spotTheBug?.solvedBugs || []).forEach(id => solvedSet.add(id));
+  }
 
   const poolByDiff = { 1: [], 2: [], 3: [], 4: [], 5: [] };
   for (let idx = 0; idx < items.length; idx++) {
@@ -85,20 +93,47 @@ export function getDailyGameChallenges({ gameType = "bar-model", weekNumber = 1,
     targetD3 = 5;
   }
 
-  const pickFromPool = (targetDiff, seedOffset) => {
+  const pickFromPool = (targetDiff, seedOffset, excludedIds = new Set()) => {
     let pool = poolByDiff[targetDiff];
     if (!pool || pool.length === 0) {
       pool = poolByDiff[Math.min(5, targetDiff + 1)] || poolByDiff[Math.max(1, targetDiff - 1)] || items;
     }
-    const idxInPool = (w * 7 + d * 3 + seedOffset) % pool.length;
-    return pool[idxInPool];
+    // Lọc các bài chưa bị chọn ở bước trước
+    const candidates = pool.filter(it => !excludedIds.has(it.id));
+    const unsolved = candidates.filter(it => !solvedSet.has(it.id) && !solvedSet.has(it.index));
+
+    let activePool = unsolved;
+    // Fallback: nếu toàn bộ bài ở độ khó mục tiêu đã hoàn thành, tìm bài chưa giải ở các độ khó gần nhất
+    if (activePool.length === 0) {
+      for (let dist = 1; dist <= 4; dist++) {
+        const candidateDiffs = [targetDiff - dist, targetDiff + dist].filter(df => df >= 1 && df <= 5);
+        for (const adjDiff of candidateDiffs) {
+          const adjPool = (poolByDiff[adjDiff] || []).filter(it => !excludedIds.has(it.id));
+          const adjUnsolved = adjPool.filter(it => !solvedSet.has(it.id) && !solvedSet.has(it.index));
+          if (adjUnsolved.length > 0) {
+            activePool = adjUnsolved;
+            break;
+          }
+        }
+        if (activePool.length > 0) break;
+      }
+    }
+
+    // Nếu toàn bộ kho bài (ở mọi độ khó) đều đã hoàn thành hết, fallback chọn lại bài trong candidates hoặc pool
+    if (activePool.length === 0) {
+      activePool = candidates.length > 0 ? candidates : pool;
+    }
+
+    const idxInPool = (w * 7 + d * 3 + seedOffset) % activePool.length;
+    return activePool[idxInPool];
   };
 
-  let item1 = pickFromPool(targetD1, 0);
-  let item2 = pickFromPool(targetD2, 1);
-  if (item2.id === item1.id) {
-    item2 = items[(item1.index + 1) % items.length];
-  }
+  const selectedIds = new Set();
+  let item1 = pickFromPool(targetD1, 0, selectedIds);
+  selectedIds.add(item1.id);
+
+  let item2 = pickFromPool(targetD2, 1, selectedIds);
+  selectedIds.add(item2.id);
 
   // Đảm bảo Bài 1 dễ hơn hoặc bằng Bài 2
   if (item1.difficulty > item2.difficulty) {
@@ -109,10 +144,7 @@ export function getDailyGameChallenges({ gameType = "bar-model", weekNumber = 1,
 
   let selected = [item1, item2];
   if (isSat) {
-    let item3 = pickFromPool(targetD3, 2);
-    if (item3.id === item1.id || item3.id === item2.id) {
-      item3 = items[(item2.index + 2) % items.length];
-    }
+    let item3 = pickFromPool(targetD3, 2, selectedIds);
     selected.push(item3);
     selected.sort((a, b) => a.difficulty - b.difficulty);
   }
@@ -124,7 +156,8 @@ export function getDailyGameChallenges({ gameType = "bar-model", weekNumber = 1,
       ? "Bài 1 (Khởi động)" 
       : (idx === 1 ? "Bài 2 (Thử thách)" : "Bài 3 (Chinh phục Thứ 7)"),
     challenge: item,
-    diffMeta: getDifficultyMeta(item.difficulty)
+    diffMeta: getDifficultyMeta(item.difficulty),
+    isSolved: solvedSet.has(item.id) || solvedSet.has(item.index)
   }));
 }
 
@@ -493,7 +526,7 @@ export function renderSpeedMathArena({ state, appRoot, saveLocal } = {}) {
       </div>
 
       <!-- Starting Level Selector -->
-      <div style="display:flex; justify-content:center; align-items:center; gap:6px; margin:10px 0 14px; flex-wrap:wrap">
+      <div style="display:flex; justify-content:center; align-items:center; gap:6px; margin:10px 0 6px; flex-wrap:wrap">
         <span style="font-size:0.8rem; font-weight:700; color:var(--muted)">Chọn cấp độ xuất phát:</span>
         <button type="button" class="small-button sm-lvl-btn" data-streak="0" style="font-size:0.78rem; padding:3px 8px">Cấp 1</button>
         <button type="button" class="small-button sm-lvl-btn" data-streak="3" style="font-size:0.78rem; padding:3px 8px">Cấp 2</button>
@@ -501,6 +534,15 @@ export function renderSpeedMathArena({ state, appRoot, saveLocal } = {}) {
         <button type="button" class="small-button sm-lvl-btn" data-streak="10" style="font-size:0.82rem; padding:4px 12px; background:#fef2f2; color:#dc2626; border:1.5px solid #f87171; font-weight:800">
           🔥 Cấp 4: Olympic Hack Não
         </button>
+      </div>
+
+      <!-- Bảng quy tắc thưởng điểm theo tốc độ -->
+      <div style="display:flex; justify-content:center; align-items:center; gap:6px; margin:4px 0 12px; font-size:0.82rem; color:var(--muted); flex-wrap:wrap">
+        <span>⚡ <b>Thưởng tốc độ:</b></span>
+        <span style="background:#fef3c7; color:#b45309; padding:2px 8px; border-radius:999px; font-weight:700">≤1.5s (+50đ)</span>
+        <span style="background:#ecfdf5; color:#047857; padding:2px 8px; border-radius:999px; font-weight:700">≤2.5s (+30đ)</span>
+        <span style="background:#eff6ff; color:#1d4ed8; padding:2px 8px; border-radius:999px; font-weight:700">≤3.5s (+20đ)</span>
+        <span style="background:#f8fafc; color:#475569; padding:2px 8px; border-radius:999px; font-weight:600">≤5.0s (+10đ)</span>
       </div>
 
       <div id="gamePlayArea">
@@ -549,7 +591,7 @@ export function renderSpeedMathArena({ state, appRoot, saveLocal } = {}) {
       if (timerEl) timerEl.textContent = `${remaining}s`;
       if (fillEl) fillEl.style.width = `${(remaining / duration) * 100}%`;
     },
-    onScoreChange: ({ isCorrect, points, score, streak, problem, expected, responseTime, wasFast, usedHint }) => {
+    onScoreChange: ({ isCorrect, points, basePoints, speedBonus, score, streak, problem, expected, responseTime, wasFast, usedHint }) => {
       if (scoreEl) scoreEl.textContent = `${score} đ`;
       if (streakEl) streakEl.textContent = `Streak: ${streak} ${streak >= 3 ? "🔥" : ""}`;
       
@@ -557,11 +599,12 @@ export function renderSpeedMathArena({ state, appRoot, saveLocal } = {}) {
         feedbackEl.style.display = "inline-block";
         if (isCorrect) {
           feedbackEl.className = "math-feedback-badge correct" + (wasFast ? " fast" : "");
+          const bonusTag = speedBonus > 0 ? ` (+${speedBonus}đ tốc độ ⚡)` : "";
           feedbackEl.innerHTML = usedHint
             ? `✓ Đúng (Có trợ giúp mẹo: không tăng Streak) +${points} đ`
-            : (wasFast 
-                ? `⚡ ${responseTime}s (Thần tốc!) +${points} đ` 
-                : `✓ Đúng rồi! (${responseTime}s) +${points} đ`);
+            : (wasFast
+                ? `⚡ ${responseTime}s (Thần tốc!) +${points} đ${bonusTag}`
+                : `✓ Đúng rồi! (${responseTime}s) +${points} đ${bonusTag}`);
           if (hintEl) {
             hintEl.style.display = "none";
             hintEl.textContent = "";
@@ -581,7 +624,7 @@ export function renderSpeedMathArena({ state, appRoot, saveLocal } = {}) {
         inputEl.focus();
       }
     },
-    onEnd: async ({ score, correctCount, wrongCount, bestStreak, avgResponseTime, fastSolveCount, velocityTier, difficultyBoost: nextBoost }) => {
+    onEnd: async ({ score, correctCount, wrongCount, bestStreak, avgResponseTime, fastSolveCount, totalSpeedBonus, velocityTier, difficultyBoost: nextBoost }) => {
       if (playArea) playArea.hidden = true;
       if (endArea) {
         endArea.hidden = false;
@@ -598,6 +641,7 @@ export function renderSpeedMathArena({ state, appRoot, saveLocal } = {}) {
         if (isNewRecord) sm.highScore = score;
         sm.avgResponseTime = avgResponseTime;
         sm.fastSolveCount = (sm.fastSolveCount || 0) + (fastSolveCount || 0);
+        sm.totalSpeedBonus = (sm.totalSpeedBonus || 0) + (totalSpeedBonus || 0);
         sm.velocityTier = velocityTier;
         sm.difficultyBoost = nextBoost; // Lưu để tự động tăng độ khó cho các ván tiếp theo!
 
@@ -630,10 +674,14 @@ export function renderSpeedMathArena({ state, appRoot, saveLocal } = {}) {
             <h2 class="game-results-title">${isNewRecord ? "KỶ LỤC MỚI CỦA BÁCH!" : "HOÀN THÀNH VÒNG ĐẤU 90S!"}</h2>
             <p style="color:var(--muted)">Bách đã duy trì sự tập trung rất tốt trong suốt 90 giây.</p>
 
-            <div class="results-stats-grid" style="grid-template-columns:repeat(4, 1fr); margin-top:20px">
+            <div class="results-stats-grid" style="grid-template-columns:repeat(auto-fit, minmax(110px, 1fr)); margin-top:20px">
               <div class="results-stat-box">
                 <small>ĐIỂM LƯỢT NÀY</small>
                 <span style="color:var(--coral)">${score}</span>
+              </div>
+              <div class="results-stat-box">
+                <small>THƯỞNG TỐC ĐỘ ⚡</small>
+                <span style="color:#d97706">+${totalSpeedBonus || 0} đ</span>
               </div>
               <div class="results-stat-box">
                 <small>ĐÚNG / SAI</small>
@@ -651,6 +699,7 @@ export function renderSpeedMathArena({ state, appRoot, saveLocal } = {}) {
 
             <div style="margin-top:14px; display:flex; justify-content:center; gap:20px; font-size:0.92rem; color:var(--muted); flex-wrap:wrap">
               <span>🏆 Kỷ lục 1 lượt (90s): <strong style="color:var(--ink)">${Math.max(score, prevHighScore)} đ</strong></span>
+              <span>⚡ Tổng thưởng tốc độ: <strong style="color:#d97706">+${totalSpeedBonus || 0} đ</strong></span>
               <span>🔥 Chuỗi đúng cao nhất: <strong style="color:var(--ink)">${Math.max(bestStreak, sm.bestStreak || 0)} câu</strong></span>
             </div>
 

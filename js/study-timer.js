@@ -3,7 +3,8 @@ import { state, escapeHtml } from "./core.js";
 import {
   getLessonDefaultSeconds,
   formatTimerSeconds,
-  computeCurrentTimerState
+  computeCurrentTimerState,
+  migrateLegacyLessonTimers
 } from "../data/data-core.js";
 
 let _saveLocal = () => Promise.resolve();
@@ -18,7 +19,10 @@ export const lessonTimerManager = {
   intervalId: null,
 
   init() {
-    this.recomputeAll();
+    const changed = this.recomputeAll();
+    if (changed) {
+      _saveLocal(true).catch(err => console.warn("Lỗi lưu timer sau khi migrate:", err));
+    }
     this.ensureTicker();
 
     if (typeof document !== "undefined") {
@@ -41,9 +45,17 @@ export const lessonTimerManager = {
   },
 
   recomputeAll() {
-    if (!state.db.lessonTimers) return;
+    if (!state.db.lessonTimers) return false;
     const now = Date.now();
     let hasChanges = false;
+
+    // Tự động migration các timer cũ 50 phút (3000s) sang chuẩn 40 phút (2400s)
+    const { timers: migratedTimers, migrated } = migrateLegacyLessonTimers(state.db.lessonTimers, now);
+    if (migrated) {
+      state.db.lessonTimers = migratedTimers;
+      hasChanges = true;
+    }
+
     for (const [key, timer] of Object.entries(state.db.lessonTimers)) {
       if (timer && timer.status === "running") {
         const computed = computeCurrentTimerState(timer, now);

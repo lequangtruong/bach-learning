@@ -5,11 +5,11 @@
 - Mỗi bài học hàng ngày (định danh theo `${weekId}-${subject}-${dayIndex + 1}`) có bộ đếm giờ độc lập.
 - Thời lượng mặc định:
   - Ngày thường (Thứ 2 đến Thứ 6, `dayIndex 0..4`): 25 phút (1500 giây, hiển thị `25:00`).
-  - Thứ 7 (`dayIndex 5` hoặc `day.day === "Thứ 7"`): 50 phút (3000 giây, hiển thị `50:00`).
+  - Thứ 7 (`dayIndex 5` hoặc `day.day === "Thứ 7"`): 40 phút (2400 giây, hiển thị `40:00`).
 - Lưu trữ trạng thái timer trong `db.lessonTimers` (local-first trong IndexedDB và localStorage fallback qua `data/data-core.js`):
   - `status`: `"idle" | "running" | "paused" | "completed"`
   - `remainingSeconds`: số giây còn lại (integer, 0 <= remainingSeconds <= duration)
-  - `durationSeconds`: tổng thời lượng bài học (1500 hoặc 3000)
+  - `durationSeconds`: tổng thời lượng bài học (1500 hoặc 2400; dữ liệu cũ hỗ trợ 3000)
   - `lastStartedAt`: timestamp ISO string khi bấm Bắt đầu/Tiếp tục (dùng để tính delta theo wall clock `Date.now()`)
   - `updatedAt`: timestamp ISO string
 - Khả năng phục hồi (Durable & Wall-clock calculation):

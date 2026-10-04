@@ -103,7 +103,7 @@ test("server.mjs: strict static asset allowlist blocks dotfiles and internal rep
   assert.equal(isStaticAllowed("test/smoke.test.mjs"), false);
 });
 
-test("sw.js: shouldCacheRequest excludes APIs, Authorization headers, and query tokens", () => {
+test("sw.js: shouldCacheRequest excludes APIs, Authorization headers, and query tokens", async () => {
   const getStatic = { method: "GET", url: "http://localhost/styles.css", headers: new Headers() };
   assert.equal(shouldCacheRequest(getStatic), true);
 
@@ -122,11 +122,20 @@ test("sw.js: shouldCacheRequest excludes APIs, Authorization headers, and query 
 
   const tokenParamRequest = { method: "GET", url: "http://localhost/app.js?token=secret", headers: new Headers() };
   assert.equal(shouldCacheRequest(tokenParamRequest), false);
+
+  // Offline PWA: Weekend math exam modules must be cached and allowed
+  const examModuleReq = { method: "GET", url: "http://localhost/js/math-weekend-bank-data.js", headers: new Headers() };
+  assert.equal(shouldCacheRequest(examModuleReq), true);
+
+  const swContent = await readFile(new URL("../sw.js", import.meta.url), "utf8");
+  assert.match(swContent, /"js\/math-weekend-bank-data\.js"/, "sw.js must cache math-weekend-bank-data.js for offline exam availability");
+  assert.match(swContent, /"js\/math-weekend-exam\.js"/, "sw.js must cache math-weekend-exam.js for offline exam availability");
+  assert.match(swContent, /CACHE_NAME = "bach-learning-v43"/, "sw.js cache version must be bumped to v43");
 });
 
-test("lesson timer: default seconds and formatting match weekday=25:00 and Saturday=50:00", () => {
+test("lesson timer: default seconds and formatting match weekday=25:00 and Saturday=40:00", () => {
   assert.equal(WEEKDAY_LESSON_SECONDS, 1500);
-  assert.equal(SATURDAY_LESSON_SECONDS, 3000);
+  assert.equal(SATURDAY_LESSON_SECONDS, 2400);
 
   // Day indices: 0..4 weekdays, 5 Saturday
   for (let dayIndex = 0; dayIndex < 5; dayIndex++) {
@@ -136,10 +145,10 @@ test("lesson timer: default seconds and formatting match weekday=25:00 and Satur
   }
 
   // Saturday (day index 5 or label "Thứ 7")
-  assert.equal(getLessonDefaultSeconds(5), 3000);
-  assert.equal(formatTimerSeconds(getLessonDefaultSeconds(5)), "50:00");
-  assert.equal(getLessonDefaultSeconds("Thứ 7"), 3000);
-  assert.equal(formatTimerSeconds(getLessonDefaultSeconds("Thứ 7")), "50:00");
+  assert.equal(getLessonDefaultSeconds(5), 2400);
+  assert.equal(formatTimerSeconds(getLessonDefaultSeconds(5)), "40:00");
+  assert.equal(getLessonDefaultSeconds("Thứ 7"), 2400);
+  assert.equal(formatTimerSeconds(getLessonDefaultSeconds("Thứ 7")), "40:00");
 
   // Weekday labels (e.g. Thứ 2)
   assert.equal(getLessonDefaultSeconds("Thứ 2"), 1500);

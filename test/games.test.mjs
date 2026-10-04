@@ -94,9 +94,10 @@ test("games: SpeedMathSession manages 90s score, combo multiplier and answers co
   const cur1 = session.currentProblem;
   const res1 = session.submitAnswer(cur1.answer);
   assert.equal(res1.isCorrect, true);
-  assert.equal(session.score, 100);
+  assert.equal(session.score, 150); // 100 base + 50 speed bonus (< 1.5s)
   assert.equal(session.streak, 1);
   assert.equal(session.correctCount, 1);
+  assert.equal(res1.speedBonus, 50);
 
   // Submit wrong answer
   const cur2 = session.currentProblem;
@@ -104,7 +105,7 @@ test("games: SpeedMathSession manages 90s score, combo multiplier and answers co
   assert.equal(res2.isCorrect, false);
   assert.equal(session.streak, 0); // streak reset
   assert.equal(session.wrongCount, 1);
-  assert.equal(session.score, 100); // score not decreased
+  assert.equal(session.score, 150); // score not decreased
 
   session.stop();
   assert.equal(session.isRunning, false);
@@ -829,6 +830,7 @@ test("games: speed-math tracks response time, grants velocity bonus, and compute
   const r1 = session.submitAnswer(String(ans1));
   assert.equal(r1.isCorrect, true);
   assert.equal(r1.wasFast, true);
+  assert.equal(r1.speedBonus, 50);
   assert.equal(session.correctCount, 1);
   assert.equal(session.fastSolveCount, 1);
   assert.equal(session.streak, 1); // Streak đầu tiên tăng 1
@@ -839,6 +841,7 @@ test("games: speed-math tracks response time, grants velocity bonus, and compute
   const r2 = session.submitAnswer(String(ans2));
   assert.equal(r2.isCorrect, true);
   assert.equal(r2.wasFast, true);
+  assert.equal(r2.speedBonus, 50);
   assert.equal(session.streak, 3); // 1 + 2 = 3
 
   // Thêm các câu thần tốc để đạt velocity tier
@@ -854,6 +857,7 @@ test("games: speed-math tracks response time, grants velocity bonus, and compute
   assert.equal(lastEndResult.velocityTier, "lightning");
   assert.equal(lastEndResult.difficultyBoost, 6);
   assert.ok(lastEndResult.avgResponseTime <= 2.8);
+  assert.ok(lastEndResult.totalSpeedBonus >= 200, "Must track totalSpeedBonus in onEnd");
 
   // Ván tiếp theo: khởi động với initialStreak từ difficultyBoost
   const nextSession = new SpeedMathSession({ initialStreak: lastEndResult.difficultyBoost });
@@ -863,6 +867,35 @@ test("games: speed-math tracks response time, grants velocity bonus, and compute
   // Khi streak >= 6, các dạng bài được sinh ra thuộc nhóm nâng cao / Olympic
   assert.ok(nextSession.currentProblem);
   nextSession.stop();
+});
+
+test("games: calculateSpeedBonus computes correct speed bonus tiers and respects usedHint", async () => {
+  const { calculateSpeedBonus } = await import("../js/speed-math.js");
+
+  // Siêu thần tốc <= 1.5s -> +50 điểm
+  assert.equal(calculateSpeedBonus(0.5), 50);
+  assert.equal(calculateSpeedBonus(1.2), 50);
+  assert.equal(calculateSpeedBonus(1.5), 50);
+
+  // Thần tốc 1.6s - 2.5s -> +30 điểm
+  assert.equal(calculateSpeedBonus(1.8), 30);
+  assert.equal(calculateSpeedBonus(2.5), 30);
+
+  // Nhanh 2.6s - 3.5s -> +20 điểm
+  assert.equal(calculateSpeedBonus(2.8), 20);
+  assert.equal(calculateSpeedBonus(3.5), 20);
+
+  // Chuẩn xác 3.6s - 5.0s -> +10 điểm
+  assert.equal(calculateSpeedBonus(4.0), 10);
+  assert.equal(calculateSpeedBonus(5.0), 10);
+
+  // Quá 5.0s -> không thưởng
+  assert.equal(calculateSpeedBonus(5.2), 0);
+  assert.equal(calculateSpeedBonus(10.0), 0);
+
+  // Khi dùng gợi ý mẹo (usedHint = true) -> không thưởng tốc độ để bảo vệ tính độc lập
+  assert.equal(calculateSpeedBonus(0.8, true), 0);
+  assert.equal(calculateSpeedBonus(1.5, true), 0);
 });
 
 test("games: anti-repetition prevents rapid topic and group reuse across games", async () => {
@@ -1665,13 +1698,56 @@ test("games: all 80 Make 24 challenges are solvable with all 4 cards and have va
   }
 });
 
+test("games: getDailyGameChallenges falls back to nearest unsolved difficulty before repeating solved challenges", async () => {
+  const { getDailyGameChallenges } = await import("../js/render-games.js");
+  const { BAR_MODEL_CHALLENGES } = await import("../js/bar-model-challenges.js");
 
+  // Filter all difficulty 1 challenges
+  const diff1Challenges = BAR_MODEL_CHALLENGES.filter(c => (c.difficulty || 2) === 1);
+  assert.ok(diff1Challenges.length > 0, "Must have diff 1 challenges");
 
+  // State where ALL diff 1 challenges are completed
+  const completedIds = diff1Challenges.map(c => c.id);
+  const mockState = {
+    db: {
+      gameRecords: {
+        barModel: {
+          completedChallenges: completedIds
+        }
+      }
+    }
+  };
 
+  // Week 1 (targets targetD1 = 1). Since all diff 1 are solved, it must fallback to nearest unsolved (diff 2)
+  const result = getDailyGameChallenges({
+    gameType: "bar-model",
+    weekNumber: 1,
+    dayIndex: 0,
+    state: mockState
+  });
 
+  assert.equal(result.length, 2);
+  // Item 1 would have been diff 1 if solved challenges were accepted immediately.
+  // With fallback, it picks an unsolved challenge from adjacent difficulty (diff 2)!
+  assert.equal(result[0].isSolved, false, "Fallback must choose an unsolved challenge from adjacent difficulty");
+  assert.ok(result[0].challenge.difficulty >= 2, "Challenge difficulty must be shifted to adjacent difficulty");
 
-
-
-
-
-
+  // When ALL challenges across ALL difficulties are completed
+  const allCompletedIds = BAR_MODEL_CHALLENGES.map(c => c.id);
+  const mockAllDoneState = {
+    db: {
+      gameRecords: {
+        barModel: {
+          completedChallenges: allCompletedIds
+        }
+      }
+    }
+  };
+  const resultAllDone = getDailyGameChallenges({
+    gameType: "bar-model",
+    weekNumber: 1,
+    dayIndex: 0,
+    state: mockAllDoneState
+  });
+  assert.equal(resultAllDone[0].isSolved, true, "When every challenge in bank is solved, safely returns solved challenge");
+});

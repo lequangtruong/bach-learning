@@ -32,7 +32,7 @@ Chương trình Ngôn ngữ Tiểu học của Singapore MOE cung cấp **phươ
 ## 4. Trụ cột 4: Cảm hứng Kỹ thuật Mã nguồn mở (Engineering Inspiration Only)
 Các repository open-source dưới đây chỉ đóng vai trò **gợi ý kiến trúc phần mềm, tương tác UI/UX và kỹ thuật frontend (ENGINEERING INSPIRATION ONLY)**, tuyệt đối **không có thẩm quyền chương trình học và không sao chép trực tiếp mã nguồn hay nội dung của dự án khác**:
 - [kilowatto/math-challenge](https://github.com/kilowatto/math-challenge): Gợi ý khái niệm chia nhỏ bài tập theo nấc thang lũy tiến (challenge ladder); toàn bộ logic bài tập, câu hỏi và bộ sinh đề trong Bách Learning Lab là thiết kế độc lập của dự án (PROJECT DECISION).
-- [Literacy For Kids](https://github.com/literacy-for-kids): Gợi ý khái niệm chia nhỏ phiên học tương tác theo phân đoạn thời gian; ứng dụng tự thiết kế nhịp học 25 phút/môn ngày thường và 50 phút/môn Thứ 7 cho phù hợp thói quen học tập của gia đình.
+- [Literacy For Kids](https://github.com/literacy-for-kids): Gợi ý khái niệm chia nhỏ phiên học tương tác theo phân đoạn thời gian; ứng dụng tự thiết kế nhịp học 25 phút/môn ngày thường và 40 phút/môn Thứ 7 cho phù hợp thói quen học tập của gia đình.
 - [megafarad/barabara](https://github.com/megafarad/barabara): Gợi ý mô hình lưu trữ cục bộ phía client (Local-First), bảo vệ quyền riêng tư không theo dõi (Zero Tracking); việc cài đặt IndexedDB/Drive trong dự án là mã nguồn độc lập.
 - [openSRS](https://github.com/openSRS-App/openSRS): Gợi ý nguyên lý gợi nhắc lặp lại ngắt quãng (spaced retrieval); dự án chỉ vận dụng nguyên lý này qua nhịp rà soát Thứ 6 (chữa lỗi) và Thứ 7 (mini-test), không sao chép thuật toán SRS của repo.
 

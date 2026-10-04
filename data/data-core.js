@@ -130,7 +130,7 @@ export function validateDatabasePayload(data) {
       if (typeof key !== "string" || !/^w([1-9]|[12][0-9]|3[0-6])-(math|vietnamese)-[1-6]$/.test(key)) return false;
       if (!val || typeof val !== "object" || Array.isArray(val)) return false;
       if (typeof val.status !== "string" || !["idle", "running", "paused", "completed"].includes(val.status)) return false;
-      if (!Number.isInteger(val.durationSeconds) || (val.durationSeconds !== 1500 && val.durationSeconds !== 3000)) return false;
+      if (!Number.isInteger(val.durationSeconds) || (val.durationSeconds !== 1500 && val.durationSeconds !== 2400 && val.durationSeconds !== 3000)) return false;
       if (!Number.isInteger(val.remainingSeconds) || val.remainingSeconds < 0 || val.remainingSeconds > val.durationSeconds) return false;
       if (typeof val.updatedAt !== "string" || Number.isNaN(Date.parse(val.updatedAt))) return false;
       if (val.status === "completed") {
@@ -268,7 +268,7 @@ export function appendVoiceTranscript(existingText = "", newTranscript = "") {
 
 // Chuẩn hóa định dạng hội thoại cho prompt AI
 export function formatConversationForTutor({ subject, weekId, weekFocus, userMessage, history = [], learningContext = {}, mode = "student_tutor" }) {
-  const boundedMsg = (userMessage || "").trim().slice(0, 2400);
+  const boundedMsg = (userMessage || "").trim().slice(0, 12000);
   const cleanHistory = Array.isArray(history)
     ? history.slice(-6).map(h => ({
         role: h.role === "model" || h.role === "assistant" ? "model" : "user",
@@ -297,9 +297,9 @@ export function formatConversationForTutor({ subject, weekId, weekFocus, userMes
   };
 }
 
-// Định cấu hình thời lượng mặc định (giây) cho bài học: Ngày thường 25p, Thứ 7 50p
+// Định cấu hình thời lượng mặc định (giây) cho bài học: Ngày thường 25p, Thứ 7 40p (chuẩn 1 tiết học)
 export const WEEKDAY_LESSON_SECONDS = 25 * 60; // 1500s
-export const SATURDAY_LESSON_SECONDS = 50 * 60; // 3000s
+export const SATURDAY_LESSON_SECONDS = 40 * 60; // 2400s
 
 export function getLessonDefaultSeconds(dayLabelOrIndex) {
   if (dayLabelOrIndex === "Thứ 7" || dayLabelOrIndex === 5 || dayLabelOrIndex === 6) {
@@ -316,19 +316,103 @@ export function formatTimerSeconds(totalSeconds) {
   return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 }
 
+// Migration rõ ràng cho timer bài học Thứ 7 từ 50 phút (3000s) sang 40 phút (2400s)
+export function migrateLegacyLessonTimer(timer, nowMs = Date.now()) {
+  if (!timer || typeof timer !== "object") return timer;
+  if (timer.durationSeconds !== 3000) return timer;
+
+  const targetDuration = SATURDAY_LESSON_SECONDS; // 2400s
+  const status = timer.status || "idle";
+  let remaining = Number.isInteger(timer.remainingSeconds) ? timer.remainingSeconds : targetDuration;
+  const lastStartedAt = timer.lastStartedAt || null;
+
+  if (status === "completed" || remaining <= 0) {
+    return {
+      ...timer,
+      durationSeconds: targetDuration,
+      remainingSeconds: 0,
+      status: "completed",
+      lastStartedAt: null,
+      updatedAt: timer.updatedAt || new Date(nowMs).toISOString()
+    };
+  }
+
+  if (status === "idle") {
+    return {
+      ...timer,
+      durationSeconds: targetDuration,
+      remainingSeconds: targetDuration,
+      status: "idle",
+      lastStartedAt: null,
+      updatedAt: timer.updatedAt || new Date(nowMs).toISOString()
+    };
+  }
+
+  // running hoặc paused: tính toán thời gian đã học thực tế (elapsed)
+  if (status === "running" && lastStartedAt) {
+    const startedTime = Date.parse(lastStartedAt);
+    if (!Number.isNaN(startedTime) && nowMs >= startedTime) {
+      const elapsedSinceStart = Math.floor((nowMs - startedTime) / 1000);
+      remaining = Math.max(0, remaining - elapsedSinceStart);
+    }
+  }
+
+  const elapsedTotal = Math.max(0, 3000 - remaining);
+  if (elapsedTotal >= targetDuration) {
+    // Đã học đủ hoặc quá 40 phút -> chuyển sang completed
+    return {
+      ...timer,
+      durationSeconds: targetDuration,
+      remainingSeconds: 0,
+      status: "completed",
+      lastStartedAt: null,
+      updatedAt: new Date(nowMs).toISOString()
+    };
+  }
+
+  const newRemaining = Math.max(1, targetDuration - elapsedTotal);
+  return {
+    ...timer,
+    durationSeconds: targetDuration,
+    remainingSeconds: newRemaining,
+    status: status, // giữ running hoặc paused
+    lastStartedAt: status === "running" ? new Date(nowMs).toISOString() : null,
+    updatedAt: new Date(nowMs).toISOString()
+  };
+}
+
+export function migrateLegacyLessonTimers(lessonTimers, nowMs = Date.now()) {
+  if (!lessonTimers || typeof lessonTimers !== "object") return { timers: lessonTimers, migrated: false };
+  let migrated = false;
+  const migratedTimers = {};
+  for (const [key, timer] of Object.entries(lessonTimers)) {
+    if (timer && timer.durationSeconds === 3000) {
+      migratedTimers[key] = migrateLegacyLessonTimer(timer, nowMs);
+      migrated = true;
+    } else {
+      migratedTimers[key] = timer;
+    }
+  }
+  return { timers: migratedTimers, migrated };
+}
+
 // Tính toán lại trạng thái timer dựa trên Wall Clock (Date.now())
 export function computeCurrentTimerState(timer, nowMs = Date.now()) {
   if (!timer || typeof timer !== "object") return null;
-  const duration = Number.isInteger(timer.durationSeconds) && timer.durationSeconds > 0
-    ? timer.durationSeconds
+  const safeTimer = timer.durationSeconds === 3000
+    ? migrateLegacyLessonTimer(timer, nowMs)
+    : timer;
+
+  const duration = Number.isInteger(safeTimer.durationSeconds) && safeTimer.durationSeconds > 0
+    ? safeTimer.durationSeconds
     : WEEKDAY_LESSON_SECONDS;
 
-  let remaining = Number.isInteger(timer.remainingSeconds) ? timer.remainingSeconds : duration;
-  let status = timer.status || "idle";
+  let remaining = Number.isInteger(safeTimer.remainingSeconds) ? safeTimer.remainingSeconds : duration;
+  let status = safeTimer.status || "idle";
 
   if (status === "running") {
-    if (timer.lastStartedAt) {
-      const startedTime = Date.parse(timer.lastStartedAt);
+    if (safeTimer.lastStartedAt) {
+      const startedTime = Date.parse(safeTimer.lastStartedAt);
       if (!Number.isNaN(startedTime) && nowMs >= startedTime) {
         const elapsedSinceStart = Math.floor((nowMs - startedTime) / 1000);
         remaining = Math.max(0, remaining - elapsedSinceStart);
@@ -347,6 +431,6 @@ export function computeCurrentTimerState(timer, nowMs = Date.now()) {
     remainingSeconds: remaining,
     durationSeconds: duration,
     lastStartedAt: status === "running" ? new Date(nowMs).toISOString() : null,
-    updatedAt: timer.updatedAt || new Date(nowMs).toISOString()
+    updatedAt: safeTimer.updatedAt || new Date(nowMs).toISOString()
   };
 }
